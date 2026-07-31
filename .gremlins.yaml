@@ -1,0 +1,11 @@
+silent: false
+unleash:
+  integration: false
+  workers: 2
+  timeout-coefficient: 3
+  threshold:
+    efficacy: 75
+    mutant-coverage: 65
+  exclude-files:
+    - "_windows\\.go$"
+    - "cmd/"

@@ -1,0 +1,115 @@
+name: Verify
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  go-assurance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: '.go-version'
+          cache: true
+      - name: Lint GitHub Actions workflows
+        shell: bash
+        run: |
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+          actionlint -color never
+      - name: Unit, race, vet, formatting, coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(gofmt -l .)"
+          go test ./...
+          go test -race ./...
+          go vet ./...
+          go test -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out | tee coverage.txt
+          ./scripts/check-critical-coverage.sh coverage.out
+          ./scripts/check-governance.sh
+          ./scripts/check-docs.sh
+          git diff --check
+      - name: Govulncheck
+        shell: bash
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          govulncheck ./...
+      - name: Fuzz seed campaigns
+        shell: bash
+        run: ./scripts/fuzz.sh 20s
+      - name: Catalog SBOM and license coverage
+        shell: bash
+        run: |
+          go run ./cmd/agentstack-sbom --version ci --out agentstack-catalog.cdx.json
+          go test ./internal/supplychain
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: assurance-evidence
+          path: |
+            coverage.txt
+            agentstack-catalog.cdx.json
+  mutation-testing:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: '.go-version'
+      - name: Install pinned Gremlins
+        run: go install github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0
+      - name: Mutation quality gate
+        run: gremlins unleash --output mutation-results.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: mutation-results
+          path: mutation-results.json
+  windows-e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            arch: amd64
+          - runner: windows-11-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: '.go-version'
+          cache: true
+      - name: Native Windows tests and end-to-end smoke
+        shell: pwsh
+        run: ./scripts/windows-e2e.ps1 -Architecture '${{ matrix.arch }}'
+  accessibility:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: '.go-version'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24.11.0'
+          cache: npm
+          cache-dependency-path: ui-tests/package-lock.json
+      - name: Build UI test binary
+        shell: pwsh
+        run: go build -trimpath -o agentstack.exe ./cmd/agentstack
+      - name: Install pinned UI test dependencies
+        working-directory: ui-tests
+        run: npm ci
+      - name: Install browser
+        working-directory: ui-tests
+        run: npx playwright install chromium
+      - name: Accessibility and keyboard checks
+        working-directory: ui-tests
+        run: npm test

@@ -1,0 +1,96 @@
+package processctl
+
+import (
+	"context"
+	"errors"
+	"os/exec"
+	"sync"
+	"time"
+)
+
+type platformController interface {
+	terminate() error
+	close() error
+}
+
+type Process struct {
+	Cmd        *exec.Cmd
+	controller platformController
+	waitOnce   sync.Once
+	waitCh     chan error
+}
+
+func Start(cmd *exec.Cmd) (*Process, error) {
+	prepareCommand(cmd)
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	controller, err := attachCommand(cmd)
+	if err != nil {
+		_ = cmd.Process.Kill()
+		_ = cmd.Wait()
+		return nil, err
+	}
+	process := &Process{Cmd: cmd, controller: controller, waitCh: make(chan error, 1)}
+	process.waitOnce.Do(func() {
+		go func() {
+			err := cmd.Wait()
+			_ = controller.close()
+			process.waitCh <- err
+			close(process.waitCh)
+		}()
+	})
+	return process, nil
+}
+
+func (p *Process) Wait(ctx context.Context) error {
+	if p == nil {
+		return errors.New("process is nil")
+	}
+	select {
+	case err := <-p.waitCh:
+		return err
+	case <-ctx.Done():
+		_ = p.Terminate()
+		select {
+		case err := <-p.waitCh:
+			if err != nil {
+				return ctx.Err()
+			}
+			return ctx.Err()
+		case <-time.After(5 * time.Second):
+			return ctx.Err()
+		}
+	}
+}
+
+func (p *Process) GracefulClose(closeInput func() error, grace time.Duration) error {
+	if p == nil {
+		return nil
+	}
+	if closeInput != nil {
+		_ = closeInput()
+	}
+	if grace <= 0 {
+		grace = 2 * time.Second
+	}
+	select {
+	case err := <-p.waitCh:
+		return err
+	case <-time.After(grace):
+		_ = p.Terminate()
+		select {
+		case err := <-p.waitCh:
+			return err
+		case <-time.After(5 * time.Second):
+			return errors.New("process tree did not terminate")
+		}
+	}
+}
+
+func (p *Process) Terminate() error {
+	if p == nil || p.controller == nil {
+		return nil
+	}
+	return p.controller.terminate()
+}

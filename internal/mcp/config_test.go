@@ -1,0 +1,117 @@
+package mcp
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
+
+	"github.com/agentstack/agentstack/internal/catalog"
+	"github.com/agentstack/agentstack/internal/model"
+)
+
+func TestBuildRouterConfigIncludesOnlyActiveRouterActions(t *testing.T) {
+	c, err := catalog.LoadDefault()
+	if err != nil {
+		t.Fatal(err)
+	}
+	plan := model.Plan{Profile: "essential", Actions: []model.PlanAction{
+		{ComponentID: "memory-mcp", Kind: model.ActionConfigure},
+		{ComponentID: "playwright-mcp", Kind: model.ActionConfigure},
+		{ComponentID: "puppeteer-mcp", Kind: model.ActionPreserveInactive},
+		{ComponentID: "github-mcp", Kind: model.ActionConsentRequired},
+	}}
+	config, err := BuildRouterConfig(c, plan, `C:\Users\Test\AppData\Local\AgentStack`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(config.Servers) != 2 {
+		t.Fatalf("expected two servers, got %d", len(config.Servers))
+	}
+	memory := config.Servers["memory-mcp"]
+	if got := memory.Env["MEMORY_FILE_PATH"]; got != `C:\Users\Test\AppData\Local\AgentStack/memory/knowledge-graph.jsonl` && got != `C:\Users\Test\AppData\Local\AgentStack\memory\knowledge-graph.jsonl` {
+		t.Fatalf("data path not expanded: %q", got)
+	}
+	if _, exists := config.Servers["puppeteer-mcp"]; exists {
+		t.Fatal("inactive duplicate included")
+	}
+}
+
+func TestWriteRouterConfigRoundTrip(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "router.json")
+	input := RouterConfig{Version: 1, Profile: "essential", Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}
+	if err := WriteRouterConfig(path, input); err != nil {
+		t.Fatal(err)
+	}
+	output, err := LoadRouterConfig(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output.Servers["memory"].Command != "npx" {
+		t.Fatalf("unexpected config %#v", output)
+	}
+}
+
+func TestRouterConfigEquivalentIgnoresUpdatedTimestamp(t *testing.T) {
+	left := RouterConfig{Version: 1, Profile: "essential", UpdatedAt: time.Unix(1, 0), Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}
+	right := RouterConfig{Version: 1, Profile: "essential", UpdatedAt: time.Unix(2, 0), Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}
+	if !RouterConfigEquivalent(left, right) {
+		t.Fatal("timestamps should not make equivalent router profiles different")
+	}
+	right.Servers["memory"] = ServerConfig{Command: "npx", Args: []string{"different"}}
+	if RouterConfigEquivalent(left, right) {
+		t.Fatal("server changes must make router profiles different")
+	}
+}
+
+func TestMergeAgyConfigPreservesUnknownKeysAndExistingServers(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "mcp_config.json")
+	original := `{"theme":"dark","mcpServers":{"existing":{"command":"keep"}}}`
+	if err := os.WriteFile(path, []byte(original), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	result, err := MergeAgyConfig(path, `C:\AgentStack\agentstack.exe`, []string{"mcp-router", "--config", `C:\config.json`}, filepath.Join(dir, "backups"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Changed || result.BackupPath == "" {
+		t.Fatalf("expected change and backup: %#v", result)
+	}
+	data, _ := os.ReadFile(path)
+	var parsed map[string]any
+	if err := json.Unmarshal(data, &parsed); err != nil {
+		t.Fatal(err)
+	}
+	if parsed["theme"] != "dark" {
+		t.Fatal("unknown key lost")
+	}
+	servers := parsed["mcpServers"].(map[string]any)
+	if _, ok := servers["existing"]; !ok {
+		t.Fatal("existing server lost")
+	}
+	if _, ok := servers["agentstack-router"]; !ok {
+		t.Fatal("router missing")
+	}
+}
+
+func TestMergeAgyConfigConflictDoesNotMutate(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "mcp_config.json")
+	original := `{"mcpServers":{"agentstack-router":{"command":"custom"}}}`
+	if err := os.WriteFile(path, []byte(original), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	result, err := MergeAgyConfig(path, "agentstack", []string{"mcp-router"}, filepath.Join(dir, "backups"))
+	if err == nil {
+		t.Fatal("foreign registration conflict should be explicit")
+	}
+	if result.Changed || !result.Conflict {
+		t.Fatalf("expected non-mutating conflict: %#v", result)
+	}
+	data, _ := os.ReadFile(path)
+	if string(data) != original {
+		t.Fatal("conflicting config was mutated")
+	}
+}

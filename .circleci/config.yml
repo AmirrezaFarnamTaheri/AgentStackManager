@@ -1,0 +1,30 @@
+version: 2.1
+jobs:
+  verify:
+    docker:
+      - image: cimg/go:1.26.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b
+    steps:
+      - checkout
+      - run:
+          name: Formatting, unit tests, race tests, vet, coverage and policy
+          command: |
+            test -z "$(gofmt -l .)"
+            go test ./...
+            go test -race ./...
+            go vet ./...
+            go test -coverprofile=coverage.out ./...
+            ./scripts/check-critical-coverage.sh coverage.out
+            ./scripts/check-governance.sh
+            ./scripts/check-docs.sh
+            git diff --check
+      - run:
+          name: Vulnerability scan
+          command: |
+            go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+            govulncheck ./...
+      - run:
+          name: Catalog SBOM contract
+          command: go run ./cmd/agentstack-sbom --version ci --out /tmp/agentstack-catalog.cdx.json
+workflows:
+  verify:
+    jobs: [verify]

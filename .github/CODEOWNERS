@@ -1,0 +1,8 @@
+# AgentStack release, security, and automation changes require explicit owner review.
+* @AmirrezaFarnamTaheri
+/.github/ @AmirrezaFarnamTaheri
+/scripts/release.ps1 @AmirrezaFarnamTaheri
+/internal/security/ @AmirrezaFarnamTaheri
+/internal/selfinstall/ @AmirrezaFarnamTaheri
+/internal/supplychain/ @AmirrezaFarnamTaheri
+/supply-chain/ @AmirrezaFarnamTaheri

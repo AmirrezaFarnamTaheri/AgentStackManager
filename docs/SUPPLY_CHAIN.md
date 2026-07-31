@@ -1,0 +1,34 @@
+# Supply-Chain Assurance
+
+## Catalog controls
+
+Every automatic component declares an exact identity appropriate to its installer: WinGet package ID/version/source, npm package version, uv package version/source, or Git commit. Catalog validation rejects floating `latest`, missing versions, unapproved sources, duplicate component IDs, invalid dependency graphs, unsupported platforms, and incomplete license coverage.
+
+The Superpowers skill pack is fetched by exact commit and accepted only when Git resolves that commit and the expected skill inventory is present. Existing skills are preserved.
+
+## Release inputs
+
+A public build requires:
+
+- a clean tree at a verified signed annotated `v*` tag;
+- Go 1.26.5;
+- exact pinned assurance tools;
+- `go test`, race, vet, fuzz seed campaigns, mutation testing, critical-path coverage, governance/docs checks;
+- source and Windows-binary `govulncheck`;
+- two-build unsigned reproducibility comparison per binary;
+- valid Authenticode signatures and expected publisher thumbprint;
+- CycloneDX catalog and binary SBOMs;
+- component license inventory;
+- OpenVEX output;
+- deterministic ZIPs and SHA-256 manifests;
+- GitHub artifact attestations.
+
+A development build is explicitly unsigned and must not be presented as a public release.
+
+## Installed-stack assurance
+
+The catalog SBOM describes all selectable components, not only Go module dependencies. License metadata and approved source/publisher fields are checked in tests. Credentialed/manual integrations remain explicit and are not represented as automatically installed capabilities.
+
+## Vulnerability response
+
+Catalog updates must preserve exact versions and sources, update SBOM/license/VEX evidence, pass code-owner review, and produce a new signed release. VEX expresses applicability decisions; it does not suppress uninvestigated vulnerabilities.

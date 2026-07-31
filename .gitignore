@@ -1,0 +1,9 @@
+*.exe
+*.log
+.DS_Store
+/agentstack-diagnostics-*.zip
+/build/
+/coverage.out
+/dist-dev/
+/dist/
+/mutation-results.json

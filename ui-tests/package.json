@@ -1,0 +1,16 @@
+{
+  "name": "agentstack-ui-assurance",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "test": "node accessibility.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "axe-core": "4.12.1",
+    "playwright": "1.61.1"
+  }
+}

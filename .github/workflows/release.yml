@@ -1,0 +1,312 @@
+name: Signed GitHub Release
+run-name: Release ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing signed annotated tag to release (vX.Y.Z or vX.Y.Z-prerelease)
+        required: true
+        type: string
+      prerelease:
+        description: Mark the GitHub Release as a prerelease
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: signed-release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build-sign-package:
+    name: Build, sign, and attest
+    runs-on: windows-2025
+    timeout-minutes: 90
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    outputs:
+      release_tag: ${{ steps.release.outputs.tag }}
+      release_version: ${{ steps.release.outputs.version }}
+      prerelease: ${{ steps.release.outputs.prerelease }}
+    steps:
+      - name: Resolve requested ref
+        id: requested-ref
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_TAG: ${{ inputs.tag }}
+          PUSH_REF: ${{ github.ref }}
+        run: |
+          $ref = if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            $env:DISPATCH_TAG.Trim()
+          } else {
+            $env:PUSH_REF
+          }
+          if ([string]::IsNullOrWhiteSpace($ref)) { throw 'Release ref is empty' }
+          "ref=$ref" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.requested-ref.outputs.ref }}
+
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: '.go-version'
+          cache: true
+
+      - name: Resolve and validate release identity
+        id: release
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_TAG: ${{ inputs.tag }}
+          DISPATCH_PRERELEASE: ${{ inputs.prerelease }}
+          PUSH_TAG: ${{ github.ref_name }}
+        run: |
+          $tag = if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            $env:DISPATCH_TAG.Trim()
+          } else {
+            $env:PUSH_TAG.Trim()
+          }
+          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+            throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
+          }
+          git show-ref --tags --verify --quiet "refs/tags/$tag"
+          if ($LASTEXITCODE -ne 0) { throw "Tag does not exist in the repository: $tag" }
+
+          $version = $tag.Substring(1)
+          $manualPrerelease = $env:DISPATCH_PRERELEASE -eq 'true'
+          $isPrerelease = $manualPrerelease -or $version.Contains('-')
+          "tag=$tag" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+          "version=$version" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+          "prerelease=$($isPrerelease.ToString().ToLowerInvariant())" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+
+      - name: Install pinned assurance tools
+        shell: pwsh
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          go install github.com/anchore/syft/cmd/syft@v1.50.0
+          govulncheck -version
+          syft version
+
+      - name: Import release certificate
+        shell: pwsh
+        env:
+          SIGNING_PFX_BASE64: ${{ secrets.SIGNING_PFX_BASE64 }}
+          SIGNING_PFX_PASSWORD: ${{ secrets.SIGNING_PFX_PASSWORD }}
+        run: |
+          if (-not $env:SIGNING_PFX_BASE64 -or -not $env:SIGNING_PFX_PASSWORD) {
+            throw 'Signing secrets are required'
+          }
+          $pfxPath = Join-Path $env:RUNNER_TEMP 'signing.pfx'
+          [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:SIGNING_PFX_BASE64))
+          $secure = ConvertTo-SecureString $env:SIGNING_PFX_PASSWORD -AsPlainText -Force
+          Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\CurrentUser\My -Password $secure | Out-Null
+
+      - name: Import trusted release-tag verification key
+        shell: pwsh
+        env:
+          RELEASE_TAG_PUBLIC_KEY_BASE64: ${{ secrets.RELEASE_TAG_PUBLIC_KEY_BASE64 }}
+        run: |
+          if (-not $env:RELEASE_TAG_PUBLIC_KEY_BASE64) { throw 'Release tag public key is required' }
+          $keyPath = Join-Path $env:RUNNER_TEMP 'release-tag-public-key.asc'
+          [IO.File]::WriteAllBytes($keyPath, [Convert]::FromBase64String($env:RELEASE_TAG_PUBLIC_KEY_BASE64))
+          gpg --batch --import $keyPath
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to import release-tag verification key' }
+          git fetch --force --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to fetch authoritative origin/main' }
+
+      - name: Build, verify, sign, and package
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
+        run: ./scripts/release.ps1 -Version $env:RELEASE_VERSION -CertificateThumbprint $env:SIGNING_CERT_THUMBPRINT
+
+      - name: Attest release archive provenance
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-path: 'dist/*.zip'
+
+      - name: Attest raw executable provenance
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-path: 'dist/*.exe'
+
+      - name: Attest x64 binary SBOM
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-path: 'dist/agentstack-windows-amd64.exe'
+          sbom-path: 'dist/agentstack-binary-amd64.cdx.json'
+
+      - name: Attest ARM64 binary SBOM
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-path: 'dist/agentstack-windows-arm64.exe'
+          sbom-path: 'dist/agentstack-binary-arm64.cdx.json'
+
+      - name: Attest catalog SBOM provenance
+        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        with:
+          subject-path: 'dist/agentstack-catalog.cdx.json'
+
+      - name: Upload signed release candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signed-release-${{ steps.release.outputs.tag }}
+          path: dist/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  arm64-runtime-proof:
+    name: Verify signed ARM64 runtime
+    needs: build-sign-package
+    runs-on: windows-11-arm
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: signed-release-${{ needs.build-sign-package.outputs.release_tag }}
+          path: dist
+
+      - name: Verify and smoke signed ARM64 bundle
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem dist -Filter '*windows-arm64.zip' | Select-Object -First 1
+          if (-not $zip) { throw 'ARM64 bundle missing' }
+          Expand-Archive $zip.FullName -DestinationPath extracted
+          $setup = Get-ChildItem extracted -Recurse -Filter AgentStack-Setup.exe | Select-Object -First 1
+          $console = Get-ChildItem extracted -Recurse -Filter agentstack-windows-arm64.exe | Select-Object -First 1
+          $manifest = Get-ChildItem extracted -Recurse -Filter SHA256SUMS.txt | Select-Object -First 1
+          if (-not $setup -or -not $console -or -not $manifest) { throw 'ARM64 bundle is incomplete' }
+
+          $root = Split-Path -Parent $manifest.FullName
+          foreach ($line in Get-Content $manifest.FullName) {
+            if ($line -notmatch '^([0-9a-fA-F]{64})\s{2}(.+)$') { throw "Invalid checksum line: $line" }
+            $file = Join-Path $root $Matches[2]
+            if ((Get-FileHash -Algorithm SHA256 $file).Hash.ToLowerInvariant() -ne $Matches[1].ToLowerInvariant()) {
+              throw "Checksum mismatch: $($Matches[2])"
+            }
+          }
+
+          $signatures = @($setup, $console | ForEach-Object { Get-AuthenticodeSignature $_.FullName })
+          foreach ($signature in $signatures) {
+            if ($signature.Status -ne 'Valid') { throw 'Invalid ARM64 Authenticode signature' }
+          }
+          if ($signatures[0].SignerCertificate.Thumbprint -ne $signatures[1].SignerCertificate.Thumbprint) {
+            throw 'ARM64 setup and console have different publishers'
+          }
+
+          & $setup.FullName --verify-only
+          if ($LASTEXITCODE -ne 0) { throw 'ARM64 graphical setup pair verification failed' }
+          & $console.FullName version
+          if ($LASTEXITCODE -ne 0) { throw 'ARM64 runtime smoke failed' }
+          & $console.FullName catalog | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw 'ARM64 catalog smoke failed' }
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build-sign-package, arm64-runtime-proof]
+    runs-on: windows-2025
+    timeout-minutes: 30
+    environment: release
+    permissions:
+      contents: write
+      attestations: read
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: signed-release-${{ needs.build-sign-package.outputs.release_tag }}
+          path: dist
+
+      - name: Verify top-level release manifest
+        shell: pwsh
+        run: |
+          if (-not (Test-Path dist/SHA256SUMS.txt)) { throw 'Top-level checksum manifest missing' }
+          foreach ($line in Get-Content dist/SHA256SUMS.txt) {
+            if ($line -notmatch '^([0-9a-fA-F]{64})\s{2}(.+)$') { throw "Invalid checksum line: $line" }
+            $file = Join-Path dist $Matches[2]
+            if (-not (Test-Path $file)) { throw "Release file missing: $($Matches[2])" }
+            if ((Get-FileHash -Algorithm SHA256 $file).Hash.ToLowerInvariant() -ne $Matches[1].ToLowerInvariant()) {
+              throw "Release checksum mismatch: $($Matches[2])"
+            }
+          }
+
+      - name: Verify GitHub artifact attestations
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ needs.build-sign-package.outputs.release_version }}
+        run: |
+          $subjects = @(
+            "dist/AgentStackManager-$env:RELEASE_VERSION-windows-amd64.zip",
+            "dist/AgentStackManager-$env:RELEASE_VERSION-windows-arm64.zip",
+            "dist/AgentStackManager-$env:RELEASE_VERSION-source.zip",
+            'dist/agentstack-windows-amd64.exe',
+            'dist/agentstack-windows-arm64.exe',
+            'dist/AgentStack-Setup-windows-amd64.exe',
+            'dist/AgentStack-Setup-windows-arm64.exe'
+          )
+          foreach ($subject in $subjects) {
+            if (-not (Test-Path -LiteralPath $subject)) { throw "Attested subject missing: $subject" }
+            gh attestation verify $subject --repo $env:GH_REPO
+            if ($LASTEXITCODE -ne 0) { throw "Attestation verification failed: $subject" }
+          }
+
+      - name: Create immutable GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build-sign-package.outputs.release_tag }}
+          RELEASE_VERSION: ${{ needs.build-sign-package.outputs.release_version }}
+          RELEASE_PRERELEASE: ${{ needs.build-sign-package.outputs.prerelease }}
+        run: |
+          gh release view $env:RELEASE_TAG --repo $env:GH_REPO *> $null
+          if ($LASTEXITCODE -eq 0) { throw "GitHub Release already exists: $env:RELEASE_TAG" }
+
+          $assets = @(
+            "dist/AgentStackManager-$env:RELEASE_VERSION-windows-amd64.zip",
+            "dist/AgentStackManager-$env:RELEASE_VERSION-windows-arm64.zip",
+            "dist/AgentStackManager-$env:RELEASE_VERSION-source.zip",
+            'dist/agentstack-windows-amd64.exe',
+            'dist/agentstack-windows-arm64.exe',
+            'dist/AgentStack-Setup-windows-amd64.exe',
+            'dist/AgentStack-Setup-windows-arm64.exe',
+            'dist/AgentStack-Setup.ps1',
+            'dist/SHA256SUMS.txt',
+            'dist/agentstack-catalog.cdx.json',
+            'dist/agentstack-binary-amd64.cdx.json',
+            'dist/agentstack-binary-arm64.cdx.json',
+            'dist/agentstack.openvex.json',
+            'dist/provenance.json',
+            'dist/component-licenses.json'
+          )
+          foreach ($asset in $assets) {
+            if (-not (Test-Path -LiteralPath $asset)) { throw "Release asset missing: $asset" }
+          }
+
+          $releaseArguments = @(
+            $env:RELEASE_TAG,
+            '--repo', $env:GH_REPO,
+            '--verify-tag',
+            '--generate-notes',
+            '--title', "AgentStack Manager $env:RELEASE_VERSION"
+          )
+          if ($env:RELEASE_PRERELEASE -eq 'true') { $releaseArguments += '--prerelease' }
+          $releaseArguments += $assets
+          gh release create @releaseArguments
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub Release creation failed' }

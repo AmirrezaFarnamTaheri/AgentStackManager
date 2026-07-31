@@ -1,0 +1,1431 @@
+{
+  "version": 3,
+  "components": [
+    {
+      "id": "git",
+      "name": "Git",
+      "description": "Version control foundation.",
+      "tier": "essential",
+      "category": "foundation",
+      "detectCommands": [
+        "git"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Git.Git",
+        "source": "winget",
+        "version": "2.50.1",
+        "publisher": "Git Development Community"
+      },
+      "tags": [
+        "source-control"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "versionPolicy": {
+        "minimum": "2.40.0",
+        "probe": {
+          "command": "git",
+          "args": [
+            "--version"
+          ]
+        },
+        "pattern": "([0-9]+\\.[0-9]+\\.[0-9]+)"
+      }
+    },
+    {
+      "id": "node",
+      "name": "Node.js LTS",
+      "description": "Runtime for npm and Node-based MCP servers.",
+      "tier": "essential",
+      "category": "foundation",
+      "detectCommands": [
+        "node",
+        "npm",
+        "npx"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "OpenJS.NodeJS.LTS",
+        "source": "winget",
+        "version": "24.11.0",
+        "publisher": "OpenJS Foundation"
+      },
+      "tags": [
+        "runtime"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "versionPolicy": {
+        "minimum": "20.0.0",
+        "probe": {
+          "command": "node",
+          "args": [
+            "--version"
+          ]
+        },
+        "pattern": "v?([0-9]+\\.[0-9]+\\.[0-9]+)"
+      }
+    },
+    {
+      "id": "uv",
+      "name": "uv and uvx",
+      "description": "Fast isolated Python tool runner.",
+      "tier": "essential",
+      "category": "foundation",
+      "detectCommands": [
+        "uv",
+        "uvx"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "astral-sh.uv",
+        "source": "winget",
+        "version": "0.11.16",
+        "publisher": "Astral Software Inc."
+      },
+      "tags": [
+        "runtime"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "versionPolicy": {
+        "minimum": "0.8.0",
+        "probe": {
+          "command": "uv",
+          "args": [
+            "--version"
+          ]
+        },
+        "pattern": "([0-9]+\\.[0-9]+\\.[0-9]+)"
+      }
+    },
+    {
+      "id": "ripgrep",
+      "name": "ripgrep",
+      "description": "Fast repository text search.",
+      "tier": "essential",
+      "category": "search",
+      "detectCommands": [
+        "rg"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "BurntSushi.ripgrep.MSVC",
+        "source": "winget",
+        "version": "15.1.0",
+        "publisher": "Andrew Gallant"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "fd",
+      "name": "fd",
+      "description": "Fast file discovery.",
+      "tier": "essential",
+      "category": "search",
+      "detectCommands": [
+        "fd"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "sharkdp.fd",
+        "source": "winget",
+        "version": "10.2.0",
+        "publisher": "David Peter"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "jq",
+      "name": "jq",
+      "description": "JSON query and transformation utility.",
+      "tier": "essential",
+      "category": "data",
+      "detectCommands": [
+        "jq"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "jqlang.jq",
+        "source": "winget",
+        "version": "1.8.1",
+        "publisher": "jqlang"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "yq",
+      "name": "yq",
+      "description": "YAML and structured-data utility.",
+      "tier": "essential",
+      "category": "data",
+      "detectCommands": [
+        "yq"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "MikeFarah.yq",
+        "source": "winget",
+        "version": "4.47.1",
+        "publisher": "Mike Farah"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "ast-grep",
+      "name": "ast-grep",
+      "description": "Structural code search and rewrite engine.",
+      "tier": "essential",
+      "category": "code-intelligence",
+      "detectCommands": [
+        "ast-grep",
+        "sg"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "@ast-grep/cli@0.45.0",
+        "source": "npm",
+        "version": "0.45.0",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "pre-commit",
+      "name": "pre-commit",
+      "description": "Repository quality-gate runner.",
+      "tier": "essential",
+      "category": "quality",
+      "detectCommands": [
+        "pre-commit"
+      ],
+      "install": {
+        "kind": "uv-tool",
+        "package": "pre-commit==4.3.0",
+        "source": "pypi",
+        "version": "4.3.0",
+        "publisher": "PyPI project maintainers"
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "gitleaks",
+      "name": "Gitleaks",
+      "description": "Secret scanning for repositories and history.",
+      "tier": "essential",
+      "category": "security",
+      "detectCommands": [
+        "gitleaks"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Gitleaks.Gitleaks",
+        "source": "winget",
+        "version": "8.27.2",
+        "publisher": "Gitleaks"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "description": "Filesystem, dependency and container security scanner.",
+      "tier": "essential",
+      "category": "security",
+      "detectCommands": [
+        "trivy"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "AquaSecurity.Trivy",
+        "source": "winget",
+        "version": "0.65.0",
+        "publisher": "Aqua Security"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "shellcheck",
+      "name": "ShellCheck",
+      "description": "Shell script static analysis.",
+      "tier": "essential",
+      "category": "quality",
+      "detectCommands": [
+        "shellcheck"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "koalaman.shellcheck",
+        "source": "winget",
+        "version": "0.10.0",
+        "publisher": "ShellCheck"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "actionlint",
+      "name": "actionlint",
+      "description": "GitHub Actions workflow validator.",
+      "tier": "essential",
+      "category": "quality",
+      "detectCommands": [
+        "actionlint"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "rhysd.actionlint",
+        "source": "winget",
+        "version": "1.7.7",
+        "publisher": "rhysd"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "graphify",
+      "name": "Graphify",
+      "description": "Local repository knowledge graph and MCP support.",
+      "tier": "essential",
+      "category": "knowledge",
+      "detectCommands": [
+        "graphify"
+      ],
+      "install": {
+        "kind": "uv-tool",
+        "package": "graphifyy[mcp]==0.9.25",
+        "source": "pypi",
+        "version": "0.9.25",
+        "publisher": "PyPI project maintainers"
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "superpowers",
+      "name": "Superpowers skills",
+      "description": "Planning, TDD, debugging and verification workflows.",
+      "tier": "essential",
+      "category": "skills",
+      "install": {
+        "kind": "skill-pack",
+        "repository": "https://github.com/obra/superpowers.git",
+        "repositoryRevision": "v5.1.0",
+        "manifestDigest": "git-commit:f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+        "expectedEntries": [
+          "brainstorming",
+          "dispatching-parallel-agents",
+          "executing-plans",
+          "finishing-a-development-branch",
+          "receiving-code-review",
+          "requesting-code-review",
+          "subagent-driven-development",
+          "systematic-debugging",
+          "test-driven-development",
+          "using-git-worktrees",
+          "using-superpowers",
+          "verification-before-completion",
+          "writing-plans",
+          "writing-skills"
+        ],
+        "source": "github",
+        "version": "5.1.0",
+        "publisher": "Prime Radiant"
+      },
+      "dependsOn": [
+        "git"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "memory-mcp",
+      "name": "Local memory MCP",
+      "description": "Local JSONL knowledge-graph memory.",
+      "tier": "essential",
+      "category": "mcp",
+      "capability": "memory",
+      "preferred": true,
+      "install": {
+        "kind": "router"
+      },
+      "router": {
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "npx",
+          "-y",
+          "@modelcontextprotocol/server-memory@2025.11.25"
+        ],
+        "env": {
+          "MEMORY_FILE_PATH": "${AGENTSTACK_DATA}/memory/knowledge-graph.jsonl"
+        },
+        "warm": {
+          "command": "cmd.exe",
+          "args": [
+            "/c",
+            "npx",
+            "-y",
+            "@modelcontextprotocol/server-memory@2025.11.25",
+            "--help"
+          ]
+        },
+        "persistent": true,
+        "idleTTLSeconds": 300
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "playwright-mcp",
+      "name": "Playwright MCP",
+      "description": "Isolated browser automation and UI verification.",
+      "tier": "essential",
+      "category": "mcp",
+      "capability": "browser",
+      "preferred": true,
+      "install": {
+        "kind": "router"
+      },
+      "router": {
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "npx",
+          "-y",
+          "@playwright/mcp@0.0.78",
+          "--isolated",
+          "--headless"
+        ],
+        "warm": {
+          "command": "cmd.exe",
+          "args": [
+            "/c",
+            "npx",
+            "-y",
+            "@playwright/mcp@0.0.78",
+            "--help"
+          ]
+        },
+        "persistent": true,
+        "idleTTLSeconds": 300
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "markitdown-mcp",
+      "name": "MarkItDown MCP",
+      "description": "Local conversion of documents and archives into Markdown.",
+      "tier": "essential",
+      "category": "mcp",
+      "capability": "document-conversion",
+      "preferred": true,
+      "install": {
+        "kind": "router"
+      },
+      "router": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "markitdown-mcp==0.0.1a4",
+          "markitdown-mcp==0.0.1a4"
+        ],
+        "warm": {
+          "command": "uvx",
+          "args": [
+            "--from",
+            "markitdown-mcp==0.0.1a4",
+            "markitdown-mcp==0.0.1a4",
+            "--help"
+          ]
+        },
+        "persistent": true,
+        "idleTTLSeconds": 300
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "delta",
+      "name": "delta",
+      "description": "Readable syntax-aware Git diffs.",
+      "tier": "recommended",
+      "category": "developer-experience",
+      "detectCommands": [
+        "delta"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "dandavison.delta",
+        "source": "winget",
+        "version": "0.18.2",
+        "publisher": "Dan Davison"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "description": "Multi-language static analysis and security rules.",
+      "tier": "recommended",
+      "category": "security",
+      "detectCommands": [
+        "semgrep"
+      ],
+      "install": {
+        "kind": "uv-tool",
+        "package": "semgrep==1.130.0",
+        "source": "pypi",
+        "version": "1.130.0",
+        "publisher": "PyPI project maintainers"
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "osv-scanner",
+      "name": "OSV-Scanner",
+      "description": "Open-source dependency vulnerability scanner.",
+      "tier": "recommended",
+      "category": "security",
+      "detectCommands": [
+        "osv-scanner"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Google.OSVScanner",
+        "source": "winget",
+        "version": "2.2.2",
+        "publisher": "Google"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "markdownlint",
+      "name": "markdownlint-cli2",
+      "description": "Markdown consistency and correctness checks.",
+      "tier": "recommended",
+      "category": "documentation",
+      "detectCommands": [
+        "markdownlint-cli2"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "markdownlint-cli2@0.23.2",
+        "source": "npm",
+        "version": "0.23.2",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "vale",
+      "name": "Vale",
+      "description": "Prose and documentation linting.",
+      "tier": "recommended",
+      "category": "documentation",
+      "detectCommands": [
+        "vale"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "errata-ai.Vale",
+        "source": "winget",
+        "version": "3.12.0",
+        "publisher": "Vale"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "mermaid",
+      "name": "Mermaid CLI",
+      "description": "Architecture and workflow diagram rendering.",
+      "tier": "recommended",
+      "category": "documentation",
+      "detectCommands": [
+        "mmdc"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "@mermaid-js/mermaid-cli@11.16.0",
+        "source": "npm",
+        "version": "11.16.0",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "task",
+      "name": "Task",
+      "description": "Declarative cross-platform task runner.",
+      "tier": "recommended",
+      "category": "automation",
+      "detectCommands": [
+        "task"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Task.Task",
+        "source": "winget",
+        "version": "3.44.1",
+        "publisher": "Task"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "mcp-inspector",
+      "name": "MCP Inspector",
+      "description": "Interactive MCP protocol debugging.",
+      "tier": "recommended",
+      "category": "mcp",
+      "detectCommands": [
+        "mcp-inspector"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "@modelcontextprotocol/inspector@1.0.0",
+        "source": "npm",
+        "version": "1.0.0",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "dependency-cruiser",
+      "name": "dependency-cruiser",
+      "description": "JavaScript and TypeScript dependency-rule analysis.",
+      "tier": "recommended",
+      "category": "architecture",
+      "detectCommands": [
+        "depcruise"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "dependency-cruiser@18.1.0",
+        "source": "npm",
+        "version": "18.1.0",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "tree-sitter",
+      "name": "tree-sitter CLI",
+      "description": "Parser and syntax-tree tooling.",
+      "tier": "recommended",
+      "category": "code-intelligence",
+      "detectCommands": [
+        "tree-sitter"
+      ],
+      "install": {
+        "kind": "npm-global",
+        "package": "tree-sitter-cli@0.26.11",
+        "source": "npm",
+        "version": "0.26.11",
+        "publisher": "npm package publisher"
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "ruff",
+      "name": "Ruff",
+      "description": "Fast Python linting and formatting.",
+      "tier": "recommended",
+      "category": "quality",
+      "detectCommands": [
+        "ruff"
+      ],
+      "install": {
+        "kind": "uv-tool",
+        "package": "ruff==0.12.4",
+        "source": "pypi",
+        "version": "0.12.4",
+        "publisher": "PyPI project maintainers"
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "hyperfine",
+      "name": "hyperfine",
+      "description": "Command-line benchmarking.",
+      "tier": "recommended",
+      "category": "performance",
+      "detectCommands": [
+        "hyperfine"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "sharkdp.hyperfine",
+        "source": "winget",
+        "version": "1.19.0",
+        "publisher": "sharkdp"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "scc",
+      "name": "scc",
+      "description": "Fast codebase size and language inventory.",
+      "tier": "recommended",
+      "category": "inventory",
+      "detectCommands": [
+        "scc"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "boyter.scc",
+        "source": "winget",
+        "version": "3.5.0",
+        "publisher": "boyter"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "description": "Optional local model runtime.",
+      "tier": "optional-local",
+      "category": "local-ai",
+      "detectCommands": [
+        "ollama"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Ollama.Ollama",
+        "source": "winget",
+        "version": "0.11.4",
+        "publisher": "Ollama"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "aider",
+      "name": "Aider",
+      "description": "Optional repository coding agent.",
+      "tier": "optional-local",
+      "category": "agent",
+      "detectCommands": [
+        "aider"
+      ],
+      "install": {
+        "kind": "uv-tool",
+        "package": "aider-chat==0.86.1",
+        "source": "pypi",
+        "version": "0.86.1",
+        "publisher": "PyPI project maintainers"
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "jupyter-mcp",
+      "name": "Jupyter MCP",
+      "description": "Optional notebook execution provider.",
+      "tier": "optional-local",
+      "category": "mcp",
+      "capability": "notebook",
+      "install": {
+        "kind": "router"
+      },
+      "router": {
+        "command": "uvx",
+        "args": [
+          "mcp-server-jupyter==0.1.9"
+        ],
+        "warm": {
+          "command": "uvx",
+          "args": [
+            "mcp-server-jupyter==0.1.9",
+            "--help"
+          ]
+        },
+        "persistent": true,
+        "idleTTLSeconds": 300
+      },
+      "dependsOn": [
+        "uv"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "name": "Chrome DevTools MCP",
+      "description": "Alternative Chrome diagnostics provider.",
+      "tier": "optional-local",
+      "category": "mcp",
+      "capability": "browser",
+      "install": {
+        "kind": "router"
+      },
+      "router": {
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "npx",
+          "-y",
+          "chrome-devtools-mcp@1.2.0",
+          "--slim",
+          "--headless",
+          "--isolated",
+          "--no-usage-statistics",
+          "--no-performance-crux"
+        ],
+        "warm": {
+          "command": "cmd.exe",
+          "args": [
+            "/c",
+            "npx",
+            "-y",
+            "chrome-devtools-mcp@1.2.0",
+            "--help"
+          ]
+        },
+        "env": {
+          "CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS": "1",
+          "CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS": "1"
+        },
+        "persistent": false
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "github-cli",
+      "name": "GitHub CLI",
+      "description": "GitHub repository and pull-request CLI; requires login for authenticated operations.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "detectCommands": [
+        "gh"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "GitHub.cli",
+        "loginHint": "gh auth login",
+        "source": "winget",
+        "version": "2.75.0",
+        "publisher": "GitHub, Inc.",
+        "documentationUrl": "https://cli.github.com/manual/gh_auth_login"
+      },
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "github-mcp",
+      "name": "GitHub MCP",
+      "description": "Authenticated GitHub issues, pull requests and Actions integration.",
+      "tier": "credential",
+      "category": "mcp",
+      "credentialRequired": true,
+      "capability": "github",
+      "preferred": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Use the official GitHub MCP OAuth or token setup.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/set-up-the-github-mcp-server"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "context7",
+      "name": "Context7 MCP",
+      "description": "Current library documentation integration.",
+      "tier": "credential",
+      "category": "mcp",
+      "credentialRequired": true,
+      "capability": "documentation-lookup",
+      "preferred": true,
+      "install": {
+        "kind": "router",
+        "loginHint": "Configure Context7 authentication when enabling this integration.",
+        "documentationUrl": "https://github.com/upstash/context7"
+      },
+      "router": {
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "npx",
+          "-y",
+          "@upstash/context7-mcp@1.0.31"
+        ],
+        "warm": {
+          "command": "cmd.exe",
+          "args": [
+            "/c",
+            "npx",
+            "-y",
+            "@upstash/context7-mcp@1.0.31",
+            "--help"
+          ]
+        },
+        "persistent": false
+      },
+      "dependsOn": [
+        "node"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "id": "figma",
+      "name": "Figma MCP",
+      "description": "Design context and asset integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Connect with Figma OAuth.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://developers.figma.com/docs/figma-mcp-server/"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "notion",
+      "name": "Notion MCP",
+      "description": "Workspace knowledge integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Connect with Notion OAuth.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://developers.notion.com/guides/mcp/overview"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "slack",
+      "name": "Slack MCP",
+      "description": "Team channel and message integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Connect with Slack OAuth.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://api.slack.com/authentication/oauth-v2"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry MCP",
+      "description": "Authenticated production error and trace integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Connect a Sentry organization.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://docs.sentry.io/product/sentry-mcp/"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "supabase",
+      "name": "Supabase MCP",
+      "description": "Authenticated database and project integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Authenticate with Supabase.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://supabase.com/docs/guides/getting-started/mcp"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare MCP",
+      "description": "Authenticated edge-platform integration.",
+      "tier": "credential",
+      "category": "integration",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Authenticate with Cloudflare.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "aws",
+      "name": "AWS tools",
+      "description": "Optional authenticated AWS integration.",
+      "tier": "credential",
+      "category": "cloud",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Configure the official AWS CLI credential flow.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://awslabs.github.io/mcp/"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "azure",
+      "name": "Azure tools",
+      "description": "Optional authenticated Azure integration.",
+      "tier": "credential",
+      "category": "cloud",
+      "credentialRequired": true,
+      "install": {
+        "kind": "manual",
+        "loginHint": "Run az login after installation.",
+        "description": "Guided setup only; AgentStack opens no login flow and stores no credentials.",
+        "documentationUrl": "https://learn.microsoft.com/azure/developer/azure-mcp-server/"
+      },
+      "platforms": [
+        "windows"
+      ],
+      "guidedSetup": true
+    },
+    {
+      "id": "gcloud",
+      "name": "Google Cloud CLI",
+      "description": "Optional authenticated Google Cloud integration.",
+      "tier": "credential",
+      "category": "cloud",
+      "credentialRequired": true,
+      "detectCommands": [
+        "gcloud"
+      ],
+      "install": {
+        "kind": "winget",
+        "wingetId": "Google.CloudSDK",
+        "loginHint": "gcloud auth login",
+        "source": "winget",
+        "version": "529.0.0",
+        "publisher": "Google LLC",
+        "documentationUrl": "https://cloud.google.com/sdk/docs/authorizing"
+      },
+      "platforms": [
+        "windows"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "core",
+      "name": "Core",
+      "description": "Minimal local runtime, search, JSON tooling, and memory router foundation.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "jq",
+        "memory-mcp"
+      ]
+    },
+    {
+      "id": "essential",
+      "name": "Full Baseline (legacy essential)",
+      "description": "Compatibility alias for the original broad 0.1 baseline. New installations should start with core or a focused profile.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp"
+      ]
+    },
+    {
+      "id": "recommended",
+      "name": "Recommended",
+      "description": "Essential plus documentation, security, architecture and performance enrichment.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "semgrep",
+        "osv-scanner",
+        "markdownlint",
+        "vale",
+        "mermaid",
+        "task",
+        "mcp-inspector",
+        "dependency-cruiser",
+        "tree-sitter",
+        "ruff",
+        "hyperfine",
+        "scc"
+      ]
+    },
+    {
+      "id": "web-development",
+      "name": "Web Development",
+      "description": "Essential safeguards plus browser testing, web code intelligence, documentation, and automation tools.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "markdownlint",
+        "vale",
+        "mermaid",
+        "task",
+        "mcp-inspector",
+        "dependency-cruiser",
+        "tree-sitter",
+        "scc"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security Review",
+      "description": "Essential stack enriched with multi-language static analysis and dependency vulnerability scanning.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "semgrep",
+        "osv-scanner",
+        "mcp-inspector",
+        "tree-sitter",
+        "scc"
+      ]
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture & Convergence",
+      "description": "Repository mapping, dependency analysis, diagrams, code metrics, and local knowledge tooling.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "mermaid",
+        "dependency-cruiser",
+        "tree-sitter",
+        "scc",
+        "hyperfine"
+      ]
+    },
+    {
+      "id": "documentation",
+      "name": "Documentation",
+      "description": "Document conversion, prose and Markdown quality gates, diagrams, and reproducible task automation.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "markdownlint",
+        "vale",
+        "mermaid",
+        "task"
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python Engineering",
+      "description": "Essential stack plus Python linting, notebook MCP support, security scanning, and task automation.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "ruff",
+        "semgrep",
+        "osv-scanner",
+        "task",
+        "jupyter-mcp"
+      ]
+    },
+    {
+      "id": "full-local",
+      "name": "Full Local",
+      "description": "Recommended stack plus optional local agents and MCP providers, with duplicates inactive unless overridden.",
+      "components": [
+        "git",
+        "node",
+        "uv",
+        "ripgrep",
+        "fd",
+        "jq",
+        "yq",
+        "ast-grep",
+        "pre-commit",
+        "gitleaks",
+        "trivy",
+        "shellcheck",
+        "actionlint",
+        "graphify",
+        "superpowers",
+        "memory-mcp",
+        "playwright-mcp",
+        "markitdown-mcp",
+        "delta",
+        "semgrep",
+        "osv-scanner",
+        "markdownlint",
+        "vale",
+        "mermaid",
+        "task",
+        "mcp-inspector",
+        "dependency-cruiser",
+        "tree-sitter",
+        "ruff",
+        "hyperfine",
+        "scc",
+        "ollama",
+        "aider",
+        "jupyter-mcp",
+        "chrome-devtools-mcp"
+      ]
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "description": "No defaults; select individual components.",
+      "components": []
+    }
+  ]
+}

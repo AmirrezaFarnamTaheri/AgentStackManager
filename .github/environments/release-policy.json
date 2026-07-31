@@ -1,0 +1,16 @@
+{
+  "environment": "release",
+  "required_reviewers": 1,
+  "prevent_self_review": true,
+  "deployment_branch_policy": {
+    "protected_branches": false,
+    "custom_branch_policies": true,
+    "allowed_tag_pattern": "v*"
+  },
+  "required_secrets": [
+    "SIGNING_PFX_BASE64",
+    "SIGNING_PFX_PASSWORD",
+    "SIGNING_CERT_THUMBPRINT",
+    "RELEASE_TAG_PUBLIC_KEY_BASE64"
+  ]
+}

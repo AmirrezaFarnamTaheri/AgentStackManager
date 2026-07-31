@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="agentstack-token" content="__AGENTSTACK_TOKEN__">
+  <meta name="agentstack-version" content="__AGENTSTACK_VERSION__">
+  <meta name="agentstack-base" content="__AGENTSTACK_BASE__">
+  <title>AgentStack Manager</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#overview-title">Skip to main content</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2 3.5 6.5 12 11l8.5-4.5L12 2Zm-8.5 9L12 15.5 20.5 11M3.5 15.5 12 20l8.5-4.5"/></svg>
+        </div>
+        <div><strong>AgentStack</strong><span>Manager</span></div>
+      </div>
+      <nav aria-label="Primary">
+        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><span aria-hidden="true">⌂</span>Overview</button>
+        <button type="button" class="nav-item" data-section="components"><span aria-hidden="true">□</span>Components</button>
+        <button type="button" class="nav-item" data-section="plan"><span aria-hidden="true">✓</span>Install plan</button>
+        <button type="button" class="nav-item" data-section="router"><span aria-hidden="true">⌘</span>MCP router</button>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="status-dot"></span><span>Local-only control plane</span>
+        <small>v__AGENTSTACK_VERSION__</small>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Preservation-first agent tooling</p>
+          <h1>Build the stack you actually need.</h1>
+          <p>Keep everything already installed. Add missing essentials. Repair AgentStack-owned tools that disappeared. Activate one provider per capability. Opt into credentials only when you choose.</p>
+        </div>
+        <div class="top-actions">
+          <button id="refreshBtn" class="button secondary">Refresh inventory</button>
+          <button id="installSelfBtn" class="button primary">Install AgentStack</button>
+          <button id="exitBtn" class="button secondary">Exit manager</button>
+        </div>
+      </header>
+
+      <section id="overview" class="section active-section" aria-labelledby="overview-title">
+        <h2 id="overview-title" class="visually-hidden" tabindex="-1">Overview</h2>
+        <div class="metrics" id="metrics">
+          <article><span>Detected</span><strong id="detectedMetric">—</strong><small>catalog components</small></article>
+          <article><span>Preserved</span><strong id="preservedMetric">—</strong><small>existing installations</small></article>
+          <article><span>Selected</span><strong id="selectedMetric">—</strong><small>active profile items</small></article>
+          <article><span>Credentials</span><strong id="credentialMetric">Off</strong><small>explicit opt-in</small></article>
+        </div>
+
+        <div class="grid two">
+          <section class="panel">
+            <div class="panel-head"><div><h2>Installation profile</h2><p>Profiles select capabilities; they never remove unrelated software.</p></div></div>
+            <label class="field">Profile
+              <select id="profileSelect"></select>
+            </label>
+            <label class="switch-row">
+              <input type="checkbox" id="credentialToggle">
+              <span><strong>Enable credential integrations</strong><small>Allows selected login-dependent tools into the plan. No login starts automatically.</small></span>
+            </label>
+            <label class="switch-row">
+              <input type="checkbox" id="upgradeToggle">
+              <span><strong>Allow reviewed runtime upgrades</strong><small>Only incompatible selected runtimes enter the plan. Existing compatible tools remain untouched.</small></span>
+            </label>
+            <label class="field">Browser provider
+              <select id="browserProvider"></select>
+            </label>
+            <div class="button-row">
+              <button id="buildPlanBtn" class="button primary">Build safe plan</button>
+              <button id="doctorBtn" class="button secondary">Run MCP doctor</button>
+            </div>
+          </section>
+
+          <section class="panel assurance">
+            <div class="panel-head"><div><h2>Protection guarantees</h2><p>These invariants apply to every transaction.</p></div></div>
+            <ul>
+              <li><span>✓</span><div><strong>No automatic uninstall</strong><small>Dominated providers remain installed and become inactive only in AgentStack profiles.</small></div></li>
+              <li><span>✓</span><div><strong>No silent upgrade</strong><small>Missing packages use non-upgrading install commands.</small></div></li>
+              <li><span>✓</span><div><strong>Repair only what AgentStack owns</strong><small>Broken managed components can be revived; unrelated installations remain untouched.</small></div></li>
+              <li><span>✓</span><div><strong>Back up before merge</strong><small>Existing AGY and managed router configuration is copied before mutation.</small></div></li>
+              <li><span>✓</span><div><strong>One routed MCP surface</strong><small>Child MCP servers start lazily through the AgentStack binary.</small></div></li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section id="components" class="section" aria-labelledby="components-title">
+        <div class="section-heading"><div><p class="eyebrow">Catalog</p><h2 id="components-title" tabindex="-1">Components</h2><p>Choose optional tools. Core profile items are selected automatically.</p></div><label class="search-field" for="componentSearch"><span>Search components</span><input id="componentSearch" type="search" placeholder="Tools, capabilities, categories…"></label></div>
+        <div id="componentGroups"></div>
+      </section>
+
+      <section id="plan" class="section" aria-labelledby="plan-title">
+        <div class="section-heading"><div><p class="eyebrow">Preview before mutation</p><h2 id="plan-title" tabindex="-1">Install plan</h2><p>Every selected component is classified as keep, install, repair, configure, preserve inactive, or consent required.</p></div></div>
+        <div id="planEmpty" class="empty-state">Build a plan to see exact machine changes.</div>
+        <div id="planContent" hidden>
+          <div id="planSummary" class="metrics compact" aria-live="polite"></div>
+          <div class="table-wrap"><table><thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead><tbody id="planRows"></tbody></table></div>
+          <label class="confirm-row"><input type="checkbox" id="confirmApply"><span>I reviewed this plan and authorize only the listed install, repair, and configure actions.</span></label>
+          <div class="button-row"><button id="applyBtn" class="button danger" disabled>Apply reviewed plan</button></div>
+        </div>
+      </section>
+
+      <section id="router" class="section" aria-labelledby="router-title">
+        <div class="section-heading"><div><p class="eyebrow">Lazy child processes</p><h2 id="router-title" tabindex="-1">MCP router</h2><p>Initialize packages, generate the managed router configuration, and register one endpoint in available clients.</p></div></div>
+        <div class="grid two">
+          <section class="panel"><h3>Session preparation</h3><p>Run before Codex or AGY. AgentStack validates commands, warms selected packages, and merges client registrations without replacement.</p><div class="button-row"><button id="mcpInitBtn" class="button primary">Initialize MCP stack</button><button id="mcpDoctorBtn" class="button secondary">Doctor</button></div></section>
+          <section class="panel"><h3>CLI launcher</h3><pre><code>agentstack codex --profile core
+agentstack agy --profile recommended
+agentstack mcp doctor</code></pre></section>
+        </div>
+        <pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>

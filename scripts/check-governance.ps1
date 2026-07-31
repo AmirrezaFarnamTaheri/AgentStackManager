@@ -1,0 +1,40 @@
+#requires -Version 7.0
+[CmdletBinding()]
+param()
+$ErrorActionPreference='Stop'
+Set-StrictMode -Version Latest
+$root=Split-Path -Parent $PSScriptRoot
+$owners=Get-Content -Raw (Join-Path $root '.github/CODEOWNERS')
+if ($owners -notmatch '@AmirrezaFarnamTaheri' -or $owners -match 'placeholder|agentstack-maintainers|CHANGE_ME|TODO') { throw 'CODEOWNERS is missing the reviewed owner or contains a placeholder' }
+$rules=Get-Content -Raw (Join-Path $root '.github/rulesets/main-protection.json') | ConvertFrom-Json -Depth 100
+if ($rules.enforcement -ne 'active') { throw 'main ruleset is not active' }
+$types=@($rules.rules | ForEach-Object type)
+foreach($required in @('non_fast_forward','deletion','required_signatures','pull_request','required_status_checks')) { if ($types -notcontains $required) { throw "main ruleset lacks $required" } }
+$pr=$rules.rules | Where-Object type -eq 'pull_request'
+if (-not $pr.parameters.require_code_owner_review -or -not $pr.parameters.dismiss_stale_reviews_on_push -or $pr.parameters.required_approving_review_count -lt 1) { throw 'pull-request governance is weaker than required' }
+$checks=$rules.rules | Where-Object type -eq 'required_status_checks'
+if (-not $checks.parameters.strict_required_status_checks_policy -or @($checks.parameters.required_status_checks).Count -lt 5) { throw 'required status-check policy is incomplete' }
+$release=Get-Content -Raw (Join-Path $root '.github/environments/release-policy.json') | ConvertFrom-Json -Depth 20
+$expectedSecrets=@('RELEASE_TAG_PUBLIC_KEY_BASE64','SIGNING_CERT_THUMBPRINT','SIGNING_PFX_BASE64','SIGNING_PFX_PASSWORD')
+if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
+$goVersion=(Get-Content -Raw (Join-Path $root '.go-version')).Trim()
+if ($goVersion -ne '1.26.5') { throw '.go-version must pin Go 1.26.5' }
+$workflowText=(Get-Content -Raw (Join-Path $root '.github/workflows/verify.yml')) + (Get-Content -Raw (Join-Path $root '.github/workflows/release.yml'))
+$releaseWorkflow=Get-Content -Raw (Join-Path $root '.github/workflows/release.yml')
+foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:')) {
+    if ($releaseWorkflow -notmatch $requiredPattern) { throw "Release workflow is missing required control: $requiredPattern" }
+}
+if ($releaseWorkflow -match 'softprops/action-gh-release') { throw 'Release publication must use the authenticated GitHub CLI, not a third-party release action' }
+if ($workflowText -notmatch "go-version-file:\s*'\.go-version'") { throw 'GitHub workflows must use .go-version' }
+$circle=Get-Content -Raw (Join-Path $root '.circleci/config.yml')
+if ($circle -notmatch 'cimg/go:1\.26\.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b') { throw 'CircleCI image is not pinned to the reviewed digest' }
+if ($workflowText -notmatch 'golang.org/x/vuln/cmd/govulncheck@v1\.1\.4') { throw 'govulncheck is not pinned to v1.1.4' }
+if ($workflowText -notmatch 'github.com/rhysd/actionlint/cmd/actionlint@v1\.7\.12') { throw 'actionlint is not pinned to v1.7.12' }
+if ($workflowText -notmatch 'github.com/anchore/syft/cmd/syft@v1\.50\.0') { throw 'Syft is not pinned to v1.50.0' }
+$workflowLines=Get-ChildItem (Join-Path $root '.github/workflows') -Filter '*.yml' | ForEach-Object { Get-Content $_.FullName }
+$uses=@($workflowLines | Where-Object { $_ -match '^\s*-?\s*uses:\s*[^@\s]+@' })
+if (-not $uses) { throw 'No GitHub Action references were found' }
+foreach($line in $uses) {
+    if ($line -notmatch '@[0-9a-f]{40}(\s*#.*)?\s*$') { throw "GitHub Action is not pinned to a full immutable commit SHA: $line" }
+}
+Write-Host 'Repository governance policy files are internally consistent.' -ForegroundColor Green
