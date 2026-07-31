@@ -4,8 +4,8 @@
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
 bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
-5278abb3182ed77ea78ee7bfe14fbe44b6f95e8f920197b186d981e622f311a5  ./.github/workflows/release.yml
-b3f03c55cc09fd677f7c737e02f3b8c2494cd9368dfa2a032704d1f37310a35d  ./.github/workflows/verify.yml
+8977920ef8e925cf1d4ed3aedd5d59361807e05608d640bd8c28b762793c4243  ./.github/workflows/release.yml
+fb6e04e5ef984ad8bdefc28b126c5681e50612d235221ec8be7ba45198e1f805  ./.github/workflows/verify.yml
 6263084463b96fb3c9ce56ffd55d4b1f20f88286c6f907ddde0dc31251378e53  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
 5d6072ec72fb9e5bcac9fc0f1ded9b3f3b519ce7cb44b8af71d31c7e0995be4a  ./.gremlins.yaml
@@ -13,7 +13,7 @@ e5cd3c2a6c7da4c6f2244a937dc85ec1c4ae255ef92ec3ab2ef5e744321d987a  ./.impeccable/
 491432053bfe5ff7ec09dfeadfd38cd4c79e1ee13fd89fc73ca505756fcef21e  ./.impeccable/design.json
 0d51472774984e190aa36c5fafa3e0e7f11a25d694bcf849605e0ca5a8387c13  ./.impeccable/finish-review.md
 036c4111859d0afdd37587f3af544c5ec040823b9eeb21a415fe3b497b177d99  ./.impeccable/surfaces/internal-ui-web.md
-b3a1bb9cfb4fdb798e3b91389c8b09950c6670c102fbcb147eedf5949859cbcc  ./CHANGELOG.md
+5c8cc8419837dcb6656e16e9019625a34f5467a6f26b785cd8aa42e377dc3b81  ./CHANGELOG.md
 17e6614864cee671169ec33b1fa24b650ec58329088e99779a9a25f1ea90a024  ./DELIVERY_STATUS.md
 9f96750b1619c8a67e3a0be7cc5c9a99eadcb59aa57d999289556fbbf3516246  ./DESIGN.md
 de53435dabdea837448a79d8123a62b8f2e99d4331049a53d178b7068ddca878  ./LICENSE
@@ -28,7 +28,7 @@ a3cdaaa754d36af7047c579107553709f66249e9399edc0d9c1a30cd5be1ea96  ./docs/CLI_REF
 536cd7be9bc6d18b52d5e53f29a5c11593a048f7ba28ac6f3f570f1ab2f13d17  ./docs/GOVERNANCE.md
 191c186b4e9c2c5baea8e46a7f13876a56a3c6ed909e6559dd06611562011f1d  ./docs/OPERATIONS.md
 2b30e92b14d7b5361bc1af9a7cf9ba4cafa8659fb641327544b4bfc1fab0d53f  ./docs/PRIVACY.md
-a1a04482288bc638992b5b525903bc03a860eba280d96b35d72e7efcf2d70762  ./docs/RELEASE.md
+7792e18e69f840068d290176646215215a88bc88458058cab8b30b6b1fd1c3e7  ./docs/RELEASE.md
 35816fe66026aff01c842b18eecd93acf49c4c5fee527562a1cec74ec5897e29  ./docs/SECURITY.md
 8ce65a6d89f5721fd1758dea0bc2bfeceeb41aa06b8420e35baa8978535fc67d  ./docs/SUPPLY_CHAIN.md
 affbfbee51749e37a348424db8e81c441f7aacfdc320b017a2c1b06816b6835f  ./docs/THREAT_MODEL.md
@@ -174,8 +174,8 @@ a0babe9956c91cc54f5a9c6f21f483becde2c0d74bc11d7c7e433fced97ad72a  ./scripts/appl
 2037f59fdefb8ffcb6a60c03e7fbb4a9684bd9cbaf77557d69e5d9c07443d507  ./scripts/check-critical-coverage.sh
 69cf2a3b99cf227ced57b31bfd2fc3605fc9db0ff34f5175a7b9c29a71ffb1a8  ./scripts/check-docs.ps1
 a9161dfda7b2b03cac2e3a059d4832417dd0a886d0de06c148d0f0e90a22bb09  ./scripts/check-docs.sh
-0c0072225da964535b03e602358b240ee561ff6803e713d8611dc57b702c8c98  ./scripts/check-governance.ps1
-52ffc60d82ee8ae7274f510109dd17883d6a98df1cc58e5213bccca2df264eb6  ./scripts/check-governance.sh
+4bc76023210ade8994bd41e3ad0d52c3004ca3bb46620143dff2271a524d7497  ./scripts/check-governance.ps1
+cfaa18ded1113c152c1457cce40937b3630d6536db9c6c8d6e76855a7dd9c8ce  ./scripts/check-governance.sh
 daa44c3114292051aafcdb846f21be2c93a88d1e88e7981289d825b9cb4a203e  ./scripts/check-source-archive-build.sh
 6f16c19d19588190dba41d225bf3be4ad49d86d40c8a2802d71eb25369bc1628  ./scripts/fuzz.sh
 86fe71a496743c85168464c027201a5e8c2a77b9003db3e643d75c635deb9fd9  ./scripts/release.ps1
@@ -184,5 +184,5 @@ dd0f49050937e5cee56fc90f3a1ce2295c54466fc6eea96b675b5a58d9fa4fab  ./scripts/veri
 83faa92c06144000a3afa10ee8becea9d90e8bc2dd62ba1426045d06ccdc0117  ./scripts/write-source-manifest.sh
 ee5431ef530c16bb41d02ddb30d36f62291d5560b05ff41e564f91fc01397b5f  ./supply-chain/component-licenses.json
 d7c60c00c4ad6d062844e28a13fcb824b232e75d400f00c0e3f6b616f2af41e6  ./ui-tests/accessibility.mjs
-db9b5527de2e8af9ca4d94ef761eeff271a04da5247fa98cc773f91addaa7f1f  ./ui-tests/package-lock.json
-dd587f5660126f33abeaec5b4c80ef1ae2279b8f563e43f525cb960930c32913  ./ui-tests/package.json
+6a5d6b026038cc13ac7ad8f5e9549e32e32a30a2b9ac5d59f756c55b30730a23  ./ui-tests/package-lock.json
+1180f01093d993e2d3f91051cda9ae51f251556a9b1d955f5e2b4c0bca2878da  ./ui-tests/package.json
