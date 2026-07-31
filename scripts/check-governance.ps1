@@ -58,6 +58,8 @@ $circle=Get-Content -Raw (Join-Path $root '.circleci/config.yml')
 if ($circle -notmatch 'cimg/go:1\.26\.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b') { throw 'CircleCI image is not pinned to the reviewed digest' }
 if ($workflowText -notmatch 'golang.org/x/vuln/cmd/govulncheck@v1\.1\.4') { throw 'govulncheck is not pinned to v1.1.4' }
 if ($workflowText -notmatch 'github.com/rhysd/actionlint/cmd/actionlint@v1\.7\.12') { throw 'actionlint is not pinned to v1.7.12' }
+if ($workflowText -match 'actionlint -color never') { throw 'actionlint color mode must not be passed as a positional file argument' }
+if ($workflowText -notmatch '(?m)^\s+actionlint\s*$') { throw 'Verify workflow must invoke actionlint without positional arguments' }
 if ($workflowText -notmatch 'github.com/anchore/syft/cmd/syft@v1\.50\.0') { throw 'Syft is not pinned to v1.50.0' }
 $workflowLines=Get-ChildItem (Join-Path $root '.github/workflows') -Filter '*.yml' | ForEach-Object { Get-Content $_.FullName }
 $uses=@($workflowLines | Where-Object { $_ -match '^\s*-?\s*uses:\s*[^@\s]+@' })
