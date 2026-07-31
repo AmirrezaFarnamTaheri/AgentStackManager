@@ -13,14 +13,14 @@ jobs:
             go test -race ./...
             go vet ./...
             go test -coverprofile=coverage.out ./...
-            ./scripts/check-critical-coverage.sh coverage.out
-            ./scripts/check-governance.sh
-            ./scripts/check-docs.sh
-            ./scripts/check-benchmarks.sh /tmp/benchmark-results.txt
+            bash scripts/check-critical-coverage.sh coverage.out
+            bash scripts/check-governance.sh
+            bash scripts/check-docs.sh
+            bash scripts/check-benchmarks.sh /tmp/benchmark-results.txt
             git diff --check
       - run:
           name: Source archive build without Git metadata
-          command: ./scripts/check-source-archive-build.sh "git:${CIRCLE_SHA1}"
+          command: bash scripts/check-source-archive-build.sh "git:${CIRCLE_SHA1}"
       - run:
           name: Vulnerability scan
           command: |
