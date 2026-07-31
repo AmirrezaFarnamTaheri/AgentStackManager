@@ -37,3 +37,11 @@ Export excludes locks and sealed plans. Diagnostics are sanitized for support. `
 ## Security and residual risk
 
 Windows data receives a current-user-only DACL; POSIX state uses mode `0700`. The browser UI is loopback-only and token-gated. Software already running as the same user may still access that user’s files or browser session; AgentStack is not a sandbox against a compromised local account.
+
+## Credential redaction boundaries
+
+Free-form event messages and nested fields are sanitized before persistence. The same
+redaction is applied again when legacy events are read and when diagnostics or data exports
+are created. Authorization bearer values, JWTs, JSON token fields, common key/value secret
+forms, GitHub token prefixes, and OpenAI-style secret prefixes are removed. This layered
+boundary prevents historical unredacted records from being copied into support archives.

@@ -34,7 +34,7 @@ func TestCopyMissingSkillsPreservesExistingDirectories(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	report, err := CopyMissingSkills(source, []string{target})
+	report, err := CopyMissingSkills(source, []string{"review", "debug"}, []string{target})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func TestCopyMissingSkillsPublishesCompleteSkillWithoutStagingResidue(t *testing
 	if err := os.WriteFile(filepath.Join(skill, "nested", "data.txt"), []byte("complete"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	report, err := CopyMissingSkills(source, []string{target})
+	report, err := CopyMissingSkills(source, []string{"atomic-skill"}, []string{target})
 	if err != nil {
 		t.Fatal(err)
 	}

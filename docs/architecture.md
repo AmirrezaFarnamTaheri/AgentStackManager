@@ -40,11 +40,13 @@ Application service
 
 ## MCP lifecycle
 
-The router is one stdio MCP server with four stable tools. It negotiates the client protocol version, lazily starts a selected child, performs bounded request/response forwarding, and pools healthy children for the router lifetime. Child event logs contain server digests, durations, and status—not raw arguments, environment values, or tool payloads.
+The router is one stdio MCP server with four stable tools. It negotiates the client protocol version, lazily starts a selected child, performs bounded request/response forwarding, and pools healthy children for the router lifetime. On Windows, each catalog-managed child tree receives a Job Object with kill-on-close, aggregate memory, CPU-rate, and active-process ceilings. Child event logs contain server digests, durations, and status—not raw arguments, environment values, or tool payloads.
 
 ## Recovery model
 
-Managed files are replaced through staging and rollback. Every backup has an index record, original target, content digest, and reason. Preview is read-only. Restore revalidates digest/target/structure and performs a live MCP probe for router configuration. Interrupted transactions are marked recoverable during startup.
+Windows PATH values cross the PowerShell process boundary as UTF-16LE/Base64 so non-ASCII and duplicate pre-existing segments remain intact; only the AgentStack bin segment is appended persistently.
+
+Managed files are replaced through staging and rollback while carrying the destination POSIX mode or Windows DACL to the staged replacement. Every backup has an index record, original target, content digest, and reason. Preview is read-only. Restore revalidates digest/target/structure and performs a live MCP probe for router configuration. Interrupted transactions are marked recoverable during startup.
 
 ## Platform boundary
 

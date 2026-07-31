@@ -23,6 +23,13 @@ agentstack apply --plan-id $plan.id --digest $plan.digest --yes
 
 A plan expires and is invalidated by relevant machine, catalog, or selection changes. AgentStack does not automatically upgrade, uninstall, or claim ownership of pre-existing software.
 
+
+## Browser manager feedback
+
+Every long-running manager action uses the same operation surface. The initiating button shows a task-specific spinner and busy label, mutation-related controls are locked, and a polite live region reports running, successful, or failed state. Focus returns to the initiating control unless the operation intentionally navigates to a result section. Navigation uses one locally embedded Lucide outline icon family; no icon CDN or runtime font is loaded.
+
+Client-side locking is not an authorization boundary. The server still enforces the mutation gate, sealed-plan identity, and cross-process lease.
+
 ## Install and repair semantics
 
 - `preserve`: existing compatible software remains untouched.
@@ -49,7 +56,7 @@ agentstack codex --profile core --
 agentstack agy --profile core --
 ```
 
-The router negotiates the client protocol version, bounds messages and stderr, performs live child probes, and reuses healthy child processes during one router session. Child and session process trees are terminated through Unix process groups or Windows Job Objects when a timeout, cancellation, or shutdown occurs.
+The router negotiates the client protocol version, bounds messages and stderr, performs live child probes, and reuses healthy child processes during one router session. Child and session process trees are terminated through Unix process groups or Windows Job Objects when a timeout, cancellation, or shutdown occurs. Catalog-managed MCP children also declare Windows Job Object ceilings for aggregate job memory, CPU hard-cap percentage, and active process count. Non-Windows builds reject nonzero hard-limit requests rather than claiming unsupported enforcement; the supported distributable remains Windows x64 and ARM64.
 
 Registration rules:
 

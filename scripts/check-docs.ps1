@@ -8,7 +8,9 @@ try {
     $required=@(
         'README.md','docs/CLI_REFERENCE.md','docs/USER_GUIDE.md','docs/SECURITY.md',
         'docs/PRIVACY.md','docs/OPERATIONS.md','docs/SUPPLY_CHAIN.md','docs/THREAT_MODEL.md',
-        'docs/GOVERNANCE.md','docs/RELEASE.md','docs/architecture.md','docs/audit/ASM-001-040-closure.md'
+        'docs/GOVERNANCE.md','docs/RELEASE.md','docs/architecture.md','docs/UX_DESIGN.md',
+        'docs/audit/ASM-001-040-closure.md','docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.md',
+        'docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.json'
     )
     foreach($file in $required) {
         if (-not (Test-Path -LiteralPath $file) -or (Get-Item -LiteralPath $file).Length -eq 0) { throw "Missing or empty documentation: $file" }
@@ -25,7 +27,7 @@ try {
     foreach($pattern in @('agentstack apply --profile','terminates them after each request','terminates children after each call','Linux amd64 console CLI')) {
         if ($text -match [regex]::Escape($pattern)) { throw "Stale documentation contract: $pattern" }
     }
-    foreach($requiredText in @('agentstack apply --plan-id','agentstack backup restore --id','agentstack data policy','agentstack owned remove','Go 1.26.5','Authenticode')) {
+    foreach($requiredText in @('agentstack apply --plan-id','agentstack backup restore --id','agentstack data policy','agentstack owned remove','Go 1.26.5','Authenticode','Windows Job Object resource ceilings','operation-status surface')) {
         if ($text -notmatch [regex]::Escape($requiredText)) { throw "Required documentation text missing: $requiredText" }
     }
     $catalog=Get-Content internal/catalog/default.json -Raw | ConvertFrom-Json

@@ -52,12 +52,19 @@ go test ./...
 go test -race ./...
 go vet ./...
 ./scripts/check-critical-coverage.sh coverage.out
+./scripts/check-benchmarks.sh benchmark-results.txt
 ./scripts/fuzz.sh 20s
 ./scripts/check-governance.sh
 ./scripts/check-docs.sh
 ```
 
-GitHub additionally runs native Windows setup/PATH/ACL/plan/apply/router/session smoke tests on both x64 and ARM64, and Playwright/axe keyboard-accessibility checks on Windows.
+The benchmark gate records five samples for one-shot and persistent MCP requests,
+large-catalog planning, credential redaction, and operation-status lookup. It applies
+deliberately tolerant latency ceilings that reject order-of-magnitude regressions while
+remaining stable on shared CI hosts. Fuzz campaigns use one worker per target and a hard
+per-target timeout so a pathological case fails visibly instead of stalling the workflow.
+
+GitHub additionally runs native Windows setup/PATH/ACL/plan/apply/router/session smoke tests on both x64 and ARM64. The Go race detector runs on Linux and Windows x64; the Windows ARM64 runner executes the complete native non-race suite because upstream Go does not support race instrumentation on windows/arm64. The native suite includes explicit DACL continuity across atomic replacement and a runnable suspended-before-assignment Job Object with memory, CPU-rate, and active-process ceilings. Playwright/axe checks keyboard navigation, reduced motion, operation busy feedback, focus restoration, and authenticated shutdown on Windows.
 
 ## Reproducibility statement
 
@@ -66,3 +73,26 @@ AgentStack claims reproducibility only for the **unsigned** binary build perform
 ## Rollback
 
 A release can be withdrawn by removing it from distribution and publishing a superseding signed release. Installed AgentStack-owned configuration can be restored from indexed backups. Third-party package rollback remains with the respective package manager and must be documented in the incident record.
+
+## Source archive provenance
+
+A source archive is buildable without a `.git` directory only after
+`SOURCE_MANIFEST.sha256` verifies successfully and `SOURCE_REVISION` contains either
+`git:<40-hex>` or the explicitly non-release `unreleased-base:<40-hex>` form. The protected
+release workflow permits only the `git:` form, generated from the clean signed tag that is
+identical to fetched `origin/main`, and records repository, workflow, run, tag, and commit
+identity in `SOURCE_PROVENANCE.json`. The baseline commit must never be presented as the
+identity of a modified, uncommitted source candidate.
+
+## Source archive verification
+
+Every source bundle carries `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and
+`SOURCE_MANIFEST.sha256`. A bundle without `.git` is accepted only after the
+manifest verifies both every digest and the exact source file set, and the revision is either `git:<40-hex>` or the explicitly
+unreleased `unreleased-base:<40-hex>` form. CI runs
+`./scripts/check-source-archive-build.sh` to create an ephemeral Git-free copy,
+place it inside an unrelated parent Git repository, regenerate and verify its manifest,
+prove an unlisted file is rejected, and execute the supported archive build path.
+This proves archive buildability; it does not turn an unreleased workspace into
+protected release evidence.
+

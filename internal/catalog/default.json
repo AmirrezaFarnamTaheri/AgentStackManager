@@ -404,7 +404,12 @@
           ]
         },
         "persistent": true,
-        "idleTTLSeconds": 300
+        "idleTTLSeconds": 300,
+        "limits": {
+          "memoryBytes": 2147483648,
+          "cpuPercent": 80,
+          "activeProcesses": 32
+        }
       },
       "dependsOn": [
         "node"
@@ -445,7 +450,12 @@
           ]
         },
         "persistent": true,
-        "idleTTLSeconds": 300
+        "idleTTLSeconds": 300,
+        "limits": {
+          "memoryBytes": 4294967296,
+          "cpuPercent": 80,
+          "activeProcesses": 64
+        }
       },
       "dependsOn": [
         "node"
@@ -482,7 +492,12 @@
           ]
         },
         "persistent": true,
-        "idleTTLSeconds": 300
+        "idleTTLSeconds": 300,
+        "limits": {
+          "memoryBytes": 2147483648,
+          "cpuPercent": 80,
+          "activeProcesses": 32
+        }
       },
       "dependsOn": [
         "uv"
@@ -838,7 +853,12 @@
           ]
         },
         "persistent": true,
-        "idleTTLSeconds": 300
+        "idleTTLSeconds": 300,
+        "limits": {
+          "memoryBytes": 2147483648,
+          "cpuPercent": 80,
+          "activeProcesses": 32
+        }
       },
       "dependsOn": [
         "uv"
@@ -884,7 +904,12 @@
           "CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS": "1",
           "CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS": "1"
         },
-        "persistent": false
+        "persistent": false,
+        "limits": {
+          "memoryBytes": 4294967296,
+          "cpuPercent": 80,
+          "activeProcesses": 64
+        }
       },
       "dependsOn": [
         "node"
@@ -968,7 +993,12 @@
             "--help"
           ]
         },
-        "persistent": false
+        "persistent": false,
+        "limits": {
+          "memoryBytes": 2147483648,
+          "cpuPercent": 80,
+          "activeProcesses": 32
+        }
       },
       "dependsOn": [
         "node"

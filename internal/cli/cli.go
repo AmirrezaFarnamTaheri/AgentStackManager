@@ -28,11 +28,16 @@ type CLI struct {
 	Err         io.Writer
 	Starter     session.Starter
 	Version     string
+	Revision    string
 	InstallSelf func() (selfinstall.Report, error)
 }
 
-func New(service *app.Service, version string) *CLI {
-	return &CLI{Service: service, Out: os.Stdout, Err: os.Stderr, Starter: session.ExecStarter{}, Version: version, InstallSelf: selfinstall.InstallSelf}
+func New(service *app.Service, version string, revision ...string) *CLI {
+	value := ""
+	if len(revision) > 0 {
+		value = revision[0]
+	}
+	return &CLI{Service: service, Out: os.Stdout, Err: os.Stderr, Starter: session.ExecStarter{}, Version: version, Revision: value, InstallSelf: selfinstall.InstallSelf}
 }
 
 func (c *CLI) Run(ctx context.Context, args []string) int {
@@ -48,7 +53,11 @@ func (c *CLI) Run(ctx context.Context, args []string) int {
 		c.printHelp()
 		return 0
 	case "version", "--version":
-		fmt.Fprintln(c.outWriter(), c.Version)
+		if c.Revision == "" {
+			fmt.Fprintln(c.outWriter(), c.Version)
+		} else {
+			fmt.Fprintf(c.outWriter(), "%s (%s)\n", c.Version, c.Revision)
+		}
 		return 0
 	case "ui":
 		return c.runUI(ctx, args[1:])
@@ -99,7 +108,9 @@ func (c *CLI) Run(ctx context.Context, args []string) int {
 		}
 		result, err := c.Service.ApplyPlanned(ctx, *planID, *digest, true)
 		if err != nil {
-			_ = c.printJSON(result)
+			if result.Plan.ID != "" || result.Transaction.ID != "" || result.Router != nil {
+				_ = c.printJSON(map[string]any{"ok": false, "error": err.Error(), "report": result})
+			}
 			return c.fail(err)
 		}
 		return c.printJSON(result)
@@ -168,7 +179,7 @@ func (c *CLI) runUI(ctx context.Context, args []string) int {
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	err := ui.Run(ctx, ui.HandlerOptions{Backend: c.Service, Version: c.Version}, ui.RunOptions{ListenAddress: *listen, OpenBrowser: !*noOpen})
+	err := ui.Run(ctx, ui.HandlerOptions{Backend: c.Service, Version: c.Version, Revision: c.Revision}, ui.RunOptions{ListenAddress: *listen, OpenBrowser: !*noOpen})
 	if errors.Is(err, context.Canceled) {
 		return 0
 	}

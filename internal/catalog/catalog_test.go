@@ -123,3 +123,19 @@ func TestDefaultCatalogHasMinimalCoreAndLockedAutomaticAcquisitions(t *testing.T
 		}
 	}
 }
+
+func TestDefaultRouterComponentsDeclareHardResourceLimits(t *testing.T) {
+	c, err := LoadDefault()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, component := range c.Components {
+		if component.Install.Kind != model.InstallRouter || component.Router == nil {
+			continue
+		}
+		limits := component.Router.Limits
+		if limits.MemoryBytes == 0 || limits.CPUPercent == 0 || limits.ActiveProcesses == 0 {
+			t.Fatalf("router component %s lacks a complete hard resource ceiling: %#v", component.ID, limits)
+		}
+	}
+}

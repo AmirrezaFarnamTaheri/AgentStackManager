@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/processctl"
 	"github.com/agentstack/agentstack/internal/safefile"
 )
 
@@ -70,7 +71,7 @@ func (s Store) AcquireLease(name string, staleAfter time.Duration) (*Lease, erro
 			return nil, err
 		}
 		existing, readErr := readLeaseRecord(path)
-		if readErr != nil || time.Since(existing.HeartbeatAt) > staleAfter || !processAlive(existing.PID) {
+		if readErr != nil || time.Since(existing.HeartbeatAt) > staleAfter || !processctl.IsAlive(existing.PID) {
 			stalePath := path + ".stale-" + time.Now().UTC().Format("20060102T150405.000000000Z")
 			if renameErr := os.Rename(path, stalePath); renameErr != nil {
 				return nil, fmt.Errorf("recover stale mutation lease: %w", renameErr)

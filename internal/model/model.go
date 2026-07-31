@@ -53,6 +53,12 @@ type VersionPolicy struct {
 	Pattern string      `json:"pattern,omitempty"`
 }
 
+type ProcessLimits struct {
+	MemoryBytes     uint64 `json:"memoryBytes,omitempty"`
+	CPUPercent      uint32 `json:"cpuPercent,omitempty"`
+	ActiveProcesses uint32 `json:"activeProcesses,omitempty"`
+}
+
 type RouterServerSpec struct {
 	Command        string            `json:"command"`
 	Args           []string          `json:"args,omitempty"`
@@ -60,6 +66,7 @@ type RouterServerSpec struct {
 	Warm           *CommandSpec      `json:"warm,omitempty"`
 	Persistent     bool              `json:"persistent,omitempty"`
 	IdleTTLSeconds int               `json:"idleTTLSeconds,omitempty"`
+	Limits         ProcessLimits     `json:"limits,omitempty"`
 }
 
 type Component struct {

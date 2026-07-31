@@ -7,18 +7,27 @@ import (
 	"path/filepath"
 )
 
-// Replace atomically installs source at destination when the operating system
-// permits it. On platforms where rename cannot replace an existing file, the
-// old destination is staged in the same directory and restored if installing
-// the new file fails.
+// Replace atomically installs source at destination while preserving the
+// destination's permission metadata. On platforms where rename cannot replace
+// an existing file, the old destination is staged in the same directory and
+// restored if installing the new file fails.
 func Replace(source, destination string) error {
+	_, statErr := os.Stat(destination)
+	if errors.Is(statErr, os.ErrNotExist) {
+		return os.Rename(source, destination)
+	}
+	if statErr != nil {
+		return statErr
+	}
+	metadata, err := captureFileMetadata(destination)
+	if err != nil {
+		return fmt.Errorf("capture destination permissions: %w", err)
+	}
+	if err := applyFileMetadata(source, metadata); err != nil {
+		return fmt.Errorf("preserve destination permissions: %w", err)
+	}
 	if err := os.Rename(source, destination); err == nil {
 		return nil
-	}
-	if _, err := os.Stat(destination); errors.Is(err, os.ErrNotExist) {
-		return os.Rename(source, destination)
-	} else if err != nil {
-		return err
 	}
 
 	backup, err := reserveBackupPath(filepath.Dir(destination))

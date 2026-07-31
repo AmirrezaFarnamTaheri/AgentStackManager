@@ -119,3 +119,9 @@ Lifecycle commands operate only on recorded AgentStack-owned resources. Skill fi
 - `python` — Python linting, security, automation, and notebook MCP.
 - `full-local` — all maintained local components, with duplicate providers inactive unless selected.
 - `custom` — no implicit components or providers.
+
+### `agentstack version`
+
+Prints the product version and embedded source identity. Protected releases use
+`git:<commit>`; verified but unreleased source bundles use `unreleased-base:<commit>` so the
+output cannot be mistaken for immutable candidate or release evidence.

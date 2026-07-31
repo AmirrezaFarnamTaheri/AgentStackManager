@@ -6,7 +6,7 @@ AgentStack is a local single-user control plane. Its privileged operations run w
 
 The browser manager binds only to loopback and uses both a high-entropy session path and a per-process request token. All API endpoints—including reads—require the token; cross-origin requests, non-JSON mutations, oversized bodies, and concurrent UI mutations are rejected. This protects against accidental access and browser-origin attacks. It is **not** a boundary against malicious code already executing as the same OS user.
 
-Windows state directories receive a current-user-only DACL and are audited in Windows-native CI. POSIX state directories are forced to mode `0700`.
+Windows state directories receive a current-user-only DACL and are audited in Windows-native CI. Atomic managed-file replacement carries the destination DACL onto the replacement before the swap. POSIX state directories are forced to mode `0700`, and replacement preserves the destination mode.
 
 ## Mutation authorization
 
@@ -19,7 +19,7 @@ Windows state directories receive a current-user-only DACL and are audited in Wi
 
 ## Command and process safety
 
-Catalog commands are static structured arrays—not shell strings. Component identifiers, versions, package sources, publishers, and platform compatibility are validated. Every external invocation has a timeout and bounded stdout/stderr. Child MCP/session process trees are contained and terminated with Unix process groups or Windows Job Objects.
+Catalog commands are static structured arrays—not shell strings. Component identifiers, versions, package sources, publishers, platform compatibility, and MCP resource ceilings are validated. Every external invocation has a timeout and bounded stdout/stderr. Unix process groups are PGID-checked before signaling and remain reachable after a leader exits; Linux additionally records the kernel process start time when available to reject same-PID reuse. Windows MCP trees start suspended, enter a Job Object before executing, and then resume under kill-on-close plus catalog-defined job-memory, CPU-rate, and active-process limits.
 
 MCP messages are size-bounded, protocol versions are negotiated, and `doctor` performs live `initialize` and `tools/list` probes rather than testing only executable presence.
 

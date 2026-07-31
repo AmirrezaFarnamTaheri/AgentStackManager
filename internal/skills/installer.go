@@ -8,12 +8,16 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
+	"sort"
 	"strings"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/runner"
 )
+
+var portableSkillNamePattern = regexp.MustCompile(`^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$`)
 
 type Report struct {
 	Added          []string `json:"added"`
@@ -96,7 +100,7 @@ func (i Installer) Install(ctx context.Context, component model.Component) runne
 	if err := ValidateSkillInventory(source, component.Install.ExpectedEntries); err != nil {
 		return runner.Result{ExitCode: -1, Err: err, Stderr: err.Error()}
 	}
-	report, err := CopyMissingSkills(source, targets)
+	report, err := CopyMissingSkills(source, component.Install.ExpectedEntries, targets)
 	if err != nil {
 		return runner.Result{ExitCode: -1, Err: err, Stderr: err.Error()}
 	}
@@ -114,31 +118,97 @@ func ValidateSkillInventory(source string, expected []string) error {
 	if err != nil {
 		return fmt.Errorf("read skill inventory: %w", err)
 	}
+	expectedSet := make(map[string]bool, len(expected))
+	portableNames := make(map[string]string, len(expected))
+	for _, name := range expected {
+		if !portableSkillName(name) || strings.ContainsAny(name, `/\\`) || filepath.Base(name) != name {
+			return fmt.Errorf("expected skill inventory contains unsafe entry %q", name)
+		}
+		folded := strings.ToLower(name)
+		if prior, exists := portableNames[folded]; exists {
+			return fmt.Errorf("expected skill inventory contains portable name collision %q and %q", prior, name)
+		}
+		portableNames[folded] = name
+		if expectedSet[name] {
+			return fmt.Errorf("expected skill inventory contains duplicate entry %q", name)
+		}
+		expectedSet[name] = true
+	}
 	actual := map[string]bool{}
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			continue
 		}
-		if _, err := os.Stat(filepath.Join(source, entry.Name(), "SKILL.md")); err == nil {
+		info, err := os.Lstat(filepath.Join(source, entry.Name(), "SKILL.md"))
+		if err == nil && info.Mode().IsRegular() && info.Mode()&os.ModeSymlink == 0 {
 			actual[entry.Name()] = true
 		}
 	}
-	missing := []string{}
+	missing, unexpected := []string{}, []string{}
 	for _, name := range expected {
 		if !actual[name] {
 			missing = append(missing, name)
 		}
 	}
-	if len(missing) > 0 {
-		return fmt.Errorf("skill inventory mismatch; missing audited entries: %s", strings.Join(missing, ", "))
+	for name := range actual {
+		if !expectedSet[name] {
+			unexpected = append(unexpected, name)
+		}
+	}
+	sort.Strings(missing)
+	sort.Strings(unexpected)
+	if len(missing) > 0 || len(unexpected) > 0 {
+		parts := []string{}
+		if len(missing) > 0 {
+			parts = append(parts, "missing audited entries: "+strings.Join(missing, ", "))
+		}
+		if len(unexpected) > 0 {
+			parts = append(parts, "unexpected entries: "+strings.Join(unexpected, ", "))
+		}
+		return fmt.Errorf("skill inventory mismatch; %s", strings.Join(parts, "; "))
+	}
+	for _, name := range expected {
+		if err := validateSkillTree(filepath.Join(source, name)); err != nil {
+			return fmt.Errorf("validate skill %q: %w", name, err)
+		}
 	}
 	return nil
 }
 
-func CopyMissingSkills(source string, targets []string) (Report, error) {
-	entries, err := os.ReadDir(source)
-	if err != nil {
-		return Report{}, fmt.Errorf("read skill source: %w", err)
+func portableSkillName(name string) bool {
+	if !portableSkillNamePattern.MatchString(name) {
+		return false
+	}
+	switch name {
+	case "con", "prn", "aux", "nul", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9":
+		return false
+	default:
+		return true
+	}
+}
+
+func validateSkillTree(root string) error {
+	return filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		if info.Mode()&os.ModeSymlink != 0 {
+			return fmt.Errorf("symbolic links are not allowed: %s", path)
+		}
+		if !entry.IsDir() && !info.Mode().IsRegular() {
+			return fmt.Errorf("unsupported file type: %s", path)
+		}
+		return nil
+	})
+}
+
+func CopyMissingSkills(source string, expected, targets []string) (Report, error) {
+	if err := ValidateSkillInventory(source, expected); err != nil {
+		return Report{}, err
 	}
 	report := Report{}
 	for _, target := range targets {
@@ -146,17 +216,12 @@ func CopyMissingSkills(source string, targets []string) (Report, error) {
 			return report, err
 		}
 	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-		skillSource := filepath.Join(source, entry.Name())
-		if _, err := os.Stat(filepath.Join(skillSource, "SKILL.md")); err != nil {
-			report.Skipped = append(report.Skipped, skillSource)
-			continue
-		}
+	names := append([]string(nil), expected...)
+	sort.Strings(names)
+	for _, name := range names {
+		skillSource := filepath.Join(source, name)
 		for _, target := range targets {
-			destination := filepath.Join(target, entry.Name())
+			destination := filepath.Join(target, name)
 			if _, err := os.Stat(destination); err == nil {
 				report.Preserved = append(report.Preserved, destination)
 				continue
@@ -213,10 +278,7 @@ func copyTree(source, destination string) error {
 			return err
 		}
 		if info.Mode()&os.ModeSymlink != 0 {
-			if entry.IsDir() {
-				return filepath.SkipDir
-			}
-			return nil
+			return fmt.Errorf("symbolic links are not allowed: %s", path)
 		}
 		if entry.IsDir() {
 			return os.MkdirAll(target, info.Mode().Perm()|0o700)

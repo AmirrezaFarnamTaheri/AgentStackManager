@@ -1,11 +1,20 @@
-# AgentStack Manager 0.2.0 remediation source
+# AgentStack Manager remediation workspace
 
-This is the complete uncommitted remediation candidate based on baseline commit
-`d196b8d25de524d5659b5e1f82902ed8327f04ee`. All 40 audit findings have source-level
-remediations. See `docs/audit/ASM-001-040-remediation-report.md` and the JSON export.
+This source tree is an **unreleased remediation workspace**, not immutable pull-request,
+protected-branch, signed-tag, or production-release evidence. Its historical base is
+`2356a0290239f3a7551a6db9dd7bb76f563fa96d`; the current modifications have no Git commit
+identity because this artifact was supplied as a source archive rather than a repository
+checkout.
 
-No production release is included. Protected signing, Windows-native, vulnerability,
-accessibility, mutation, governance, provenance, and attestation gates must pass on a
-clean signed tag before publication.
+`SOURCE_REVISION` therefore uses the explicit `unreleased-base:<sha>` form, and
+`SOURCE_PROVENANCE.json` carries null candidate/release fields. This prevents the baseline
+commit from being misrepresented as the identity of the modified candidate.
 
-A complete `.github/workflows/release.yml` is included. It can run from a pushed signed tag or a manual dispatch referencing an existing signed tag, and it publishes only after signing, attestation, checksum, and native ARM64 gates pass.
+Source archives are self-verifying through `SOURCE_MANIFEST.sha256`. Development builds now
+work both from a clean Git checkout and from a verified source archive. A protected release
+must run `scripts/release.ps1`, which requires a clean signed tag equal to fetched
+`origin/main`, writes `git:<candidate-commit>` to `SOURCE_REVISION`, overwrites
+`SOURCE_PROVENANCE.json` with repository/workflow/run evidence, regenerates the source
+manifest, and produces signed binaries, checksums, SBOM/VEX, provenance, and attestations.
+
+Until those protected gates pass, this tree must not be represented as a production release.

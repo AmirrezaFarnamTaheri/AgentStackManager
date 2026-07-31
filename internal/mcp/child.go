@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/agentstack/agentstack/internal/processctl"
+	"github.com/agentstack/agentstack/internal/redact"
 )
 
 var SupportedProtocolVersions = []string{"2025-06-18", "2025-03-26"}
@@ -66,6 +67,8 @@ type StdIOChildClient struct {
 }
 
 func (c StdIOChildClient) ListTools(ctx context.Context, server ServerConfig) (json.RawMessage, error) {
+	ctx, cancel := c.operationContext(ctx)
+	defer cancel()
 	session, err := c.start(ctx, server)
 	if err != nil {
 		return nil, err
@@ -75,6 +78,8 @@ func (c StdIOChildClient) ListTools(ctx context.Context, server ServerConfig) (j
 }
 
 func (c StdIOChildClient) CallTool(ctx context.Context, server ServerConfig, name string, arguments json.RawMessage) (json.RawMessage, error) {
+	ctx, cancel := c.operationContext(ctx)
+	defer cancel()
 	var decoded any = map[string]any{}
 	if len(arguments) > 0 {
 		if err := json.Unmarshal(arguments, &decoded); err != nil {
@@ -90,6 +95,8 @@ func (c StdIOChildClient) CallTool(ctx context.Context, server ServerConfig, nam
 }
 
 func (c StdIOChildClient) Doctor(ctx context.Context, server ServerConfig) DoctorItem {
+	ctx, cancel := c.operationContext(ctx)
+	defer cancel()
 	started := time.Now()
 	if server.Command == "" {
 		return DoctorItem{Status: "error", Message: "command is empty"}
@@ -115,7 +122,15 @@ func (c StdIOChildClient) Doctor(ctx context.Context, server ServerConfig) Docto
 	return DoctorItem{Status: "ok", ProtocolVersion: session.protocolVersion, ToolCount: len(payload.Tools), Duration: time.Since(started)}
 }
 
-func (c StdIOChildClient) start(parent context.Context, server ServerConfig) (*childSession, error) {
+func (c StdIOChildClient) operationContext(parent context.Context) (context.Context, context.CancelFunc) {
+	timeout := c.Timeout
+	if timeout <= 0 {
+		timeout = defaultChildTimeout
+	}
+	return context.WithTimeout(parent, timeout)
+}
+
+func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*childSession, error) {
 	startedAt := time.Now()
 	key := serverKey(server)
 	commandName := filepath.Base(server.Command)
@@ -124,12 +139,6 @@ func (c StdIOChildClient) start(parent context.Context, server ServerConfig) (*c
 			c.Observer(ChildEvent{Type: "child.launch", ServerKey: key, Command: commandName, Status: status, Duration: time.Since(startedAt), Message: redactChildError(message)})
 		}
 	}
-	timeout := c.Timeout
-	if timeout <= 0 {
-		timeout = defaultChildTimeout
-	}
-	ctx, cancel := context.WithTimeout(parent, timeout)
-	defer cancel()
 	messageLimit := c.MaxMessageBytes
 	if messageLimit <= 0 {
 		messageLimit = defaultMessageLimit
@@ -155,7 +164,7 @@ func (c StdIOChildClient) start(parent context.Context, server ServerConfig) (*c
 	}
 	stderr := newCappedThreadSafeBuffer(stderrLimit)
 	cmd.Stderr = stderr
-	process, err := processctl.Start(cmd)
+	process, err := processctl.StartWithLimits(cmd, processctl.Limits{MemoryBytes: server.Limits.MemoryBytes, CPUPercent: server.Limits.CPUPercent, ActiveProcesses: server.Limits.ActiveProcesses})
 	if err != nil {
 		emit("error", err.Error())
 		return nil, fmt.Errorf("start child %s: %w", server.Command, err)
@@ -171,7 +180,9 @@ func (c StdIOChildClient) start(parent context.Context, server ServerConfig) (*c
 		command:      commandName,
 		startedAt:    startedAt,
 		observer:     c.Observer,
+		requestGate:  make(chan struct{}, 1),
 	}
+	session.requestGate <- struct{}{}
 	if err := session.initialize(ctx); err != nil {
 		_ = session.Close()
 		emit("error", err.Error())
@@ -189,7 +200,8 @@ type childSession struct {
 	messageLimit    int
 	protocolVersion string
 	nextID          int
-	mu              sync.Mutex
+	stateMu         sync.Mutex
+	requestGate     chan struct{}
 	closed          bool
 	serverKey       string
 	command         string
@@ -216,7 +228,7 @@ func (s *childSession) initialize(ctx context.Context) error {
 		return fmt.Errorf("child negotiated unsupported MCP protocol %q", initialized.ProtocolVersion)
 	}
 	s.protocolVersion = initialized.ProtocolVersion
-	return s.notify(map[string]any{"jsonrpc": "2.0", "method": "notifications/initialized"})
+	return s.notify(ctx, map[string]any{"jsonrpc": "2.0", "method": "notifications/initialized"})
 }
 
 func (s *childSession) request(ctx context.Context, method string, params any) (json.RawMessage, error) {
@@ -238,11 +250,18 @@ func (s *childSession) request(ctx context.Context, method string, params any) (
 }
 
 func (s *childSession) requestRaw(ctx context.Context, method string, params any) (json.RawMessage, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	select {
+	case <-s.requestGate:
+		defer func() { s.requestGate <- struct{}{} }()
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+	s.stateMu.Lock()
 	if s.closed {
+		s.stateMu.Unlock()
 		return nil, errors.New("child session is closed")
 	}
+	s.stateMu.Unlock()
 	id := s.nextID
 	s.nextID++
 	request := map[string]any{"jsonrpc": "2.0", "id": id, "method": method, "params": params}
@@ -267,20 +286,24 @@ func (s *childSession) requestRaw(ctx context.Context, method string, params any
 	}
 }
 
-func (s *childSession) notify(value any) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func (s *childSession) notify(ctx context.Context, value any) error {
+	select {
+	case <-s.requestGate:
+		defer func() { s.requestGate <- struct{}{} }()
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	return writeJSONLine(s.stdin, value, s.messageLimit)
 }
 
 func (s *childSession) Close() error {
-	s.mu.Lock()
+	s.stateMu.Lock()
 	if s.closed {
-		s.mu.Unlock()
+		s.stateMu.Unlock()
 		return nil
 	}
 	s.closed = true
-	s.mu.Unlock()
+	s.stateMu.Unlock()
 	err := s.process.GracefulClose(s.stdin.Close, 2*time.Second)
 	if s.observer != nil {
 		status := "ok"
@@ -302,15 +325,19 @@ type PooledChildClient struct {
 }
 
 type pooledWorker struct {
-	session  *childSession
-	lastUsed time.Time
-	timer    *time.Timer
+	session    *childSession
+	lastUsed   time.Time
+	timer      *time.Timer
+	generation uint64
+	active     int
 }
 
 func (p *PooledChildClient) ListTools(ctx context.Context, server ServerConfig) (json.RawMessage, error) {
 	if !server.Persistent {
 		return p.Base.ListTools(ctx, server)
 	}
+	ctx, cancel := p.Base.operationContext(ctx)
+	defer cancel()
 	return p.withSession(ctx, server, func(session *childSession) (json.RawMessage, error) {
 		return session.request(ctx, "tools/list", map[string]any{})
 	})
@@ -320,6 +347,8 @@ func (p *PooledChildClient) CallTool(ctx context.Context, server ServerConfig, n
 	if !server.Persistent {
 		return p.Base.CallTool(ctx, server, name, arguments)
 	}
+	ctx, cancel := p.Base.operationContext(ctx)
+	defer cancel()
 	var decoded any = map[string]any{}
 	if len(arguments) > 0 {
 		if err := json.Unmarshal(arguments, &decoded); err != nil {
@@ -367,37 +396,60 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 	}
 	if worker.timer != nil {
 		worker.timer.Stop()
+		worker.timer = nil
 	}
+	worker.generation++
+	worker.active++
 	worker.lastUsed = time.Now()
 	p.mu.Unlock()
 
 	result, err := operation(worker.session)
-	if err != nil {
-		p.mu.Lock()
+	p.mu.Lock()
+	if worker.active > 0 {
+		worker.active--
+	}
+	current := p.workers[key] == worker
+	if err != nil && current {
 		delete(p.workers, key)
+	}
+	if err != nil {
 		p.mu.Unlock()
 		_ = worker.session.Close()
 		return nil, err
 	}
-
-	ttl := p.IdleTTL
-	if server.IdleTTLSeconds > 0 {
-		ttl = time.Duration(server.IdleTTLSeconds) * time.Second
+	if !current {
+		p.mu.Unlock()
+		_ = worker.session.Close()
+		return result, nil
 	}
-	if ttl <= 0 {
-		ttl = 2 * time.Minute
-	}
-	p.mu.Lock()
 	worker.lastUsed = time.Now()
-	worker.timer = time.AfterFunc(ttl, func() { p.expire(key, worker) })
+	if worker.active == 0 {
+		ttl := p.IdleTTL
+		if server.IdleTTLSeconds > 0 {
+			ttl = time.Duration(server.IdleTTLSeconds) * time.Second
+		}
+		if ttl <= 0 {
+			ttl = 2 * time.Minute
+		}
+		generation := worker.generation
+		worker.timer = time.AfterFunc(ttl, func() { p.expire(key, worker, generation) })
+	}
 	p.mu.Unlock()
 	return result, nil
 }
 
-func (p *PooledChildClient) expire(key string, expected *pooledWorker) {
+func (p *PooledChildClient) removeWorkerIfCurrent(key string, expected *pooledWorker) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if p.workers[key] == expected {
+		delete(p.workers, key)
+	}
+}
+
+func (p *PooledChildClient) expire(key string, expected *pooledWorker, generation uint64) {
 	p.mu.Lock()
 	worker := p.workers[key]
-	if worker != expected {
+	if worker != expected || worker.generation != generation || worker.active != 0 {
 		p.mu.Unlock()
 		return
 	}
@@ -519,20 +571,7 @@ func childError(err error, stderr string, truncated bool) error {
 }
 
 func redactChildError(value string) string {
-	value = strings.TrimSpace(value)
-	for _, marker := range []string{"TOKEN=", "API_KEY=", "PASSWORD=", "SECRET="} {
-		for {
-			index := strings.Index(strings.ToUpper(value), marker)
-			if index < 0 {
-				break
-			}
-			end := index + len(marker)
-			for end < len(value) && value[end] != ' ' && value[end] != '\n' && value[end] != '\r' && value[end] != '\t' {
-				end++
-			}
-			value = value[:index] + marker + "[REDACTED]" + value[end:]
-		}
-	}
+	value = redact.Text(strings.TrimSpace(value))
 	if len(value) > defaultStderrLimit {
 		value = value[:defaultStderrLimit] + "…"
 	}

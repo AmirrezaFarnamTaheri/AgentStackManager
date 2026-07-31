@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/agentstack/agentstack/internal/model"
+	"github.com/agentstack/agentstack/internal/processctl"
 )
 
 //go:embed default.json
@@ -118,11 +120,13 @@ func validateSupplyChainLock(component model.Component) error {
 			return fmt.Errorf("winget component %q must lock id, source, version, and publisher", component.ID)
 		}
 	case model.InstallNPMGlobal:
-		if install.Package == "" || install.Source != "npm" || install.Version == "" || install.Publisher == "" || !packageHasExactNPMVersion(install.Package) {
+		packageVersion, ok := exactNPMVersion(install.Package)
+		if install.Package == "" || install.Source != "npm" || install.Version == "" || install.Publisher == "" || !ok || packageVersion != install.Version {
 			return fmt.Errorf("npm component %q must use an exact package version and source metadata", component.ID)
 		}
 	case model.InstallUVTool:
-		if install.Package == "" || install.Source != "pypi" || install.Version == "" || install.Publisher == "" || !strings.Contains(install.Package, "==") {
+		packageVersion, ok := exactUVVersion(install.Package)
+		if install.Package == "" || install.Source != "pypi" || install.Version == "" || install.Publisher == "" || !ok || packageVersion != install.Version {
 			return fmt.Errorf("uv component %q must use an exact == version and source metadata", component.ID)
 		}
 	case model.InstallSkillPack:
@@ -133,10 +137,25 @@ func validateSupplyChainLock(component model.Component) error {
 		if component.Router == nil {
 			return fmt.Errorf("router component %q has no router definition", component.ID)
 		}
+		limits := processctl.Limits{MemoryBytes: component.Router.Limits.MemoryBytes, CPUPercent: component.Router.Limits.CPUPercent, ActiveProcesses: component.Router.Limits.ActiveProcesses}
+		if limits.Disabled() {
+			return fmt.Errorf("router component %q must declare hard process resource limits", component.ID)
+		}
+		if err := limits.Validate(); err != nil {
+			return fmt.Errorf("router component %q has invalid process resource limits: %w", component.ID, err)
+		}
 		for _, value := range append(append([]string(nil), component.Router.Args...), routerWarmArgs(component.Router)...) {
 			lower := strings.ToLower(value)
 			if strings.Contains(lower, "@latest") {
 				return fmt.Errorf("router component %q contains floating package %q", component.ID, value)
+			}
+		}
+		if err := validateRouterAcquisition(component.ID, component.Router.Command, component.Router.Args); err != nil {
+			return err
+		}
+		if component.Router.Warm != nil {
+			if err := validateRouterAcquisition(component.ID+" warm command", component.Router.Warm.Command, component.Router.Warm.Args); err != nil {
+				return err
 			}
 		}
 	case model.InstallManual:
@@ -156,14 +175,117 @@ func validateSupplyChainLock(component model.Component) error {
 	return nil
 }
 
-func packageHasExactNPMVersion(value string) bool {
+var (
+	npmPackageNamePattern  = regexp.MustCompile(`^(?:@[a-z0-9][a-z0-9._~-]*/)?[a-z0-9][a-z0-9._~-]*$`)
+	npmExactVersionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$`)
+	uvPackageNamePattern   = regexp.MustCompile(`^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?(?:\[[A-Za-z0-9._-]+(?:,[A-Za-z0-9._-]+)*\])?$`)
+	pep440VersionPattern   = regexp.MustCompile(`^\d+(?:\.\d+)*(?:(?:a|b|rc)\d+)?(?:\.post\d+)?(?:\.dev\d+)?(?:\+[0-9A-Za-z.]+)?$`)
+)
+
+func exactNPMVersion(value string) (string, bool) {
 	value = strings.TrimSpace(value)
-	if strings.HasPrefix(value, "@") {
-		separator := strings.LastIndex(value, "@")
-		return separator > strings.Index(value, "/") && separator < len(value)-1
-	}
 	separator := strings.LastIndex(value, "@")
-	return separator > 0 && separator < len(value)-1
+	if strings.HasPrefix(value, "@") {
+		if separator <= strings.Index(value, "/") {
+			return "", false
+		}
+	} else if separator <= 0 {
+		return "", false
+	}
+	packageName := value[:separator]
+	version := value[separator+1:]
+	return version, npmPackageNamePattern.MatchString(packageName) && npmExactVersionPattern.MatchString(version)
+}
+
+func exactUVVersion(value string) (string, bool) {
+	value = strings.TrimSpace(value)
+	if strings.Count(value, "==") != 1 {
+		return "", false
+	}
+	parts := strings.SplitN(value, "==", 2)
+	packageName := strings.TrimSpace(parts[0])
+	if !uvPackageNamePattern.MatchString(packageName) {
+		return "", false
+	}
+	version := strings.TrimSpace(parts[1])
+	return version, pep440VersionPattern.MatchString(version)
+}
+
+func validateRouterAcquisition(label, command string, args []string) error {
+	command = strings.ToLower(strings.TrimSpace(command))
+	command = strings.TrimSuffix(command, ".exe")
+	if command == "cmd" && len(args) >= 2 && strings.EqualFold(args[0], "/c") {
+		command = strings.ToLower(strings.TrimSuffix(args[1], ".exe"))
+		args = args[2:]
+	}
+	switch command {
+	case "npx":
+		for index := 0; index < len(args); index++ {
+			arg := args[index]
+			lower := strings.ToLower(arg)
+			if lower == "--package" || lower == "-p" {
+				if index+1 >= len(args) {
+					return fmt.Errorf("router component %q has incomplete npx package acquisition", label)
+				}
+				if _, ok := exactNPMVersion(args[index+1]); !ok {
+					return fmt.Errorf("router component %q must use an exact npx package version, got %q", label, args[index+1])
+				}
+				index++
+				continue
+			}
+			for _, prefix := range []string{"--package=", "-p="} {
+				if strings.HasPrefix(lower, prefix) {
+					if _, ok := exactNPMVersion(arg[len(prefix):]); !ok {
+						return fmt.Errorf("router component %q must use an exact npx package version, got %q", label, arg[len(prefix):])
+					}
+				}
+			}
+		}
+		for _, arg := range args {
+			if arg == "-y" || arg == "--yes" || arg == "--quiet" || arg == "--" {
+				continue
+			}
+			if strings.HasPrefix(arg, "-") {
+				continue
+			}
+			if _, ok := exactNPMVersion(arg); !ok {
+				return fmt.Errorf("router component %q must use an exact npx package version, got %q", label, arg)
+			}
+			return nil
+		}
+		return fmt.Errorf("router component %q has no exact npx package acquisition", label)
+	case "uvx":
+		for index := 0; index < len(args); index++ {
+			arg := args[index]
+			if strings.HasPrefix(strings.ToLower(arg), "--from=") {
+				spec := arg[len("--from="):]
+				if _, ok := exactUVVersion(spec); !ok {
+					return fmt.Errorf("router component %q must use an exact uvx package version, got %q", label, spec)
+				}
+				continue
+			}
+			if arg == "--from" {
+				if index+1 >= len(args) {
+					return fmt.Errorf("router component %q has incomplete uvx --from acquisition", label)
+				}
+				if _, ok := exactUVVersion(args[index+1]); !ok {
+					return fmt.Errorf("router component %q must use an exact uvx package version, got %q", label, args[index+1])
+				}
+				index++
+				continue
+			}
+			if strings.HasPrefix(arg, "-") {
+				continue
+			}
+			if _, ok := exactUVVersion(arg); !ok {
+				return fmt.Errorf("router component %q must use an exact uvx package version, got %q", label, arg)
+			}
+			return nil
+		}
+		return fmt.Errorf("router component %q has no exact uvx package acquisition", label)
+	default:
+		return nil
+	}
 }
 
 func routerWarmArgs(router *model.RouterServerSpec) []string {

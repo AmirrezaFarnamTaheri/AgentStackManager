@@ -16,12 +16,13 @@ import (
 )
 
 type ServerConfig struct {
-	Command        string             `json:"command"`
-	Args           []string           `json:"args,omitempty"`
-	Env            map[string]string  `json:"env,omitempty"`
-	Warm           *model.CommandSpec `json:"warm,omitempty"`
-	Persistent     bool               `json:"persistent,omitempty"`
-	IdleTTLSeconds int                `json:"idleTTLSeconds,omitempty"`
+	Command        string              `json:"command"`
+	Args           []string            `json:"args,omitempty"`
+	Env            map[string]string   `json:"env,omitempty"`
+	Warm           *model.CommandSpec  `json:"warm,omitempty"`
+	Persistent     bool                `json:"persistent,omitempty"`
+	IdleTTLSeconds int                 `json:"idleTTLSeconds,omitempty"`
+	Limits         model.ProcessLimits `json:"limits,omitempty"`
 }
 
 type RouterConfig struct {
@@ -50,6 +51,7 @@ func BuildRouterConfig(c model.Catalog, plan model.Plan, dataDir string) (Router
 			Warm:           component.Router.Warm,
 			Persistent:     component.Router.Persistent,
 			IdleTTLSeconds: component.Router.IdleTTLSeconds,
+			Limits:         component.Router.Limits,
 		}
 		if len(component.Router.Env) > 0 {
 			server.Env = make(map[string]string, len(component.Router.Env))

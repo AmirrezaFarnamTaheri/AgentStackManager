@@ -31,13 +31,14 @@ func AuditPrivateDir(path string) error {
 	if err != nil {
 		return err
 	}
-	output, err := exec.Command("icacls.exe", path).CombinedOutput()
+	command := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-Command", "$ErrorActionPreference='Stop'; (Get-Acl -LiteralPath $env:AGENTSTACK_ACL_PATH).Sddl")
+	command.Env = append(os.Environ(), "AGENTSTACK_ACL_PATH="+path)
+	output, err := command.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("audit AgentStack data ACL: %w: %s", err, strings.TrimSpace(string(output)))
 	}
-	text := strings.ToUpper(string(output))
-	if !strings.Contains(text, strings.ToUpper(sid)) || strings.Contains(text, "EVERYONE") || strings.Contains(text, "AUTHENTICATED USERS") {
-		return fmt.Errorf("AgentStack data ACL is not private to the current user and system principals")
+	if err := auditPrivateSDDL(string(output), sid); err != nil {
+		return fmt.Errorf("AgentStack data ACL is not private to the exact current-user/system allowlist: %w", err)
 	}
 	return nil
 }

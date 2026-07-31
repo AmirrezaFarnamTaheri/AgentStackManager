@@ -14,7 +14,10 @@ required=(
   docs/GOVERNANCE.md
   docs/RELEASE.md
   docs/architecture.md
+  docs/UX_DESIGN.md
   docs/audit/ASM-001-040-closure.md
+  docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.md
+  docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.json
 )
 for file in "${required[@]}"; do
   [[ -s "$file" ]] || { echo "missing or empty documentation: $file" >&2; exit 1; }
@@ -39,7 +42,9 @@ for required_text in \
   'agentstack data policy' \
   'agentstack owned remove' \
   'Go 1.26.5' \
-  'Authenti'; do
+  'Authenti' \
+  'Windows Job Object resource ceilings' \
+  'operation-status surface'; do
   grep -Rqs "$required_text" "${corpus[@]}" || { echo "required documentation text missing: $required_text" >&2; exit 1; }
 done
 profile_count="$(jq '.profiles | length' internal/catalog/default.json)"

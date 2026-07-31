@@ -17,7 +17,11 @@ $repo = Split-Path -Parent $PSScriptRoot
 Push-Location $repo
 try {
     Invoke-Native go @('test','./...')
-    Invoke-Native go @('test','-race','./...')
+    if ($Architecture -eq 'amd64') {
+        Invoke-Native go @('test','-race','./...')
+    } else {
+        Write-Host 'Go race detector is not supported on windows/arm64; Linux and Windows amd64 race gates remain required.' -ForegroundColor Yellow
+    }
     Invoke-Native go @('vet','./...')
 
     $root = Join-Path $env:RUNNER_TEMP ("agentstack-e2e-$Architecture-" + [guid]::NewGuid().ToString('N'))
@@ -29,6 +33,9 @@ try {
     $env:USERPROFILE = $profile
     $env:HOME = $profile
     $env:APPDATA = $roaming
+
+    $seedUserPath = 'C:\Preserve-工具\bin;C:\Duplicate\bin;C:\Duplicate\bin;'
+    [Environment]::SetEnvironmentVariable('Path',$seedUserPath,'User')
 
     $binary = Join-Path $root 'agentstack.exe'
     Invoke-Native go @('build','-trimpath','-o',$binary,'./cmd/agentstack')
@@ -42,6 +49,7 @@ try {
     if (-not (Test-Path -LiteralPath $installed)) { throw "installed CLI missing: $installed" }
     if ([IO.Path]::GetFileName($installed) -ne 'agentstack.exe') { throw "unexpected installed name: $installed" }
     $userPath = [Environment]::GetEnvironmentVariable('Path','User')
+    if (-not $userPath.StartsWith($seedUserPath,[StringComparison]::Ordinal)) { throw "pre-existing Unicode/duplicate user PATH was not preserved exactly: $userPath" }
     if (($userPath -split ';') -notcontains (Split-Path -Parent $installed)) { throw 'AgentStack directory was not appended to user PATH' }
 
     $dataRoot = Join-Path $local 'AgentStack'

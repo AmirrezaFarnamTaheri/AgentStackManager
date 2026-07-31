@@ -115,3 +115,19 @@ func TestMergeAgyConfigConflictDoesNotMutate(t *testing.T) {
 		t.Fatal("conflicting config was mutated")
 	}
 }
+
+func TestBuildRouterConfigCopiesResourceLimits(t *testing.T) {
+	c := model.Catalog{Version: 1, Components: []model.Component{{
+		ID: "limited", Name: "Limited", Install: model.InstallSpec{Kind: model.InstallRouter},
+		Router: &model.RouterServerSpec{Command: "server", Limits: model.ProcessLimits{MemoryBytes: 2 << 30, CPUPercent: 80, ActiveProcesses: 32}},
+	}}}
+	plan := model.Plan{Actions: []model.PlanAction{{ComponentID: "limited", Kind: model.ActionConfigure}}}
+	config, err := BuildRouterConfig(c, plan, t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := config.Servers["limited"].Limits
+	if got.MemoryBytes != 2<<30 || got.CPUPercent != 80 || got.ActiveProcesses != 32 {
+		t.Fatalf("resource limits were not preserved: %#v", got)
+	}
+}

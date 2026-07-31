@@ -41,9 +41,11 @@ type Backend interface {
 
 type HandlerOptions struct {
 	Backend     Backend
+	Context     context.Context
 	Token       string
 	SessionID   string
 	Version     string
+	Revision    string
 	InstallSelf func() (any, error)
 	Shutdown    func()
 }
@@ -80,9 +82,13 @@ func NewHandler(options HandlerOptions) http.Handler {
 	if options.SessionID == "" {
 		options.SessionID = "test-session"
 	}
+	if options.Context == nil {
+		options.Context = context.Background()
+	}
 	base := "/session/" + url.PathEscape(options.SessionID) + "/"
 	apiBase := base + "api/"
 	mutationGate := make(chan struct{}, 1)
+	operations := newOperationStore()
 	limiter := &requestLimiter{limit: 120}
 	mux := http.NewServeMux()
 	mux.HandleFunc(base, func(w http.ResponseWriter, r *http.Request) {
@@ -132,13 +138,31 @@ func NewHandler(options HandlerOptions) http.Handler {
 			next(w, r)
 		})
 	}
+	startMutation := func(w http.ResponseWriter, kind string, work func(context.Context) (any, error)) {
+		select {
+		case mutationGate <- struct{}{}:
+		default:
+			writeError(w, http.StatusLocked, fmt.Errorf("another AgentStack UI operation is running"))
+			return
+		}
+		receipt, err := operations.start(options.Context, kind, apiBase+"operations/", func(ctx context.Context) (any, error) {
+			defer func() { <-mutationGate }()
+			return work(ctx)
+		})
+		if err != nil {
+			<-mutationGate
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		writeJSON(w, http.StatusAccepted, receipt)
+	}
 
 	mux.HandleFunc(apiBase+"status", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			methodNotAllowed(w)
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]any{"name": "AgentStack Manager", "version": options.Version, "localOnly": true})
+		writeJSON(w, http.StatusOK, map[string]any{"name": "AgentStack Manager", "version": options.Version, "revision": options.Revision, "localOnly": true})
 	}))
 	mux.HandleFunc(apiBase+"catalog", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -175,7 +199,7 @@ func NewHandler(options HandlerOptions) http.Handler {
 		}
 		writeJSON(w, http.StatusOK, result)
 	}))
-	mux.HandleFunc(apiBase+"apply", mutation(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(apiBase+"apply", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			methodNotAllowed(w)
 			return
@@ -192,14 +216,15 @@ func NewHandler(options HandlerOptions) http.Handler {
 			writeError(w, http.StatusBadRequest, app.ErrConfirmationRequired)
 			return
 		}
-		result, err := options.Backend.ApplyPlanned(r.Context(), request.PlanID, request.Digest, true)
-		if err != nil {
-			writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error(), "report": result})
-			return
-		}
-		writeJSON(w, http.StatusOK, result)
+		startMutation(w, "apply", func(ctx context.Context) (any, error) {
+			result, err := options.Backend.ApplyPlanned(ctx, request.PlanID, request.Digest, true)
+			if err != nil {
+				return map[string]any{"report": result}, err
+			}
+			return result, nil
+		})
 	}))
-	mux.HandleFunc(apiBase+"mcp/init", mutation(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(apiBase+"mcp/init", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			methodNotAllowed(w)
 			return
@@ -208,12 +233,13 @@ func NewHandler(options HandlerOptions) http.Handler {
 		if !decodeJSON(w, r, &request) {
 			return
 		}
-		result, err := options.Backend.MCPInit(r.Context(), request)
-		if err != nil {
-			writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error(), "report": result})
-			return
-		}
-		writeJSON(w, http.StatusOK, result)
+		startMutation(w, "mcp-init", func(ctx context.Context) (any, error) {
+			result, err := options.Backend.MCPInit(ctx, request)
+			if err != nil {
+				return map[string]any{"report": result}, err
+			}
+			return result, nil
+		})
 	}))
 	mux.HandleFunc(apiBase+"mcp/doctor", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -227,7 +253,7 @@ func NewHandler(options HandlerOptions) http.Handler {
 		}
 		writeJSON(w, http.StatusOK, result)
 	}))
-	mux.HandleFunc(apiBase+"install-self", mutation(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(apiBase+"install-self", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			methodNotAllowed(w)
 			return
@@ -242,12 +268,26 @@ func NewHandler(options HandlerOptions) http.Handler {
 			writeError(w, http.StatusBadRequest, app.ErrConfirmationRequired)
 			return
 		}
-		result, err := options.InstallSelf()
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, err)
+		startMutation(w, "install-self", func(context.Context) (any, error) {
+			return options.InstallSelf()
+		})
+	}))
+	mux.HandleFunc(apiBase+"operations/", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
 			return
 		}
-		writeJSON(w, http.StatusOK, result)
+		id := strings.TrimPrefix(r.URL.Path, apiBase+"operations/")
+		if id == "" || strings.Contains(id, "/") {
+			http.NotFound(w, r)
+			return
+		}
+		operation, ok := operations.get(id)
+		if !ok {
+			http.NotFound(w, r)
+			return
+		}
+		writeJSON(w, http.StatusOK, operation)
 	}))
 	mux.HandleFunc(apiBase+"shutdown", mutation(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -287,6 +327,7 @@ func Run(ctx context.Context, handlerOptions HandlerOptions, options RunOptions)
 		}
 		handlerOptions.SessionID = value
 	}
+	handlerOptions.Context = ctx
 	shutdownRequested := make(chan struct{})
 	var shutdownOnce sync.Once
 	externalShutdown := handlerOptions.Shutdown

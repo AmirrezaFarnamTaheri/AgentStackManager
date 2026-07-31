@@ -9,6 +9,7 @@ import (
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/selfinstall"
+	"github.com/agentstack/agentstack/internal/state"
 )
 
 func TestParseSelectionOptions(t *testing.T) {
@@ -126,5 +127,37 @@ func TestDataPolicyReportsRetentionAndUserControlledState(t *testing.T) {
 		if !bytes.Contains(output.Bytes(), []byte(value)) {
 			t.Fatalf("policy output missing %s: %s", value, output.String())
 		}
+	}
+}
+
+func TestApplyPreconditionFailureDoesNotEmitZeroValueReport(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	service := &app.Service{Store: state.NewStore(t.TempDir())}
+	command := &CLI{Service: service, Out: &stdout, Err: &stderr}
+	code := command.Run(context.Background(), []string{"apply", "--plan-id", "missing", "--digest", "sha256:missing", "--yes"})
+	if code == 0 {
+		t.Fatal("expected apply failure")
+	}
+	if stdout.Len() != 0 {
+		t.Fatalf("precondition failure emitted a misleading report: %s", stdout.String())
+	}
+}
+
+func TestVersionIncludesSourceRevisionWhenAvailable(t *testing.T) {
+	var output bytes.Buffer
+	command := &CLI{
+		Service:  &app.Service{},
+		Out:      &output,
+		Err:      &output,
+		Version:  "0.2.0",
+		Revision: "git:0123456789abcdef0123456789abcdef01234567",
+	}
+	if code := command.Run(context.Background(), []string{"version"}); code != 0 {
+		t.Fatalf("unexpected exit code %d: %s", code, output.String())
+	}
+	const expected = "0.2.0 (git:0123456789abcdef0123456789abcdef01234567)\n"
+	if output.String() != expected {
+		t.Fatalf("unexpected version output: got %q want %q", output.String(), expected)
 	}
 }

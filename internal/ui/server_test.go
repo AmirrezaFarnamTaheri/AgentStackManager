@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/model"
@@ -56,6 +58,47 @@ func authorizedRequest(method, path, body string) *http.Request {
 	return request
 }
 
+func waitForAcceptedOperation(t *testing.T, handler http.Handler, response *httptest.ResponseRecorder) json.RawMessage {
+	t.Helper()
+	if response.Code != http.StatusAccepted {
+		t.Fatalf("expected 202, got %d: %s", response.Code, response.Body.String())
+	}
+	var receipt struct {
+		StatusURL string `json:"statusUrl"`
+	}
+	if err := json.Unmarshal(response.Body.Bytes(), &receipt); err != nil {
+		t.Fatal(err)
+	}
+	deadline := time.Now().Add(2 * time.Second)
+	for {
+		status := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodGet, receipt.StatusURL, nil)
+		request.Header.Set("X-AgentStack-Token", "secret")
+		handler.ServeHTTP(status, request)
+		if status.Code != http.StatusOK {
+			t.Fatalf("operation status=%d: %s", status.Code, status.Body.String())
+		}
+		var operation struct {
+			Status string          `json:"status"`
+			Result json.RawMessage `json:"result"`
+			Error  string          `json:"error"`
+		}
+		if err := json.Unmarshal(status.Body.Bytes(), &operation); err != nil {
+			t.Fatal(err)
+		}
+		switch operation.Status {
+		case "succeeded":
+			return operation.Result
+		case "failed":
+			t.Fatalf("operation failed: %s", operation.Error)
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("operation did not complete: %s", status.Body.String())
+		}
+		time.Sleep(time.Millisecond)
+	}
+}
+
 func TestEveryAPIEndpointRequiresToken(t *testing.T) {
 	handler := newTestHandler(&fakeBackend{})
 	for _, path := range []string{"status", "catalog", "inventory", "mcp/doctor"} {
@@ -84,9 +127,7 @@ func TestApplyEndpointUsesReviewedPlanIdentity(t *testing.T) {
 	handler := newTestHandler(backend)
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, authorizedRequest(http.MethodPost, "apply", `{"planId":"plan-1","digest":"sha256:plan","confirm":true}`))
-	if response.Code != http.StatusOK {
-		t.Fatalf("expected 200, got %d: %s", response.Code, response.Body.String())
-	}
+	waitForAcceptedOperation(t, handler, response)
 	if backend.planID != "plan-1" || backend.digest != "sha256:plan" {
 		t.Fatalf("apply did not use reviewed plan identity: %#v", backend)
 	}
@@ -123,7 +164,8 @@ func TestInstallSelfEndpointRequiresExplicitConfirmation(t *testing.T) {
 	}
 	response := httptest.NewRecorder()
 	handler.ServeHTTP(response, authorizedRequest(http.MethodPost, "install-self", `{"confirm":true}`))
-	if response.Code != http.StatusOK || calls != 1 {
+	waitForAcceptedOperation(t, handler, response)
+	if calls != 1 {
 		t.Fatalf("confirmed install-self status=%d calls=%d body=%s", response.Code, calls, response.Body.String())
 	}
 }
@@ -197,5 +239,187 @@ func TestRunRejectsNonLoopbackAddress(t *testing.T) {
 	err := Run(context.Background(), HandlerOptions{Backend: &fakeBackend{}, Version: "test"}, RunOptions{ListenAddress: "0.0.0.0:0", OpenBrowser: false, Random: strings.NewReader(strings.Repeat("r", 128))})
 	if err == nil || !strings.Contains(err.Error(), "non-loopback") {
 		t.Fatalf("expected non-loopback refusal, got %v", err)
+	}
+}
+
+type blockingApplyBackend struct {
+	fakeBackend
+	started chan struct{}
+	release chan struct{}
+}
+
+func (b *blockingApplyBackend) ApplyPlanned(_ context.Context, planID, digest string, confirmed bool) (app.ApplyReport, error) {
+	close(b.started)
+	<-b.release
+	return app.ApplyReport{Plan: model.Plan{ID: planID, Digest: digest}}, nil
+}
+
+func TestApplyReturnsAcceptedAndCompletesThroughOperationEndpoint(t *testing.T) {
+	backend := &blockingApplyBackend{started: make(chan struct{}), release: make(chan struct{})}
+	t.Cleanup(func() {
+		select {
+		case <-backend.release:
+		default:
+			close(backend.release)
+		}
+	})
+	handler := newTestHandler(backend)
+	response := httptest.NewRecorder()
+	done := make(chan struct{})
+	go func() {
+		handler.ServeHTTP(response, authorizedRequest(http.MethodPost, "apply", `{"planId":"plan-1","digest":"sha256:plan","confirm":true}`))
+		close(done)
+	}()
+	select {
+	case <-done:
+	case <-time.After(250 * time.Millisecond):
+		close(backend.release)
+		t.Fatal("apply handler remained synchronously blocked on the long mutation")
+	}
+	if response.Code != http.StatusAccepted {
+		t.Fatalf("long mutation must return 202 immediately, got %d: %s", response.Code, response.Body.String())
+	}
+	var accepted struct {
+		OperationID string `json:"operationId"`
+		Status      string `json:"status"`
+		StatusURL   string `json:"statusUrl"`
+	}
+	if err := json.Unmarshal(response.Body.Bytes(), &accepted); err != nil {
+		t.Fatal(err)
+	}
+	if accepted.OperationID == "" || accepted.Status != "running" || accepted.StatusURL == "" {
+		t.Fatalf("invalid operation receipt: %#v", accepted)
+	}
+	select {
+	case <-backend.started:
+	case <-time.After(time.Second):
+		t.Fatal("background mutation did not start")
+	}
+	close(backend.release)
+	deadline := time.Now().Add(2 * time.Second)
+	for {
+		status := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodGet, accepted.StatusURL, nil)
+		request.Header.Set("X-AgentStack-Token", "secret")
+		handler.ServeHTTP(status, request)
+		if status.Code != http.StatusOK {
+			t.Fatalf("operation status=%d: %s", status.Code, status.Body.String())
+		}
+		var operation struct {
+			Status string          `json:"status"`
+			Result json.RawMessage `json:"result"`
+		}
+		if err := json.Unmarshal(status.Body.Bytes(), &operation); err != nil {
+			t.Fatal(err)
+		}
+		if operation.Status == "succeeded" {
+			if len(operation.Result) == 0 || string(operation.Result) == "null" {
+				t.Fatal("completed operation omitted its result")
+			}
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("operation did not complete: %#v", operation)
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+}
+
+func TestShutdownIsLockedWhileBackgroundMutationRuns(t *testing.T) {
+	backend := &blockingApplyBackend{started: make(chan struct{}), release: make(chan struct{})}
+	t.Cleanup(func() {
+		select {
+		case <-backend.release:
+		default:
+			close(backend.release)
+		}
+	})
+	called := false
+	handler := NewHandler(HandlerOptions{Backend: backend, Token: "secret", SessionID: "browser-session", Version: "test", Shutdown: func() { called = true }})
+	applyResponse := httptest.NewRecorder()
+	go handler.ServeHTTP(applyResponse, authorizedRequest(http.MethodPost, "apply", `{"planId":"plan-1","digest":"sha256:plan","confirm":true}`))
+	<-backend.started
+	shutdownResponse := httptest.NewRecorder()
+	handler.ServeHTTP(shutdownResponse, authorizedRequest(http.MethodPost, "shutdown", `{}`))
+	close(backend.release)
+	if shutdownResponse.Code != http.StatusLocked || called {
+		t.Fatalf("shutdown raced active mutation: status=%d called=%v", shutdownResponse.Code, called)
+	}
+}
+
+func TestWriteJSONEmitsExactlyOneDocument(t *testing.T) {
+	response := httptest.NewRecorder()
+	writeJSON(response, http.StatusOK, map[string]any{"ok": true})
+	decoder := json.NewDecoder(response.Body)
+	var first map[string]any
+	if err := decoder.Decode(&first); err != nil {
+		t.Fatal(err)
+	}
+	var extra any
+	if err := decoder.Decode(&extra); !errors.Is(err, io.EOF) {
+		t.Fatalf("response contains more than one JSON document: %v body=%q", err, response.Body.String())
+	}
+}
+
+func TestLongMutationSurvivesHTTPWriteTimeoutViaOperationReceipt(t *testing.T) {
+	backend := &blockingApplyBackend{started: make(chan struct{}), release: make(chan struct{})}
+	handler := newTestHandler(backend)
+	server := httptest.NewUnstartedServer(handler)
+	server.Config.WriteTimeout = 40 * time.Millisecond
+	server.Start()
+	defer server.Close()
+	t.Cleanup(func() {
+		select {
+		case <-backend.release:
+		default:
+			close(backend.release)
+		}
+	})
+	request, err := http.NewRequest(http.MethodPost, server.URL+testBase+"api/apply", strings.NewReader(`{"planId":"plan-1","digest":"sha256:plan","confirm":true}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("X-AgentStack-Token", "secret")
+	response, err := server.Client().Do(request)
+	if err != nil {
+		t.Fatalf("client lost operation receipt before write timeout: %v", err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusAccepted {
+		body, _ := io.ReadAll(response.Body)
+		t.Fatalf("expected 202 receipt, got %d: %s", response.StatusCode, body)
+	}
+	var receipt operationReceipt
+	if err := json.NewDecoder(response.Body).Decode(&receipt); err != nil {
+		t.Fatal(err)
+	}
+	<-backend.started
+	time.Sleep(80 * time.Millisecond)
+	close(backend.release)
+	deadline := time.Now().Add(2 * time.Second)
+	for {
+		statusRequest, err := http.NewRequest(http.MethodGet, server.URL+receipt.StatusURL, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		statusRequest.Header.Set("X-AgentStack-Token", "secret")
+		statusResponse, err := server.Client().Do(statusRequest)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var operation operationStatus
+		decodeErr := json.NewDecoder(statusResponse.Body).Decode(&operation)
+		statusResponse.Body.Close()
+		if decodeErr != nil {
+			t.Fatal(decodeErr)
+		}
+		if operation.Status == "succeeded" {
+			return
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("backend completed but operation was not observable: %+v", operation)
+		}
+		time.Sleep(10 * time.Millisecond)
 	}
 }

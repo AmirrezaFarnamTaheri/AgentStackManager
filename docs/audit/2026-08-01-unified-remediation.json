@@ -1,0 +1,32 @@
+{
+  "schema": "agentstack.unified-remediation.v1",
+  "date": "2026-08-01",
+  "base_revision": "2356a0290239f3a7551a6db9dd7bb76f563fa96d",
+  "candidate_revision": null,
+  "workspace_status": "unreleased-remediation-workspace",
+  "source_findings_addressed": 17,
+  "local_verdict": "passes-locally-executable-review-gate",
+  "release_verdict": "blocked-pending-protected-external-gates",
+  "coverage_percent": 64.0,
+  "verification": {
+    "unit": "pass",
+    "race": "pass",
+    "shuffle_count_20": "pass",
+    "critical_coverage": "pass",
+    "fuzz_targets": 6,
+    "benchmarks": "pass",
+    "linux_builds": "pass",
+    "windows_cross_builds": "pass",
+    "source_archive_build": "pass",
+    "source_manifest_negative_control": "pass"
+  },
+  "external_gates": {
+    "go_1_26_5": "not-run-network-unavailable",
+    "native_windows": "not-run",
+    "powershell_release": "not-run-powershell-unavailable",
+    "authenticode": "not-run",
+    "playwright_axe": "not-run-dependency-not-cached",
+    "codex_review": "not-run-cli-unavailable",
+    "immutable_candidate_sha": "not-available-source-archive"
+  }
+}

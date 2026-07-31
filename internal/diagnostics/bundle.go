@@ -10,11 +10,11 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
-	"sort"
 	"strings"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/model"
+	"github.com/agentstack/agentstack/internal/redact"
 	"github.com/agentstack/agentstack/internal/safefile"
 	"github.com/agentstack/agentstack/internal/state"
 )
@@ -63,7 +63,11 @@ func Create(input Input) error {
 		temp.Close()
 		return err
 	}
-	if err := writeJSON(archive, "events.json", input.Events); err != nil {
+	events := make([]state.Event, len(input.Events))
+	for index, event := range input.Events {
+		events[index] = state.SanitizeEvent(event)
+	}
+	if err := writeJSON(archive, "events.json", events); err != nil {
 		archive.Close()
 		temp.Close()
 		return err
@@ -131,13 +135,5 @@ func SHA256(path string) (string, error) {
 }
 
 func RedactText(value string) string {
-	lines := strings.Split(value, "\n")
-	sort.Strings(lines)
-	for i, line := range lines {
-		lower := strings.ToLower(line)
-		if strings.Contains(lower, "token") || strings.Contains(lower, "secret") || strings.Contains(lower, "password") || strings.Contains(lower, "authorization") {
-			lines[i] = "[REDACTED]"
-		}
-	}
-	return strings.Join(lines, "\n")
+	return redact.Text(value)
 }

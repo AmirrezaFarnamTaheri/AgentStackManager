@@ -1,0 +1,117 @@
+{
+  "schema": "agentstack.external-report-accepted-items.v1",
+  "source_commit": "2356a0290239f3a7551a6db9dd7bb76f563fa96d",
+  "items": [
+    {
+      "id": "R1-DUP-PROC",
+      "disposition": "accepted-verified",
+      "status": "implemented",
+      "controls": [
+        "processctl.IsAlive",
+        "duplicate state process liveness files removed"
+      ],
+      "verification": [
+        "go test ./...",
+        "go test -race ./...",
+        "Windows test-package cross-compilation"
+      ]
+    },
+    {
+      "id": "R1-ACL",
+      "disposition": "accepted-revised",
+      "status": "implemented-windows-release-gated",
+      "controls": [
+        "destination permission metadata capture",
+        "POSIX mode preservation",
+        "Windows DACL preservation"
+      ],
+      "verification": [
+        "POSIX permission regression",
+        "native Windows explicit-DACL replacement test"
+      ]
+    },
+    {
+      "id": "R1-PATH",
+      "disposition": "accepted-narrowed",
+      "status": "implemented",
+      "controls": [
+        "canonical Windows PATH comparison package",
+        "persistent PATH append preserves unrelated entries",
+        "UTF-16LE/Base64 PowerShell transport preserves non-ASCII segments"
+      ],
+      "verification": [
+        "normalization tests",
+        "idempotence tests",
+        "duplicate preservation tests",
+        "Unicode transport round-trip",
+        "native Windows Unicode PATH preservation"
+      ]
+    },
+    {
+      "id": "R2-RESOURCE",
+      "disposition": "promoted-enhancement",
+      "status": "implemented-windows-release-gated",
+      "controls": [
+        "catalog process ceilings",
+        "Windows suspended-before-assignment",
+        "Windows Job Object job-memory cap",
+        "Windows CPU hard cap",
+        "active-process cap"
+      ],
+      "verification": [
+        "catalog and router-config tests",
+        "native Windows limited-job test"
+      ]
+    },
+    {
+      "id": "R3-PGID",
+      "disposition": "accepted-revised",
+      "status": "implemented",
+      "controls": [
+        "recorded PID/PGID identity",
+        "Linux process-start token when available",
+        "PID-reuse refusal",
+        "surviving-group probe after leader exit"
+      ],
+      "verification": [
+        "identity mismatch test",
+        "leader exit test",
+        "whole process-tree test"
+      ]
+    },
+    {
+      "id": "R3-BUSY",
+      "disposition": "promoted-enhancement",
+      "status": "implemented-accessibility-release-gated",
+      "controls": [
+        "shared operation controller",
+        "aria-busy",
+        "live status surface",
+        "control locking",
+        "focus preservation",
+        "reduced motion",
+        "Lucide navigation icons"
+      ],
+      "verification": [
+        "embedded UI contract",
+        "JavaScript syntax check",
+        "Playwright and axe CI"
+      ]
+    },
+    {
+      "id": "RELEASE-EVIDENCE",
+      "disposition": "retained-release-gate",
+      "status": "external-evidence-required",
+      "controls": [
+        "protected signed GitHub Release workflow"
+      ],
+      "verification": [
+        "native Windows x64",
+        "native Windows ARM64",
+        "Authenticode",
+        "SBOM and provenance attestations",
+        "accessibility"
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/redact"
 	"github.com/agentstack/agentstack/internal/safefile"
 )
 
@@ -42,7 +43,7 @@ func (s Store) AppendEvent(event Event) error {
 	if event.Timestamp.IsZero() {
 		event.Timestamp = time.Now().UTC()
 	}
-	event.Fields = redactFields(event.Fields)
+	event = SanitizeEvent(event)
 	path := filepath.Join(s.Root, "logs", "events.jsonl")
 	if info, err := os.Stat(path); err == nil && info.Size() >= maxEventLogBytes {
 		rotated := filepath.Join(s.Root, "logs", "events.previous.jsonl")
@@ -86,7 +87,7 @@ func (s Store) RecentEvents(limit int) ([]Event, error) {
 	for scanner.Scan() {
 		var event Event
 		if json.Unmarshal(scanner.Bytes(), &event) == nil {
-			events = append(events, event)
+			events = append(events, SanitizeEvent(event))
 		}
 	}
 	if err := scanner.Err(); err != nil {
@@ -98,43 +99,13 @@ func (s Store) RecentEvents(limit int) ([]Event, error) {
 	return events, nil
 }
 
-func redactFields(fields map[string]any) map[string]any {
-	if len(fields) == 0 {
-		return nil
-	}
-	result := make(map[string]any, len(fields))
-	for key, value := range fields {
-		lower := strings.ToLower(key)
-		if strings.Contains(lower, "token") || strings.Contains(lower, "secret") || strings.Contains(lower, "password") || strings.Contains(lower, "credential") || strings.Contains(lower, "authorization") || strings.Contains(lower, "api_key") || strings.Contains(lower, "apikey") {
-			result[key] = "[REDACTED]"
-			continue
-		}
-		result[key] = redactValue(value)
-	}
-	return result
-}
-
-func redactValue(value any) any {
-	switch typed := value.(type) {
-	case map[string]any:
-		return redactFields(typed)
-	case []any:
-		result := make([]any, len(typed))
-		for index, item := range typed {
-			result[index] = redactValue(item)
-		}
-		return result
-	case string:
-		lower := strings.ToLower(typed)
-		for _, marker := range []string{"bearer ", "ghp_", "github_pat_", "sk-", "api_key=", "apikey="} {
-			if strings.Contains(lower, marker) {
-				return "[REDACTED]"
-			}
-		}
-		return typed
-	default:
-		return value
-	}
+// SanitizeEvent removes credentials from both free-form messages and
+// structured fields. It is intentionally applied at persistence, read, and
+// export boundaries so legacy logs cannot bypass newer redaction rules.
+func SanitizeEvent(event Event) Event {
+	event.Message = redact.Text(event.Message)
+	event.Fields = redact.Fields(event.Fields)
+	return event
 }
 
 func (s Store) ExportData(destination string) error {
@@ -202,23 +173,11 @@ func (s Store) ExportData(destination string) error {
 			temp.Close()
 			return err
 		}
-		input, err := os.Open(path)
-		if err != nil {
-			archive.Close()
-			temp.Close()
-			return err
-		}
-		_, copyErr := io.Copy(writer, input)
-		closeErr := input.Close()
+		copyErr := copyExportContent(writer, path, filepath.ToSlash(rel))
 		if copyErr != nil {
 			archive.Close()
 			temp.Close()
 			return copyErr
-		}
-		if closeErr != nil {
-			archive.Close()
-			temp.Close()
-			return closeErr
 		}
 	}
 	manifest := map[string]any{"exportedAt": time.Now().UTC(), "dataRoot": "[LOCAL_USER_DATA_ROOT]", "files": len(files)}
@@ -246,6 +205,34 @@ func (s Store) ExportData(destination string) error {
 		return err
 	}
 	return replaceExport(tempName, destination)
+}
+
+func copyExportContent(writer io.Writer, source, relative string) error {
+	input, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+	defer input.Close()
+	if !strings.HasPrefix(relative, "logs/") || !strings.HasSuffix(relative, ".jsonl") {
+		_, err = io.Copy(writer, input)
+		return err
+	}
+	scanner := bufio.NewScanner(input)
+	scanner.Buffer(make([]byte, 64*1024), 1<<20)
+	encoder := json.NewEncoder(writer)
+	for scanner.Scan() {
+		var event Event
+		if err := json.Unmarshal(scanner.Bytes(), &event); err != nil {
+			if _, writeErr := fmt.Fprintln(writer, redact.Text(scanner.Text())); writeErr != nil {
+				return writeErr
+			}
+			continue
+		}
+		if err := encoder.Encode(SanitizeEvent(event)); err != nil {
+			return err
+		}
+	}
+	return scanner.Err()
 }
 
 func replaceExport(source, destination string) error {

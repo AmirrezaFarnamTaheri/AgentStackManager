@@ -32,3 +32,18 @@ The catalog SBOM describes all selectable components, not only Go module depende
 ## Vulnerability response
 
 Catalog updates must preserve exact versions and sources, update SBOM/license/VEX evidence, pass code-owner review, and produce a new signed release. VEX expresses applicability decisions; it does not suppress uninvestigated vulnerabilities.
+
+## Exact acquisition and inventory closure
+
+NPM and PyPI entries must use exact versions that agree with their catalog `version`
+metadata; ranges, tags, wildcards, URLs, and unversioned router acquisition commands are
+rejected. Skill-pack validation compares the complete discovered skill set to the audited
+`expectedEntries` set and fails on both missing and unexpected entries before any target is
+modified. Expected names use the portable lowercase alphanumeric/hyphen form, reject Windows
+device names and case-fold collisions, and every accepted skill tree must contain only regular
+files/directories with no symbolic links. Copying iterates only the audited allowlist.
+
+Source bundles include `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and a full
+`SOURCE_MANIFEST.sha256`. An unreleased archive explicitly identifies only its historical
+base and carries no candidate commit. Protected release automation overwrites those fields
+with the signed-tag commit and CI run evidence before packaging.

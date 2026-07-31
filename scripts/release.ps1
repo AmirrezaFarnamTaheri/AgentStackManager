@@ -69,10 +69,49 @@ function Sign-ScriptAndVerify([string]$Path) {
     if (($signature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant() -ne $thumbprint) { throw 'Unexpected PowerShell launcher signer' }
 }
 function Write-Checksums([string]$Directory) {
-    Get-ChildItem $Directory -File | Where-Object Name -ne 'SHA256SUMS.txt' | Sort-Object Name | ForEach-Object {
+    Get-ChildItem $Directory -Recurse -File | Where-Object Name -ne 'SHA256SUMS.txt' | ForEach-Object {
         $hash = Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName
-        "$($hash.Hash.ToLowerInvariant())  $($_.Name)"
+        [pscustomobject]@{
+            Relative=[IO.Path]::GetRelativePath($Directory,$_.FullName).Replace('\','/')
+            Hash=$hash.Hash.ToLowerInvariant()
+        }
+    } | Sort-Object Relative | ForEach-Object {
+        "$($_.Hash)  $($_.Relative)"
     } | Set-Content (Join-Path $Directory 'SHA256SUMS.txt') -Encoding utf8NoBOM
+}
+function Write-SourceManifest([string]$Directory) {
+    $manifest=Join-Path $Directory 'SOURCE_MANIFEST.sha256'
+    Get-ChildItem $Directory -Recurse -File | Where-Object FullName -ne $manifest | ForEach-Object {
+        $relative=[IO.Path]::GetRelativePath($Directory,$_.FullName).Replace('\','/')
+        [pscustomobject]@{ Relative=$relative; Hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant() }
+    } | Sort-Object Relative | ForEach-Object {
+        "$($_.Hash)  ./$($_.Relative)"
+    } | Set-Content $manifest -Encoding utf8NoBOM
+}
+function Assert-ReleaseOutput([string]$Directory) {
+    $expected=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach($name in @(
+        "AgentStackManager-$Version-windows-amd64.zip",
+        "AgentStackManager-$Version-windows-arm64.zip",
+        "AgentStackManager-$Version-source.zip",
+        'agentstack-windows-amd64.exe',
+        'agentstack-windows-arm64.exe',
+        'AgentStack-Setup-windows-amd64.exe',
+        'AgentStack-Setup-windows-arm64.exe',
+        'AgentStack-Setup.ps1',
+        'SHA256SUMS.txt',
+        'agentstack-catalog.cdx.json',
+        'agentstack-binary-amd64.cdx.json',
+        'agentstack-binary-arm64.cdx.json',
+        'agentstack.openvex.json',
+        'provenance.json',
+        'component-licenses.json'
+    )) { [void]$expected.Add($name) }
+    foreach($item in Get-ChildItem $Directory -Force) {
+        if ($item.PSIsContainer) { throw "Unexpected release output directory: $($item.Name)" }
+        if (-not $expected.Remove($item.Name)) { throw "Unexpected release output file: $($item.Name)" }
+    }
+    if ($expected.Count -ne 0) { throw "Release output is missing: $(([string[]]$expected | Sort-Object) -join ', ')" }
 }
 function Write-Provenance([string]$Revision) {
     foreach($required in @('GITHUB_SERVER_URL','GITHUB_REPOSITORY','GITHUB_RUN_ID','GITHUB_WORKFLOW_REF')) {
@@ -122,12 +161,20 @@ function Assert-Bundle([string]$Archive,[string]$Arch) {
         $manifest=Get-ChildItem $extract -Recurse -Filter SHA256SUMS.txt | Select-Object -First 1
         if (-not $manifest) { throw "Bundle $Archive has no internal checksum manifest" }
         $bundleRoot=Split-Path -Parent $manifest.FullName
+        $expected=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
         foreach($line in Get-Content -LiteralPath $manifest.FullName) {
             if ($line -notmatch '^([0-9a-fA-F]{64})\s{2}(.+)$') { throw "Invalid checksum line in $Archive`: $line" }
-            $file=Join-Path $bundleRoot $Matches[2]
-            if (-not (Test-Path -LiteralPath $file)) { throw "Bundle member missing: $($Matches[2])" }
+            $relative=$Matches[2].Replace('\','/')
+            if (-not $expected.Add($relative)) { throw "Duplicate checksum member in ${Archive}: $relative" }
+            $file=Join-Path $bundleRoot $relative
+            if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "Bundle member missing: $relative" }
             $actual=(Get-FileHash -Algorithm SHA256 -LiteralPath $file).Hash.ToLowerInvariant()
-            if ($actual -ne $Matches[1].ToLowerInvariant()) { throw "Bundle digest mismatch: $($Matches[2])" }
+            if ($actual -ne $Matches[1].ToLowerInvariant()) { throw "Bundle digest mismatch: $relative" }
+        }
+        foreach($file in Get-ChildItem $bundleRoot -Recurse -File) {
+            if ($file.FullName -eq $manifest.FullName) { continue }
+            $relative=[IO.Path]::GetRelativePath($bundleRoot,$file.FullName).Replace('\','/')
+            if (-not $expected.Contains($relative)) { throw "Bundle contains an unlisted member: $relative" }
         }
         $setup=Join-Path $bundleRoot 'AgentStack-Setup.exe'
         $console=Join-Path $bundleRoot "agentstack-windows-$Arch.exe"
@@ -163,13 +210,15 @@ try {
     Invoke-Checked go @('test','./...')
     Invoke-Checked go @('test','-race','./...')
     Invoke-Checked go @('vet','./...')
-    $coverage=Join-Path $dist 'coverage.out'
+    $coverage=Join-Path $env:RUNNER_TEMP 'agentstack-release-coverage.out'
+    Remove-Item $coverage -Force -ErrorAction SilentlyContinue
     Invoke-Checked go @('test',"-coverprofile=$coverage",'./...')
     & (Join-Path $root 'scripts/check-critical-coverage.sh') $coverage
     if ($LASTEXITCODE -ne 0) { throw 'Critical-path coverage gate failed' }
+    Remove-Item $coverage -Force
     Invoke-Checked govulncheck @('./...')
 
-    $baseFlags = "-s -w -buildid= -X main.version=$Version"
+    $baseFlags = "-s -w -buildid= -X main.version=$Version -X main.revision=git:$revision"
     foreach ($arch in @('amd64','arm64')) {
         $first = Join-Path $dist "agentstack-$arch.repro1.exe"
         $second = Join-Path $dist "agentstack-$arch.repro2.exe"
@@ -225,6 +274,7 @@ try {
         $archive=Join-Path $dist "$name.zip"
         Invoke-Checked go @('run','./cmd/releasepack','--root',$bundle,'--out',$archive,'--prefix',$name)
         Assert-Bundle $archive $arch
+        Remove-Item $bundle -Recurse -Force
     }
 
     $sourceTar=Join-Path $dist 'source.tar'
@@ -233,8 +283,24 @@ try {
     Invoke-Checked git @('archive','--format=tar','--output',$sourceTar,$tag)
     Invoke-Checked tar @('-xf',$sourceTar,'-C',$sourceRoot)
     Remove-Item $sourceTar
+    Set-Content (Join-Path $sourceRoot 'SOURCE_REVISION') "git:$revision" -Encoding utf8NoBOM
+    [ordered]@{
+        schemaVersion=1
+        status='protected-release-candidate'
+        baseRevision=$revision
+        candidateRevision=$revision
+        releaseTag=$tag
+        repository="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY"
+        workflowRef=$env:GITHUB_WORKFLOW_REF
+        runId=$env:GITHUB_RUN_ID
+    } | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $sourceRoot 'SOURCE_PROVENANCE.json') -Encoding utf8NoBOM
+    Write-SourceManifest $sourceRoot
     Invoke-Checked go @('run','./cmd/releasepack','--root',$sourceRoot,'--out',(Join-Path $dist "AgentStackManager-$Version-source.zip"),'--prefix',"AgentStackManager-$Version-source")
+    Remove-Item $sourceRoot -Recurse -Force
+    Remove-Item (Join-Path $dist 'README.md'),(Join-Path $dist 'LICENSE'),(Join-Path $dist 'CHANGELOG.md') -Force
+    Remove-Item (Join-Path $dist 'docs') -Recurse -Force
     Write-Checksums $dist
+    Assert-ReleaseOutput $dist
     Write-Host "Release candidates created at $dist" -ForegroundColor Green
 }
 finally {

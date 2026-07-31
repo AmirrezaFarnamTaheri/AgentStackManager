@@ -8,22 +8,40 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/agentstack/agentstack/internal/pathenv"
 )
 
 func ensureUserPath(target string) (bool, string, error) {
-	script := `$target=$env:AGENTSTACK_BIN; $current=[Environment]::GetEnvironmentVariable('Path','User'); ` +
-		`$parts=@($current -split ';' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }); ` +
-		`$normalized=$target.TrimEnd('\\','/'); ` +
-		`$exists=$false; foreach($part in $parts){ if($part.TrimEnd('\\','/').Equals($normalized,[StringComparison]::OrdinalIgnoreCase)){ $exists=$true } }; ` +
-		`if($exists){ Write-Output 'unchanged'; exit 0 }; ` +
-		`$next=(@($parts)+$target)-join ';'; [Environment]::SetEnvironmentVariable('Path',$next,'User'); Write-Output 'changed'`
-	cmd := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script)
-	cmd.Env = append(os.Environ(), "AGENTSTACK_BIN="+target)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout, cmd.Stderr = &stdout, &stderr
-	if err := cmd.Run(); err != nil {
-		return false, "", fmt.Errorf("update user PATH: %w: %s", err, stderr.String())
+	current, err := readUserPath()
+	if err != nil {
+		return false, "", err
 	}
-	changed := strings.Contains(strings.ToLower(stdout.String()), "changed") && !strings.Contains(strings.ToLower(stdout.String()), "unchanged")
-	return changed, strings.TrimSpace(stdout.String()), nil
+	next, changed := AppendPathSegment(current, target)
+	if !changed {
+		return false, "unchanged", nil
+	}
+	encoded := pathenv.EncodeWindowsString(next)
+	script := `$value=[Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($env:AGENTSTACK_USER_PATH_B64)); [Environment]::SetEnvironmentVariable('Path',$value,'User')`
+	cmd := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script)
+	cmd.Env = append(os.Environ(), "AGENTSTACK_USER_PATH_B64="+encoded)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		return false, "", fmt.Errorf("update user PATH: %w: %s", err, strings.TrimSpace(stderr.String()))
+	}
+	return true, "changed", nil
+}
+
+func readUserPath() (string, error) {
+	script := `$value=[Environment]::GetEnvironmentVariable('Path','User'); if($null -eq $value){$value=''}; [Console]::Out.Write([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($value)))`
+	output, err := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script).CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("read user PATH: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	value, decodeErr := pathenv.DecodeWindowsString(string(output))
+	if decodeErr != nil {
+		return "", fmt.Errorf("decode user PATH: %w", decodeErr)
+	}
+	return value, nil
 }

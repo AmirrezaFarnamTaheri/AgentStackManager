@@ -136,9 +136,20 @@ func NewDefault() (*Service, error) {
 		DoctorTTL:  30 * time.Second,
 	}
 	service.Installer.Verifier = inventory.Verifier{Scanner: service.Scanner, Catalog: c}
-	_, _ = service.Store.RecoverIncompleteTransactions()
-	_, _ = service.Store.Prune(time.Now().UTC(), state.DefaultRetentionPolicy())
+	if err := prepareStore(service.Store, time.Now().UTC()); err != nil {
+		return nil, err
+	}
 	return service, nil
+}
+
+func prepareStore(store state.Store, now time.Time) error {
+	if _, err := store.RecoverIncompleteTransactions(); err != nil {
+		return fmt.Errorf("recover incomplete transactions: %w", err)
+	}
+	if _, err := store.Prune(now, state.DefaultRetentionPolicy()); err != nil {
+		return fmt.Errorf("apply data retention policy: %w", err)
+	}
+	return nil
 }
 
 type defaultLocator struct{}
@@ -306,6 +317,13 @@ func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confi
 		routerReport, routerErr := s.configureRouter(ctx, plan, MCPInitOptions{Request: saved.Request, RegisterClients: true, Warm: true})
 		report.Router = &routerReport
 		if routerErr != nil {
+			transaction.Status = model.TransactionPartial
+			transaction.FinishedAt = time.Now().UTC()
+			report.Transaction = transaction
+			if saveErr := s.Store.SaveTransaction(transaction); saveErr != nil {
+				return report, fmt.Errorf("router configuration failed after installation (%v), and partial transaction persistence failed: %w", routerErr, saveErr)
+			}
+			_ = s.logEvent(state.Event{Level: "error", Type: "apply.partial", CorrelationID: plan.ID, Message: routerErr.Error(), Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
 			return report, routerErr
 		}
 	}

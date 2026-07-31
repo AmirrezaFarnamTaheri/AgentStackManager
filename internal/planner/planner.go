@@ -33,6 +33,7 @@ func Build(c model.Catalog, inventory model.Inventory, request Request) (model.P
 
 	selected := make(map[string]bool)
 	excluded := make(map[string]bool)
+	included := make(map[string]bool)
 	for _, id := range profile.Components {
 		selected[id] = true
 	}
@@ -40,9 +41,16 @@ func Build(c model.Catalog, inventory model.Inventory, request Request) (model.P
 		if _, exists := c.ComponentByID(id); !exists {
 			return model.Plan{}, fmt.Errorf("unknown included component %q", id)
 		}
+		included[id] = true
 		selected[id] = true
 	}
 	for _, id := range request.Exclude {
+		if _, exists := c.ComponentByID(id); !exists {
+			return model.Plan{}, fmt.Errorf("unknown excluded component %q", id)
+		}
+		if included[id] {
+			return model.Plan{}, fmt.Errorf("component %q is both included and excluded", id)
+		}
 		excluded[id] = true
 		delete(selected, id)
 	}
@@ -60,6 +68,9 @@ func Build(c model.Catalog, inventory model.Inventory, request Request) (model.P
 		}
 		if component.Capability != capability {
 			return model.Plan{}, fmt.Errorf("component %q does not provide capability %q", componentID, capability)
+		}
+		if excluded[componentID] {
+			return model.Plan{}, fmt.Errorf("provider override for %q references excluded component %q", capability, componentID)
 		}
 		activeProviders[capability] = componentID
 		selected[componentID] = true

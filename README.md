@@ -11,7 +11,10 @@ AgentStack Manager is a preservation-first Windows control plane for local engin
 - Credential integrations require explicit selection and never store provider credentials.
 - AgentStack-owned resources can be previewed, deactivated, removed, quarantined, backed up, restored, exported, or cleared without treating unrelated software as owned.
 - The managed MCP router negotiates protocol versions, bounds output, performs live health probes, and reuses healthy child processes.
+- Catalog-managed MCP children use explicit Windows Job Object resource ceilings for job memory, CPU rate, and active process count.
 - Public release automation is fail-closed on a clean signed tag, supported Go toolchain, vulnerability scans, reproducibility checks, Authenticode verification, SBOM/license/VEX evidence, and Windows runtime gates.
+
+The browser manager uses one coherent icon language and a persistent accessible operation-status surface; long-running controls cannot be submitted twice while work is active.
 
 ## Windows installation
 

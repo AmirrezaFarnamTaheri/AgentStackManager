@@ -21,6 +21,9 @@ func TestProcessHelper(t *testing.T) {
 		time.Sleep(2 * time.Minute)
 		return
 	}
+	if mode == "exit" {
+		return
+	}
 	if mode != "parent" {
 		t.Fatalf("unknown helper mode %q", mode)
 	}
@@ -142,4 +145,24 @@ func TestGracefulCloseEscalatesWhenChildIgnoresInput(t *testing.T) {
 		// result is also acceptable if the platform reports clean shutdown.
 	}
 	waitDead(t, cmd.Process.Pid)
+}
+
+func TestStartHandlesImmediatelyExitingProcess(t *testing.T) {
+	if os.Getenv("AGENTSTACK_PROCESS_HELPER") != "" {
+		return
+	}
+	for attempt := 0; attempt < 5; attempt++ {
+		cmd := exec.Command(os.Args[0], "-test.run=^TestProcessHelper$")
+		cmd.Env = append(os.Environ(), "AGENTSTACK_PROCESS_HELPER=exit")
+		managed, err := Start(cmd)
+		if err != nil {
+			t.Fatalf("attempt %d: start immediate process: %v", attempt, err)
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		err = managed.Wait(ctx)
+		cancel()
+		if err != nil {
+			t.Fatalf("attempt %d: wait immediate process: %v", attempt, err)
+		}
+	}
 }

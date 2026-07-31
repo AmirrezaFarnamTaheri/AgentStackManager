@@ -32,7 +32,11 @@ jobs:
           ./scripts/check-critical-coverage.sh coverage.out
           ./scripts/check-governance.sh
           ./scripts/check-docs.sh
+          ./scripts/check-benchmarks.sh benchmark-results.txt
           git diff --check
+      - name: Source archive build without Git metadata
+        shell: bash
+        run: ./scripts/check-source-archive-build.sh "git:${GITHUB_SHA}"
       - name: Govulncheck
         shell: bash
         run: |
@@ -51,6 +55,7 @@ jobs:
           name: assurance-evidence
           path: |
             coverage.txt
+            benchmark-results.txt
             agentstack-catalog.cdx.json
   mutation-testing:
     runs-on: ubuntu-24.04

@@ -15,6 +15,7 @@ import (
 
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/redact"
 	"github.com/agentstack/agentstack/internal/safefile"
 )
 
@@ -149,14 +150,11 @@ func minimizedTransaction(value model.Transaction) model.Transaction {
 }
 
 func redactPersistedText(value string) string {
-	if value == "" {
-		return ""
+	redacted := redact.Text(value)
+	if redacted != value {
+		return redact.Replacement
 	}
-	redacted, ok := redactValue(value).(string)
-	if !ok {
-		return "[REDACTED]"
-	}
-	return redacted
+	return value
 }
 
 func validRecordID(value string) bool {

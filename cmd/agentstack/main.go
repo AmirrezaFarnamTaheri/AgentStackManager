@@ -18,6 +18,7 @@ import (
 )
 
 var version = "dev"
+var revision = "unavailable"
 var defaultMode = "ui"
 var consoleSHA256 = ""
 var publisherThumbprint = ""
@@ -65,7 +66,7 @@ func main() {
 			args = append(args, "--no-launch")
 		}
 	}
-	command := cli.New(service, version)
+	command := cli.New(service, version, revision)
 	if setupDefault {
 		command.InstallSelf = func() (selfinstall.Report, error) {
 			return selfinstall.InstallFrom(releaseConsolePath)

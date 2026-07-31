@@ -25,8 +25,18 @@ grep -q 'cimg/go:1.26.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d4
 grep -Rqs 'golang.org/x/vuln/cmd/govulncheck@v1.1.4' .github/workflows .circleci/config.yml
 grep -q 'github.com/rhysd/actionlint/cmd/actionlint@v1.7.12' .github/workflows/verify.yml
 grep -q 'github.com/anchore/syft/cmd/syft@v1.50.0' .github/workflows/release.yml
+grep -Fq 'Remove-Item $bundle -Recurse -Force' scripts/release.ps1
+grep -Fq 'Remove-Item $sourceRoot -Recurse -Force' scripts/release.ps1
+grep -Fq "Get-ChildItem \$Directory -Recurse -File" scripts/release.ps1
+grep -Fq 'Bundle contains an unlisted member' scripts/release.ps1
+grep -Fq "Join-Path \$env:RUNNER_TEMP 'agentstack-release-coverage.out'" scripts/release.ps1
+grep -Fq 'Assert-ReleaseOutput $dist' scripts/release.ps1
+grep -Fq "if (\$Architecture -eq 'amd64')" scripts/windows-e2e.ps1
 grep -Rqs "go-version-file: '.go-version'" .github/workflows/verify.yml .github/workflows/release.yml
 for workflow in verify.yml release.yml; do test -s ".github/workflows/$workflow"; done
+for script in scripts/build.sh scripts/check-critical-coverage.sh scripts/check-docs.sh scripts/check-governance.sh scripts/fuzz.sh; do
+  [[ -x "$script" ]] || { echo "required CI script is not executable: $script" >&2; exit 1; }
+done
 release_workflow=.github/workflows/release.yml
 grep -q 'workflow_dispatch:' "$release_workflow"
 grep -q '^concurrency:' "$release_workflow"

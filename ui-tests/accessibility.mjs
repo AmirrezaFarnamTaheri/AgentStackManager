@@ -71,6 +71,22 @@ try {
     throw new Error('skip link did not move focus to the main overview heading');
   }
 
+  await page.route('**/api/inventory', async route => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await route.continue();
+  }, { times: 1 });
+  const refreshButton = page.locator('#refreshBtn');
+  await refreshButton.focus();
+  await refreshButton.click();
+  await page.locator('#mainContent[aria-busy="true"]').waitFor();
+  await page.locator('#refreshBtn[aria-busy="true"]:disabled').waitFor();
+  await page.locator('#operationStatus[data-state="running"]').waitFor();
+  await page.locator('#operationStatus[data-state="success"]').waitFor();
+  await page.waitForFunction(() => !document.querySelector('#mainContent')?.hasAttribute('aria-busy'));
+  if (await page.evaluate(() => document.activeElement?.id) !== 'refreshBtn') {
+    throw new Error('operation completion did not restore focus to the initiating control');
+  }
+
   const componentsNav = page.locator('[data-section="components"]');
   await componentsNav.focus();
   await page.keyboard.press('Enter');
@@ -102,12 +118,15 @@ try {
     axeViolations: axe.violations.length,
     blockingViolations: blocking.length,
     keyboardNavigation: 'pass',
+    operationFeedback: 'pass',
     reducedMotion: 'pass',
     shutdown: 'pass'
   }, null, 2));
 } finally {
   if (browser) await browser.close();
   if (child.exitCode === null) child.kill('SIGTERM');
-  await new Promise(resolve => child.once('exit', resolve));
+  if (child.exitCode === null) {
+    await new Promise(resolve => child.once('exit', resolve));
+  }
   await rm(isolatedHome, { recursive: true, force: true });
 }

@@ -557,3 +557,41 @@ func TestGuidedIntegrationsExposeOfficialNextStepWithoutSecretStorage(t *testing
 		t.Fatalf("unexpected guided integration: %+v", items)
 	}
 }
+
+func TestApplyPlannedPersistsPartialTransactionWhenRouterConfigurationFails(t *testing.T) {
+	c := model.Catalog{Version: 1, Components: []model.Component{{ID: "memory", Name: "Memory", Tier: model.TierEssential, Install: model.InstallSpec{Kind: model.InstallRouter}, Router: &model.RouterServerSpec{Command: "npx", Args: []string{"memory"}}}}, Profiles: []model.Profile{{ID: "essential", Components: []string{"memory"}}}}
+	service := minimalService(t, c, &appRunner{})
+	plan, err := service.Plan(context.Background(), planner.Request{Profile: "essential"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	blocker := filepath.Join(t.TempDir(), "not-a-directory")
+	if err := os.WriteFile(blocker, []byte("x"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	service.Paths.DataRoot = blocker
+	report, err := service.ApplyPlanned(context.Background(), plan.ID, plan.Digest, true)
+	if err == nil {
+		t.Fatal("expected router configuration failure")
+	}
+	if report.Transaction.Status != model.TransactionPartial {
+		t.Fatalf("expected partial transaction, got %s", report.Transaction.Status)
+	}
+	persisted, loadErr := service.Store.LoadTransaction(report.Transaction.ID)
+	if loadErr != nil {
+		t.Fatal(loadErr)
+	}
+	if persisted.Status != model.TransactionPartial {
+		t.Fatalf("persisted transaction status=%s", persisted.Status)
+	}
+}
+
+func TestPrepareStoreSurfacesRecoveryAndRetentionErrors(t *testing.T) {
+	blocker := filepath.Join(t.TempDir(), "not-a-directory")
+	if err := os.WriteFile(blocker, []byte("x"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := prepareStore(state.NewStore(blocker), time.Now().UTC()); err == nil {
+		t.Fatal("startup store preparation silently ignored recovery/retention error")
+	}
+}

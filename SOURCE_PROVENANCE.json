@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "status": "unreleased-remediation-workspace",
+  "baseRevision": "2356a0290239f3a7551a6db9dd7bb76f563fa96d",
+  "candidateRevision": null,
+  "releaseTag": null,
+  "repository": null,
+  "workflowRef": null,
+  "runId": null,
+  "note": "This source bundle is not immutable release evidence. A protected release overwrites this file with the signed-tag commit and CI provenance."
+}

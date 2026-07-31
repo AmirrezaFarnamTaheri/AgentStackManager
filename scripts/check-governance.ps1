@@ -21,6 +21,13 @@ $goVersion=(Get-Content -Raw (Join-Path $root '.go-version')).Trim()
 if ($goVersion -ne '1.26.5') { throw '.go-version must pin Go 1.26.5' }
 $workflowText=(Get-Content -Raw (Join-Path $root '.github/workflows/verify.yml')) + (Get-Content -Raw (Join-Path $root '.github/workflows/release.yml'))
 $releaseWorkflow=Get-Content -Raw (Join-Path $root '.github/workflows/release.yml')
+$windowsE2E=Get-Content -Raw (Join-Path $root 'scripts/windows-e2e.ps1')
+if ($windowsE2E -notmatch [regex]::Escape("if (`$Architecture -eq 'amd64')")) { throw 'Windows E2E must gate the race detector to supported windows/amd64 runners' }
+$requiredExecutableScripts=@('scripts/build.sh','scripts/check-critical-coverage.sh','scripts/check-docs.sh','scripts/check-governance.sh','scripts/fuzz.sh')
+foreach($script in $requiredExecutableScripts) {
+    $entry=git -C $root ls-files -s -- $script
+    if ($LASTEXITCODE -ne 0 -or $entry -notmatch '^100755\s') { throw "Required CI script is not executable in Git: $script" }
+}
 foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:')) {
     if ($releaseWorkflow -notmatch $requiredPattern) { throw "Release workflow is missing required control: $requiredPattern" }
 }
