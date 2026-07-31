@@ -2,7 +2,7 @@
 1a1dbe176bc233b499d35a57db7513f2941c99ab9759f177830c9149be99005b  ./.gitattributes
 9016a78b2627a2faf5c79b792f9a0756184cfa0fb4061e4d7c402474bf61d045  ./.github/CODEOWNERS
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
-bf929d37d06b56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/environments/release-policy.json
+bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
 8977920ef8e925cf1d4ed3aedd5d59361807e05608d640bd8c28b762793c4243  ./.github/workflows/release.yml
 da1d555cd8d5157c29c50582f6d1610ca1c7154b6e5d90ef43ffa2dba5149ff4  ./.github/workflows/verify.yml
