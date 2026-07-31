@@ -37,7 +37,7 @@ func TestReplacePreservesExplicitWindowsDACL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if bytes.Equal(before.descriptor, sourceBefore.descriptor) {
+	if before.dacl.SDDL == sourceBefore.dacl.SDDL {
 		t.Fatal("test precondition failed: source already has destination DACL")
 	}
 
@@ -48,8 +48,8 @@ func TestReplacePreservesExplicitWindowsDACL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if before.securityInformation != after.securityInformation || !bytes.Equal(before.descriptor, after.descriptor) {
-		t.Fatal("destination DACL changed during atomic replacement")
+	if before.dacl.SecurityInformation != after.dacl.SecurityInformation || before.dacl.SDDL != after.dacl.SDDL {
+		t.Fatalf("destination DACL changed during atomic replacement: before=%q after=%q", before.dacl.SDDL, after.dacl.SDDL)
 	}
 }
 
