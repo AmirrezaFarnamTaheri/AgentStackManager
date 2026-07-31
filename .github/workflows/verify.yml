@@ -29,14 +29,14 @@ jobs:
           go vet ./...
           go test -coverprofile=coverage.out ./...
           go tool cover -func=coverage.out | tee coverage.txt
-          ./scripts/check-critical-coverage.sh coverage.out
-          ./scripts/check-governance.sh
-          ./scripts/check-docs.sh
-          ./scripts/check-benchmarks.sh benchmark-results.txt
+          bash scripts/check-critical-coverage.sh coverage.out
+          bash scripts/check-governance.sh
+          bash scripts/check-docs.sh
+          bash scripts/check-benchmarks.sh benchmark-results.txt
           git diff --check
       - name: Source archive build without Git metadata
         shell: bash
-        run: ./scripts/check-source-archive-build.sh "git:${GITHUB_SHA}"
+        run: bash scripts/check-source-archive-build.sh "git:${GITHUB_SHA}"
       - name: Govulncheck
         shell: bash
         run: |
@@ -44,7 +44,7 @@ jobs:
           govulncheck ./...
       - name: Fuzz seed campaigns
         shell: bash
-        run: ./scripts/fuzz.sh 20s
+        run: bash scripts/fuzz.sh 20s
       - name: Catalog SBOM and license coverage
         shell: bash
         run: |
