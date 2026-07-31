@@ -5,7 +5,7 @@
 bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
 8977920ef8e925cf1d4ed3aedd5d59361807e05608d640bd8c28b762793c4243  ./.github/workflows/release.yml
-fb6e04e5ef984ad8bdefc28b126c5681e50612d235221ec8be7ba45198e1f805  ./.github/workflows/verify.yml
+da1d555cd8d5157c29c50582f6d1610ca1c7154b6e5d90ef43ffa2dba5149ff4  ./.github/workflows/verify.yml
 6263084463b96fb3c9ce56ffd55d4b1f20f88286c6f907ddde0dc31251378e53  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
 5d6072ec72fb9e5bcac9fc0f1ded9b3f3b519ce7cb44b8af71d31c7e0995be4a  ./.gremlins.yaml
@@ -174,8 +174,8 @@ a0babe9956c91cc54f5a9c6f21f483becde2c0d74bc11d7c7e433fced97ad72a  ./scripts/appl
 2037f59fdefb8ffcb6a60c03e7fbb4a9684bd9cbaf77557d69e5d9c07443d507  ./scripts/check-critical-coverage.sh
 69cf2a3b99cf227ced57b31bfd2fc3605fc9db0ff34f5175a7b9c29a71ffb1a8  ./scripts/check-docs.ps1
 a9161dfda7b2b03cac2e3a059d4832417dd0a886d0de06c148d0f0e90a22bb09  ./scripts/check-docs.sh
-4bc76023210ade8994bd41e3ad0d52c3004ca3bb46620143dff2271a524d7497  ./scripts/check-governance.ps1
-cfaa18ded1113c152c1457cce40937b3630d6536db9c6c8d6e76855a7dd9c8ce  ./scripts/check-governance.sh
+41fcc0f868dffeb33c30a997534315c91f966623b33fdb4a9dede92fc7c34621  ./scripts/check-governance.ps1
+885483135cce36bc1342b795deca5e05d4620adf9e07152981f5ae2679860243  ./scripts/check-governance.sh
 daa44c3114292051aafcdb846f21be2c93a88d1e88e7981289d825b9cb4a203e  ./scripts/check-source-archive-build.sh
 6f16c19d19588190dba41d225bf3be4ad49d86d40c8a2802d71eb25369bc1628  ./scripts/fuzz.sh
 86fe71a496743c85168464c027201a5e8c2a77b9003db3e643d75c635deb9fd9  ./scripts/release.ps1
