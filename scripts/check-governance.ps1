@@ -28,8 +28,29 @@ foreach($script in $requiredExecutableScripts) {
     $entry=git -C $root ls-files -s -- $script
     if ($LASTEXITCODE -ne 0 -or $entry -notmatch '^100755\s') { throw "Required CI script is not executable in Git: $script" }
 }
-foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:')) {
+foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:', 'git/ref/tags/', "object\.type\s+-ne\s+'tag'", 'ref=refs/tags/\$tag')) {
     if ($releaseWorkflow -notmatch $requiredPattern) { throw "Release workflow is missing required control: $requiredPattern" }
+}
+$preflightIndex=$releaseWorkflow.IndexOf('name: Validate requested release tag',[StringComparison]::Ordinal)
+$checkoutIndex=$releaseWorkflow.IndexOf('uses: actions/checkout@',[StringComparison]::Ordinal)
+if ($preflightIndex -lt 0 -or $checkoutIndex -lt 0 -or $preflightIndex -ge $checkoutIndex) { throw 'Release tag validation must run before checkout' }
+foreach($requiredAction in @(
+    'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1',
+    'actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0',
+    'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0',
+    'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1',
+    'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1'
+)) {
+    if ($workflowText -notmatch [regex]::Escape($requiredAction)) { throw "Required Node 24-compatible action pin is missing: $requiredAction" }
+}
+foreach($deprecatedAction in @(
+    'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2',
+    'actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0',
+    'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0',
+    'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2',
+    'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0'
+)) {
+    if ($workflowText -match [regex]::Escape($deprecatedAction)) { throw "Deprecated Node 20-era action pin remains: $deprecatedAction" }
 }
 if ($releaseWorkflow -match 'softprops/action-gh-release') { throw 'Release publication must use the authenticated GitHub CLI, not a third-party release action' }
 if ($workflowText -notmatch "go-version-file:\s*'\.go-version'") { throw 'GitHub workflows must use .go-version' }
