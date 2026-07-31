@@ -35,7 +35,7 @@ Replace `v1.0.0` with the intended version. `git status --short` must produce no
 - pushing an existing signed annotated `v*` tag;
 - manually dispatching the workflow with an existing signed annotated tag and an optional prerelease flag.
 
-The workflow serializes runs per tag, checks out the exact tag, verifies that the tag commit equals protected `origin/main`, builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
+Before checkout, manual dispatch validates that the requested ref exists and resolves to an annotated tag object through the GitHub API. The workflow then serializes runs per tag, checks out the exact tag, verifies that the tag commit equals protected `origin/main`, builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
 
 Publication uses the job-scoped `GITHUB_TOKEN` with `contents: write`; build jobs receive only the read, identity-token, attestation, and artifact-metadata permissions they require. Existing GitHub Releases are never overwritten.
 
