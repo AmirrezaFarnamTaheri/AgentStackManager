@@ -6,120 +6,146 @@
   <meta name="agentstack-token" content="__AGENTSTACK_TOKEN__">
   <meta name="agentstack-version" content="__AGENTSTACK_VERSION__">
   <meta name="agentstack-base" content="__AGENTSTACK_BASE__">
+  <meta name="theme-color" content="#edf0ef">
   <title>AgentStack Manager</title>
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+  <!--
+  THESIS: AgentStack is a conservation ledger for local tooling, not a generic SaaS dashboard. It refuses the marketing-hero plus equal-card arrangement.
+  OWN-WORLD: Cold paper surfaces, graphite structure, muted teal actions, compact provenance seals, and registry rows.
+  STORY: Inspect what exists, select what belongs, review the sealed record, then authorize only that record.
+  FIRST VIEWPORT: A narrow navigation rail, compact workspace masthead, live operation ribbon, machine-state ledger, and one elevated configuration surface.
+  FORM: Conservation Ledger, assigned direction 4; seed b47af99d.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
   <a class="skip-link" href="#overview-title">Skip to main content</a>
   <div class="shell">
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="AgentStack workspace">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 2 3.5 6.5 12 11l8.5-4.5L12 2Zm-8.5 9L12 15.5 20.5 11M3.5 15.5 12 20l8.5-4.5"/></svg>
-        </div>
-        <div><strong>AgentStack</strong><span>Manager</span></div>
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="brand-copy"><strong>AgentStack</strong><span>Local control plane</span></div>
       </div>
+
+      <div class="workspace-note">
+        <strong>Preserve. Review. Apply.</strong>
+        <span>Every mutation starts with an inventory-bound plan.</span>
+      </div>
+
       <nav aria-label="Primary">
-        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Overview</button>
-        <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>Components</button>
-        <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg>Install plan</button>
-        <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg>MCP router</button>
+        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Overview</span></button>
+        <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg><span>Components</span></button>
+        <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg><span>Install plan</span></button>
+        <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg><span>MCP router</span></button>
       </nav>
+
       <div class="sidebar-foot">
-        <span class="status-dot"></span><span>Local-only control plane</span>
-        <small>v__AGENTSTACK_VERSION__</small>
+        <div><strong>Loopback only</strong><span>Credentials stay with their providers.</span></div>
+        <small>Version __AGENTSTACK_VERSION__</small>
       </div>
     </aside>
 
     <main id="mainContent">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">Preservation-first agent tooling</p>
-          <h1>Build the stack you actually need.</h1>
-          <p>Keep everything already installed. Add missing essentials. Repair AgentStack-owned tools that disappeared. Activate one provider per capability. Opt into credentials only when you choose.</p>
+        <div class="title-block">
+          <h1>Local stack control</h1>
+          <p>Inspect the machine, choose capabilities, and authorize only the sealed changes you reviewed.</p>
         </div>
-        <div class="top-actions">
+        <div class="top-actions" aria-label="Workspace actions">
           <button id="refreshBtn" class="button secondary" data-operation data-busy-label="Refreshing…">Refresh inventory</button>
           <button id="installSelfBtn" class="button primary" data-operation data-busy-label="Installing…">Install AgentStack</button>
-          <button id="exitBtn" class="button secondary" data-operation data-busy-label="Stopping…">Exit manager</button>
+          <button id="exitBtn" class="button quiet" data-operation data-busy-label="Stopping…">Exit</button>
         </div>
       </header>
 
       <div id="operationStatus" class="operation-status" data-state="idle" role="status" aria-live="polite" aria-atomic="true">
         <span class="operation-status-icon" aria-hidden="true"><span class="operation-spinner"></span></span>
         <span class="operation-status-copy"><strong id="operationStatusTitle">Ready</strong><small id="operationStatusDetail">No operation is running.</small></span>
+        <span class="operation-seal" aria-hidden="true">Local</span>
       </div>
 
       <section id="overview" class="section active-section" aria-labelledby="overview-title">
-        <h2 id="overview-title" class="visually-hidden" tabindex="-1">Overview</h2>
-        <div class="metrics" id="metrics">
-          <article><span>Detected</span><strong id="detectedMetric">—</strong><small>catalog components</small></article>
-          <article><span>Preserved</span><strong id="preservedMetric">—</strong><small>existing installations</small></article>
-          <article><span>Selected</span><strong id="selectedMetric">—</strong><small>active profile items</small></article>
-          <article><span>Credentials</span><strong id="credentialMetric">Off</strong><small>explicit opt-in</small></article>
+        <div class="section-heading compact-heading">
+          <div><h2 id="overview-title" tabindex="-1">Machine overview</h2><p>Current inventory and the controls that determine the next sealed plan.</p></div>
         </div>
 
-        <div class="grid two">
-          <section class="panel">
-            <div class="panel-head"><div><h2>Installation profile</h2><p>Profiles select capabilities; they never remove unrelated software.</p></div></div>
-            <label class="field">Profile
-              <select id="profileSelect" data-operation-lock></select>
-            </label>
-            <label class="switch-row">
-              <input type="checkbox" id="credentialToggle" data-operation-lock>
-              <span><strong>Enable credential integrations</strong><small>Allows selected login-dependent tools into the plan. No login starts automatically.</small></span>
-            </label>
-            <label class="switch-row">
-              <input type="checkbox" id="upgradeToggle" data-operation-lock>
-              <span><strong>Allow reviewed runtime upgrades</strong><small>Only incompatible selected runtimes enter the plan. Existing compatible tools remain untouched.</small></span>
-            </label>
-            <label class="field">Browser provider
-              <select id="browserProvider" data-operation-lock></select>
-            </label>
-            <div class="button-row">
+        <div class="metrics" id="metrics" aria-label="Inventory summary">
+          <article><span>Detected</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>installed catalog items</small></article>
+          <article><span>Preserved</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>left in place</small></article>
+          <article><span>Selected</span><strong id="selectedMetric" class="metric-value is-loading">0</strong><small>profile components</small></article>
+          <article><span>Credentials</span><strong id="credentialMetric" class="metric-value is-loading">Off</strong><small>explicit opt-in</small></article>
+        </div>
+
+        <div class="overview-grid">
+          <section class="panel profile-panel">
+            <div class="panel-head"><div><h3>Configure the reviewed scope</h3><p>Profiles select capabilities. They never remove unrelated software.</p></div><span class="record-seal">Plan input</span></div>
+            <div class="form-grid">
+              <label class="field">Profile
+                <select id="profileSelect" data-operation-lock></select>
+              </label>
+              <label class="field">Browser provider
+                <select id="browserProvider" data-operation-lock></select>
+              </label>
+            </div>
+            <div class="choice-stack">
+              <label class="switch-row">
+                <input type="checkbox" id="credentialToggle" data-operation-lock>
+                <span><strong>Enable credential integrations</strong><small>Allows selected login-dependent tools into the plan. No login starts automatically.</small></span>
+              </label>
+              <label class="switch-row">
+                <input type="checkbox" id="upgradeToggle" data-operation-lock>
+                <span><strong>Allow reviewed runtime upgrades</strong><small>Only incompatible selected runtimes enter the plan. Existing compatible tools remain untouched.</small></span>
+              </label>
+            </div>
+            <div class="button-row primary-row">
               <button id="buildPlanBtn" class="button primary" data-operation data-busy-label="Building plan…">Build safe plan</button>
               <button id="doctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Run MCP doctor</button>
             </div>
           </section>
 
-          <section class="panel assurance">
-            <div class="panel-head"><div><h2>Protection guarantees</h2><p>These invariants apply to every transaction.</p></div></div>
+          <section class="assurance" aria-labelledby="assurance-title">
+            <div class="panel-head"><div><h3 id="assurance-title">Protection register</h3><p>Invariants enforced for every transaction.</p></div></div>
             <ul>
-              <li><span>✓</span><div><strong>No automatic uninstall</strong><small>Dominated providers remain installed and become inactive only in AgentStack profiles.</small></div></li>
-              <li><span>✓</span><div><strong>No silent upgrade</strong><small>Missing packages use non-upgrading install commands.</small></div></li>
-              <li><span>✓</span><div><strong>Repair only what AgentStack owns</strong><small>Broken managed components can be revived; unrelated installations remain untouched.</small></div></li>
-              <li><span>✓</span><div><strong>Back up before merge</strong><small>Existing AGY and managed router configuration is copied before mutation.</small></div></li>
-              <li><span>✓</span><div><strong>One routed MCP surface</strong><small>Child MCP servers start lazily through the AgentStack binary.</small></div></li>
+              <li><span class="state-mark" aria-hidden="true">01</span><div><strong>No automatic uninstall</strong><small>Dominated providers remain installed and become inactive only in AgentStack profiles.</small></div></li>
+              <li><span class="state-mark" aria-hidden="true">02</span><div><strong>No silent upgrade</strong><small>Missing packages use non-upgrading install commands.</small></div></li>
+              <li><span class="state-mark" aria-hidden="true">03</span><div><strong>Repair only managed resources</strong><small>Broken owned components can be revived. Unrelated installations stay untouched.</small></div></li>
+              <li><span class="state-mark" aria-hidden="true">04</span><div><strong>Back up before merge</strong><small>Existing AGY and managed router configuration is copied before mutation.</small></div></li>
+              <li><span class="state-mark" aria-hidden="true">05</span><div><strong>One routed MCP surface</strong><small>Child MCP servers start lazily through the AgentStack binary.</small></div></li>
             </ul>
           </section>
         </div>
       </section>
 
       <section id="components" class="section" aria-labelledby="components-title">
-        <div class="section-heading"><div><p class="eyebrow">Catalog</p><h2 id="components-title" tabindex="-1">Components</h2><p>Choose optional tools. Core profile items are selected automatically.</p></div><label class="search-field" for="componentSearch"><span>Search components</span><input id="componentSearch" type="search" data-operation-lock placeholder="Tools, capabilities, categories…"></label></div>
-        <div id="componentGroups"></div>
+        <div class="section-heading">
+          <div><h2 id="components-title" tabindex="-1">Component registry</h2><p>Choose optional tools. Core profile items remain selected automatically.</p></div>
+          <label class="search-field" for="componentSearch"><span>Search registry</span><input id="componentSearch" type="search" data-operation-lock placeholder="Name, capability, category"></label>
+        </div>
+        <div id="componentGroups" class="registry"></div>
       </section>
 
       <section id="plan" class="section" aria-labelledby="plan-title">
-        <div class="section-heading"><div><p class="eyebrow">Preview before mutation</p><h2 id="plan-title" tabindex="-1">Install plan</h2><p>Every selected component is classified as keep, install, repair, configure, preserve inactive, or consent required.</p></div></div>
-        <div id="planEmpty" class="empty-state">Build a plan to see exact machine changes.</div>
+        <div class="section-heading"><div><h2 id="plan-title" tabindex="-1">Sealed install plan</h2><p>Review every keep, install, repair, configure, preserve, and consent action before mutation.</p></div></div>
+        <div id="planEmpty" class="empty-state"><strong>No plan has been built.</strong><span>Return to the overview, choose a profile, then build a safe plan.</span></div>
         <div id="planContent" hidden>
           <div id="planSummary" class="metrics compact" aria-live="polite"></div>
           <div class="table-wrap"><table><thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead><tbody id="planRows"></tbody></table></div>
-          <label class="confirm-row"><input type="checkbox" id="confirmApply" data-operation-lock><span>I reviewed this plan and authorize only the listed install, repair, and configure actions.</span></label>
-          <div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div>
+          <div class="authorization-block">
+            <label class="confirm-row"><input type="checkbox" id="confirmApply" data-operation-lock><span><strong>Authorize this sealed record</strong><small>I reviewed this plan and authorize only the listed install, repair, and configure actions.</small></span></label>
+            <div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div>
+          </div>
         </div>
       </section>
 
       <section id="router" class="section" aria-labelledby="router-title">
-        <div class="section-heading"><div><p class="eyebrow">Lazy child processes</p><h2 id="router-title" tabindex="-1">MCP router</h2><p>Initialize packages, generate the managed router configuration, and register one endpoint in available clients.</p></div></div>
-        <div class="grid two">
-          <section class="panel"><h3>Session preparation</h3><p>Run before Codex or AGY. AgentStack validates commands, warms selected packages, and merges client registrations without replacement.</p><div class="button-row"><button id="mcpInitBtn" class="button primary" data-operation data-busy-label="Initializing…">Initialize MCP stack</button><button id="mcpDoctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Doctor</button></div></section>
-          <section class="panel"><h3>CLI launcher</h3><pre><code>agentstack codex --profile core
+        <div class="section-heading"><div><h2 id="router-title" tabindex="-1">MCP router</h2><p>Prepare one managed endpoint for Codex and AGY, then verify each selected child.</p></div></div>
+        <div class="router-grid">
+          <section class="panel"><div class="panel-head"><div><h3>Prepare a session</h3><p>Validate commands, warm selected packages, and merge client registrations without replacement.</p></div><span class="record-seal">Managed</span></div><div class="button-row"><button id="mcpInitBtn" class="button primary" data-operation data-busy-label="Initializing…">Initialize MCP stack</button><button id="mcpDoctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Doctor</button></div></section>
+          <section class="command-sheet"><h3>CLI launchers</h3><p>Use the same reviewed profile from a terminal.</p><pre><code>agentstack codex --profile core
 agentstack agy --profile recommended
 agentstack mcp doctor</code></pre></section>
         </div>
-        <pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre>
+        <div class="output-shell"><div class="output-head"><strong>Operation record</strong><span>JSON</span></div><pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre></div>
       </section>
     </main>
   </div>

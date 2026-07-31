@@ -79,6 +79,10 @@ function setOperationStatus(status, title, detail) {
   surface.dataset.state = status;
   $('operationStatusTitle').textContent = title;
   $('operationStatusDetail').textContent = detail;
+  const seal = surface.querySelector('.operation-seal');
+  if (seal) {
+    seal.textContent = { running: 'Running', success: 'Verified', error: 'Review', idle: 'Local' }[status] || 'Local';
+  }
 }
 
 function setOperationControlsBusy(activeButton, busy) {
@@ -185,7 +189,7 @@ function invalidatePlan() {
   updateApplyAvailability();
   $('planContent').hidden = true;
   $('planEmpty').hidden = false;
-  $('planEmpty').textContent = 'Selections changed. Build and review a new plan before applying.';
+  $('planEmpty').innerHTML = '<strong>Selections changed.</strong><span>Build and review a new sealed plan before applying.</span>';
 }
 
 function applyProfile() {
@@ -213,6 +217,12 @@ function buildRequest() {
   };
 }
 
+function setMetricsLoading(loading) {
+  ['detectedMetric', 'preservedMetric', 'selectedMetric', 'credentialMetric'].forEach(id => {
+    $(id).classList.toggle('is-loading', loading);
+  });
+}
+
 function updateMetrics() {
   if (!state.inventory || !state.catalog) {
     return;
@@ -222,12 +232,13 @@ function updateMetrics() {
   $('preservedMetric').textContent = installed;
   $('selectedMetric').textContent = state.selected.size;
   $('credentialMetric').textContent = state.allowCredentials ? 'On' : 'Off';
+  setMetricsLoading(false);
 }
 
 function renderProfiles() {
   const select = $('profileSelect');
   select.innerHTML = state.catalog.profiles
-    .map(profile => `<option value="${escapeHtml(profile.id)}">${escapeHtml(profile.name)} — ${escapeHtml(profile.description)}</option>`)
+    .map(profile => `<option value="${escapeHtml(profile.id)}">${escapeHtml(profile.name)} - ${escapeHtml(profile.description)}</option>`)
     .join('');
   if (!state.catalog.profiles.some(profile => profile.id === state.profile)) {
     state.profile = state.catalog.profiles[0]?.id || 'custom';
@@ -249,32 +260,26 @@ function renderComponents() {
   }
   const query = $('componentSearch').value.toLowerCase().trim();
   const groups = ['essential', 'recommended', 'optional-local', 'credential'];
-  $('componentGroups').innerHTML = groups.map(tier => {
+  let visibleCount = 0;
+  const markup = groups.map(tier => {
     const items = state.catalog.components
       .filter(component => component.tier === tier)
       .filter(component => !query || `${component.name} ${component.description} ${component.category} ${component.capability || ''}`.toLowerCase().includes(query));
+    visibleCount += items.length;
     if (!items.length) {
       return '';
     }
     return `<section class="component-group"><h3>${tierLabel(tier)}</h3><div class="component-grid">${items.map(componentCard).join('')}</div></section>`;
   }).join('');
+  $('componentGroups').innerHTML = visibleCount
+    ? markup
+    : '<div class="empty-state compact"><strong>No components found.</strong><span>Try a name, capability, or broader category.</span></div>';
 
   document.querySelectorAll('.component-card input').forEach(input => {
     if (activeOperation) {
       input.dataset.wasDisabled = input.disabled ? 'true' : 'false';
       input.disabled = true;
     }
-    input.addEventListener('change', event => {
-      const id = event.target.dataset.id;
-      if (event.target.checked) {
-        state.selected.add(id);
-      } else {
-        state.selected.delete(id);
-      }
-      invalidatePlan();
-      renderComponents();
-      updateMetrics();
-    });
   });
 }
 
@@ -287,7 +292,7 @@ function componentCard(component) {
   const disabled = component.credentialRequired && !state.allowCredentials;
   const health = (broken || incompatible) && inventory?.healthMessage ? ` title="${escapeHtml(inventory.healthMessage)}"` : '';
   const hint = component.install?.loginHint ? `<p class="login-hint">Next: ${escapeHtml(component.install.loginHint)}</p>` : '';
-  return `<label class="component-card ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}"${health}><input type="checkbox" data-operation-lock data-id="${escapeHtml(component.id)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><div><h4>${escapeHtml(component.name)}</h4><p>${escapeHtml(component.description)}</p>${hint}<div class="card-meta"><span class="badge">${escapeHtml(component.category)}</span>${broken ? '<span class="badge repair">repair available</span>' : incompatible ? '<span class="badge repair">upgrade approval needed</span>' : installed ? '<span class="badge installed">installed</span>' : ''}${component.credentialRequired ? '<span class="badge credential">guided login</span>' : ''}${component.preferred ? '<span class="badge">preferred</span>' : ''}</div></div></label>`;
+  return `<label class="component-card ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}"${health}${disabled ? ' aria-disabled="true"' : ''}><input type="checkbox" data-operation-lock data-id="${escapeHtml(component.id)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><div><h4>${escapeHtml(component.name)}</h4><p>${escapeHtml(component.description)}</p>${hint}</div><div class="card-meta"><span class="badge">${escapeHtml(component.category)}</span>${broken ? '<span class="badge repair">repair available</span>' : incompatible ? '<span class="badge repair">upgrade approval needed</span>' : installed ? '<span class="badge installed">installed</span>' : ''}${component.credentialRequired ? '<span class="badge credential">guided login</span>' : ''}${component.preferred ? '<span class="badge">preferred</span>' : ''}</div></label>`;
 }
 
 function renderPlan(plan) {
@@ -342,11 +347,11 @@ function escapeHtml(value) {
 }
 
 async function refresh(options = {}) {
+  setMetricsLoading(true);
   [state.catalog, state.inventory] = await Promise.all([api('catalog'), api('inventory')]);
   renderProfiles();
   renderProviders();
   applyProfile();
-  renderComponents();
   if (!options.silent) {
     toast('Inventory refreshed');
   }
@@ -452,6 +457,21 @@ $('browserProvider').addEventListener('change', event => {
   renderComponents();
 });
 $('componentSearch').addEventListener('input', renderComponents);
+$('componentGroups').addEventListener('change', event => {
+  const input = event.target.closest('.component-card input');
+  if (!input) {
+    return;
+  }
+  const id = input.dataset.id;
+  if (input.checked) {
+    state.selected.add(id);
+  } else {
+    state.selected.delete(id);
+  }
+  input.closest('.component-card')?.classList.toggle('selected', input.checked);
+  invalidatePlan();
+  updateMetrics();
+});
 $('confirmApply').addEventListener('change', updateApplyAvailability);
 
 $('refreshBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh inventory', refresh));
