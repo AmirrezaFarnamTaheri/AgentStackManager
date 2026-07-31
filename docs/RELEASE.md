@@ -13,6 +13,21 @@ AgentStack public releases target Windows x64 and Windows ARM64. Linux is used f
 - protected release environment approval;
 - all required verification workflows green.
 
+## Create and push the release tag
+
+The manual workflow does not create a release tag. From a clean, verified `main` checkout, create and push the signed annotated tag before dispatching the workflow:
+
+```powershell
+git switch main
+git pull --ff-only
+git status --short
+git tag -s v1.0.0 -m "Release v1.0.0"
+git tag -v v1.0.0
+git push origin v1.0.0
+```
+
+Replace `v1.0.0` with the intended version. `git status --short` must produce no output. A lightweight tag created with `git tag v1.0.0` is rejected. Pushing the tag starts the release workflow automatically; manual dispatch is only a controlled retry for an existing tag.
+
 ## GitHub Release workflow
 
 `.github/workflows/release.yml` supports two controlled entry points:
