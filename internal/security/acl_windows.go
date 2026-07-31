@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/agentstack/agentstack/internal/winsecurity"
 )
 
 func EnsurePrivateDir(path string) error {
@@ -31,13 +33,11 @@ func AuditPrivateDir(path string) error {
 	if err != nil {
 		return err
 	}
-	command := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-Command", "$ErrorActionPreference='Stop'; (Get-Acl -LiteralPath $env:AGENTSTACK_ACL_PATH).Sddl")
-	command.Env = append(os.Environ(), "AGENTSTACK_ACL_PATH="+path)
-	output, err := command.CombinedOutput()
+	sddl, err := winsecurity.FileDACLSDDL(path)
 	if err != nil {
-		return fmt.Errorf("audit AgentStack data ACL: %w: %s", err, strings.TrimSpace(string(output)))
+		return fmt.Errorf("audit AgentStack data ACL: %w", err)
 	}
-	if err := auditPrivateSDDL(string(output), sid); err != nil {
+	if err := auditPrivateSDDL(sddl, sid); err != nil {
 		return fmt.Errorf("AgentStack data ACL is not private to the exact current-user/system allowlist: %w", err)
 	}
 	return nil
