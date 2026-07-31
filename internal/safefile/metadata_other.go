@@ -2,9 +2,7 @@
 
 package safefile
 
-import (
-	"os"
-)
+import "os"
 
 type fileMetadata struct {
 	mode os.FileMode
@@ -21,4 +19,12 @@ func captureFileMetadata(path string) (fileMetadata, error) {
 
 func applyFileMetadata(path string, metadata fileMetadata) error {
 	return os.Chmod(path, metadata.mode)
+}
+
+func fileMetadataMatches(path string, metadata fileMetadata) (bool, error) {
+	current, err := captureFileMetadata(path)
+	if err != nil {
+		return false, err
+	}
+	return current.mode == metadata.mode, nil
 }
