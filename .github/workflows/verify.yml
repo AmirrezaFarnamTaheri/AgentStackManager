@@ -18,7 +18,7 @@ jobs:
         shell: bash
         run: |
           go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
-          actionlint -color never
+          actionlint
       - name: Unit, race, vet, formatting, coverage
         shell: bash
         run: |
