@@ -66,11 +66,11 @@ The script refuses a dirty tree, lightweight/unsigned tag, unsupported Go versio
 go test ./...
 go test -race ./...
 go vet ./...
-./scripts/check-critical-coverage.sh coverage.out
-./scripts/check-benchmarks.sh benchmark-results.txt
-./scripts/fuzz.sh 20s
-./scripts/check-governance.sh
-./scripts/check-docs.sh
+bash scripts/check-critical-coverage.sh coverage.out
+bash scripts/check-benchmarks.sh benchmark-results.txt
+bash scripts/fuzz.sh 20s
+bash scripts/check-governance.sh
+bash scripts/check-docs.sh
 ```
 
 The benchmark gate records five samples for one-shot and persistent MCP requests,
@@ -105,7 +105,7 @@ Every source bundle carries `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and
 `SOURCE_MANIFEST.sha256`. A bundle without `.git` is accepted only after the
 manifest verifies both every digest and the exact source file set, and the revision is either `git:<40-hex>` or the explicitly
 unreleased `unreleased-base:<40-hex>` form. CI runs
-`./scripts/check-source-archive-build.sh` to create an ephemeral Git-free copy,
+`bash scripts/check-source-archive-build.sh` to create an ephemeral Git-free copy,
 place it inside an unrelated parent Git repository, regenerate and verify its manifest,
 prove an unlisted file is rejected, and execute the supported archive build path.
 This proves archive buildability; it does not turn an unreleased workspace into
