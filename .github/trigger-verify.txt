@@ -1,1 +1,0 @@
-Trigger a user-authored pull-request synchronization after the exact manifest repair.
