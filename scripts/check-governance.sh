@@ -42,8 +42,9 @@ grep -Fq 'Assert-ReleaseOutput $dist' scripts/release.ps1
 grep -Fq "if (\$Architecture -eq 'amd64')" scripts/windows-e2e.ps1
 grep -Rqs "go-version-file: '.go-version'" .github/workflows/verify.yml .github/workflows/release.yml
 for workflow in verify.yml release.yml; do test -s ".github/workflows/$workflow"; done
-for script in scripts/build.sh scripts/check-critical-coverage.sh scripts/check-docs.sh scripts/check-governance.sh scripts/fuzz.sh; do
-  [[ -x "$script" ]] || { echo "required CI script is not executable: $script" >&2; exit 1; }
+for script in scripts/build.sh scripts/check-benchmarks.sh scripts/check-critical-coverage.sh scripts/check-docs.sh scripts/check-governance.sh scripts/check-source-archive-build.sh scripts/fuzz.sh scripts/verify-source-manifest.sh scripts/write-source-manifest.sh; do
+  [[ -f "$script" ]] || { echo "required CI script is missing: $script" >&2; exit 1; }
+  bash -n "$script"
 done
 release_workflow=.github/workflows/release.yml
 grep -q 'workflow_dispatch:' "$release_workflow"
