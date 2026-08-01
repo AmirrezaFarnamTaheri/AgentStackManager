@@ -23,10 +23,12 @@ $workflowText=(Get-Content -Raw (Join-Path $root '.github/workflows/verify.yml')
 $releaseWorkflow=Get-Content -Raw (Join-Path $root '.github/workflows/release.yml')
 $windowsE2E=Get-Content -Raw (Join-Path $root 'scripts/windows-e2e.ps1')
 if ($windowsE2E -notmatch [regex]::Escape("if (`$Architecture -eq 'amd64')")) { throw 'Windows E2E must gate the race detector to supported windows/amd64 runners' }
-$requiredExecutableScripts=@('scripts/build.sh','scripts/check-critical-coverage.sh','scripts/check-docs.sh','scripts/check-governance.sh','scripts/fuzz.sh')
-foreach($script in $requiredExecutableScripts) {
-    $entry=git -C $root ls-files -s -- $script
-    if ($LASTEXITCODE -ne 0 -or $entry -notmatch '^100755\s') { throw "Required CI script is not executable in Git: $script" }
+$requiredShellScripts=@('scripts/build.sh','scripts/check-benchmarks.sh','scripts/check-critical-coverage.sh','scripts/check-docs.sh','scripts/check-governance.sh','scripts/check-source-archive-build.sh','scripts/fuzz.sh','scripts/verify-source-manifest.sh','scripts/write-source-manifest.sh')
+foreach($script in $requiredShellScripts) {
+    $path=Join-Path $root $script
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required CI script is missing: $script" }
+    & bash -n $path
+    if ($LASTEXITCODE -ne 0) { throw "Required CI script has invalid Bash syntax: $script" }
 }
 foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:', 'git/ref/tags/', "object\.type\s+-ne\s+'tag'", 'ref=refs/tags/\$tag')) {
     if ($releaseWorkflow -notmatch $requiredPattern) { throw "Release workflow is missing required control: $requiredPattern" }
