@@ -31,6 +31,13 @@ mkdir -p dist-dev
 go test ./...
 go test -race ./...
 go vet ./...
+if [[ -f "cmd/agentstack/icon.rc" ]]; then
+  if command -v windres >/dev/null 2>&1; then
+    windres -i cmd/agentstack/icon.rc -O coff -o cmd/agentstack/icon_windows_amd64.syso
+  elif command -v rsrc >/dev/null 2>&1; then
+    rsrc -ico cmd/agentstack/icon.ico -o cmd/agentstack/icon_windows_amd64.syso
+  fi
+fi
 flags="-s -w -buildid= -X main.version=$version -X main.revision=$revision"
 for arch in amd64 arm64; do
   CGO_ENABLED=0 GOOS=windows GOARCH="$arch" go build -trimpath -buildvcs="$buildvcs" -ldflags="$flags" -o "dist-dev/agentstack-windows-$arch.exe" ./cmd/agentstack

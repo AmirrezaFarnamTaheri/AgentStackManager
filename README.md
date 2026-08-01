@@ -4,6 +4,8 @@ AgentStack Manager is a preservation-first Windows control plane for local engin
 
 ## Safety properties
 
+- Single unified application executable (`agentstack.exe`) with embedded Windows application icon resources and built-in subcommands (`agentstack sbom`, `agentstack releasepack`).
+- Dedicated native window application mode (`agentstack ui`) launching in a clean, standalone desktop window without browser tabs or toolbars.
 - Existing commands, WinGet packages, global npm packages, uv tools, skills, and foreign MCP entries are adopted or preserved rather than replaced.
 - A plan is bound to its catalog revision, minimized machine inventory, expiry, ID, and SHA-256 digest. `apply` accepts only that reviewed identity.
 - Mutations use a cross-process lease and incremental transaction journal.

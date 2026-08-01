@@ -8,17 +8,21 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/app"
+	"github.com/agentstack/agentstack/internal/catalog"
 	"github.com/agentstack/agentstack/internal/mcp"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/releasepack"
 	"github.com/agentstack/agentstack/internal/selfinstall"
 	"github.com/agentstack/agentstack/internal/session"
 	"github.com/agentstack/agentstack/internal/state"
+	"github.com/agentstack/agentstack/internal/supplychain"
 	"github.com/agentstack/agentstack/internal/ui"
 )
 
@@ -136,9 +140,81 @@ func (c *CLI) Run(ctx context.Context, args []string) int {
 		return c.runOwned(ctx, args[1:])
 	case "cleanup":
 		return c.cleanupPreview(ctx, args[1:])
+	case "sbom":
+		return c.runSBOM(args[1:])
+	case "releasepack", "release-pack":
+		return c.runReleasepack(args[1:])
 	default:
 		return c.failUsage(fmt.Errorf("unknown command %q", args[0]))
 	}
+}
+
+func (c *CLI) runSBOM(args []string) int {
+	fs := flag.NewFlagSet("sbom", flag.ContinueOnError)
+	fs.SetOutput(c.errWriter())
+	version := fs.String("version", c.Version, "AgentStack version")
+	licensesPath := fs.String("licenses", "supply-chain/component-licenses.json", "reviewed license inventory")
+	out := fs.String("out", "agentstack-catalog.cdx.json", "CycloneDX output")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() != 0 {
+		return c.failUsage(fmt.Errorf("unexpected sbom positional argument: %s", fs.Arg(0)))
+	}
+	cat, err := catalog.LoadDefault()
+	if err != nil {
+		return c.fail(err)
+	}
+	licenses, err := supplychain.LoadLicenses(*licensesPath)
+	if err != nil && !filepath.IsAbs(*licensesPath) {
+		if exe, e := os.Executable(); e == nil {
+			alt := filepath.Join(filepath.Dir(exe), *licensesPath)
+			if l, e2 := supplychain.LoadLicenses(alt); e2 == nil {
+				licenses = l
+				err = nil
+			}
+		}
+	}
+	if err != nil {
+		return c.fail(err)
+	}
+	bom, err := supplychain.Generate(cat, *version, licenses)
+	if err != nil {
+		return c.fail(err)
+	}
+	data, err := json.MarshalIndent(bom, "", "  ")
+	if err != nil {
+		return c.fail(err)
+	}
+	data = append(data, '\n')
+	if info, lerr := os.Lstat(*out); lerr == nil && info.Mode()&os.ModeSymlink != 0 {
+		return c.fail(fmt.Errorf("refusing to write SBOM to symlink target: %s", *out))
+	}
+	if err := os.WriteFile(*out, data, 0o600); err != nil {
+		return c.fail(err)
+	}
+	return 0
+}
+
+func (c *CLI) runReleasepack(args []string) int {
+	fs := flag.NewFlagSet("releasepack", flag.ContinueOnError)
+	fs.SetOutput(c.errWriter())
+	root := fs.String("root", "", "root directory")
+	out := fs.String("out", "", "output ZIP")
+	prefix := fs.String("prefix", "", "archive prefix")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() != 0 {
+		return c.failUsage(fmt.Errorf("unexpected releasepack positional argument: %s", fs.Arg(0)))
+	}
+	if *root == "" || *out == "" {
+		return c.failUsage(fmt.Errorf("--root and --out are required"))
+	}
+	if err := releasepack.Pack(*root, *out, *prefix); err != nil {
+		return c.fail(err)
+	}
+	return 0
 }
 
 func (c *CLI) runSetup(ctx context.Context, args []string) int {
@@ -600,6 +676,8 @@ Usage:
   agentstack [ui]
   agentstack setup [--no-launch]
   agentstack status | inventory | catalog | profiles | integrations
+  agentstack sbom [--version VERSION] [--licenses PATH] [--out FILE]
+  agentstack releasepack --root DIR --out ZIP [--prefix NAME]
   agentstack plan [selection options]
   agentstack apply --plan-id ID --digest SHA256 --yes
   agentstack mcp init [selection options] --yes [--no-warm] [--no-register]

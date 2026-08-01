@@ -6,4 +6,7 @@
 /coverage.out
 /dist-dev/
 /dist/
+/bin/
+*.syso
 /mutation-results.json
+
