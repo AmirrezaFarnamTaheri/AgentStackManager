@@ -2,6 +2,7 @@ package processctl
 
 import (
 	"context"
+	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -9,7 +10,13 @@ import (
 )
 
 func TestWaitReturnsOriginalExitErrorToEveryCaller(t *testing.T) {
-	process, err := Start(exec.Command("sh", "-c", "exit 7"))
+	if os.Getenv("AGENTSTACK_PROCESS_HELPER") == "exit7" {
+		os.Exit(7)
+	}
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestWaitReturnsOriginalExitErrorToEveryCaller$")
+	cmd.Env = append(os.Environ(), "AGENTSTACK_PROCESS_HELPER=exit7")
+	process, err := Start(cmd)
 	if err != nil {
 		t.Fatal(err)
 	}

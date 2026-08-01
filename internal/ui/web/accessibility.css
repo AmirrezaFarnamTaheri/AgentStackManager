@@ -1,3 +1,43 @@
-.sidebar-foot small {
-  color: var(--sidebar-muted);
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--surface-raised, #ffffff);
+  color: var(--action-teal, #0f766e);
+  padding: 0.5rem 1rem;
+  z-index: 10000;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: top 0.15s ease-out;
 }
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.sidebar-foot small {
+  color: var(--sidebar-muted, #7c8b88);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .button.primary,
+  .button.secondary,
+  .nav-item.active {
+    border: 2px solid CanvasText;
+  }
+  :focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+}
+
