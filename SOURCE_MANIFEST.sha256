@@ -185,7 +185,7 @@ a9161dfda7b2b03cac2e3a059d4832417dd0a886d0de06c148d0f0e90a22bb09  ./scripts/chec
 6f16c19d19588190dba41d225bf3be4ad49d86d40c8a2802d71eb25369bc1628  ./scripts/fuzz.sh
 54f23bafe6165cc16299b4c60048bfa14e4ab2745d9bd94531d91123d8423e22  ./scripts/release.ps1
 dd0f49050937e5cee56fc90f3a1ce2295c54466fc6eea96b675b5a58d9fa4fab  ./scripts/verify-source-manifest.sh
-5a39939d56e80f0b3dad1ce9eb291ab72e95b4ea6bd407674b7524d07f01cf90  ./scripts/windows-e2e.ps1
+e1c4ff563f53962b8e4ba9add9ecc90b3e33b4bbb1548d3789cb883f1d0e48ec  ./scripts/windows-e2e.ps1
 83faa92c06144000a3afa10ee8becea9d90e8bc2dd62ba1426045d06ccdc0117  ./scripts/write-source-manifest.sh
 ee5431ef530c16bb41d02ddb30d36f62291d5560b05ff41e564f91fc01397b5f  ./supply-chain/component-licenses.json
 25b7d2c620a1a13dcf56d728ac0cfb1a7878dd128af54dcae2beb91309767812  ./ui-tests/accessibility.mjs
