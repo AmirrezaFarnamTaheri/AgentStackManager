@@ -5,7 +5,7 @@
 bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
 8977920ef8e925cf1d4ed3aedd5d59361807e05608d640bd8c28b762793c4243  ./.github/workflows/release.yml
-68b30f8c67874bb86de23378dc3c6fdef180a3863c8968b2a9680afabc2fef66  ./.github/workflows/verify.yml
+2fb008fb95f6dd46af96ef179dc667a5573c25d485d32babd586819c3e7205d6  ./.github/workflows/verify.yml
 6263084463b96fb3c9ce56ffd55d4b1f20f88286c6f907ddde0dc31251378e53  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
 5d6072ec72fb9e5bcac9fc0f1ded9b3f3b519ce7cb44b8af71d31c7e0995be4a  ./.gremlins.yaml
