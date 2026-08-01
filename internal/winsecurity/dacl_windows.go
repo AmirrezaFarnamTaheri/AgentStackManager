@@ -22,16 +22,17 @@ const (
 )
 
 var (
-	advapi32                                  = syscall.NewLazyDLL("advapi32.dll")
-	kernel32                                  = syscall.NewLazyDLL("kernel32.dll")
-	procGetFileSecurityW                      = advapi32.NewProc("GetFileSecurityW")
-	procGetSecurityDescriptorControl          = advapi32.NewProc("GetSecurityDescriptorControl")
-	procSetNamedSecurityInfoW                 = advapi32.NewProc("SetNamedSecurityInfoW")
-	procConvertSecurityDescriptorToStringSDDL = advapi32.NewProc("ConvertSecurityDescriptorToStringSecurityDescriptorW")
-	procConvertStringSidToSidW                = advapi32.NewProc("ConvertStringSidToSidW")
-	procConvertSidToStringSidW                = advapi32.NewProc("ConvertSidToStringSidW")
-	procLocalFree                             = kernel32.NewProc("LocalFree")
-	procLocalSize                             = kernel32.NewProc("LocalSize")
+	advapi32                                           = syscall.NewLazyDLL("advapi32.dll")
+	kernel32                                           = syscall.NewLazyDLL("kernel32.dll")
+	procGetFileSecurityW                               = advapi32.NewProc("GetFileSecurityW")
+	procGetSecurityDescriptorControl                   = advapi32.NewProc("GetSecurityDescriptorControl")
+	procSetNamedSecurityInfoW                          = advapi32.NewProc("SetNamedSecurityInfoW")
+	procConvertSecurityDescriptorToStringSDDL          = advapi32.NewProc("ConvertSecurityDescriptorToStringSecurityDescriptorW")
+	procConvertStringSecurityDescriptorToSecurityDescW = advapi32.NewProc("ConvertStringSecurityDescriptorToSecurityDescriptorW")
+	procConvertStringSidToSidW                         = advapi32.NewProc("ConvertStringSidToSidW")
+	procConvertSidToStringSidW                         = advapi32.NewProc("ConvertSidToStringSidW")
+	procLocalFree                                      = kernel32.NewProc("LocalFree")
+	procLocalSize                                      = kernel32.NewProc("LocalSize")
 )
 
 const (
@@ -87,10 +88,47 @@ func CaptureFileDACL(path string) (DACL, error) {
 	if ok == 0 {
 		return DACL{}, fmt.Errorf("read file DACL: %w", callErr)
 	}
+	return daclFromDescriptor(descriptor)
+}
+
+// DACLFromSDDL builds a native, restorable DACL snapshot from an SDDL security
+// descriptor. The returned ACL can be applied with ApplyFileDACL without
+// inheriting machine-specific default principals.
+func DACLFromSDDL(sddl string) (DACL, error) {
+	input, err := syscall.UTF16PtrFromString(strings.TrimSpace(sddl))
+	if err != nil {
+		return DACL{}, err
+	}
+	var descriptor *byte
+	var length uint32
+	ok, _, callErr := procConvertStringSecurityDescriptorToSecurityDescW.Call(
+		uintptr(unsafe.Pointer(input)),
+		securityDescriptorStringRevision1,
+		uintptr(unsafe.Pointer(&descriptor)),
+		uintptr(unsafe.Pointer(&length)),
+	)
+	if ok == 0 {
+		return DACL{}, fmt.Errorf("convert SDDL to security descriptor: %w", callErr)
+	}
+	if descriptor == nil {
+		return DACL{}, fmt.Errorf("convert SDDL to security descriptor: empty result")
+	}
+	defer procLocalFree.Call(uintptr(unsafe.Pointer(descriptor)))
+	if length < securityDescriptorRelativeSize {
+		return DACL{}, fmt.Errorf("converted security descriptor is too short: %d bytes", length)
+	}
+	copied := append([]byte(nil), unsafe.Slice(descriptor, int(length))...)
+	return daclFromDescriptor(copied)
+}
+
+func daclFromDescriptor(descriptor []byte) (DACL, error) {
+	if len(descriptor) < securityDescriptorRelativeSize {
+		return DACL{}, fmt.Errorf("file security descriptor is too short: %d bytes", len(descriptor))
+	}
 
 	var control uint16
 	var revision uint32
-	ok, _, callErr = procGetSecurityDescriptorControl.Call(
+	ok, _, callErr := procGetSecurityDescriptorControl.Call(
 		uintptr(unsafe.Pointer(&descriptor[0])),
 		uintptr(unsafe.Pointer(&control)),
 		uintptr(unsafe.Pointer(&revision)),
@@ -99,9 +137,6 @@ func CaptureFileDACL(path string) (DACL, error) {
 		return DACL{}, fmt.Errorf("read file DACL control: %w", callErr)
 	}
 
-	if len(descriptor) < securityDescriptorRelativeSize {
-		return DACL{}, fmt.Errorf("file security descriptor is too short: %d bytes", len(descriptor))
-	}
 	daclOffset := int(binary.LittleEndian.Uint32(descriptor[daclOffsetPosition : daclOffsetPosition+4]))
 	if daclOffset == 0 {
 		return DACL{}, fmt.Errorf("file security descriptor has a NULL DACL")
