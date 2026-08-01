@@ -26,7 +26,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -z "$(gofmt -l .)"
+          unformatted="$(gofmt -l .)"
+          if [[ -n "$unformatted" ]]; then
+            echo "::error::gofmt is required for the following files"
+            printf '%s\n' "$unformatted"
+            exit 1
+          fi
           go test ./...
           go test -race ./...
           go vet ./...
