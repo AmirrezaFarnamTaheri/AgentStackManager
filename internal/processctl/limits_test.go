@@ -34,3 +34,14 @@ func TestUnsupportedLimitsErrorIsClassifiable(t *testing.T) {
 		t.Fatal("unsupported error must be classifiable")
 	}
 }
+
+func TestLimitsValidationAcceptsExactUpperAndLowerBounds(t *testing.T) {
+	limits := Limits{
+		MemoryBytes:     minimumMemoryLimit,
+		CPUPercent:      100,
+		ActiveProcesses: maximumProcesses,
+	}
+	if err := limits.Validate(); err != nil {
+		t.Fatalf("exact resource-limit boundaries were rejected: %v", err)
+	}
+}
