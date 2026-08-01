@@ -137,9 +137,9 @@ jobs:
                 $version = "$version-rc.$env:GITHUB_RUN_NUMBER"
               }
               $tag = "v$version"
-              if (git show-ref --tags --verify --quiet "refs/tags/$tag") {
-                throw "Automatically selected tag already exists: $tag"
-              }
+              git show-ref --tags --verify --quiet "refs/tags/$tag"
+              if ($LASTEXITCODE -eq 0) { throw "Automatically selected tag already exists: $tag" }
+              if ($LASTEXITCODE -ne 1) { throw "Unable to test whether release tag exists: $tag" }
 
               $message = @(
                 "Automated release $tag",
@@ -377,8 +377,8 @@ jobs:
             "dist/AgentStackManager-$env:RELEASE_VERSION-source.zip",
             'dist/agentstack-windows-amd64.exe',
             'dist/agentstack-windows-arm64.exe',
-            'dist/AgentStack-Setup-windows-amd64.exe',
             'dist/AgentStack-Setup-windows-arm64.exe',
+            'dist/AgentStack-Setup-windows-amd64.exe',
             'dist/AgentStack-Setup.ps1',
             'dist/SHA256SUMS.txt',
             'dist/agentstack-catalog.cdx.json',
