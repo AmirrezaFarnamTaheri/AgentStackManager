@@ -62,7 +62,11 @@ try {
     $apply = (& $installed apply --plan-id $plan.id --digest $plan.digest --yes | Out-String | ConvertFrom-Json)
     if ($apply.transaction.status -ne 'succeeded') { throw "custom no-op apply failed: $($apply | ConvertTo-Json -Depth 20)" }
     & $installed apply --plan-id bogus --digest bogus --yes *> $null
-    if ($LASTEXITCODE -eq 0) { throw 'invalid reviewed plan was accepted' }
+    $invalidPlanExitCode = $LASTEXITCODE
+    if ($invalidPlanExitCode -eq 0) { throw 'invalid reviewed plan was accepted' }
+    # The nonzero result is expected and fully asserted above; do not leak it as
+    # the successful PowerShell script's process exit code.
+    $global:LASTEXITCODE = 0
 
     $stdout = Join-Path $root 'ui.stdout.log'
     $stderr = Join-Path $root 'ui.stderr.log'
