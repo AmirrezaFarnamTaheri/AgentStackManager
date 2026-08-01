@@ -25,5 +25,5 @@ func fileMetadataMatches(path string, metadata fileMetadata) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return current.SecurityInformation == metadata.dacl.SecurityInformation && current.SDDL == metadata.dacl.SDDL, nil
+	return winsecurity.EqualDACL(current, metadata.dacl), nil
 }
