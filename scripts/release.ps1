@@ -33,7 +33,7 @@ function Assert-CleanTaggedSource {
 function Assert-Toolchain {
     $versionText = (go version).Trim()
     if ($versionText -notmatch '\bgo1\.26\.5\b') { throw "Release requires Go 1.26.5; found $versionText" }
-    foreach ($tool in @('git','go','govulncheck','syft','signtool','tar')) {
+    foreach ($tool in @('git','go','govulncheck','syft','signtool','tar','bash')) {
         if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) { throw "Required release tool is missing: $tool" }
     }
 }
@@ -213,8 +213,7 @@ try {
     $coverage=Join-Path $env:RUNNER_TEMP 'agentstack-release-coverage.out'
     Remove-Item $coverage -Force -ErrorAction SilentlyContinue
     Invoke-Checked go @('test',"-coverprofile=$coverage",'./...')
-    & (Join-Path $root 'scripts/check-critical-coverage.sh') $coverage
-    if ($LASTEXITCODE -ne 0) { throw 'Critical-path coverage gate failed' }
+    Invoke-Checked bash @('scripts/check-critical-coverage.sh',$coverage)
     Remove-Item $coverage -Force
     Invoke-Checked govulncheck @('./...')
 
