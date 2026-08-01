@@ -1,5 +1,5 @@
 name: Signed GitHub Release
-run-name: Release ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+run-name: Release ${{ github.event_name == 'workflow_dispatch' && 'automatic' || github.ref_name }}
 
 on:
   push:
@@ -7,18 +7,14 @@ on:
       - 'v*'
   workflow_dispatch:
     inputs:
-      tag:
-        description: Existing signed annotated tag to release (vX.Y.Z or vX.Y.Z-prerelease)
-        required: true
-        type: string
       prerelease:
-        description: Mark the GitHub Release as a prerelease
+        description: Mark the automatically versioned GitHub Release as a prerelease
         required: false
         default: false
         type: boolean
 
 concurrency:
-  group: signed-release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  group: signed-release-${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -28,7 +24,7 @@ jobs:
     timeout-minutes: 90
     environment: release
     permissions:
-      contents: read
+      contents: write
       id-token: write
       attestations: write
       artifact-metadata: write
@@ -37,82 +33,176 @@ jobs:
       release_version: ${{ steps.release.outputs.version }}
       prerelease: ${{ steps.release.outputs.prerelease }}
     steps:
-      - name: Validate requested release tag
-        id: requested-ref
-        shell: pwsh
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          DISPATCH_TAG: ${{ inputs.tag }}
-          PUSH_TAG: ${{ github.ref_name }}
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          $tag = if ($env:EVENT_NAME -eq 'workflow_dispatch') {
-            $env:DISPATCH_TAG.Trim()
-          } else {
-            $env:PUSH_TAG.Trim()
-          }
-          if ([string]::IsNullOrWhiteSpace($tag)) { throw 'Release tag is empty' }
-          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
-            throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
-          }
-
-          $encodedTag = [Uri]::EscapeDataString($tag)
-          $refJson = gh api "repos/$env:GH_REPO/git/ref/tags/$encodedTag" 2>$null
-          if ($LASTEXITCODE -ne 0) {
-            throw ("Release tag '{0}' does not exist. Create and push a signed annotated tag first: git tag -s {0} -m 'Release {0}'; git push origin {0}" -f $tag)
-          }
-          $refObject = $refJson | ConvertFrom-Json
-          if ($refObject.object.type -ne 'tag') {
-            throw ("Release tag '{0}' is lightweight. Delete it and recreate it as a signed annotated tag before release." -f $tag)
-          }
-
-          "ref=refs/tags/$tag" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
-
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          ref: ${{ steps.requested-ref.outputs.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: '.go-version'
           cache: true
 
-      - name: Resolve and validate release identity
+      - name: Install pinned release tools
+        shell: pwsh
+        run: |
+          go install github.com/sigstore/gitsign@v0.16.0
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          go install github.com/anchore/syft/cmd/syft@v1.50.0
+          gitsign --version
+          govulncheck -version
+          syft version
+
+      - name: Resolve, create, and verify release identity
         id: release
         shell: pwsh
         env:
           EVENT_NAME: ${{ github.event_name }}
-          DISPATCH_TAG: ${{ inputs.tag }}
-          DISPATCH_PRERELEASE: ${{ inputs.prerelease }}
           PUSH_TAG: ${{ github.ref_name }}
+          DISPATCH_PRERELEASE: ${{ inputs.prerelease }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          GITSIGN_TOKEN_PROVIDER: github-actions
         run: |
-          $tag = if ($env:EVENT_NAME -eq 'workflow_dispatch') {
-            $env:DISPATCH_TAG.Trim()
-          } else {
-            $env:PUSH_TAG.Trim()
-          }
-          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
-            throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
-          }
-          git show-ref --tags --verify --quiet "refs/tags/$tag"
-          if ($LASTEXITCODE -ne 0) { throw "Tag does not exist in the repository: $tag" }
+          $ErrorActionPreference = 'Stop'
+          git fetch --force --tags origin
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to fetch release tags' }
+          git fetch --force --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to fetch authoritative origin/main' }
 
+          $head = (git rev-parse HEAD).Trim()
+          $originMain = (git rev-parse refs/remotes/origin/main).Trim()
+          if ($env:EVENT_NAME -eq 'workflow_dispatch' -and $head -ne $originMain) {
+            throw "Manual release must run from current origin/main; HEAD=$head origin/main=$originMain"
+          }
+
+          $tagPattern = '^v(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$'
+          $tag = $null
+          $trustMode = $null
+
+          if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            git config --local user.name 'github-actions[bot]'
+            git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git config --local gpg.format x509
+            git config --local gpg.x509.program (Get-Command gitsign -ErrorAction Stop).Source
+
+            $identity = "https://github.com/$env:WORKFLOW_REF"
+            $issuer = 'https://token.actions.githubusercontent.com'
+
+            foreach ($existingTag in @(git tag --points-at HEAD --list 'v*' --sort=-v:refname)) {
+              if ($existingTag -notmatch $tagPattern) { continue }
+              if ((git cat-file -t "refs/tags/$existingTag").Trim() -ne 'tag') { continue }
+              $tagObject = git cat-file -p "refs/tags/$existingTag"
+              if (($tagObject -join "`n") -notmatch 'Managed-By: AgentStackManager release workflow') { continue }
+              gh release view $existingTag --repo $env:GH_REPO *> $null
+              if ($LASTEXITCODE -eq 0) { continue }
+              gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$existingTag"
+              if ($LASTEXITCODE -ne 0) { throw "Existing automated tag failed Sigstore verification: $existingTag" }
+              $tag = $existingTag
+              $trustMode = 'sigstore'
+              break
+            }
+
+            if (-not $tag) {
+              $stableTags = @(git tag --list 'v*' --sort=-v:refname | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' })
+              if ($stableTags.Count -eq 0) {
+                $major = 1
+                $minor = 0
+                $patch = 0
+              } else {
+                $latestTag = $stableTags[0]
+                if ($latestTag -notmatch '^v(\d+)\.(\d+)\.(\d+)$') { throw "Invalid stable tag: $latestTag" }
+                $major = [int]$Matches[1]
+                $minor = [int]$Matches[2]
+                $patch = [int]$Matches[3]
+                $latestCommit = (git rev-list -n 1 $latestTag).Trim()
+                if ($latestCommit -eq $head) { throw "HEAD is already released as $latestTag" }
+
+                $messages = (git log --format='%B%n---END-COMMIT---' "$latestTag..HEAD") -join "`n"
+                if ($messages -match '(?m)^[A-Za-z]+(?:\([^)]+\))?!:' -or $messages -match '(?m)^BREAKING(?: |-)?CHANGE:') {
+                  $major++
+                  $minor = 0
+                  $patch = 0
+                } elseif ($messages -match '(?m)^feat(?:\([^)]+\))?:') {
+                  $minor++
+                  $patch = 0
+                } else {
+                  $patch++
+                }
+              }
+
+              $version = "$major.$minor.$patch"
+              if ($env:DISPATCH_PRERELEASE -eq 'true') {
+                $version = "$version-rc.$env:GITHUB_RUN_NUMBER"
+              }
+              $tag = "v$version"
+              if (git show-ref --tags --verify --quiet "refs/tags/$tag") {
+                throw "Automatically selected tag already exists: $tag"
+              }
+
+              $message = @(
+                "Automated release $tag",
+                '',
+                'Managed-By: AgentStackManager release workflow',
+                "Source-Commit: $head",
+                "Workflow-Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+              ) -join "`n"
+              git tag -s $tag -m $message
+              if ($LASTEXITCODE -ne 0) { throw "Unable to create keyless signed tag: $tag" }
+              gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$tag"
+              if ($LASTEXITCODE -ne 0) { throw "New automated tag failed Sigstore verification: $tag" }
+              git push origin "refs/tags/$tag"
+              if ($LASTEXITCODE -ne 0) { throw "Unable to push automated tag: $tag" }
+              $trustMode = 'sigstore'
+            }
+          } else {
+            $tag = $env:PUSH_TAG.Trim()
+            if ($tag -notmatch $tagPattern) {
+              throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
+            }
+            git show-ref --tags --verify --quiet "refs/tags/$tag"
+            if ($LASTEXITCODE -ne 0) { throw "Tag does not exist in the repository: $tag" }
+            if ((git cat-file -t "refs/tags/$tag").Trim() -ne 'tag') { throw "$tag must be an annotated tag" }
+            $trustMode = 'gpg'
+          }
+
+          if ($tag -notmatch $tagPattern) { throw "Resolved invalid release tag: $tag" }
           $version = $tag.Substring(1)
-          $manualPrerelease = $env:DISPATCH_PRERELEASE -eq 'true'
-          $isPrerelease = $manualPrerelease -or $version.Contains('-')
+          $tagCommit = (git rev-list -n 1 $tag).Trim()
+          if ($tagCommit -ne $head) { throw "Release tag $tag points to $tagCommit, but HEAD is $head" }
+          if ($tagCommit -ne $originMain) { throw "Release tag $tag must point to authoritative origin/main $originMain" }
+
+          $isPrerelease = $version.Contains('-') -or $env:DISPATCH_PRERELEASE -eq 'true'
           "tag=$tag" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
           "version=$version" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
           "prerelease=$($isPrerelease.ToString().ToLowerInvariant())" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+          "trust_mode=$trustMode" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
 
-      - name: Install pinned assurance tools
+      - name: Configure and verify release tag trust
         shell: pwsh
+        env:
+          TRUST_MODE: ${{ steps.release.outputs.trust_mode }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_TAG_PUBLIC_KEY_BASE64: ${{ secrets.RELEASE_TAG_PUBLIC_KEY_BASE64 }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          GITSIGN_TOKEN_PROVIDER: github-actions
         run: |
-          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
-          go install github.com/anchore/syft/cmd/syft@v1.50.0
-          govulncheck -version
-          syft version
+          if ($env:TRUST_MODE -eq 'sigstore') {
+            git config --local gpg.format x509
+            git config --local gpg.x509.program (Get-Command gitsign -ErrorAction Stop).Source
+            $identity = "https://github.com/$env:WORKFLOW_REF"
+            gitsign verify --certificate-identity $identity --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' "refs/tags/$env:RELEASE_TAG"
+            if ($LASTEXITCODE -ne 0) { throw 'Sigstore release-tag verification failed' }
+          } else {
+            if (-not $env:RELEASE_TAG_PUBLIC_KEY_BASE64) { throw 'Release tag public key is required for externally pushed tags' }
+            $keyPath = Join-Path $env:RUNNER_TEMP 'release-tag-public-key.asc'
+            [IO.File]::WriteAllBytes($keyPath, [Convert]::FromBase64String($env:RELEASE_TAG_PUBLIC_KEY_BASE64))
+            gpg --batch --import $keyPath
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to import release-tag verification key' }
+            git tag -v $env:RELEASE_TAG
+            if ($LASTEXITCODE -ne 0) { throw 'GPG release-tag verification failed' }
+          }
 
       - name: Import release certificate
         shell: pwsh
@@ -127,19 +217,6 @@ jobs:
           [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:SIGNING_PFX_BASE64))
           $secure = ConvertTo-SecureString $env:SIGNING_PFX_PASSWORD -AsPlainText -Force
           Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\CurrentUser\My -Password $secure | Out-Null
-
-      - name: Import trusted release-tag verification key
-        shell: pwsh
-        env:
-          RELEASE_TAG_PUBLIC_KEY_BASE64: ${{ secrets.RELEASE_TAG_PUBLIC_KEY_BASE64 }}
-        run: |
-          if (-not $env:RELEASE_TAG_PUBLIC_KEY_BASE64) { throw 'Release tag public key is required' }
-          $keyPath = Join-Path $env:RUNNER_TEMP 'release-tag-public-key.asc'
-          [IO.File]::WriteAllBytes($keyPath, [Convert]::FromBase64String($env:RELEASE_TAG_PUBLIC_KEY_BASE64))
-          gpg --batch --import $keyPath
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to import release-tag verification key' }
-          git fetch --force --no-tags origin +refs/heads/main:refs/remotes/origin/main
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to fetch authoritative origin/main' }
 
       - name: Build, verify, sign, and package
         shell: pwsh
