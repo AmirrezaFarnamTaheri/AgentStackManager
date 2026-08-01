@@ -62,7 +62,11 @@ try {
     $apply = (& $installed apply --plan-id $plan.id --digest $plan.digest --yes | Out-String | ConvertFrom-Json)
     if ($apply.transaction.status -ne 'succeeded') { throw "custom no-op apply failed: $($apply | ConvertTo-Json -Depth 20)" }
     & $installed apply --plan-id bogus --digest bogus --yes *> $null
-    if ($LASTEXITCODE -eq 0) { throw 'invalid reviewed plan was accepted' }
+    $invalidPlanExitCode = $LASTEXITCODE
+    if ($invalidPlanExitCode -eq 0) { throw 'invalid reviewed plan was accepted' }
+    # The nonzero result is expected and fully asserted above; do not leak it as
+    # the successful PowerShell script's process exit code.
+    $global:LASTEXITCODE = 0
 
     $stdout = Join-Path $root 'ui.stdout.log'
     $stderr = Join-Path $root 'ui.stderr.log'
@@ -78,19 +82,23 @@ try {
             Start-Sleep -Milliseconds 100
         }
         if (-not $url) { throw "manager URL not emitted; stderr=$(Get-Content -Raw $stderr -ErrorAction SilentlyContinue)" }
-        try {
-            Invoke-WebRequest -Uri ([uri]::new($url,'api/status')) -ErrorAction Stop | Out-Null
-            throw 'unauthorized API request unexpectedly succeeded'
-        } catch {
-            if ($_.Exception.Response.StatusCode.value__ -ne 403) { throw }
+
+        $managerUri = [uri]$url
+        $statusUri = [uri]::new($managerUri, 'api/status')
+        $shutdownUri = [uri]::new($managerUri, 'api/shutdown')
+
+        $unauthorized = Invoke-WebRequest -Uri $statusUri -SkipHttpErrorCheck
+        if ([int]$unauthorized.StatusCode -ne 403) {
+            throw "unauthorized API request returned HTTP $([int]$unauthorized.StatusCode), expected 403"
         }
-        $page = (Invoke-WebRequest -Uri $url).Content
+
+        $page = (Invoke-WebRequest -Uri $managerUri).Content
         if ($page -notmatch '<meta name="agentstack-token" content="([^"]+)">') { throw 'session token missing from secret page' }
         $token = $matches[1]
         $headers = @{'X-AgentStack-Token'=$token}
-        $status = Invoke-RestMethod -Uri ([uri]::new($url,'api/status')) -Headers $headers
+        $status = Invoke-RestMethod -Uri $statusUri -Headers $headers
         if (-not $status.localOnly) { throw 'manager did not report local-only mode' }
-        Invoke-RestMethod -Method Post -Uri ([uri]::new($url,'api/shutdown')) -Headers $headers -ContentType 'application/json' -Body '{}' | Out-Null
+        Invoke-RestMethod -Method Post -Uri $shutdownUri -Headers $headers -ContentType 'application/json' -Body '{}' | Out-Null
         if (-not $process.WaitForExit(10000)) { throw 'manager did not stop after authenticated shutdown' }
     } finally {
         if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force }

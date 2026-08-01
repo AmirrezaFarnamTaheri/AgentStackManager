@@ -139,3 +139,24 @@ func TestDefaultRouterComponentsDeclareHardResourceLimits(t *testing.T) {
 		}
 	}
 }
+
+func TestValidateRejectsMultiplePreferredProvidersForCapability(t *testing.T) {
+	catalog := model.Catalog{Version: 1, Components: []model.Component{
+		{ID: "first", Capability: "search", Preferred: true},
+		{ID: "second", Capability: "search", Preferred: true},
+	}}
+	err := Validate(catalog)
+	if err == nil || !strings.Contains(err.Error(), "multiple preferred providers") {
+		t.Fatalf("expected preferred-provider conflict, got %v", err)
+	}
+}
+
+func TestValidateAllowsPreferredComponentsWithoutCapability(t *testing.T) {
+	catalog := model.Catalog{Version: 1, Components: []model.Component{
+		{ID: "first", Preferred: true},
+		{ID: "second", Preferred: true},
+	}}
+	if err := Validate(catalog); err != nil {
+		t.Fatalf("capability-free preferred components should not collide: %v", err)
+	}
+}

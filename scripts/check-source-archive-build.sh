@@ -43,18 +43,18 @@ JSON
 (
   cd "$archive_root"
   echo "Regenerating and verifying source manifest"
-  ./scripts/write-source-manifest.sh
-  ./scripts/verify-source-manifest.sh >/dev/null
+  bash ./scripts/write-source-manifest.sh
+  bash ./scripts/verify-source-manifest.sh >/dev/null
   echo "Proving unlisted source files fail verification"
   printf 'manifest-negative-control\n' > UNLISTED-INJECTION.txt
-  if ./scripts/verify-source-manifest.sh >/dev/null 2>&1; then
+  if bash ./scripts/verify-source-manifest.sh >/dev/null 2>&1; then
     echo "source manifest verifier accepted an unlisted file" >&2
     exit 1
   fi
   rm -f UNLISTED-INJECTION.txt
-  ./scripts/verify-source-manifest.sh >/dev/null
+  bash ./scripts/verify-source-manifest.sh >/dev/null
   echo "Running supported no-Git build path"
-  VERSION=source-archive-check ./scripts/build.sh
+  VERSION=source-archive-check bash ./scripts/build.sh
   test -s dist-dev/agentstack-windows-amd64.exe
   test -s dist-dev/agentstack-windows-arm64.exe
 )

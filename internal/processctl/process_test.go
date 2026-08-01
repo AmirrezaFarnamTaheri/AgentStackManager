@@ -44,7 +44,12 @@ func TestProcessHelper(t *testing.T) {
 		t.Fatal(err)
 	}
 	pidFile := os.Getenv("AGENTSTACK_PROCESS_PIDFILE")
-	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(child.Process.Pid)), 0o600); err != nil {
+	pidTemp := pidFile + ".tmp"
+	if err := os.WriteFile(pidTemp, []byte(strconv.Itoa(child.Process.Pid)), 0o600); err != nil {
+		_ = child.Process.Kill()
+		t.Fatal(err)
+	}
+	if err := os.Rename(pidTemp, pidFile); err != nil {
 		_ = child.Process.Kill()
 		t.Fatal(err)
 	}
@@ -102,19 +107,41 @@ func TestWaitTimeoutTerminatesProcess(t *testing.T) {
 func waitForPID(t *testing.T, path string) int {
 	t.Helper()
 	deadline := time.Now().Add(10 * time.Second)
+	var lastErr error
 	for {
 		data, err := os.ReadFile(path)
 		if err == nil {
-			pid, convErr := strconv.Atoi(strings.TrimSpace(string(data)))
-			if convErr != nil {
-				t.Fatal(convErr)
+			text := strings.TrimSpace(string(data))
+			pid, convErr := strconv.Atoi(text)
+			if convErr == nil && pid > 0 {
+				return pid
 			}
-			return pid
+			if convErr != nil {
+				lastErr = fmt.Errorf("parse child PID %q: %w", text, convErr)
+			} else {
+				lastErr = fmt.Errorf("invalid child PID %d", pid)
+			}
+		} else {
+			lastErr = err
 		}
 		if time.Now().After(deadline) {
-			t.Fatalf("waiting for child PID: %v", err)
+			t.Fatalf("waiting for child PID: %v", lastErr)
 		}
 		time.Sleep(20 * time.Millisecond)
+	}
+}
+
+func TestWaitForPIDWaitsForCompletePublication(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "child.pid")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	go func() {
+		time.Sleep(50 * time.Millisecond)
+		_ = os.WriteFile(path, []byte("123"), 0o600)
+	}()
+	if got := waitForPID(t, path); got != 123 {
+		t.Fatalf("PID = %d, want 123", got)
 	}
 }
 

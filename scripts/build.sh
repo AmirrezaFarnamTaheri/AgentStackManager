@@ -19,7 +19,7 @@ if [[ -n "$git_root_real" && "$git_root_real" == "$root_real" ]]; then
   revision="git:$(git rev-parse HEAD)"
   buildvcs=true
 else
-  ./scripts/verify-source-manifest.sh >/dev/null
+  bash ./scripts/verify-source-manifest.sh >/dev/null
   revision="$(tr -d '\r\n' < SOURCE_REVISION)"
   if [[ ! "$revision" =~ ^(git|unreleased-base):[0-9A-Fa-f]{40}$ ]]; then
     echo "SOURCE_REVISION must contain git:<40-hex> or unreleased-base:<40-hex>" >&2

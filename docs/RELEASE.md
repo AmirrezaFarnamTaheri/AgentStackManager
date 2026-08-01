@@ -13,6 +13,21 @@ AgentStack public releases target Windows x64 and Windows ARM64. Linux is used f
 - protected release environment approval;
 - all required verification workflows green.
 
+## Create and push the release tag
+
+The manual workflow does not create a release tag. From a clean, verified `main` checkout, create and push the signed annotated tag before dispatching the workflow:
+
+```powershell
+git switch main
+git pull --ff-only
+git status --short
+git tag -s v1.0.0 -m "Release v1.0.0"
+git tag -v v1.0.0
+git push origin v1.0.0
+```
+
+Replace `v1.0.0` with the intended version. `git status --short` must produce no output. A lightweight tag created with `git tag v1.0.0` is rejected. Pushing the tag starts the release workflow automatically; manual dispatch is only a controlled retry for an existing tag.
+
 ## GitHub Release workflow
 
 `.github/workflows/release.yml` supports two controlled entry points:
@@ -20,7 +35,7 @@ AgentStack public releases target Windows x64 and Windows ARM64. Linux is used f
 - pushing an existing signed annotated `v*` tag;
 - manually dispatching the workflow with an existing signed annotated tag and an optional prerelease flag.
 
-The workflow serializes runs per tag, checks out the exact tag, verifies that the tag commit equals protected `origin/main`, builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
+Before checkout, manual dispatch validates that the requested ref exists and resolves to an annotated tag object through the GitHub API. The workflow then serializes runs per tag, checks out the exact tag, verifies that the tag commit equals protected `origin/main`, builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
 
 Publication uses the job-scoped `GITHUB_TOKEN` with `contents: write`; build jobs receive only the read, identity-token, attestation, and artifact-metadata permissions they require. Existing GitHub Releases are never overwritten.
 
@@ -51,11 +66,11 @@ The script refuses a dirty tree, lightweight/unsigned tag, unsupported Go versio
 go test ./...
 go test -race ./...
 go vet ./...
-./scripts/check-critical-coverage.sh coverage.out
-./scripts/check-benchmarks.sh benchmark-results.txt
-./scripts/fuzz.sh 20s
-./scripts/check-governance.sh
-./scripts/check-docs.sh
+bash scripts/check-critical-coverage.sh coverage.out
+bash scripts/check-benchmarks.sh benchmark-results.txt
+bash scripts/fuzz.sh 20s
+bash scripts/check-governance.sh
+bash scripts/check-docs.sh
 ```
 
 The benchmark gate records five samples for one-shot and persistent MCP requests,
@@ -90,7 +105,7 @@ Every source bundle carries `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and
 `SOURCE_MANIFEST.sha256`. A bundle without `.git` is accepted only after the
 manifest verifies both every digest and the exact source file set, and the revision is either `git:<40-hex>` or the explicitly
 unreleased `unreleased-base:<40-hex>` form. CI runs
-`./scripts/check-source-archive-build.sh` to create an ephemeral Git-free copy,
+`bash scripts/check-source-archive-build.sh` to create an ephemeral Git-free copy,
 place it inside an unrelated parent Git repository, regenerate and verify its manifest,
 prove an unlisted file is rejected, and execute the supported archive build path.
 This proves archive buildability; it does not turn an unreleased workspace into

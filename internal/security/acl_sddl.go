@@ -8,12 +8,36 @@ import (
 
 var sddlACEPattern = regexp.MustCompile(`\(([^()]*)\)`)
 
+type sidResolver func(string) (string, error)
+
 func auditPrivateSDDL(sddl, currentUserSID string) error {
+	return auditPrivateSDDLWithResolver(sddl, currentUserSID, staticSIDResolver)
+}
+
+func auditPrivateSDDLWithResolver(sddl, currentUserSID string, resolve sidResolver) error {
 	sddl = strings.TrimSpace(sddl)
-	currentUserSID = strings.ToUpper(strings.TrimSpace(currentUserSID))
+	currentUserSID = strings.TrimSpace(currentUserSID)
 	if currentUserSID == "" {
 		return fmt.Errorf("current user SID is empty")
 	}
+	currentUserSID, err := resolve(currentUserSID)
+	if err != nil {
+		return fmt.Errorf("resolve current user SID: %w", err)
+	}
+	systemSID, err := resolve("SY")
+	if err != nil {
+		return fmt.Errorf("resolve system SID: %w", err)
+	}
+	administratorsSID, err := resolve("BA")
+	if err != nil {
+		return fmt.Errorf("resolve administrators SID: %w", err)
+	}
+	allowed := map[string]string{
+		currentUserSID:    "user",
+		systemSID:         "system",
+		administratorsSID: "administrators",
+	}
+
 	daclIndex := strings.Index(strings.ToUpper(sddl), "D:")
 	if daclIndex < 0 {
 		return fmt.Errorf("Windows security descriptor has no DACL")
@@ -39,16 +63,13 @@ func auditPrivateSDDL(sddl, currentUserSID string) error {
 		aceType := strings.ToUpper(strings.TrimSpace(fields[0]))
 		flags := strings.ToUpper(strings.TrimSpace(fields[1]))
 		rights := strings.ToUpper(strings.TrimSpace(fields[2]))
-		trustee := strings.ToUpper(strings.TrimSpace(fields[len(fields)-1]))
-		principal := ""
-		switch trustee {
-		case currentUserSID:
-			principal = "user"
-		case "SY", "S-1-5-18":
-			principal = "system"
-		case "BA", "S-1-5-32-544":
-			principal = "administrators"
-		default:
+		trustee := strings.TrimSpace(fields[len(fields)-1])
+		resolvedTrustee, err := resolve(trustee)
+		if err != nil {
+			return fmt.Errorf("Windows DACL contains unexpected principal %q", trustee)
+		}
+		principal, ok := allowed[resolvedTrustee]
+		if !ok {
 			return fmt.Errorf("Windows DACL contains unexpected principal %q", trustee)
 		}
 		if aceType != "A" {
@@ -68,4 +89,18 @@ func auditPrivateSDDL(sddl, currentUserSID string) error {
 		}
 	}
 	return nil
+}
+
+func staticSIDResolver(value string) (string, error) {
+	value = strings.ToUpper(strings.TrimSpace(value))
+	switch value {
+	case "SY":
+		return "S-1-5-18", nil
+	case "BA":
+		return "S-1-5-32-544", nil
+	}
+	if strings.HasPrefix(value, "S-1-") {
+		return value, nil
+	}
+	return "", fmt.Errorf("unsupported SID alias %q", value)
 }

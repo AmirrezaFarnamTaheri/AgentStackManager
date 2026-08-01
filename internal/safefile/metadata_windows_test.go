@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/agentstack/agentstack/internal/winsecurity"
 )
 
 func TestReplacePreservesExplicitWindowsDACL(t *testing.T) {
@@ -37,7 +39,7 @@ func TestReplacePreservesExplicitWindowsDACL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if bytes.Equal(before.descriptor, sourceBefore.descriptor) {
+	if winsecurity.EqualDACL(before.dacl, sourceBefore.dacl) {
 		t.Fatal("test precondition failed: source already has destination DACL")
 	}
 
@@ -48,8 +50,8 @@ func TestReplacePreservesExplicitWindowsDACL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if before.securityInformation != after.securityInformation || !bytes.Equal(before.descriptor, after.descriptor) {
-		t.Fatal("destination DACL changed during atomic replacement")
+	if !winsecurity.EqualDACL(before.dacl, after.dacl) {
+		t.Fatalf("destination DACL changed during atomic replacement: before=%q after=%q", before.dacl.SDDL, after.dacl.SDDL)
 	}
 }
 
