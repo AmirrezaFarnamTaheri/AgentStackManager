@@ -15,24 +15,19 @@ jobs:
         with:
           ref: fix/release-tag-preflight-node24
           fetch-depth: 0
-      - name: Reassemble, verify, clean up, and commit
+      - name: Regenerate, verify, clean up, and commit
         id: repair
         shell: bash
-        env:
-          EXPECTED_SHA256: e3b57bb4172700fbdf727bfa3f36e3db3b5e66546b6d81dfddbd65dd99df3fb5
-          EXPECTED_BLOB: 7ff03231703bb2154ff6fc389fdfe555223a2b2d
         run: |
           set -euo pipefail
-          cat .manifest-repair/part-00 .manifest-repair/part-01 .manifest-repair/part-02 .manifest-repair/part-03 > SOURCE_MANIFEST.sha256
-          printf '%s  %s\n' "$EXPECTED_SHA256" SOURCE_MANIFEST.sha256 | sha256sum -c -
-          test "$(git hash-object SOURCE_MANIFEST.sha256)" = "$EXPECTED_BLOB"
           git rm -r .manifest-repair .github/workflows/repair-source-manifest.yml
+          bash scripts/write-source-manifest.sh
           bash scripts/verify-source-manifest.sh
           git diff --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add SOURCE_MANIFEST.sha256
-          git commit -m 'chore: repair exact source manifest'
+          git commit -m 'chore: regenerate exact source manifest'
           git push origin HEAD:fix/release-tag-preflight-node24
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Dispatch Verify on repaired head
