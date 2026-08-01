@@ -37,7 +37,7 @@ func AuditPrivateDir(path string) error {
 	if err != nil {
 		return fmt.Errorf("audit AgentStack data ACL: %w", err)
 	}
-	if err := auditPrivateSDDL(sddl, sid); err != nil {
+	if err := auditPrivateSDDLWithResolver(sddl, sid, winsecurity.CanonicalSIDString); err != nil {
 		return fmt.Errorf("AgentStack data ACL is not private to the exact current-user/system allowlist: %w", err)
 	}
 	return nil
