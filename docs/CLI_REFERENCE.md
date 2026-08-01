@@ -1,6 +1,6 @@
 # CLI Reference
 
-The CLI emits JSON unless a command is explicitly interactive. Mutating commands either consume a sealed plan or require an explicit operation-specific confirmation.
+The CLI emits JSON unless a command is explicitly interactive or produces file artifacts (`sbom --out` writes CycloneDX JSON to file, while `releasepack --out` writes a ZIP archive and emits no stdout JSON response). Mutating commands either consume a sealed plan or require an explicit operation-specific confirmation.
 
 ## Application and discovery
 

@@ -161,3 +161,21 @@ func TestVersionIncludesSourceRevisionWhenAvailable(t *testing.T) {
 		t.Fatalf("unexpected version output: got %q want %q", output.String(), expected)
 	}
 }
+
+func TestRunSBOMPositionalArgRejection(t *testing.T) {
+	var output bytes.Buffer
+	command := &CLI{Service: &app.Service{}, Out: &output, Err: &output}
+	code := command.Run(context.Background(), []string{"sbom", "unexpected-arg"})
+	if code != 2 {
+		t.Fatalf("expected code 2 for extra positional arg, got %d: %s", code, output.String())
+	}
+}
+
+func TestRunReleasepackPositionalArgRejection(t *testing.T) {
+	var output bytes.Buffer
+	command := &CLI{Service: &app.Service{}, Out: &output, Err: &output}
+	code := command.Run(context.Background(), []string{"releasepack", "--root", t.TempDir(), "--out", "out.zip", "extra"})
+	if code != 2 {
+		t.Fatalf("expected code 2 for extra positional arg, got %d: %s", code, output.String())
+	}
+}

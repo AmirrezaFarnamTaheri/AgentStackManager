@@ -16,6 +16,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -462,17 +463,20 @@ func htmlAttribute(value string) string {
 func openBrowser(target string) error {
 	switch runtime.GOOS {
 	case "windows":
-		candidates := []string{
-			os.Getenv("ProgramFiles(x86)") + `\Microsoft\Edge\Application\msedge.exe`,
-			os.Getenv("ProgramFiles") + `\Microsoft\Edge\Application\msedge.exe`,
-			os.Getenv("LocalAppData") + `\Microsoft\Edge\Application\msedge.exe`,
-			os.Getenv("ProgramFiles(x86)") + `\Google\Chrome\Application\chrome.exe`,
-			os.Getenv("ProgramFiles") + `\Google\Chrome\Application\chrome.exe`,
+		var candidates []string
+		for _, envVar := range []string{"ProgramFiles(x86)", "ProgramFiles", "LocalAppData"} {
+			base := os.Getenv(envVar)
+			if base != "" {
+				candidates = append(candidates,
+					filepath.Join(base, "Microsoft", "Edge", "Application", "msedge.exe"),
+					filepath.Join(base, "Google", "Chrome", "Application", "chrome.exe"),
+				)
+			}
 		}
 		for _, exe := range candidates {
-			if exe != "" {
-				if _, err := os.Stat(exe); err == nil {
-					return exec.Command(exe, "--app="+target).Start()
+			if _, err := os.Stat(exe); err == nil {
+				if err := exec.Command(exe, "--app="+target).Start(); err == nil {
+					return nil
 				}
 			}
 		}
