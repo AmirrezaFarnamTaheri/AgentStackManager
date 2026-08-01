@@ -33,8 +33,8 @@ func auditPrivateSDDLWithResolver(sddl, currentUserSID string, resolve sidResolv
 		return fmt.Errorf("resolve administrators SID: %w", err)
 	}
 	allowed := map[string]string{
-		currentUserSID:     "user",
-		systemSID:          "system",
+		currentUserSID:    "user",
+		systemSID:         "system",
 		administratorsSID: "administrators",
 	}
 
