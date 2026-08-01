@@ -4,7 +4,7 @@
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
 bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
-c3c70b04276cd172a8614b366a1b4f9f15c23e83938f666cc1ae3f02fae154b2  ./.github/workflows/release.yml
+66b8773737efdc1cfe5d5972d1278ce78a8e50d62b513a94509840bb63bf350f  ./.github/workflows/release.yml
 68c8ab1513dd2c09c931daa63a3f24fe5b56c951456e7058da57abb57170e55d  ./.github/workflows/verify.yml
 6263084463b96fb3c9ce56ffd55d4b1f20f88286c6f907ddde0dc31251378e53  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
