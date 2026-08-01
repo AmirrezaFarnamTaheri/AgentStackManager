@@ -49,10 +49,10 @@ try {
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await context.newPage();
+  await page.addInitScript({ path: path.resolve('node_modules', 'axe-core', 'axe.min.js') });
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 });
   await page.waitForFunction(() => document.querySelectorAll('#profileSelect option').length > 0, null, { timeout: 60_000 });
 
-  await page.addScriptTag({ path: path.resolve('node_modules', 'axe-core', 'axe.min.js') });
   const axe = await page.evaluate(async () => globalThis.axe.run(document, {
     runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] }
   }));
