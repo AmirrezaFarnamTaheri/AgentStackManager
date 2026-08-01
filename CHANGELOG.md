@@ -2,7 +2,10 @@
 
 ## Unreleased — forensic remediation
 
-- Hardened release dispatch with pre-checkout signed-tag validation, upgraded GitHub Actions to Node 24-compatible immutable pins, and refreshed Playwright to 1.62.0.
+- Hardened release dispatch with pre-checkout signed-tag validation, upgraded GitHub Actions to Node 24-compatible immutable pins, refreshed Playwright to 1.62.0, and cancelled superseded Verify runs.
+- Removed Git executable-bit assumptions from CI and source-archive verification by invoking repository shell scripts explicitly through Bash.
+- Replaced PowerShell-dependent Windows ACL handling with native Win32 security-descriptor capture, canonical SDDL comparison, post-rename verification, and rollback on metadata drift.
+- Strengthened mutation coverage at resource-limit and preferred-provider boundaries without lowering the 75% efficacy threshold.
 - Consolidated OS process liveness under `processctl`, hardened Unix process-group checks, added Linux process-start identity validation when available, and retained descendant cleanup after a group leader exits.
 - Added catalog-defined Windows Job Object memory, CPU-rate, and active-process ceilings for managed MCP children; each child starts suspended and resumes only after successful Job Object assignment.
 - Preserved destination POSIX modes and Windows DACLs during atomic managed-file replacement.
