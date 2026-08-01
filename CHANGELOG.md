@@ -2,6 +2,7 @@
 
 ## Unreleased — forensic remediation
 
+- Automated releases from `main`: semantic versions are inferred from Conventional Commit signals, tags are keyless-signed through GitHub OIDC/Sigstore, interrupted unpublished tags are recovered safely, and trusted GPG tag pushes remain supported.
 - Hardened release dispatch with pre-checkout signed-tag validation, upgraded GitHub Actions to Node 24-compatible immutable pins, refreshed Playwright to 1.62.0, and cancelled superseded Verify runs.
 - Removed Git executable-bit assumptions from CI and source-archive verification by invoking repository shell scripts explicitly through Bash.
 - Replaced PowerShell-dependent Windows ACL handling with native Win32 security-descriptor capture, canonical SDDL comparison, post-rename verification, and rollback on metadata drift.
