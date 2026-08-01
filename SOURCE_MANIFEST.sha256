@@ -4,7 +4,7 @@
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
 bf929d37d06b56eb4bf09e1f00803d3ad07e5e9465744160b579d82830e1fd1f  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
-8977920ef8e925cf1d4ed3aedd5d59361807e05608d640bd8c28b762793c4243  ./.github/workflows/release.yml
+e3010c862ca58ffbfebaab18d672b766e53349c7c1c638e8c5aa69de07f3a404  ./.github/workflows/release.yml
 68c8ab1513dd2c09c931daa63a3f24fe5b56c951456e7058da57abb57170e55d  ./.github/workflows/verify.yml
 6263084463b96fb3c9ce56ffd55d4b1f20f88286c6f907ddde0dc31251378e53  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
@@ -13,7 +13,7 @@ e5cd3c2a6c7da4c6f2244a937dc85ec1c4ae255ef92ec3ab2ef5e744321d987a  ./.impeccable/
 491432053bfe5ff7ec09dfeadfd38cd4c79e1ee13fd89fc73ca505756fcef21e  ./.impeccable/design.json
 0d51472774984e190aa36c5fafa3e0e7f11a25d694bcf849605e0ca5a8387c13  ./.impeccable/finish-review.md
 036c4111859d0afdd37587f3af544c5ec040823b9eeb21a415fe3b497b177d99  ./.impeccable/surfaces/internal-ui-web.md
-ec4a7b3c500bc779756427b17dec9f2f3f6b0de9163d01089f165bdf44e2c010  ./CHANGELOG.md
+13bb1fa439c4f55880bba426b00436ab02c607fcf0273cb51ddbebedc392da67  ./CHANGELOG.md
 17e6614864cee671169ec33b1fa24b650ec58329088e99779a9a25f1ea90a024  ./DELIVERY_STATUS.md
 9f96750b1619c8a67e3a0be7cc5c9a99eadcb59aa57d999289556fbbf3516246  ./DESIGN.md
 de53435dabdea837448a79d8123a62b8f2e99d4331049a53d178b7068ddca878  ./LICENSE
