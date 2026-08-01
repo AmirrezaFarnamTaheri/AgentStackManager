@@ -79,18 +79,22 @@ try {
         }
         if (-not $url) { throw "manager URL not emitted; stderr=$(Get-Content -Raw $stderr -ErrorAction SilentlyContinue)" }
 
-        $unauthorized = Invoke-WebRequest -Uri ([uri]::new($url,'api/status')) -SkipHttpErrorCheck
+        $managerUri = [uri]$url
+        $statusUri = [uri]::new($managerUri, 'api/status')
+        $shutdownUri = [uri]::new($managerUri, 'api/shutdown')
+
+        $unauthorized = Invoke-WebRequest -Uri $statusUri -SkipHttpErrorCheck
         if ([int]$unauthorized.StatusCode -ne 403) {
             throw "unauthorized API request returned HTTP $([int]$unauthorized.StatusCode), expected 403"
         }
 
-        $page = (Invoke-WebRequest -Uri $url).Content
+        $page = (Invoke-WebRequest -Uri $managerUri).Content
         if ($page -notmatch '<meta name="agentstack-token" content="([^"]+)">') { throw 'session token missing from secret page' }
         $token = $matches[1]
         $headers = @{'X-AgentStack-Token'=$token}
-        $status = Invoke-RestMethod -Uri ([uri]::new($url,'api/status')) -Headers $headers
+        $status = Invoke-RestMethod -Uri $statusUri -Headers $headers
         if (-not $status.localOnly) { throw 'manager did not report local-only mode' }
-        Invoke-RestMethod -Method Post -Uri ([uri]::new($url,'api/shutdown')) -Headers $headers -ContentType 'application/json' -Body '{}' | Out-Null
+        Invoke-RestMethod -Method Post -Uri $shutdownUri -Headers $headers -ContentType 'application/json' -Body '{}' | Out-Null
         if (-not $process.WaitForExit(10000)) { throw 'manager did not stop after authenticated shutdown' }
     } finally {
         if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force }
