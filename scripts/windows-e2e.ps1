@@ -78,12 +78,12 @@ try {
             Start-Sleep -Milliseconds 100
         }
         if (-not $url) { throw "manager URL not emitted; stderr=$(Get-Content -Raw $stderr -ErrorAction SilentlyContinue)" }
-        try {
-            Invoke-WebRequest -Uri ([uri]::new($url,'api/status')) -ErrorAction Stop | Out-Null
-            throw 'unauthorized API request unexpectedly succeeded'
-        } catch {
-            if ($_.Exception.Response.StatusCode.value__ -ne 403) { throw }
+
+        $unauthorized = Invoke-WebRequest -Uri ([uri]::new($url,'api/status')) -SkipHttpErrorCheck
+        if ([int]$unauthorized.StatusCode -ne 403) {
+            throw "unauthorized API request returned HTTP $([int]$unauthorized.StatusCode), expected 403"
         }
+
         $page = (Invoke-WebRequest -Uri $url).Content
         if ($page -notmatch '<meta name="agentstack-token" content="([^"]+)">') { throw 'session token missing from secret page' }
         $token = $matches[1]
