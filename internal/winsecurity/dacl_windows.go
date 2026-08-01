@@ -4,6 +4,7 @@ package winsecurity
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"strings"
 	"syscall"
@@ -25,21 +26,19 @@ var (
 	kernel32                                  = syscall.NewLazyDLL("kernel32.dll")
 	procGetFileSecurityW                      = advapi32.NewProc("GetFileSecurityW")
 	procGetSecurityDescriptorControl          = advapi32.NewProc("GetSecurityDescriptorControl")
-	procGetSecurityDescriptorDACL             = advapi32.NewProc("GetSecurityDescriptorDacl")
 	procSetNamedSecurityInfoW                 = advapi32.NewProc("SetNamedSecurityInfoW")
 	procConvertSecurityDescriptorToStringSDDL = advapi32.NewProc("ConvertSecurityDescriptorToStringSecurityDescriptorW")
 	procConvertStringSidToSidW                = advapi32.NewProc("ConvertStringSidToSidW")
 	procConvertSidToStringSidW                = advapi32.NewProc("ConvertSidToStringSidW")
 	procLocalFree                             = kernel32.NewProc("LocalFree")
+	procLocalSize                             = kernel32.NewProc("LocalSize")
 )
 
-type aclHeader struct {
-	Revision byte
-	Sbz1     byte
-	Size     uint16
-	AceCount uint16
-	Sbz2     uint16
-}
+const (
+	securityDescriptorRelativeSize = 20
+	daclOffsetPosition             = 16
+	aclHeaderSize                  = 8
+)
 
 // DACL is a captured native discretionary access-control list plus the
 // inheritance-protection state required to restore it exactly.
@@ -100,29 +99,21 @@ func CaptureFileDACL(path string) (DACL, error) {
 		return DACL{}, fmt.Errorf("read file DACL control: %w", callErr)
 	}
 
-	var present int32
-	var defaulted int32
-	var aclPointer uintptr
-	ok, _, callErr = procGetSecurityDescriptorDACL.Call(
-		uintptr(unsafe.Pointer(&descriptor[0])),
-		uintptr(unsafe.Pointer(&present)),
-		uintptr(unsafe.Pointer(&aclPointer)),
-		uintptr(unsafe.Pointer(&defaulted)),
-	)
-	if ok == 0 {
-		return DACL{}, fmt.Errorf("locate file DACL: %w", callErr)
+	if len(descriptor) < securityDescriptorRelativeSize {
+		return DACL{}, fmt.Errorf("file security descriptor is too short: %d bytes", len(descriptor))
 	}
-	if present == 0 {
-		return DACL{}, fmt.Errorf("file security descriptor has no DACL")
-	}
-	if aclPointer == 0 {
+	daclOffset := int(binary.LittleEndian.Uint32(descriptor[daclOffsetPosition : daclOffsetPosition+4]))
+	if daclOffset == 0 {
 		return DACL{}, fmt.Errorf("file security descriptor has a NULL DACL")
 	}
-	header := (*aclHeader)(unsafe.Pointer(aclPointer))
-	if header.Size < uint16(unsafe.Sizeof(aclHeader{})) {
-		return DACL{}, fmt.Errorf("file DACL has invalid size %d", header.Size)
+	if daclOffset < securityDescriptorRelativeSize || daclOffset > len(descriptor)-aclHeaderSize {
+		return DACL{}, fmt.Errorf("file DACL offset %d is outside the security descriptor", daclOffset)
 	}
-	acl := append([]byte(nil), unsafe.Slice((*byte)(unsafe.Pointer(aclPointer)), int(header.Size))...)
+	aclSize := int(binary.LittleEndian.Uint16(descriptor[daclOffset+2 : daclOffset+4]))
+	if aclSize < aclHeaderSize || aclSize > len(descriptor)-daclOffset {
+		return DACL{}, fmt.Errorf("file DACL has invalid size %d", aclSize)
+	}
+	acl := append([]byte(nil), descriptor[daclOffset:daclOffset+aclSize]...)
 
 	sddl, err := descriptorDACLString(descriptor)
 	if err != nil {
@@ -137,7 +128,7 @@ func CaptureFileDACL(path string) (DACL, error) {
 
 // ApplyFileDACL restores a previously captured native DACL to path.
 func ApplyFileDACL(path string, dacl DACL) error {
-	if len(dacl.ACL) < int(unsafe.Sizeof(aclHeader{})) {
+	if len(dacl.ACL) < aclHeaderSize {
 		return fmt.Errorf("file DACL snapshot is empty or malformed")
 	}
 	name, err := syscall.UTF16PtrFromString(path)
@@ -209,18 +200,22 @@ func CanonicalSIDString(value string) (string, error) {
 		return "", fmt.Errorf("format SID %q: empty result", value)
 	}
 	defer procLocalFree.Call(uintptr(unsafe.Pointer(output)))
-	return strings.ToUpper(utf16PointerString(output)), nil
+	canonical, err := localUTF16String(output)
+	if err != nil {
+		return "", fmt.Errorf("format SID %q: %w", value, err)
+	}
+	return strings.ToUpper(canonical), nil
 }
 
-func utf16PointerString(value *uint16) string {
+func localUTF16String(value *uint16) (string, error) {
 	if value == nil {
-		return ""
+		return "", fmt.Errorf("empty LocalAlloc string")
 	}
-	length := 0
-	for *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(value)) + uintptr(length)*unsafe.Sizeof(*value))) != 0 {
-		length++
+	size, _, callErr := procLocalSize.Call(uintptr(unsafe.Pointer(value)))
+	if size == 0 {
+		return "", fmt.Errorf("measure LocalAlloc string: %w", callErr)
 	}
-	return syscall.UTF16ToString(unsafe.Slice(value, length))
+	return syscall.UTF16ToString(unsafe.Slice(value, int(size)/2)), nil
 }
 
 func descriptorDACLString(descriptor []byte) (string, error) {
