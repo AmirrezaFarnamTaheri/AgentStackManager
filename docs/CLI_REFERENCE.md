@@ -14,6 +14,8 @@ agentstack inventory
 agentstack catalog
 agentstack profiles
 agentstack integrations
+agentstack sbom [--version VERSION] [--licenses PATH] [--out FILE]
+agentstack releasepack --root DIR --out ZIP [--prefix NAME]
 ```
 
 `ui` refuses non-loopback addresses. Its random session path and request token are per-process secrets. They protect against cross-origin and accidental access; they are not a security boundary against malicious software already running as the same OS user.

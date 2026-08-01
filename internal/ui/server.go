@@ -460,15 +460,26 @@ func htmlAttribute(value string) string {
 }
 
 func openBrowser(target string) error {
-	var command string
-	var args []string
 	switch runtime.GOOS {
 	case "windows":
-		command, args = "rundll32", []string{"url.dll,FileProtocolHandler", target}
+		candidates := []string{
+			os.Getenv("ProgramFiles(x86)") + `\Microsoft\Edge\Application\msedge.exe`,
+			os.Getenv("ProgramFiles") + `\Microsoft\Edge\Application\msedge.exe`,
+			os.Getenv("LocalAppData") + `\Microsoft\Edge\Application\msedge.exe`,
+			os.Getenv("ProgramFiles(x86)") + `\Google\Chrome\Application\chrome.exe`,
+			os.Getenv("ProgramFiles") + `\Google\Chrome\Application\chrome.exe`,
+		}
+		for _, exe := range candidates {
+			if exe != "" {
+				if _, err := os.Stat(exe); err == nil {
+					return exec.Command(exe, "--app="+target).Start()
+				}
+			}
+		}
+		return exec.Command("rundll32", "url.dll,FileProtocolHandler", target).Start()
 	case "darwin":
-		command, args = "open", []string{target}
+		return exec.Command("open", target).Start()
 	default:
-		command, args = "xdg-open", []string{target}
+		return exec.Command("xdg-open", target).Start()
 	}
-	return exec.Command(command, args...).Start()
 }
