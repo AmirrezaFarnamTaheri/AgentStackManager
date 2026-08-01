@@ -21,9 +21,15 @@ func EnsurePrivateDir(path string) error {
 	if err != nil {
 		return err
 	}
-	args := []string{path, "/inheritance:r", "/grant:r", "*" + sid + ":(OI)(CI)F", "*S-1-5-18:(OI)(CI)F", "*S-1-5-32-544:(OI)(CI)F", "/remove:g", "*S-1-1-0", "*S-1-5-11", "/c", "/q"}
-	if output, err := exec.Command("icacls.exe", args...).CombinedOutput(); err != nil {
-		return fmt.Errorf("secure AgentStack data ACL: %w: %s", err, strings.TrimSpace(string(output)))
+	dacl, err := winsecurity.DACLFromSDDL(fmt.Sprintf(
+		"D:P(A;OICI;FA;;;%s)(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)",
+		sid,
+	))
+	if err != nil {
+		return fmt.Errorf("build private AgentStack data ACL: %w", err)
+	}
+	if err := winsecurity.ApplyFileDACL(path, dacl); err != nil {
+		return fmt.Errorf("secure AgentStack data ACL: %w", err)
 	}
 	return AuditPrivateDir(path)
 }
