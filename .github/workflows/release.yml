@@ -1,10 +1,13 @@
 name: Signed GitHub Release
-run-name: Release ${{ github.event_name == 'workflow_dispatch' && 'automatic' || github.ref_name }}
+run-name: Release ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || (github.event_name == 'workflow_dispatch' && 'automatic' || github.ref_name) }}
 
 on:
   push:
     tags:
       - 'v*'
+  workflow_run:
+    workflows: ['Verify']
+    types: [completed]
   workflow_dispatch:
     inputs:
       prerelease:
@@ -14,11 +17,12 @@ on:
         type: boolean
 
 concurrency:
-  group: signed-release-${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref_name }}
+  group: signed-release-${{ github.event_name == 'push' && github.ref_name || 'main' }}
   cancel-in-progress: false
 
 jobs:
   build-sign-package:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     name: Build, sign, and attest
     runs-on: windows-2025
     timeout-minutes: 90
@@ -32,11 +36,12 @@ jobs:
       release_tag: ${{ steps.release.outputs.tag }}
       release_version: ${{ steps.release.outputs.version }}
       prerelease: ${{ steps.release.outputs.prerelease }}
+      skip_release: ${{ steps.release.outputs.skip_release }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || (github.event_name == 'workflow_dispatch' && 'main' || github.ref) }}
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
@@ -58,6 +63,7 @@ jobs:
         shell: pwsh
         env:
           EVENT_NAME: ${{ github.event_name }}
+          SOURCE_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           PUSH_TAG: ${{ github.ref_name }}
           DISPATCH_PRERELEASE: ${{ inputs.prerelease }}
           GH_TOKEN: ${{ github.token }}
@@ -73,15 +79,18 @@ jobs:
 
           $head = (git rev-parse HEAD).Trim()
           $originMain = (git rev-parse refs/remotes/origin/main).Trim()
-          if ($env:EVENT_NAME -eq 'workflow_dispatch' -and $head -ne $originMain) {
-            throw "Manual release must run from current origin/main; HEAD=$head origin/main=$originMain"
+          $automaticRelease = $env:EVENT_NAME -in @('workflow_dispatch', 'workflow_run')
+          if ($automaticRelease -and $head -ne $originMain) {
+            throw "Automatic release must use current origin/main; HEAD=$head origin/main=$originMain"
           }
+          if ($head -ne $env:SOURCE_SHA) { throw "Checked-out source SHA mismatch: HEAD=$head expected=$env:SOURCE_SHA" }
 
           $tagPattern = '^v(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$'
           $tag = $null
           $trustMode = $null
+          $skipRelease = 'false'
 
-          if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+          if ($automaticRelease) {
             git config --local user.name 'github-actions[bot]'
             git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git config --local gpg.format x509
@@ -94,9 +103,16 @@ jobs:
               if ($existingTag -notmatch $tagPattern) { continue }
               if ((git cat-file -t "refs/tags/$existingTag").Trim() -ne 'tag') { continue }
               $tagObject = git cat-file -p "refs/tags/$existingTag"
-              if (($tagObject -join "`n") -notmatch 'Managed-By: AgentStackManager release workflow') { continue }
+              $managedTag = ($tagObject -join "`n") -match 'Managed-By: AgentStackManager release workflow'
               gh release view $existingTag --repo $env:GH_REPO *> $null
-              if ($LASTEXITCODE -eq 0) { continue }
+              $releaseExists = $LASTEXITCODE -eq 0
+              if ($releaseExists) {
+                $tag = $existingTag
+                $trustMode = 'existing'
+                $skipRelease = 'true'
+                break
+              }
+              if (-not $managedTag) { continue }
               gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$existingTag"
               if ($LASTEXITCODE -ne 0) { throw "Existing automated tag failed Sigstore verification: $existingTag" }
               $tag = $existingTag
@@ -178,8 +194,10 @@ jobs:
           "version=$version" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
           "prerelease=$($isPrerelease.ToString().ToLowerInvariant())" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
           "trust_mode=$trustMode" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+          "skip_release=$skipRelease" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
 
       - name: Configure and verify release tag trust
+        if: steps.release.outputs.skip_release != 'true'
         shell: pwsh
         env:
           TRUST_MODE: ${{ steps.release.outputs.trust_mode }}
@@ -205,6 +223,7 @@ jobs:
           }
 
       - name: Import release certificate
+        if: steps.release.outputs.skip_release != 'true'
         shell: pwsh
         env:
           SIGNING_PFX_BASE64: ${{ secrets.SIGNING_PFX_BASE64 }}
@@ -219,6 +238,7 @@ jobs:
           Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\CurrentUser\My -Password $secure | Out-Null
 
       - name: Build, verify, sign, and package
+        if: steps.release.outputs.skip_release != 'true'
         shell: pwsh
         env:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
@@ -226,33 +246,39 @@ jobs:
         run: ./scripts/release.ps1 -Version $env:RELEASE_VERSION -CertificateThumbprint $env:SIGNING_CERT_THUMBPRINT
 
       - name: Attest release archive provenance
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
           subject-path: 'dist/*.zip'
 
       - name: Attest raw executable provenance
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
           subject-path: 'dist/*.exe'
 
       - name: Attest x64 binary SBOM
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
           subject-path: 'dist/agentstack-windows-amd64.exe'
           sbom-path: 'dist/agentstack-binary-amd64.cdx.json'
 
       - name: Attest ARM64 binary SBOM
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
           subject-path: 'dist/agentstack-windows-arm64.exe'
           sbom-path: 'dist/agentstack-binary-arm64.cdx.json'
 
       - name: Attest catalog SBOM provenance
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
         with:
           subject-path: 'dist/agentstack-catalog.cdx.json'
 
       - name: Upload signed release candidate
+        if: steps.release.outputs.skip_release != 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: signed-release-${{ steps.release.outputs.tag }}
@@ -262,6 +288,7 @@ jobs:
           retention-days: 7
 
   arm64-runtime-proof:
+    if: needs.build-sign-package.outputs.skip_release != 'true'
     name: Verify signed ARM64 runtime
     needs: build-sign-package
     runs-on: windows-11-arm
@@ -310,6 +337,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'ARM64 catalog smoke failed' }
 
   publish-release:
+    if: needs.build-sign-package.outputs.skip_release != 'true'
     name: Publish GitHub Release
     needs: [build-sign-package, arm64-runtime-proof]
     runs-on: windows-2025
