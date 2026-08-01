@@ -1,0 +1,1 @@
+Trigger user-authored verification after exact manifest regeneration.
