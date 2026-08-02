@@ -166,7 +166,7 @@ function Assert-Bundle([string]$Archive,[string]$Arch) {
         }
         if ($Arch -eq 'amd64') {
             & $setup --verify-only | Out-Null
-            if ($LASTEXITCODE -ne 0) { throw 'x64 graphical setup pair verification failed' }
+            if ($LASTEXITCODE -ne 0) { throw 'x64 setup launcher pair verification failed' }
             & $console version | Out-Null
             if ($LASTEXITCODE -ne 0) { throw 'x64 console version smoke failed' }
             & $console catalog | Out-Null
