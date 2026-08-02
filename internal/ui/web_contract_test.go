@@ -92,6 +92,16 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 	if !strings.Contains(js, "void runOperation(null, 'Load AgentStack Manager', refresh)") {
 		t.Fatal("startup refresh must not steal initial keyboard focus from the skip link")
 	}
+	for _, fragment := range []string{
+		`id="overviewLoadError"`, `id="retryLoadBtn"`, `role="alert"`,
+		`id="componentSearchStatus"`, `aria-describedby=`, `health-message`,
+		`$('shutdownTitle').focus`, `state.selected.delete(previousProvider)`,
+		`setCatalogControlsAvailable(false)`, `Reviewed plan applied.`,
+	} {
+		if !strings.Contains(html+js, fragment) {
+			t.Fatalf("recovery and accessibility contract missing %q", fragment)
+		}
+	}
 }
 
 func TestEmbeddedUINavigationUsesOneIconLanguage(t *testing.T) {

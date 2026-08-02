@@ -24,6 +24,8 @@ import (
 
 var SupportedProtocolVersions = []string{"2025-06-18", "2025-03-26"}
 
+var errRequestNotStarted = errors.New("child request did not acquire the session")
+
 const (
 	defaultChildTimeout = 45 * time.Second
 	defaultMessageLimit = 4 << 20
@@ -283,7 +285,7 @@ func (s *childSession) requestRaw(ctx context.Context, method string, params any
 	case <-s.requestGate:
 		defer func() { s.requestGate <- struct{}{} }()
 	case <-ctx.Done():
-		return nil, ctx.Err()
+		return nil, fmt.Errorf("%w: %w", errRequestNotStarted, ctx.Err())
 	}
 	s.stateMu.Lock()
 	if s.closed {
@@ -377,6 +379,8 @@ type PooledChildClient struct {
 
 type pooledWorker struct {
 	session    *childSession
+	ready      chan struct{}
+	startErr   error
 	lastUsed   time.Time
 	timer      *time.Timer
 	generation uint64
@@ -431,28 +435,10 @@ func (p *PooledChildClient) Doctor(ctx context.Context, server ServerConfig) Doc
 
 func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig, operation func(*childSession) (json.RawMessage, error)) (json.RawMessage, error) {
 	key := serverKey(server)
-	p.mu.Lock()
-	if p.workers == nil {
-		p.workers = map[string]*pooledWorker{}
+	worker, err := p.acquireWorker(ctx, key, server)
+	if err != nil {
+		return nil, err
 	}
-	worker := p.workers[key]
-	if worker == nil {
-		session, err := p.Base.start(ctx, server)
-		if err != nil {
-			p.mu.Unlock()
-			return nil, err
-		}
-		worker = &pooledWorker{session: session}
-		p.workers[key] = worker
-	}
-	if worker.timer != nil {
-		worker.timer.Stop()
-		worker.timer = nil
-	}
-	worker.generation++
-	worker.active++
-	worker.lastUsed = time.Now()
-	p.mu.Unlock()
 
 	result, err := operation(worker.session)
 	p.mu.Lock()
@@ -460,10 +446,11 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 		worker.active--
 	}
 	current := p.workers[key] == worker
-	if err != nil && current {
+	sessionInvalid := err != nil && !errors.Is(err, errRequestNotStarted)
+	if sessionInvalid && current {
 		delete(p.workers, key)
 	}
-	if err != nil {
+	if sessionInvalid {
 		p.mu.Unlock()
 		_ = worker.session.Close()
 		return nil, err
@@ -471,7 +458,7 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 	if !current {
 		p.mu.Unlock()
 		_ = worker.session.Close()
-		return result, nil
+		return result, err
 	}
 	worker.lastUsed = time.Now()
 	if worker.active == 0 {
@@ -486,7 +473,58 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 		worker.timer = time.AfterFunc(ttl, func() { p.expire(key, worker, generation) })
 	}
 	p.mu.Unlock()
-	return result, nil
+	return result, err
+}
+
+func (p *PooledChildClient) acquireWorker(ctx context.Context, key string, server ServerConfig) (*pooledWorker, error) {
+	p.mu.Lock()
+	if p.workers == nil {
+		p.workers = map[string]*pooledWorker{}
+	}
+	worker := p.workers[key]
+	if worker == nil {
+		worker = &pooledWorker{ready: make(chan struct{})}
+		p.workers[key] = worker
+		p.mu.Unlock()
+
+		session, err := p.Base.start(ctx, server)
+		p.mu.Lock()
+		worker.session = session
+		worker.startErr = err
+		close(worker.ready)
+		if err != nil && p.workers[key] == worker {
+			delete(p.workers, key)
+		}
+		p.mu.Unlock()
+		if err != nil {
+			return nil, err
+		}
+	} else if worker.ready != nil {
+		ready := worker.ready
+		p.mu.Unlock()
+		select {
+		case <-ready:
+			if worker.startErr != nil {
+				return nil, worker.startErr
+			}
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+	} else {
+		p.mu.Unlock()
+	}
+
+	p.mu.Lock()
+	if worker.timer != nil {
+		worker.timer.Stop()
+		worker.timer = nil
+	}
+	worker.ready = nil
+	worker.generation++
+	worker.active++
+	worker.lastUsed = time.Now()
+	p.mu.Unlock()
+	return worker, nil
 }
 
 func (p *PooledChildClient) removeWorkerIfCurrent(key string, expected *pooledWorker) {
@@ -519,8 +557,10 @@ func (p *PooledChildClient) Close() error {
 		if worker.timer != nil {
 			worker.timer.Stop()
 		}
-		if err := worker.session.Close(); err != nil {
-			errorsList = append(errorsList, err.Error())
+		if worker.session != nil {
+			if err := worker.session.Close(); err != nil {
+				errorsList = append(errorsList, err.Error())
+			}
 		}
 	}
 	if len(errorsList) > 0 {

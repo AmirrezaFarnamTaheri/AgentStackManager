@@ -28,7 +28,7 @@ unexpected_node="$({
   find . \
     \( -type d \( -path './.git' -o -path './dist' -o -path './dist-dev' \
        -o -path './.cocoindex_code' -o -path './.codegraph' -o -path './.serena' \
-       -o -path './.smart-coding-cache' -o -path './graphify-out' \) \) -prune -o \
+       -o -path './.smart-coding-cache' -o -path './graphify-out' -o -name node_modules \) \) -prune -o \
     \( -type l -o \( ! -type f ! -type d \) \) -print
 } | LC_ALL=C sort | head -n 1)"
 if [[ -n "$unexpected_node" ]]; then
@@ -39,7 +39,7 @@ fi
 find . \
   \( -type d \( -path './.git' -o -path './dist' -o -path './dist-dev' \
      -o -path './.cocoindex_code' -o -path './.codegraph' -o -path './.serena' \
-     -o -path './.smart-coding-cache' -o -path './graphify-out' \) \) -prune -o \
+     -o -path './.smart-coding-cache' -o -path './graphify-out' -o -name node_modules \) \) -prune -o \
   -type f ! -path './SOURCE_MANIFEST.sha256' -print | LC_ALL=C sort > "$actual"
 
 if ! cmp -s "$expected" "$actual"; then

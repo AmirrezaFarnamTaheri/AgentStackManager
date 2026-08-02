@@ -141,7 +141,25 @@ jobs:
             }
 
             if (-not $tag) {
-              $stableTags = @(git tag --list 'v*' --sort=-v:refname | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' })
+              $stableTags = @()
+              foreach ($candidateTag in @(git tag --list 'v*' --sort=-v:refname)) {
+                if ($candidateTag -notmatch '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { continue }
+                if ((git cat-file -t "refs/tags/$candidateTag").Trim() -ne 'tag') { continue }
+                git merge-base --is-ancestor "$candidateTag^{}" refs/remotes/origin/main
+                if ($LASTEXITCODE -ne 0) { continue }
+
+                $candidateObject = git cat-file -p "refs/tags/$candidateTag"
+                $workflowManaged = ($candidateObject -join "`n") -match 'Managed-By: AgentStackManager release workflow'
+                if ($workflowManaged) {
+                  gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$candidateTag" *> $null
+                  if ($LASTEXITCODE -ne 0) { continue }
+                } else {
+                  $candidateObjectSHA = (git rev-parse "refs/tags/$candidateTag^{tag}").Trim()
+                  $candidateVerification = gh api "repos/$env:GH_REPO/git/tags/$candidateObjectSHA" | ConvertFrom-Json -Depth 20
+                  if ($LASTEXITCODE -ne 0 -or -not $candidateVerification.verification.verified) { continue }
+                }
+                $stableTags += $candidateTag
+              }
               if ($stableTags.Count -eq 0) {
                 $major = 1
                 $minor = 0

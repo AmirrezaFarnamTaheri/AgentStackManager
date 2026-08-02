@@ -49,6 +49,8 @@ function Assert-EffectiveGovernance {
     if (-not $environment.protection_rules.prevent_self_review) { throw 'Release environment permits self-review' }
     if (-not $environment.deployment_branch_policy.custom_branch_policies) { throw 'Release environment lacks custom deployment policies' }
     $policies=Invoke-GhJson (@('api')+$apiHeaders+@("repos/$Repository/environments/$($releasePolicy.environment)/deployment-branch-policies"))
+    $branchPolicy=@($policies.branch_policies) | Where-Object { $_.name -eq $releasePolicy.deployment_branch_policy.allowed_branch_pattern -and $_.type -eq 'branch' }
+    if (-not $branchPolicy) { throw "Release environment lacks branch policy $($releasePolicy.deployment_branch_policy.allowed_branch_pattern)" }
     $tagPolicy=@($policies.branch_policies) | Where-Object { $_.name -eq $releasePolicy.deployment_branch_policy.allowed_tag_pattern }
     if (-not $tagPolicy) { throw "Release environment lacks tag policy $($releasePolicy.deployment_branch_policy.allowed_tag_pattern)" }
     $secrets=Invoke-GhJson @('secret','list','--repo',$Repository,'--env',$releasePolicy.environment,'--json','name')
@@ -65,6 +67,7 @@ if ($VerifyOnly) {
 $existing=Get-Ruleset
 $payload=Join-Path $env:TEMP "agentstack-ruleset-$([guid]::NewGuid().ToString('N')).json"
 $environmentPayload=Join-Path $env:TEMP "agentstack-environment-$([guid]::NewGuid().ToString('N')).json"
+$branchPayload=Join-Path $env:TEMP "agentstack-branch-policy-$([guid]::NewGuid().ToString('N')).json"
 $tagPayload=Join-Path $env:TEMP "agentstack-tag-policy-$([guid]::NewGuid().ToString('N')).json"
 try {
     $rules | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $payload -Encoding utf8NoBOM
@@ -92,6 +95,14 @@ try {
     }
 
     $policies=Invoke-GhJson (@('api')+$apiHeaders+@("repos/$Repository/environments/$($releasePolicy.environment)/deployment-branch-policies"))
+    $desiredBranch=$releasePolicy.deployment_branch_policy.allowed_branch_pattern
+    if (-not (@($policies.branch_policies) | Where-Object { $_.name -eq $desiredBranch -and $_.type -eq 'branch' })) {
+        [ordered]@{name=$desiredBranch;type='branch'} | ConvertTo-Json | Set-Content -LiteralPath $branchPayload -Encoding utf8NoBOM
+        if ($PSCmdlet.ShouldProcess("$Repository release branch policy $desiredBranch",'Create')) {
+            & gh api @apiHeaders --method POST "repos/$Repository/environments/$($releasePolicy.environment)/deployment-branch-policies" --input $branchPayload | Out-Null
+            if ($LASTEXITCODE -ne 0) { throw 'Release branch policy creation failed.' }
+        }
+    }
     $desired=$releasePolicy.deployment_branch_policy.allowed_tag_pattern
     if (-not (@($policies.branch_policies) | Where-Object name -eq $desired)) {
         [ordered]@{name=$desired;type='tag'} | ConvertTo-Json | Set-Content -LiteralPath $tagPayload -Encoding utf8NoBOM
@@ -102,7 +113,7 @@ try {
     }
 }
 finally {
-    Remove-Item $payload,$environmentPayload,$tagPayload -ErrorAction SilentlyContinue
+    Remove-Item $payload,$environmentPayload,$branchPayload,$tagPayload -ErrorAction SilentlyContinue
 }
 Write-Host 'Governance policy applied. Secret values are never created by this script; configure the required names, then verify:' -ForegroundColor Green
 Write-Host "./scripts/apply-github-governance.ps1 -Repository $Repository -ReleaseReviewerUser $ReleaseReviewerUser -VerifyOnly"

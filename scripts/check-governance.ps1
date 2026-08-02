@@ -16,7 +16,7 @@ $checks=$rules.rules | Where-Object type -eq 'required_status_checks'
 if (-not $checks.parameters.strict_required_status_checks_policy -or @($checks.parameters.required_status_checks).Count -lt 5) { throw 'required status-check policy is incomplete' }
 $release=Get-Content -Raw (Join-Path $root '.github/environments/release-policy.json') | ConvertFrom-Json -Depth 20
 $expectedSecrets=@('RELEASE_TAG_PUBLIC_KEY_BASE64','SIGNING_CERT_THUMBPRINT','SIGNING_PFX_BASE64','SIGNING_PFX_PASSWORD')
-if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
+if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or $release.deployment_branch_policy.allowed_branch_pattern -ne 'main' -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
 $goVersion=(Get-Content -Raw (Join-Path $root '.go-version')).Trim()
 if ($goVersion -ne '1.26.5') { throw '.go-version must pin Go 1.26.5' }
 $workflowText=(Get-Content -Raw (Join-Path $root '.github/workflows/verify.yml')) + (Get-Content -Raw (Join-Path $root '.github/workflows/release.yml'))
@@ -63,6 +63,9 @@ foreach($deprecatedAction in @(
     if ($workflowText -match [regex]::Escape($deprecatedAction)) { throw "Deprecated Node 20-era action pin remains: $deprecatedAction" }
 }
 if ($releaseWorkflow -match 'softprops/action-gh-release') { throw 'Release publication must use the authenticated GitHub CLI, not a third-party release action' }
+foreach($trustedTagCheck in @('git merge-base --is-ancestor', 'gitsign verify', 'verification.verified')) {
+    if ($releaseWorkflow -notmatch [regex]::Escape($trustedTagCheck)) { throw "Automatic versioning must enforce trusted tag baseline check: $trustedTagCheck" }
+}
 if ($workflowText -notmatch "go-version-file:\s*'\.go-version'") { throw 'GitHub workflows must use .go-version' }
 $circle=Get-Content -Raw (Join-Path $root '.circleci/config.yml')
 if ($circle -notmatch 'cimg/go:1\.26\.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b') { throw 'CircleCI image is not pinned to the reviewed digest' }

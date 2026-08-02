@@ -14,5 +14,6 @@ find . -type f \
   ! -path './.serena/*' \
   ! -path './.smart-coding-cache/*' \
   ! -path './graphify-out/*' \
+  ! -path '*/node_modules/*' \
   -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > "$tmp"
 mv "$tmp" SOURCE_MANIFEST.sha256

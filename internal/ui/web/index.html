@@ -12,14 +12,6 @@
   <link rel="stylesheet" href="assets/accessibility.css">
 </head>
 <body>
-  <!--
-  THESIS: AgentStack is a conservation ledger for local tooling, not a generic SaaS dashboard. It refuses the marketing-hero plus equal-card arrangement.
-  OWN-WORLD: Cold paper surfaces, graphite structure, muted teal actions, compact provenance seals, and registry rows.
-  STORY: Inspect what exists, select what belongs, review the sealed record, then authorize only that record.
-  FIRST VIEWPORT: A narrow navigation rail, compact workspace masthead, live operation ribbon, machine-state ledger, and one elevated configuration surface.
-  FORM: Conservation Ledger, assigned direction 4; seed b47af99d.
-  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
-  -->
   <a class="skip-link" href="#overview-title">Skip to main content</a>
   <div class="shell">
     <aside class="sidebar" aria-label="AgentStack workspace">
@@ -54,7 +46,7 @@
         </div>
         <div class="top-actions" aria-label="Workspace actions">
           <button id="refreshBtn" class="button secondary" data-operation data-busy-label="Refreshing…">Refresh inventory</button>
-          <button id="installSelfBtn" class="button primary" data-operation data-busy-label="Installing…">Install AgentStack</button>
+          <button id="installSelfBtn" class="button secondary" data-operation data-busy-label="Checking…">Install locally</button>
           <button id="exitBtn" class="button quiet" data-operation data-busy-label="Stopping…">Exit</button>
         </div>
       </header>
@@ -71,11 +63,12 @@
         </div>
 
         <div class="metrics" id="metrics" aria-label="Inventory summary">
-          <article><span>Detected</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>installed catalog items</small></article>
-          <article><span>Preserved</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>left in place</small></article>
+          <article><span>Catalog</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>known components</small></article>
+          <article><span>Detected</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>installed catalog items</small></article>
           <article><span>Selected</span><strong id="selectedMetric" class="metric-value is-loading">0</strong><small>profile components</small></article>
           <article><span>Credentials</span><strong id="credentialMetric" class="metric-value is-loading">Off</strong><small>explicit opt-in</small></article>
         </div>
+        <div id="overviewLoadError" class="empty-state compact load-error" role="alert" hidden><strong>Inventory could not be loaded.</strong><span id="overviewLoadErrorDetail">Check the operation record, then retry.</span><button id="retryLoadBtn" class="button primary" data-busy-label="Retrying…">Retry load</button></div>
 
         <div class="overview-grid">
           <section class="panel profile-panel">
@@ -122,6 +115,7 @@
           <div><h2 id="components-title" tabindex="-1">Component registry</h2><p>Choose optional tools. Core profile items remain selected automatically.</p></div>
           <label class="search-field" for="componentSearch"><span>Search registry</span><input id="componentSearch" type="search" data-operation-lock placeholder="Name, capability, category"></label>
         </div>
+        <p id="componentSearchStatus" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="componentGroups" class="registry"></div>
       </section>
 
@@ -141,7 +135,7 @@
       <section id="router" class="section" aria-labelledby="router-title">
         <div class="section-heading"><div><h2 id="router-title" tabindex="-1">MCP router</h2><p>Prepare one managed endpoint for Codex and AGY, then verify each selected child.</p></div></div>
         <div class="router-grid">
-          <section class="panel"><div class="panel-head"><div><h3>Prepare a session</h3><p>Validate commands, warm selected packages, and merge client registrations without replacement.</p></div><span class="record-seal">Managed</span></div><div class="button-row"><button id="mcpInitBtn" class="button primary" data-operation data-busy-label="Initializing…">Initialize MCP stack</button><button id="mcpDoctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Doctor</button></div></section>
+          <section class="panel"><div class="panel-head"><div><h3>Prepare a session</h3><p>Review selected router changes in a sealed plan before any configuration or client registration is written.</p></div><span class="record-seal">Managed</span></div><div class="button-row"><button id="mcpInitBtn" class="button primary" data-operation data-busy-label="Building…">Review MCP plan</button><button id="mcpDoctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Doctor</button></div></section>
           <section class="command-sheet"><h3>CLI launchers</h3><p>Use the same reviewed profile from a terminal.</p><pre><code>agentstack codex --profile core
 agentstack agy --profile recommended
 agentstack mcp doctor</code></pre></section>

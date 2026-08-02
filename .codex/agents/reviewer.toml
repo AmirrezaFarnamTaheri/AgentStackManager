@@ -4,5 +4,9 @@ sandbox_mode = "read-only"
 
 developer_instructions = """
 Review like an owner. Prioritize correctness, security, regressions, and
-missing tests. Lead with concrete findings and avoid style-only feedback.
+missing tests. Trace resource ownership through success, error, cancellation,
+and ownership-transfer paths. At external boundaries, check exact dependency
+pins, complete input grammars, and filesystem node types. Report a finding only
+with an exact citation and concrete trigger; deduplicate overlapping findings
+and avoid style-only feedback.
 """

@@ -95,6 +95,29 @@ try {
     throw new Error('keyboard navigation did not move focus to the selected section heading');
   }
 
+  await page.locator('#componentSearch').fill('no-component-can-match-this-query');
+  await page.waitForFunction(() => document.querySelector('#componentSearchStatus')?.textContent?.includes('0'));
+  await page.locator('#componentSearch').fill('');
+
+  const providers = await page.locator('#browserProvider option').evaluateAll(options => options.map(option => option.value).filter(Boolean));
+  if (providers.length > 1) {
+    await page.locator('[data-section="overview"]').click();
+    await page.locator('#browserProvider').selectOption(providers[0]);
+    await page.locator('#browserProvider').selectOption(providers[1]);
+    if (await page.locator(`input[data-id="${providers[0]}"]`).isChecked()) {
+      throw new Error('switching browser provider left the previous provider selected');
+    }
+    if (!(await page.locator(`input[data-id="${providers[1]}"]`).isChecked())) {
+      throw new Error('switching browser provider did not select the replacement');
+    }
+  }
+
+  for (const width of [320, 375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    if (overflow > 1) throw new Error(`horizontal overflow at ${width}px: ${overflow}px`);
+  }
+
   const reducedMotion = await page.locator('.button').first().evaluate(element => {
     const style = getComputedStyle(element);
     return { duration: style.transitionDuration, animation: style.animationDuration };
@@ -104,14 +127,10 @@ try {
     throw new Error(`reduced-motion styles still animate: ${JSON.stringify(reducedMotion)}`);
   }
 
-  const token = await page.locator('meta[name="agentstack-token"]').getAttribute('content');
-  const base = await page.locator('meta[name="agentstack-base"]').getAttribute('content');
-  const response = await context.request.post(new URL(`${base}api/shutdown`, url).href, {
-    headers: { 'X-AgentStack-Token': token, 'Content-Type': 'application/json' },
-    data: {}
-  });
-  if (!response.ok()) {
-    throw new Error(`authenticated manager shutdown failed: ${response.status()} ${await response.text()}`);
+  await page.locator('#exitBtn').click();
+  await page.locator('#shutdownTitle').waitFor();
+  if (await page.evaluate(() => document.activeElement?.id) !== 'shutdownTitle') {
+    throw new Error('shutdown did not move focus to its terminal status heading');
   }
 
   console.log(JSON.stringify({
@@ -120,7 +139,10 @@ try {
     keyboardNavigation: 'pass',
     operationFeedback: 'pass',
     reducedMotion: 'pass',
-    shutdown: 'pass'
+    responsiveOverflow: 'pass',
+    liveSearchStatus: 'pass',
+    providerReplacement: 'pass',
+    shutdownFocus: 'pass'
   }, null, 2));
 } finally {
   if (browser) await browser.close();

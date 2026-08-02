@@ -166,6 +166,22 @@ func TestScannerVersionPolicyRejectsUnsupportedRuntime(t *testing.T) {
 	}
 }
 
+func TestScannerVersionPolicyRejectsPrereleaseAtStableMinimum(t *testing.T) {
+	catalog := model.Catalog{Version: 1, Components: []model.Component{{
+		ID: "node", DetectCommands: []string{"node"},
+		VersionPolicy: &model.VersionPolicy{Minimum: "20.0.0", Probe: model.CommandSpec{Command: "node", Args: []string{"--version"}}},
+	}}}
+	scanner := Scanner{
+		Locator: fakeLocator{"node": `C:\Node\node.exe`},
+		Probe:   fakeProbe{outputs: map[string]CommandResult{"node --version": {Stdout: "v20.0.0-rc.1", ExitCode: 0}}},
+	}
+
+	item := scanner.Scan(context.Background(), catalog, nil).Items["node"]
+	if !item.Installed || !item.Incompatible || item.Compatible {
+		t.Fatalf("prerelease runtime satisfied stable minimum: %#v", item)
+	}
+}
+
 func TestScannerMarksMissingManagedExecutableAsBroken(t *testing.T) {
 	c := model.Catalog{Version: 1, Components: []model.Component{{
 		ID:             "gitleaks",

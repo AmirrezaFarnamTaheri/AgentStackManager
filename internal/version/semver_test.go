@@ -45,9 +45,34 @@ func TestParseCompareAndCompatible(t *testing.T) {
 	if compatible, err := Compatible("4.0.0", "2.0.0", "3.0.0"); err != nil || compatible {
 		t.Fatalf("expected upper-bound rejection: compatible=%v err=%v", compatible, err)
 	}
-	for _, input := range []string{"invalid", "1.2.3.4", "1.-2.3", "+1.2.3", "1.+2.3"} {
+	for _, input := range []string{"invalid", "1", "1.2", "1.2.3.4", "1.-2.3", "+1.2.3", "1.+2.3"} {
 		if _, err := Parse(input); err == nil {
 			t.Fatalf("invalid version %q was accepted", input)
 		}
+	}
+}
+
+func TestCompareUsesSemanticVersionPrereleasePrecedence(t *testing.T) {
+	tests := []struct {
+		left  string
+		right string
+		want  int
+	}{
+		{left: "1.2.3-rc.1", right: "1.2.3", want: -1},
+		{left: "1.2.3-alpha.2", right: "1.2.3-alpha.10", want: -1},
+		{left: "1.2.3-1", right: "1.2.3-alpha", want: -1},
+		{left: "1.2.3-alpha", right: "1.2.3-alpha.1", want: -1},
+		{left: "1.2.3+build.1", right: "1.2.3+build.2", want: 0},
+	}
+	for _, test := range tests {
+		comparison, err := Compare(test.left, test.right)
+		if err != nil || comparison != test.want {
+			t.Errorf("Compare(%q, %q) = %d, %v; want %d", test.left, test.right, comparison, err, test.want)
+		}
+	}
+
+	compatible, err := Compatible("1.2.3-rc.1", "1.2.3", "")
+	if err != nil || compatible {
+		t.Fatalf("prerelease satisfied stable minimum: compatible=%v err=%v", compatible, err)
 	}
 }

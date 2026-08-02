@@ -6,38 +6,45 @@ persistent_instructions = "Follow project AGENTS.md guidance and use available M
 multi_agent = true
 
 [mcp_servers.supabase]
-command = "npx"
-args = ["-y", "@supabase/mcp-server-supabase@0.9.0", "--read-only"]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-supabase", "--read-only"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.playwright]
-command = "npx"
-args = ["-y", "@playwright/mcp@0.0.78", "--extension"]
+command = "npm"
+args = ["exec", "--offline", "--", "playwright-mcp", "--extension"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp@3.2.5"]
+command = "npm"
+args = ["exec", "--offline", "--", "context7-mcp"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.exa]
-command = "npx"
-args = ["-y", "mcp-remote@0.1.38", "https://mcp.exa.ai/mcp"]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-remote", "https://mcp.exa.ai/mcp"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.github]
-command = "npx"
-args = ["-y", "@modelcontextprotocol/server-github@2025.4.8"]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-remote", "https://api.githubcopilot.com/mcp/readonly"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.memory]
-command = "npx"
-args = ["-y", "@modelcontextprotocol/server-memory@2026.7.4"]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-memory"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [mcp_servers.sequential-thinking]
-command = "npx"
-args = ["-y", "@modelcontextprotocol/server-sequential-thinking@2026.7.4"]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-sequential-thinking"]
+cwd = ".codex"
 startup_timeout_sec = 30
 
 [agents]

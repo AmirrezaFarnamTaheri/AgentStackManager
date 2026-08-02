@@ -140,6 +140,11 @@ async function runOperation(button, name, operation) {
     setOperationStatus('success', `${name} complete`, detail);
     return result;
   } catch (error) {
+    if (name === 'Load AgentStack Manager' || name === 'Refresh inventory') {
+      setMetricsLoading(false);
+      $('overviewLoadError').hidden = false;
+      $('overviewLoadErrorDetail').textContent = error.message;
+    }
     setOperationStatus('error', `${name} failed`, error.message);
     const output = $('routerOutput');
     if (output && error.data) {
@@ -149,6 +154,9 @@ async function runOperation(button, name, operation) {
     return null;
   } finally {
     setOperationControlsBusy(button, false);
+    if (!state.catalog) {
+      setCatalogControlsAvailable(false);
+    }
     activeOperation = null;
     updateApplyAvailability();
     const currentFocus = document.activeElement;
@@ -223,12 +231,18 @@ function setMetricsLoading(loading) {
   });
 }
 
+function setCatalogControlsAvailable(available) {
+  ['profileSelect', 'browserProvider', 'credentialToggle', 'upgradeToggle', 'componentSearch', 'buildPlanBtn', 'mcpInitBtn'].forEach(id => {
+    $(id).disabled = !available;
+  });
+}
+
 function updateMetrics() {
   if (!state.inventory || !state.catalog) {
     return;
   }
   const installed = Object.values(state.inventory.items || {}).filter(item => item.installed).length;
-  $('detectedMetric').textContent = installed;
+  $('detectedMetric').textContent = state.catalog.components.length;
   $('preservedMetric').textContent = installed;
   $('selectedMetric').textContent = state.selected.size;
   $('credentialMetric').textContent = state.allowCredentials ? 'On' : 'Off';
@@ -274,6 +288,7 @@ function renderComponents() {
   $('componentGroups').innerHTML = visibleCount
     ? markup
     : '<div class="empty-state compact"><strong>No components found.</strong><span>Try a name, capability, or broader category.</span></div>';
+  $('componentSearchStatus').textContent = `${visibleCount} component${visibleCount === 1 ? '' : 's'} shown.`;
 
   document.querySelectorAll('.component-card input').forEach(input => {
     if (activeOperation) {
@@ -290,9 +305,12 @@ function componentCard(component) {
   const incompatible = Boolean(inventory?.incompatible);
   const checked = state.selected.has(component.id);
   const disabled = component.credentialRequired && !state.allowCredentials;
-  const health = (broken || incompatible) && inventory?.healthMessage ? ` title="${escapeHtml(inventory.healthMessage)}"` : '';
+  const healthMessage = (broken || incompatible) ? inventory?.healthMessage : '';
+  const healthID = `health-${component.id}`;
+  const healthDescription = healthMessage ? `<p id="${escapeHtml(healthID)}" class="health-message">${escapeHtml(healthMessage)}</p>` : '';
+  const healthReference = healthMessage ? ` aria-describedby="${escapeHtml(healthID)}"` : '';
   const hint = component.install?.loginHint ? `<p class="login-hint">Next: ${escapeHtml(component.install.loginHint)}</p>` : '';
-  return `<label class="component-card ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}"${health}${disabled ? ' aria-disabled="true"' : ''}><input type="checkbox" data-operation-lock data-id="${escapeHtml(component.id)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><div><h4>${escapeHtml(component.name)}</h4><p>${escapeHtml(component.description)}</p>${hint}</div><div class="card-meta"><span class="badge">${escapeHtml(component.category)}</span>${broken ? '<span class="badge repair">repair available</span>' : incompatible ? '<span class="badge repair">upgrade approval needed</span>' : installed ? '<span class="badge installed">installed</span>' : ''}${component.credentialRequired ? '<span class="badge credential">guided login</span>' : ''}${component.preferred ? '<span class="badge">preferred</span>' : ''}</div></label>`;
+  return `<label class="component-card ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}"${disabled ? ' aria-disabled="true"' : ''}><input type="checkbox" data-operation-lock data-id="${escapeHtml(component.id)}"${healthReference} ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><div><h4>${escapeHtml(component.name)}</h4><p>${escapeHtml(component.description)}</p>${healthDescription}${hint}</div><div class="card-meta"><span class="badge">${escapeHtml(component.category)}</span>${broken ? '<span class="badge repair">repair available</span>' : incompatible ? '<span class="badge repair">upgrade approval needed</span>' : installed ? '<span class="badge installed">installed</span>' : ''}${component.credentialRequired ? '<span class="badge credential">guided login</span>' : ''}${component.preferred ? '<span class="badge">preferred</span>' : ''}</div></label>`;
 }
 
 function renderPlan(plan) {
@@ -348,7 +366,10 @@ function escapeHtml(value) {
 
 async function refresh(options = {}) {
   setMetricsLoading(true);
+  setCatalogControlsAvailable(false);
   [state.catalog, state.inventory] = await Promise.all([api('catalog'), api('inventory')]);
+  $('overviewLoadError').hidden = true;
+  setCatalogControlsAvailable(true);
   renderProfiles();
   renderProviders();
   applyProfile();
@@ -378,18 +399,15 @@ async function applyPlan() {
   $('confirmApply').checked = false;
   state.plan = null;
   await refresh({ silent: true });
+  $('planEmpty').hidden = false;
+  $('planEmpty').innerHTML = '<strong>Reviewed plan applied.</strong><span>The sealed record was consumed and postconditions were verified. Build a new plan only for additional changes.</span>';
   return { statusDetail: 'The reviewed plan was consumed, applied, and verified.' };
 }
 
 async function mcpInit() {
-  const report = await api('mcp/init', {
-    method: 'POST',
-    body: JSON.stringify({ request: buildRequest(), registerClients: true, warm: true, confirm: true }),
-  });
-  $('routerOutput').textContent = JSON.stringify(report, null, 2);
-  showSection('router');
-  toast('MCP stack initialized');
-  return { statusDetail: 'Router configuration is current and selected child servers were checked.' };
+  const result = await buildPlan();
+  showSection('plan', true);
+  return { ...result, statusDetail: 'Review and authorize the sealed plan; router configuration runs only after apply.' };
 }
 
 async function doctor() {
@@ -413,7 +431,8 @@ async function shutdown() {
   await api('shutdown', { method: 'POST', body: '{}' });
   const main = $('mainContent');
   if (main) {
-    main.innerHTML = '<section class="empty-state shutdown-state"><h2>AgentStack Manager stopped</h2><p>You can close this browser tab.</p></section>';
+    main.innerHTML = '<section class="empty-state shutdown-state"><h2 id="shutdownTitle" tabindex="-1">AgentStack Manager stopped</h2><p>You can close this browser tab.</p></section>';
+    $('shutdownTitle').focus({ preventScroll: true });
   }
   return { statusDetail: 'The local manager process has stopped.' };
 }
@@ -447,6 +466,10 @@ $('upgradeToggle').addEventListener('change', event => {
   invalidatePlan();
 });
 $('browserProvider').addEventListener('change', event => {
+  const previousProvider = state.providerOverrides.browser;
+  if (previousProvider) {
+    state.selected.delete(previousProvider);
+  }
   if (event.target.value) {
     state.providerOverrides.browser = event.target.value;
     state.selected.add(event.target.value);
@@ -475,20 +498,16 @@ $('componentGroups').addEventListener('change', event => {
 $('confirmApply').addEventListener('change', updateApplyAvailability);
 
 $('refreshBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh inventory', refresh));
+$('retryLoadBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Load AgentStack Manager', refresh));
 $('buildPlanBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Build reviewed plan', buildPlan));
 $('applyBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Apply reviewed plan', applyPlan));
 $('doctorBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Run MCP doctor', doctor));
 $('mcpDoctorBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Run MCP doctor', doctor));
-$('mcpInitBtn').addEventListener('click', event => confirmThenRun(
-  event.currentTarget,
-  'Initialize the selected MCP profile, write AgentStack-managed router configuration, and repair owned client registrations?',
-  'Initialize MCP stack',
-  mcpInit,
-));
+$('mcpInitBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Build reviewed MCP plan', mcpInit));
 $('installSelfBtn').addEventListener('click', event => confirmThenRun(
   event.currentTarget,
-  'Install the verified AgentStack console binary into the user application directory and update the user PATH?',
-  'Install AgentStack',
+  'Check the current local installation, then install the verified AgentStack console binary and update PATH only when needed?',
+  'Check local installation',
   installSelf,
 ));
 $('exitBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Stop manager', shutdown));
