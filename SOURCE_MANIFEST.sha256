@@ -23,7 +23,7 @@ e5cd3c2a6c7da4c6f2244a937dc85ec1c4ae255ef92ec3ab2ef5e744321d987a  ./.impeccable/
 036c4111859d0afdd37587f3af544c5ec040823b9eeb21a415fe3b497b177d99  ./.impeccable/surfaces/internal-ui-web.md
 28678d9c642e6f1863f73775990527eee766ccf66852aaf1f3c6a1a98f7f43f3  ./CHANGELOG.md
 17e6614864cee671169ec33b1fa24b650ec58329088e99779a9a25f1ea90a024  ./DELIVERY_STATUS.md
-52bc4d9300eadc2c18fe67958b58c3b4c02238c0081bfbde681618ca3b3b3539  ./DESIGN.md
+9556f73569d5d4539eea67c2da20356485cde3b122176bbe21296a4ab11f64ac  ./DESIGN.md
 de53435dabdea837448a79d8123a62b8f2e99d4331049a53d178b7068ddca878  ./LICENSE
 6ce11020ee00cfe80ace3c32911717f74c1811618e439a1ccf05075db1b713d0  ./PRODUCT.md
 8518d42251f9ed65cc10432e95a0b3fc5d3cf37a7952ba7cd385bdcc9ae58593  ./README.md
@@ -84,7 +84,7 @@ f0675fa2c98f9c8521525befea7f1c468d3494db34dc189d6e10973991a72d44  ./internal/dia
 841209df44c8ecf256add9f2da873a9655cb812b5f05e04951399c214b336a77  ./internal/integrity/digest_test.go
 876367d5cf5beff853cd7e96dbf2dd1d121bb0b886c3346eb9a902d1cfde8e69  ./internal/inventory/inventory.go
 eb27266c5a66de82a9cccd3192314037e116a3bc1338015ec1c02a09ce614deb  ./internal/inventory/inventory_test.go
-f0d2396259033f080222f6a7cfbd96e8d85a0947438c45fbf387cdecbc01e8c9  ./internal/mcp/child.go
+4b61e5673243bde49c4d2f446c77ba9d5b1c091f888711a01d30d2d33b0f2509  ./internal/mcp/child.go
 d33f80d19ce4df7359aa269397147c8ba3d9f6229d5112bd003be258836b4c47  ./internal/mcp/child_test.go
 adaabe125fc09fe43f8b1459c0b2db1d569468962978d0bc52dd6b4b78c25076  ./internal/mcp/config.go
 4d59900e04bf7c456ce950e5059f0040b371cc917d5378507498c69cc0183f0b  ./internal/mcp/config_test.go
@@ -94,7 +94,7 @@ adaabe125fc09fe43f8b1459c0b2db1d569468962978d0bc52dd6b4b78c25076  ./internal/mcp
 6e6bd353e010cc0b520e329e4a7af67cb9921b8b44a2e0f14833ee4f944f8eef  ./internal/mcp/register_test.go
 c0b80e7c6858c70c52f4c62a8239581dd0bbadd431b158ed119e125b45356dc3  ./internal/mcp/router.go
 5c892a888b6ee783283887f96cc0681872dd49f671501210b69228a2eb24e4e8  ./internal/mcp/router_test.go
-329e9e412a2e8f84febbd8d13d849df325adcf14d87a0b5a23b4730073034cec  ./internal/mcp/timeout_redaction_regression_test.go
+d5f667f2635267da91afa0d2ab0a3cbcbb70a0fc0c5b90cb6cc2a2f3a2de28f2  ./internal/mcp/timeout_redaction_regression_test.go
 6be519a6fddd28ddecbadfe055b6eb0b4b7ed00516ebabe8d2fc823c4e2a2199  ./internal/model/model.go
 43d9a68bc13fe48d9a1f8d306640c3432c19c6f26654d2e24b387224c9e8f462  ./internal/notify/notify_other.go
 d2ce9642ff7787d4786f8878c2da3fd648977f5131b84a72e6a288aa48cfb55d  ./internal/notify/notify_windows.go
@@ -182,10 +182,10 @@ e46c5de90170d5b08d7e71efd518829b6a577103de7ade01ad5e44be601bfc42  ./internal/ui/
 3445189966373dfe957025f54661624c7601106cbc9eb772ad5345a4f3995281  ./internal/ui/server.go
 4d096e2b066fae7a6126e287493d84aa757b3bfcee1e0d9cb18e5a111bb72809  ./internal/ui/server_test.go
 748d5481cc6dc6afe1f08cadb2d4fd8d9dd6c026ae78a092391f2610cdbee8c8  ./internal/ui/web/accessibility.css
-ce5dae5bbee581086417805accee4acef49c0a351ea6b03da66e9465c2aba489  ./internal/ui/web/app.js
+2cae4897f569bb9f6691dd9d7043bac5d1138f7102c573975a2d5f010e489c3d  ./internal/ui/web/app.js
 94d132f85fc1b77bf74be82ccc94cebbd3edc4a9a5a1b3f93e4ffc0fa47e61f7  ./internal/ui/web/index.html
-3c442f7fd039bc2aec98dd6b648610f40de966ba0b32bbd5efdf569aa55c5203  ./internal/ui/web/styles.css
-3b8a40aec23444c753703115bf92f32fe856bdb1f5f1734e6452d5d81fc8c3b9  ./internal/ui/web_contract_test.go
+45424fceb70cd601076bf46dabe6b81afef9f915eec171e6a6b4807b06696fd0  ./internal/ui/web/styles.css
+9c30ad7952260befd9ed1f3045448b163e1c0a9ee4f0ef860fd08db74d2c13ee  ./internal/ui/web_contract_test.go
 004f4bafc7956709051cb3eddbc38668ccca8ac23ea60d4c0897c1e124b5e263  ./internal/version/semver.go
 fe9fed1fa112fbcc32379a7e25258b3be0fa2978a34bb7b69ee6f41dfde31f66  ./internal/version/semver_test.go
 d666d0483d44f14805b5a8a5aa0bda3ee09b7608fe57f7c2cd72affbc3dc0c5e  ./internal/winsecurity/dacl_windows.go

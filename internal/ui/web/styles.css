@@ -333,7 +333,7 @@ main {
 .component-card h4 { margin: 0; font-size: 13px; line-height: 1.35; }
 .component-card p { margin: 4px 0 0; color: var(--text-soft); font-size: 11px; line-height: 1.5; max-width: 76ch; }
 .component-card .login-hint { margin-top: 6px; color: var(--warning); }
-.component-card .health-message { margin-top: 6px; color: var(--danger-strong); }
+.component-card .health-message { margin-top: 6px; color: var(--danger-text, var(--danger-strong)); }
 .card-meta { display: flex; justify-content: flex-end; gap: 5px; flex-wrap: wrap; max-width: 280px; }
 .badge, .action-pill {
   display: inline-flex;
@@ -495,8 +495,9 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
     --accent-soft: #1e3b37;
     --success: #6dc49b;
     --warning: #d7ae5e;
-    --danger: #df7a83;
-    --danger-strong: #f08f98;
+    --danger: #a43c45;
+    --danger-strong: #873039;
+    --danger-text: #f08f98;
     --focus: #76c7bb;
     --shadow-panel: 0 22px 48px rgba(0, 0, 0, 0.24);
     --shadow-float: 0 14px 32px rgba(0, 0, 0, 0.36);

@@ -445,6 +445,7 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 	if worker.active > 0 {
 		worker.active--
 	}
+	noActiveCallers := worker.active == 0
 	current := p.workers[key] == worker
 	sessionInvalid := err != nil && !errors.Is(err, errRequestNotStarted)
 	if sessionInvalid && current {
@@ -452,12 +453,16 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 	}
 	if sessionInvalid {
 		p.mu.Unlock()
-		_ = worker.session.Close()
+		if noActiveCallers {
+			_ = worker.session.Close()
+		}
 		return nil, err
 	}
 	if !current {
 		p.mu.Unlock()
-		_ = worker.session.Close()
+		if noActiveCallers {
+			_ = worker.session.Close()
+		}
 		return result, err
 	}
 	worker.lastUsed = time.Now()

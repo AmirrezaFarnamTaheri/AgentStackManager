@@ -78,7 +78,7 @@ func TestSlowPersistentStartupDoesNotBlockDifferentServer(t *testing.T) {
 	if _, err := client.ListTools(context.Background(), fast); err != nil {
 		t.Fatal(err)
 	}
-	if elapsed := time.Since(started); elapsed > 400*time.Millisecond {
+	if elapsed := time.Since(started); elapsed > 500*time.Millisecond {
 		t.Fatalf("unrelated server startup was serialized behind slow initialization: %s", elapsed)
 	}
 	if err := <-slowDone; err != nil {

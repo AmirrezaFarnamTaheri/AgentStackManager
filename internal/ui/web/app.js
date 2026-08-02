@@ -233,7 +233,15 @@ function setMetricsLoading(loading) {
 
 function setCatalogControlsAvailable(available) {
   ['profileSelect', 'browserProvider', 'credentialToggle', 'upgradeToggle', 'componentSearch', 'buildPlanBtn', 'mcpInitBtn'].forEach(id => {
-    $(id).disabled = !available;
+    const control = $(id);
+    if (!control) {
+      return;
+    }
+    if (control.dataset.wasDisabled !== undefined) {
+      control.dataset.wasDisabled = available ? 'false' : 'true';
+      return;
+    }
+    control.disabled = !available;
   });
 }
 
@@ -400,6 +408,7 @@ async function applyPlan() {
   state.plan = null;
   await refresh({ silent: true });
   $('planEmpty').hidden = false;
+  $('planContent').hidden = true;
   $('planEmpty').innerHTML = '<strong>Reviewed plan applied.</strong><span>The sealed record was consumed and postconditions were verified. Build a new plan only for additional changes.</span>';
   return { statusDetail: 'The reviewed plan was consumed, applied, and verified.' };
 }

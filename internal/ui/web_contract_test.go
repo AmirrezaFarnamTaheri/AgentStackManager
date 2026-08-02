@@ -97,6 +97,8 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 		`id="componentSearchStatus"`, `aria-describedby=`, `health-message`,
 		`$('shutdownTitle').focus`, `state.selected.delete(previousProvider)`,
 		`setCatalogControlsAvailable(false)`, `Reviewed plan applied.`,
+		`control.dataset.wasDisabled = available ? 'false' : 'true'`,
+		`$('planContent').hidden = true`,
 	} {
 		if !strings.Contains(html+js, fragment) {
 			t.Fatalf("recovery and accessibility contract missing %q", fragment)

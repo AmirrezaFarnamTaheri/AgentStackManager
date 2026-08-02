@@ -39,8 +39,9 @@ darkColors:
   action-teal-soft: "#1e3b37"
   success: "#6dc49b"
   warning: "#d7ae5e"
-  danger: "#df7a83"
-  danger-strong: "#f08f98"
+  danger: "#a43c45"
+  danger-strong: "#873039"
+  danger-text: "#f08f98"
 typography:
   display:
     fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
