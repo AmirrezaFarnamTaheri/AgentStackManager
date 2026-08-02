@@ -24,7 +24,7 @@ function Assert-CleanTaggedSource {
     if (-not $originMain) { throw 'Release requires a fetched refs/remotes/origin/main' }
     if ($head -ne $originMain) { throw "Release tag $tag points to $head, but origin/main is $originMain" }
     if ((git cat-file -t "refs/tags/$tag").Trim() -ne 'tag') { throw "$tag must be an annotated tag" }
-    Invoke-Checked git @('tag','-v',$tag)
+    Invoke-Checked git @('tag','-v',$tag) | Out-Host
     return $head
 }
 function Assert-Toolchain {
