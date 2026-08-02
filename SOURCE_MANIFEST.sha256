@@ -12,7 +12,7 @@ cc4400eee86504759257efe462e1c9c308e6c65b76a464d59637d9ee5b196369  ./.gitattribut
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
 d0c6c155efdf72766006a5ce71bd6a7fe43a7d0fdb94227438c6feaec4193c71  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
-ec5a916b89c3ef48e4bbc8e3b4f9fca96a888a9eed4cf882b8168da9568e667e  ./.github/workflows/release.yml
+b02e80e69d47f72a5e7f3d92230b536833bcded8b04f97fdd30216e3a167671d  ./.github/workflows/release.yml
 68c8ab1513dd2c09c931daa63a3f24fe5b56c951456e7058da57abb57170e55d  ./.github/workflows/verify.yml
 02af48083d2d63b7bd00cf97a709590ed12bcb67f3919342528132a3862115b9  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
@@ -199,8 +199,8 @@ a09e6e4f02ecd7becb3972a383a5ab50b1b869a769ca98ba2a68a988e0b1bef5  ./scripts/appl
 2037f59fdefb8ffcb6a60c03e7fbb4a9684bd9cbaf77557d69e5d9c07443d507  ./scripts/check-critical-coverage.sh
 69cf2a3b99cf227ced57b31bfd2fc3605fc9db0ff34f5175a7b9c29a71ffb1a8  ./scripts/check-docs.ps1
 a9161dfda7b2b03cac2e3a059d4832417dd0a886d0de06c148d0f0e90a22bb09  ./scripts/check-docs.sh
-9fdeee394420f2a1ffde5d9fbf355609578908123ba9849a1907dd4759ca8664  ./scripts/check-governance.ps1
-c05a5b5c5b4f503a2a0abe518ce73d80c54856f40a6cd4d4ef5478b584c299b7  ./scripts/check-governance.sh
+38ed313f0ebb621dc2a7356f6b79e8ccf6aa4bd8741bbbeec36c9851f9e59bb0  ./scripts/check-governance.ps1
+0ff4a35da9ffb0dd27e203bde59d4fdd379633d8605d7bb4c4a4e9f594439838  ./scripts/check-governance.sh
 2cc31e4825d71429f1bcf478321af31a8fb509d830b34cfce9a032e18100e8ef  ./scripts/check-source-archive-build.sh
 6f16c19d19588190dba41d225bf3be4ad49d86d40c8a2802d71eb25369bc1628  ./scripts/fuzz.sh
 54f23bafe6165cc16299b4c60048bfa14e4ab2745d9bd94531d91123d8423e22  ./scripts/release.ps1
