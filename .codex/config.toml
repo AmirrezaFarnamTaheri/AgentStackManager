@@ -1,0 +1,57 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+persistent_instructions = "Follow project AGENTS.md guidance and use available MCP servers when they materially improve the work."
+
+[features]
+multi_agent = true
+
+[mcp_servers.supabase]
+command = "npx"
+args = ["-y", "@supabase/mcp-server-supabase@latest", "--read-only"]
+startup_timeout_sec = 30
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest", "--extension"]
+startup_timeout_sec = 30
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+startup_timeout_sec = 30
+
+[mcp_servers.exa]
+command = "npx"
+args = ["-y", "mcp-remote", "https://mcp.exa.ai/mcp"]
+startup_timeout_sec = 30
+
+[mcp_servers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+startup_timeout_sec = 30
+
+[mcp_servers.memory]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-memory"]
+startup_timeout_sec = 30
+
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+startup_timeout_sec = 30
+
+[agents]
+max_threads = 6
+max_depth = 1
+
+[agents.explorer]
+description = "Read-only codebase explorer for evidence gathering."
+config_file = "agents/explorer.toml"
+
+[agents.reviewer]
+description = "Correctness and security reviewer focused on regressions and missing tests."
+config_file = "agents/reviewer.toml"
+
+[agents.docs_researcher]
+description = "Documentation specialist for API and release-note verification."
+config_file = "agents/docs-researcher.toml"

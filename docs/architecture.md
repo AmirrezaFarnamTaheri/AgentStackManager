@@ -46,7 +46,7 @@ The router is one stdio MCP server with four stable tools. It negotiates the cli
 
 Windows PATH values cross the PowerShell process boundary as UTF-16LE/Base64 so non-ASCII and duplicate pre-existing segments remain intact; only the AgentStack bin segment is appended persistently.
 
-Managed files are replaced through staging and rollback while carrying the destination POSIX mode or Windows DACL to the staged replacement. Every backup has an index record, original target, content digest, and reason. Preview is read-only. Restore revalidates digest/target/structure and performs a live MCP probe for router configuration. Interrupted transactions are marked recoverable during startup.
+Managed files are replaced through staging and rollback while carrying the destination POSIX mode or Windows DACL to the staged replacement. Every backup has an index record, original target, content digest, and reason. Preview is read-only. Restore revalidates digest/target/structure and performs a live MCP probe for router configuration. Startup recovery and retention run only while holding the global mutation lease; if another process owns that lease, its live transaction is left untouched for that process to complete or recover.
 
 ## Platform boundary
 

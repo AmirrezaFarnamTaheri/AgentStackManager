@@ -57,6 +57,22 @@ func TestDryRunExecutesNothing(t *testing.T) {
 	}
 }
 
+func TestDryRunFailsWhenInstallerActionCannotBeResolved(t *testing.T) {
+	engine := Engine{Commands: &fakeCommandRunner{}}
+	plan := model.Plan{Actions: []model.PlanAction{{
+		ComponentID: "broken",
+		Kind:        model.ActionInstall,
+		Install:     model.InstallSpec{Kind: model.InstallWinget},
+	}}}
+	tx := engine.Apply(context.Background(), plan, ApplyOptions{DryRun: true})
+	if tx.Status != model.TransactionFailed || len(tx.Actions) != 1 {
+		t.Fatalf("invalid dry run was not rejected: %#v", tx)
+	}
+	if !strings.Contains(tx.Actions[0].Error, "winget id is empty") || tx.Actions[0].Verified {
+		t.Fatalf("dry-run resolution error was not recorded: %#v", tx.Actions[0])
+	}
+}
+
 func TestWingetInstallUsesNoUpgradeAndAcceptanceFlags(t *testing.T) {
 	commands := &fakeCommandRunner{}
 	engine := Engine{Commands: commands, Skills: &fakeSkillInstaller{}}

@@ -38,6 +38,25 @@ jobs:
       prerelease: ${{ steps.release.outputs.prerelease }}
       skip_release: ${{ steps.release.outputs.skip_release }}
     steps:
+      - name: Validate requested release tag
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PUSH_TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:PUSH_TAG.Trim()
+          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+            throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
+          }
+          $ref = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json -Depth 20
+          if ($ref.ref -ne "refs/tags/$tag") { throw "GitHub returned an unexpected tag ref: $($ref.ref)" }
+          if ($ref.object.type -ne 'tag') { throw "$tag must be an annotated tag object" }
+          $tagObject = gh api "repos/$env:GH_REPO/git/tags/$($ref.object.sha)" | ConvertFrom-Json -Depth 20
+          if (-not $tagObject.verification.verified) { throw "$tag does not have a verified GitHub signature" }
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0

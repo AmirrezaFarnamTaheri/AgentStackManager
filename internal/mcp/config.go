@@ -13,6 +13,7 @@ import (
 
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/safefile"
+	"github.com/agentstack/agentstack/internal/strictjson"
 )
 
 type ServerConfig struct {
@@ -110,9 +111,7 @@ func LoadRouterConfig(path string) (RouterConfig, error) {
 		return RouterConfig{}, err
 	}
 	var config RouterConfig
-	decoder := json.NewDecoder(strings.NewReader(string(data)))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&config); err != nil {
+	if err := strictjson.Decode(data, &config); err != nil {
 		return RouterConfig{}, fmt.Errorf("decode router config: %w", err)
 	}
 	if config.Version < 1 {

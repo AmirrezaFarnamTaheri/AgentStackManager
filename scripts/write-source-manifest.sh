@@ -9,5 +9,10 @@ find . -type f \
   ! -path './SOURCE_MANIFEST.sha256' \
   ! -path './dist/*' \
   ! -path './dist-dev/*' \
+  ! -path './.cocoindex_code/*' \
+  ! -path './.codegraph/*' \
+  ! -path './.serena/*' \
+  ! -path './.smart-coding-cache/*' \
+  ! -path './graphify-out/*' \
   -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > "$tmp"
 mv "$tmp" SOURCE_MANIFEST.sha256

@@ -65,6 +65,50 @@ func TestRemoveOwnedSkillMovesToQuarantine(t *testing.T) {
 	}
 }
 
+func TestRemoveOwnedSkillQuarantinesSameNameFromMultipleRoots(t *testing.T) {
+	service := minimalService(t, model.Catalog{}, &appRunner{})
+	firstRoot := filepath.Join(service.Paths.DataRoot, "agents-skills")
+	secondRoot := filepath.Join(service.Paths.DataRoot, "gemini-skills")
+	service.SkillRoots = []string{firstRoot, secondRoot}
+	firstSkill := filepath.Join(firstRoot, "owned")
+	secondSkill := filepath.Join(secondRoot, "owned")
+	for path, content := range map[string]string{firstSkill: "agents", secondSkill: "gemini"} {
+		if err := os.MkdirAll(path, 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(path, "SKILL.md"), []byte(content), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := service.Store.SaveOwnership(state.Ownership{ManagedComponents: map[string]state.ManagedComponent{
+		"skills": {ID: "skills", Source: "agentstack", InstallKind: model.InstallSkillPack, Paths: []string{firstSkill, secondSkill}},
+	}}); err != nil {
+		t.Fatal(err)
+	}
+
+	report, err := service.RemoveOwned(context.Background(), []string{"skills"}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Actions) != 1 || report.Actions[0].Status != "succeeded" || len(report.Actions[0].Quarantine) != 2 {
+		t.Fatalf("unexpected multi-root quarantine report: %+v", report)
+	}
+	if report.Actions[0].Quarantine[0] == report.Actions[0].Quarantine[1] {
+		t.Fatalf("multi-root quarantine destinations collided: %+v", report.Actions[0].Quarantine)
+	}
+	contents := map[string]bool{}
+	for _, path := range report.Actions[0].Quarantine {
+		data, readErr := os.ReadFile(filepath.Join(path, "SKILL.md"))
+		if readErr != nil {
+			t.Fatal(readErr)
+		}
+		contents[string(data)] = true
+	}
+	if !contents["agents"] || !contents["gemini"] {
+		t.Fatalf("quarantine did not preserve both skill trees: %#v", contents)
+	}
+}
+
 func TestRemoveOwnedSkillRefusesPathOutsideRecognizedRoots(t *testing.T) {
 	service := minimalService(t, model.Catalog{}, &appRunner{})
 	service.SkillRoots = []string{filepath.Join(service.Paths.DataRoot, "recognized-skills")}

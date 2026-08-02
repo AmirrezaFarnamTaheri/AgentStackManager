@@ -55,7 +55,7 @@ grep -q 'gh release create' "$release_workflow"
 grep -q 'timeout-minutes:' "$release_workflow"
 grep -Fq 'git/ref/tags/' "$release_workflow"
 grep -Fq "object.type -ne 'tag'" "$release_workflow"
-grep -Fq '"ref=refs/tags/$tag"' "$release_workflow"
+grep -Fq '"refs/tags/$tag"' "$release_workflow"
 preflight_line="$(grep -n -m1 'name: Validate requested release tag' "$release_workflow" | cut -d: -f1)"
 checkout_line="$(grep -n -m1 'uses: actions/checkout@' "$release_workflow" | cut -d: -f1)"
 if [[ -z "$preflight_line" || -z "$checkout_line" || "$preflight_line" -ge "$checkout_line" ]]; then

@@ -73,7 +73,7 @@ func (c StdIOChildClient) ListTools(ctx context.Context, server ServerConfig) (j
 	if err != nil {
 		return nil, err
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	return session.request(ctx, "tools/list", map[string]any{})
 }
 
@@ -90,7 +90,7 @@ func (c StdIOChildClient) CallTool(ctx context.Context, server ServerConfig, nam
 	if err != nil {
 		return nil, err
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	return session.request(ctx, "tools/call", map[string]any{"name": name, "arguments": decoded})
 }
 
@@ -108,7 +108,7 @@ func (c StdIOChildClient) Doctor(ctx context.Context, server ServerConfig) Docto
 	if err != nil {
 		return DoctorItem{Status: "error", Message: redactChildError(err.Error()), Duration: time.Since(started)}
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	result, err := session.request(ctx, "tools/list", map[string]any{})
 	if err != nil {
 		return DoctorItem{Status: "error", Message: redactChildError(err.Error()), ProtocolVersion: session.protocolVersion, Duration: time.Since(started)}
@@ -164,7 +164,29 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	}
 	stderr := newCappedThreadSafeBuffer(stderrLimit)
 	cmd.Stderr = stderr
-	process, err := processctl.StartWithLimits(cmd, processctl.Limits{MemoryBytes: server.Limits.MemoryBytes, CPUPercent: server.Limits.CPUPercent, ActiveProcesses: server.Limits.ActiveProcesses})
+	type startResult struct {
+		process *processctl.Process
+		err     error
+	}
+	started := make(chan startResult, 1)
+	go func() {
+		process, startErr := processctl.StartWithLimits(cmd, processctl.Limits{MemoryBytes: server.Limits.MemoryBytes, CPUPercent: server.Limits.CPUPercent, ActiveProcesses: server.Limits.ActiveProcesses})
+		started <- startResult{process: process, err: startErr}
+	}()
+	var process *processctl.Process
+	select {
+	case result := <-started:
+		process, err = result.process, result.err
+	case <-ctx.Done():
+		go func() {
+			result := <-started
+			if result.process != nil {
+				_ = result.process.Terminate()
+			}
+		}()
+		emit("error", ctx.Err().Error())
+		return nil, ctx.Err()
+	}
 	if err != nil {
 		emit("error", err.Error())
 		return nil, fmt.Errorf("start child %s: %w", server.Command, err)
@@ -184,7 +206,7 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	}
 	session.requestGate <- struct{}{}
 	if err := session.initialize(ctx); err != nil {
-		_ = session.Close()
+		session.closeAfterOperation(ctx)
 		emit("error", err.Error())
 		return nil, err
 	}
@@ -315,6 +337,26 @@ func (s *childSession) Close() error {
 		s.observer(ChildEvent{Type: "child.stop", ServerKey: s.serverKey, Command: s.command, Status: status, Duration: time.Since(s.startedAt), Message: message})
 	}
 	return err
+}
+
+func (s *childSession) closeAfterOperation(ctx context.Context) {
+	if ctx.Err() == nil {
+		_ = s.Close()
+		return
+	}
+
+	s.stateMu.Lock()
+	if s.closed {
+		s.stateMu.Unlock()
+		return
+	}
+	s.closed = true
+	s.stateMu.Unlock()
+	_ = s.stdin.Close()
+	_ = s.process.Terminate()
+	if s.observer != nil {
+		s.observer(ChildEvent{Type: "child.stop", ServerKey: s.serverKey, Command: s.command, Status: "timeout", Duration: time.Since(s.startedAt), Message: ctx.Err().Error()})
+	}
 }
 
 type PooledChildClient struct {

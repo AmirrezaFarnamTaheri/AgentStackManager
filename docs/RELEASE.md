@@ -5,17 +5,16 @@ AgentStack public releases target Windows x64 and Windows ARM64. Linux is used f
 ## Preconditions
 
 - clean working tree;
-- HEAD exactly at a signed annotated `v<version>` tag;
-- the trusted release-tag public key is imported from the protected release environment and tag signature verification succeeds;
-- the tag commit equals the fetched authoritative `origin/main` commit;
+- for tag-push releases, HEAD exactly at a GitHub-verified signed annotated `v<version>` tag whose commit equals fetched authoritative `origin/main`;
+- for automatic releases, a successful Verify run on `main` or an approved manual dispatch against current `main`;
 - Go 1.26.5, pinned by the repository root `.go-version`;
 - valid Authenticode certificate and timestamp service;
 - protected release environment approval;
 - all required verification workflows green.
 
-## Create and push the release tag
+## Optional trusted tag release
 
-The manual workflow does not create a release tag. From a clean, verified `main` checkout, create and push the signed annotated tag before dispatching the workflow:
+To select a version explicitly, create and push a signed annotated tag from a clean, verified `main` checkout:
 
 ```powershell
 git switch main
@@ -26,16 +25,17 @@ git tag -v v1.0.0
 git push origin v1.0.0
 ```
 
-Replace `v1.0.0` with the intended version. `git status --short` must produce no output. A lightweight tag created with `git tag v1.0.0` is rejected. Pushing the tag starts the release workflow automatically; manual dispatch is only a controlled retry for an existing tag.
+Replace `v1.0.0` with the intended version. `git status --short` must produce no output. A lightweight or unverified tag is rejected. Pushing the tag starts the release workflow automatically.
 
 ## GitHub Release workflow
 
-`.github/workflows/release.yml` supports two controlled entry points:
+`.github/workflows/release.yml` supports three controlled entry points:
 
-- pushing an existing signed annotated `v*` tag;
-- manually dispatching the workflow with an existing signed annotated tag and an optional prerelease flag.
+- pushing a GitHub-verified signed annotated `v*` tag;
+- completion of the Verify workflow on `main`;
+- manual dispatch against current `main`, with an optional prerelease flag.
 
-Before checkout, manual dispatch validates that the requested ref exists and resolves to an annotated tag object through the GitHub API. The workflow then serializes runs per tag, checks out the exact tag, verifies that the tag commit equals protected `origin/main`, builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
+Before checkout, a tag-push release validates through the GitHub API that the ref is an annotated tag object with a verified signature. Automatic entry points check out current `main`, infer the next semantic version from Conventional Commit signals, and create a keyless Sigstore-signed annotated tag. The workflow recovers an interrupted workflow-owned unpublished tag and skips an already published commit. It then builds and signs both Windows architectures, creates GitHub provenance and SBOM attestations, executes the signed ARM64 artifacts on a native ARM64 runner, verifies all downloaded checksums and attestations, and only then publishes the GitHub Release with `gh release create`.
 
 Publication uses the job-scoped `GITHUB_TOKEN` with `contents: write`; build jobs receive only the read, identity-token, attestation, and artifact-metadata permissions they require. Existing GitHub Releases are never overwritten.
 
@@ -110,4 +110,3 @@ place it inside an unrelated parent Git repository, regenerate and verify its ma
 prove an unlisted file is rejected, and execute the supported archive build path.
 This proves archive buildability; it does not turn an unreleased workspace into
 protected release evidence.
-

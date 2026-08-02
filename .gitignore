@@ -9,4 +9,8 @@
 /bin/
 *.syso
 /mutation-results.json
-
+/.cocoindex_code/
+/.codegraph/
+/.serena/
+/.smart-coding-cache/
+/graphify-out/

@@ -43,6 +43,13 @@ func TestLoadDefaultCatalogIsValid(t *testing.T) {
 	}
 }
 
+func TestDecodeRejectsTrailingJSONContent(t *testing.T) {
+	_, err := decode([]byte(`{"version":1,"components":[],"profiles":[]} {}`))
+	if err == nil || !strings.Contains(err.Error(), "trailing") {
+		t.Fatalf("expected trailing content error, got %v", err)
+	}
+}
+
 func TestValidateRejectsUnknownDependency(t *testing.T) {
 	c := model.Catalog{Version: 1, Components: []model.Component{{ID: "tool", DependsOn: []string{"missing"}}}}
 	err := Validate(c)

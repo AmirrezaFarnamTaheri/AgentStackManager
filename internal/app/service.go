@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sync"
 	"time"
@@ -141,20 +140,6 @@ func NewDefault() (*Service, error) {
 	}
 	return service, nil
 }
-
-func prepareStore(store state.Store, now time.Time) error {
-	if _, err := store.RecoverIncompleteTransactions(); err != nil {
-		return fmt.Errorf("recover incomplete transactions: %w", err)
-	}
-	if _, err := store.Prune(now, state.DefaultRetentionPolicy()); err != nil {
-		return fmt.Errorf("apply data retention policy: %w", err)
-	}
-	return nil
-}
-
-type defaultLocator struct{}
-
-func (defaultLocator) LookPath(name string) (string, error) { return exec.LookPath(name) }
 
 func (s *Service) Inventory(ctx context.Context) (model.Inventory, error) {
 	ownership, err := s.Store.LoadOwnership()
