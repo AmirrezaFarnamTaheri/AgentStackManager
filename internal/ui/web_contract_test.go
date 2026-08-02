@@ -36,7 +36,7 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 
 	for _, id := range []string{
 		"refreshBtn", "installSelfBtn", "exitBtn", "buildPlanBtn", "doctorBtn",
-		"applyBtn", "mcpInitBtn", "mcpDoctorBtn",
+		"applyBtn", "mcpInitBtn", "mcpDoctorBtn", "retryLoadBtn",
 	} {
 		marker := `id="` + id + `"`
 		index := strings.Index(html, marker)

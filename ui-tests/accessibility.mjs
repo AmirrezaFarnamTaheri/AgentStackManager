@@ -96,10 +96,11 @@ try {
   }
 
   await page.locator('#componentSearch').fill('no-component-can-match-this-query');
-  await page.waitForFunction(() => document.querySelector('#componentSearchStatus')?.textContent?.includes('0'));
+  await page.waitForFunction(() => document.querySelector('#componentSearchStatus')?.textContent?.trim().startsWith('0 component'));
   await page.locator('#componentSearch').fill('');
 
   const providers = await page.locator('#browserProvider option').evaluateAll(options => options.map(option => option.value).filter(Boolean));
+  let providerReplacement = 'skipped';
   if (providers.length > 1) {
     await page.locator('[data-section="overview"]').click();
     await page.locator('#browserProvider').selectOption(providers[0]);
@@ -110,6 +111,7 @@ try {
     if (!(await page.locator(`input[data-id="${providers[1]}"]`).isChecked())) {
       throw new Error('switching browser provider did not select the replacement');
     }
+    providerReplacement = 'pass';
   }
 
   for (const width of [320, 375, 768, 1280]) {
@@ -141,7 +143,7 @@ try {
     reducedMotion: 'pass',
     responsiveOverflow: 'pass',
     liveSearchStatus: 'pass',
-    providerReplacement: 'pass',
+    providerReplacement,
     shutdownFocus: 'pass'
   }, null, 2));
 } finally {
