@@ -196,7 +196,7 @@ a09e6e4f02ecd7becb3972a383a5ab50b1b869a769ca98ba2a68a988e0b1bef5  ./scripts/appl
 2267fa953e6ba95a6b6159281e5c56548b50d506e375f3fb7a29996797c0fabd  ./scripts/build.ps1
 93f8ba3b9ca41d4abac580404bdd151439dab54356d0c32fbd4d07c97b33dd3b  ./scripts/build.sh
 07c7971b6f45b88ac539b5303c352b824899b7073d64b2a9c3ebf2e8073e6954  ./scripts/check-benchmarks.sh
-2037f59fdefb8ffcb6a60c03e7fbb4a9684bd9cbaf77557d69e5d9c07443d507  ./scripts/check-critical-coverage.sh
+eab9e1d5bd646a4305ea8b23e5df1acb10349961f4ec2f58d865173a0ac7886a  ./scripts/check-critical-coverage.sh
 4907ac9d51545616de6e9a63aed747e13f96ce45257d98d5d93f0c79d200cfca  ./scripts/check-docs.ps1
 a9161dfda7b2b03cac2e3a059d4832417dd0a886d0de06c148d0f0e90a22bb09  ./scripts/check-docs.sh
 b44b9c21f3aa8d855c1c7be3c4f5fe77481790ea8c98b951429eb4ebbe34c834  ./scripts/check-governance.ps1

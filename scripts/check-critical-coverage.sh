@@ -41,7 +41,9 @@ require_function 'internal/skills/installer.go:.*ValidateSkillInventory' 80
 require_function 'internal/catalog/catalog.go:.*validateRouterAcquisition' 70
 require_function 'internal/planner/planner.go:.*[[:space:]]Build[[:space:]]' 80
 require_function 'internal/processctl/process.go:.*GracefulClose' 50
-require_function 'internal/processctl/process_unix.go:.*[[:space:]]terminate[[:space:]]' 70
+if [[ "$(go env GOOS)" != "windows" ]]; then
+  require_function 'internal/processctl/process_unix.go:.*[[:space:]]terminate[[:space:]]' 70
+fi
 require_function 'internal/safefile/replace.go:.*[[:space:]]Replace[[:space:]]' 30
 require_function 'internal/pathenv/path.go:.*MergeWindows' 80
 require_function 'internal/pathenv/path.go:.*AppendWindows' 75
