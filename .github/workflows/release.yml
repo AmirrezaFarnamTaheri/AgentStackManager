@@ -100,10 +100,21 @@ jobs:
           $head = (git rev-parse HEAD).Trim()
           $originMain = (git rev-parse refs/remotes/origin/main).Trim()
           $automaticRelease = $env:EVENT_NAME -in @('workflow_dispatch', 'workflow_run')
-          if ($automaticRelease -and $head -ne $originMain) {
-            throw "Automatic release must use current origin/main; HEAD=$head origin/main=$originMain"
+          if ($env:EVENT_NAME -eq 'workflow_run' -and $head -ne $originMain) {
+            Write-Host "Skipping stale verified commit $head; current origin/main is $originMain"
+            "tag=" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+            "version=" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+            "prerelease=false" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+            "trust_mode=existing" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+            "skip_release=true" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+            exit 0
           }
-          if ($head -ne $env:SOURCE_SHA) { throw "Checked-out source SHA mismatch: HEAD=$head expected=$env:SOURCE_SHA" }
+          if ($env:EVENT_NAME -eq 'workflow_dispatch' -and $head -ne $originMain) {
+            throw "Manual retry must use current origin/main; HEAD=$head origin/main=$originMain"
+          }
+          if ($automaticRelease -and $head -ne $env:SOURCE_SHA) {
+            throw "Checked-out source SHA mismatch: HEAD=$head expected=$env:SOURCE_SHA"
+          }
 
           $tagPattern = '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?$'
           $tag = $null
