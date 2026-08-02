@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="assets/accessibility.css">
 </head>
 <body>
-  <a class="skip-link" href="#overview-title">Skip to main content</a>
+  <a id="skipLink" class="skip-link" href="#overview-title">Skip to main content</a>
   <div class="shell">
     <aside class="sidebar" aria-label="AgentStack workspace">
       <div class="brand">
@@ -53,9 +53,23 @@
 
       <div id="operationStatus" class="operation-status" data-state="idle" role="status" aria-live="polite" aria-atomic="true">
         <span class="operation-status-icon" aria-hidden="true"><span class="operation-spinner"></span></span>
-        <span class="operation-status-copy"><strong id="operationStatusTitle">Ready</strong><small id="operationStatusDetail">No operation is running.</small></span>
+        <span class="operation-status-copy"><strong id="operationStatusTitle">Ready</strong><small id="operationStatusDetail">No operation is running.</small><small id="operationStatusMeta" class="operation-status-meta" aria-hidden="true">Choose a profile to begin.</small></span>
         <span class="operation-seal" aria-hidden="true">Local</span>
       </div>
+
+      <section class="workflow-guide" aria-labelledby="workflow-title">
+        <div><h2 id="workflow-title">How this workspace works</h2><p>Profile and component changes only run after you review a sealed plan and explicitly authorize it.</p></div>
+        <ol>
+          <li class="active" data-workflow-step="1"><span>1</span><div><strong>Configure</strong><small>Choose a profile and optional capabilities.</small></div></li>
+          <li data-workflow-step="2"><span>2</span><div><strong>Review</strong><small>Inspect the exact keep, install, repair, and configure actions.</small></div></li>
+          <li data-workflow-step="3"><span>3</span><div><strong>Authorize</strong><small>Confirm only the plan you reviewed.</small></div></li>
+        </ol>
+      </section>
+
+      <section class="activity-panel" aria-labelledby="activity-title">
+        <div class="activity-head"><div><h2 id="activity-title">Recent activity</h2><p id="activitySummary">This browser session has not run an operation yet.</p></div><button id="clearActivityBtn" class="button quiet compact-button" type="button">Clear activity</button></div>
+        <ol id="activityLog" class="activity-log" aria-live="polite" aria-label="Recent local activity"></ol>
+      </section>
 
       <section id="overview" class="section active-section" aria-labelledby="overview-title">
         <div class="section-heading compact-heading">
@@ -127,7 +141,7 @@
           <div class="table-wrap"><table><thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead><tbody id="planRows"></tbody></table></div>
           <div class="authorization-block">
             <label class="confirm-row"><input type="checkbox" id="confirmApply" data-operation-lock><span><strong>Authorize this sealed record</strong><small>I reviewed this plan and authorize only the listed install, repair, and configure actions.</small></span></label>
-            <div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div>
+            <div class="authorization-action"><small id="applyHelp">Check the authorization box to enable this action.</small><div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div></div>
           </div>
         </div>
       </section>
