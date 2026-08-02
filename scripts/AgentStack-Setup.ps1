@@ -5,11 +5,6 @@ param(
     [string]$Profile = 'core'
 )
 $ErrorActionPreference = 'Stop'
-$selfSignature = Get-AuthenticodeSignature -LiteralPath $PSCommandPath
-if ($selfSignature.Status -ne 'Valid' -or -not $selfSignature.SignerCertificate) {
-    throw "AgentStack-Setup.ps1 is not a valid signed release launcher. Use the signed AgentStack-Setup.exe or an official signed bundle."
-}
-$expectedPublisher = ($selfSignature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant()
 $architecture = [Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant()
 $binaryName = switch ($architecture) {
     'x64'   { 'agentstack-windows-amd64.exe' }
@@ -25,10 +20,6 @@ if (-not $expectedLine) { throw "Checksum manifest does not contain $binaryName"
 $expected = ($expectedLine -split '\s+')[0].ToLowerInvariant()
 $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $source).Hash.ToLowerInvariant()
 if ($actual -ne $expected) { throw "Release binary checksum mismatch" }
-$signature = Get-AuthenticodeSignature -LiteralPath $source
-if ($signature.Status -ne 'Valid' -or -not $signature.SignerCertificate) { throw "Release binary is not Authenticode-valid: $($signature.Status)" }
-$actualPublisher = ($signature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant()
-if ($actualPublisher -ne $expectedPublisher) { throw "Release binary publisher does not match the signed setup launcher" }
 Write-Host "Installing verified AgentStack Manager ($architecture)..." -ForegroundColor Cyan
 & $source install-self
 if ($LASTEXITCODE -ne 0) { throw "AgentStack self-install failed with exit code $LASTEXITCODE" }

@@ -9,9 +9,6 @@
     "allowed_tag_pattern": "v*"
   },
   "required_secrets": [
-    "SIGNING_PFX_BASE64",
-    "SIGNING_PFX_PASSWORD",
-    "SIGNING_CERT_THUMBPRINT",
     "RELEASE_TAG_PUBLIC_KEY_BASE64"
   ]
 }

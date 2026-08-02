@@ -14,13 +14,13 @@ AgentStack Manager is a preservation-first Windows control plane for local engin
 - AgentStack-owned resources can be previewed, deactivated, removed, quarantined, backed up, restored, exported, or cleared without treating unrelated software as owned.
 - The managed MCP router negotiates protocol versions, bounds output, performs live health probes, and reuses healthy child processes.
 - Catalog-managed MCP children use explicit Windows Job Object resource ceilings for job memory, CPU rate, and active process count.
-- Public release automation is fail-closed on a clean signed tag, supported Go toolchain, vulnerability scans, reproducibility checks, Authenticode verification, SBOM/license/VEX evidence, and Windows runtime gates.
+- Public release automation is fail-closed on a clean signed tag, supported Go toolchain, vulnerability scans, reproducibility checks, SHA-256 manifests, SBOM/license/VEX evidence, artifact attestations, and Windows runtime gates.
 
 The browser manager uses one coherent icon language and a persistent accessible operation-status surface; long-running controls cannot be submitted twice while work is active.
 
 ## Windows installation
 
-A public release contains an Authenticode-signed `AgentStack-Setup.exe`, its matching signed console binary, an internal checksum manifest, SBOMs, VEX, license inventory, and documentation. Extract the entire architecture-specific ZIP and double-click `AgentStack-Setup.exe`.
+A public release contains an attested `AgentStack-Setup.exe`, its matching console binary, an internal checksum manifest, SBOMs, VEX, license inventory, and documentation. Extract the entire architecture-specific ZIP and run `AgentStack-Setup.exe`.
 
 The setup verifies the embedded console digest and expected publisher certificate before installing:
 

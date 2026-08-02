@@ -4,7 +4,7 @@
 
 Extract the complete signed release ZIP. Keep `AgentStack-Setup.exe`, the architecture-specific console executable, and `SHA256SUMS.txt` together. Double-click setup or run the bundled PowerShell launcher.
 
-The public setup path is fail-closed: it requires a valid Authenticode signature, the expected publisher thumbprint embedded at build time, and the exact embedded SHA-256 of its sibling console binary.
+The public setup path is fail-closed on the exact SHA-256 of its sibling console binary and the release checksum manifest. Artifacts are integrity-attested by GitHub Actions; Windows Authenticode is not required.
 
 ## Preservation-first workflow
 

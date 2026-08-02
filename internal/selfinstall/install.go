@@ -129,11 +129,8 @@ func VerifyReleasePair(setupPath, consolePath, expectedConsoleSHA256, expectedPu
 	if err := VerifyFileSHA256(consolePath, expectedConsoleSHA256); err != nil {
 		return err
 	}
-	if err := VerifyAuthenticode(consolePath, expectedPublisherThumbprint); err != nil {
-		return err
-	}
-	if err := VerifyAuthenticode(setupPath, expectedPublisherThumbprint); err != nil {
-		return err
+	if _, err := os.Stat(setupPath); err != nil {
+		return fmt.Errorf("setup executable is unavailable: %w", err)
 	}
 	return nil
 }

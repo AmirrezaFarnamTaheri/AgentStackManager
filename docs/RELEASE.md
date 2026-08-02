@@ -8,7 +8,7 @@ AgentStack public releases target Windows x64 and Windows ARM64. Linux is used f
 - for tag-push releases, HEAD exactly at a GitHub-verified signed annotated `v<version>` tag whose commit equals fetched authoritative `origin/main`;
 - for automatic releases, a successful Verify run on `main` or an approved manual dispatch against current `main`;
 - Go 1.26.5, pinned by the repository root `.go-version`;
-- valid Authenticode certificate and timestamp service;
+- GitHub artifact attestations and checksum manifests;
 - protected release environment approval;
 - all required verification workflows green.
 
@@ -42,7 +42,7 @@ Publication uses the job-scoped `GITHUB_TOKEN` with `contents: write`; build job
 ## Local release command
 
 ```powershell
-./scripts/release.ps1 -Version 0.2.0 -CertificateThumbprint <40-hex-thumbprint>
+./scripts/release.ps1 -Version 0.2.0
 ```
 
 The script refuses a dirty tree, lightweight/unsigned tag, unsupported Go version, missing assurance tools, invalid governance/docs, vulnerability findings, non-reproducible unsigned binaries, VCS metadata drift, invalid signatures, or bad archive contents.
