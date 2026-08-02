@@ -126,6 +126,9 @@ jobs:
             git config --local user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git config --local gpg.format x509
             git config --local gpg.x509.program (Get-Command gitsign -ErrorAction Stop).Source
+            # Use the embedded Rekor inclusion proof for all managed tags,
+            # including retries after a tag has already been pushed.
+            git config --local gitsign.rekorMode offline
 
             $identity = "https://github.com/$env:WORKFLOW_REF"
             $issuer = 'https://token.actions.githubusercontent.com'
@@ -213,10 +216,6 @@ jobs:
                 "Source-Commit: $head",
                 "Workflow-Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
               ) -join "`n"
-              # Offline Rekor mode embeds the inclusion data in the signature.
-              # This avoids the legacy online lookup, which cannot reliably
-              # reconstruct Git's annotated-tag payload for verification.
-              git config --local gitsign.rekorMode offline
               git tag -s $tag -m $message
               if ($LASTEXITCODE -ne 0) { throw "Unable to create keyless signed tag: $tag" }
               gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer $issuer $tag

@@ -12,7 +12,7 @@ cc4400eee86504759257efe462e1c9c308e6c65b76a464d59637d9ee5b196369  ./.gitattribut
 10e24f8b6cf94a34f97f9875e7ff8f5436bbc93d73819588687d459f92249753  ./.github/dependabot.yml
 d0c6c155efdf72766006a5ce71bd6a7fe43a7d0fdb94227438c6feaec4193c71  ./.github/environments/release-policy.json
 86cd6e97b48a56ae6bbe99f75d14f52dae753d953b74f1b1d3dfc099e47c6b7d  ./.github/rulesets/main-protection.json
-2e005daeaffad7c53bd52f56e849ae8089066c82258487f3916a46e1caaef636  ./.github/workflows/release.yml
+ac9e5873f576e6872296c8b2d52a2e66f798be7cd68d39e17b46c608e670ce85  ./.github/workflows/release.yml
 68c8ab1513dd2c09c931daa63a3f24fe5b56c951456e7058da57abb57170e55d  ./.github/workflows/verify.yml
 02af48083d2d63b7bd00cf97a709590ed12bcb67f3919342528132a3862115b9  ./.gitignore
 14c5f0cdd5bd79e9272abe3b788316012cd6bcabc5e4980f27634b2413857758  ./.go-version
