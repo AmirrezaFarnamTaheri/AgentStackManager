@@ -24,6 +24,8 @@ import (
 
 var SupportedProtocolVersions = []string{"2025-06-18", "2025-03-26"}
 
+var errRequestNotStarted = errors.New("child request did not acquire the session")
+
 const (
 	defaultChildTimeout = 45 * time.Second
 	defaultMessageLimit = 4 << 20
@@ -73,7 +75,7 @@ func (c StdIOChildClient) ListTools(ctx context.Context, server ServerConfig) (j
 	if err != nil {
 		return nil, err
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	return session.request(ctx, "tools/list", map[string]any{})
 }
 
@@ -90,7 +92,7 @@ func (c StdIOChildClient) CallTool(ctx context.Context, server ServerConfig, nam
 	if err != nil {
 		return nil, err
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	return session.request(ctx, "tools/call", map[string]any{"name": name, "arguments": decoded})
 }
 
@@ -108,7 +110,7 @@ func (c StdIOChildClient) Doctor(ctx context.Context, server ServerConfig) Docto
 	if err != nil {
 		return DoctorItem{Status: "error", Message: redactChildError(err.Error()), Duration: time.Since(started)}
 	}
-	defer session.Close()
+	defer session.closeAfterOperation(ctx)
 	result, err := session.request(ctx, "tools/list", map[string]any{})
 	if err != nil {
 		return DoctorItem{Status: "error", Message: redactChildError(err.Error()), ProtocolVersion: session.protocolVersion, Duration: time.Since(started)}
@@ -159,19 +161,47 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
+		_ = stdin.Close()
 		emit("error", err.Error())
 		return nil, err
 	}
 	stderr := newCappedThreadSafeBuffer(stderrLimit)
 	cmd.Stderr = stderr
-	process, err := processctl.StartWithLimits(cmd, processctl.Limits{MemoryBytes: server.Limits.MemoryBytes, CPUPercent: server.Limits.CPUPercent, ActiveProcesses: server.Limits.ActiveProcesses})
+	type startResult struct {
+		process *processctl.Process
+		err     error
+	}
+	started := make(chan startResult, 1)
+	go func() {
+		process, startErr := processctl.StartWithLimits(cmd, processctl.Limits{MemoryBytes: server.Limits.MemoryBytes, CPUPercent: server.Limits.CPUPercent, ActiveProcesses: server.Limits.ActiveProcesses})
+		started <- startResult{process: process, err: startErr}
+	}()
+	var process *processctl.Process
+	select {
+	case result := <-started:
+		process, err = result.process, result.err
+	case <-ctx.Done():
+		go func() {
+			result := <-started
+			_ = stdin.Close()
+			_ = stdout.Close()
+			if result.process != nil {
+				_ = result.process.Terminate()
+			}
+		}()
+		emit("error", ctx.Err().Error())
+		return nil, ctx.Err()
+	}
 	if err != nil {
+		_ = stdin.Close()
+		_ = stdout.Close()
 		emit("error", err.Error())
 		return nil, fmt.Errorf("start child %s: %w", server.Command, err)
 	}
 	session := &childSession{
 		process:      process,
 		stdin:        stdin,
+		stdout:       stdout,
 		reader:       bufio.NewReaderSize(stdout, 64*1024),
 		stderr:       stderr,
 		messageLimit: messageLimit,
@@ -184,7 +214,7 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	}
 	session.requestGate <- struct{}{}
 	if err := session.initialize(ctx); err != nil {
-		_ = session.Close()
+		session.closeAfterOperation(ctx)
 		emit("error", err.Error())
 		return nil, err
 	}
@@ -195,6 +225,7 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 type childSession struct {
 	process         *processctl.Process
 	stdin           io.WriteCloser
+	stdout          io.ReadCloser
 	reader          *bufio.Reader
 	stderr          *cappedThreadSafeBuffer
 	messageLimit    int
@@ -254,7 +285,7 @@ func (s *childSession) requestRaw(ctx context.Context, method string, params any
 	case <-s.requestGate:
 		defer func() { s.requestGate <- struct{}{} }()
 	case <-ctx.Done():
-		return nil, ctx.Err()
+		return nil, fmt.Errorf("%w: %w", errRequestNotStarted, ctx.Err())
 	}
 	s.stateMu.Lock()
 	if s.closed {
@@ -305,6 +336,7 @@ func (s *childSession) Close() error {
 	s.closed = true
 	s.stateMu.Unlock()
 	err := s.process.GracefulClose(s.stdin.Close, 2*time.Second)
+	_ = s.stdout.Close()
 	if s.observer != nil {
 		status := "ok"
 		message := ""
@@ -317,6 +349,27 @@ func (s *childSession) Close() error {
 	return err
 }
 
+func (s *childSession) closeAfterOperation(ctx context.Context) {
+	if ctx.Err() == nil {
+		_ = s.Close()
+		return
+	}
+
+	s.stateMu.Lock()
+	if s.closed {
+		s.stateMu.Unlock()
+		return
+	}
+	s.closed = true
+	s.stateMu.Unlock()
+	_ = s.stdin.Close()
+	_ = s.stdout.Close()
+	_ = s.process.Terminate()
+	if s.observer != nil {
+		s.observer(ChildEvent{Type: "child.stop", ServerKey: s.serverKey, Command: s.command, Status: "timeout", Duration: time.Since(s.startedAt), Message: ctx.Err().Error()})
+	}
+}
+
 type PooledChildClient struct {
 	Base    StdIOChildClient
 	IdleTTL time.Duration
@@ -326,6 +379,8 @@ type PooledChildClient struct {
 
 type pooledWorker struct {
 	session    *childSession
+	ready      chan struct{}
+	startErr   error
 	lastUsed   time.Time
 	timer      *time.Timer
 	generation uint64
@@ -380,47 +435,35 @@ func (p *PooledChildClient) Doctor(ctx context.Context, server ServerConfig) Doc
 
 func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig, operation func(*childSession) (json.RawMessage, error)) (json.RawMessage, error) {
 	key := serverKey(server)
-	p.mu.Lock()
-	if p.workers == nil {
-		p.workers = map[string]*pooledWorker{}
+	worker, err := p.acquireWorker(ctx, key, server)
+	if err != nil {
+		return nil, err
 	}
-	worker := p.workers[key]
-	if worker == nil {
-		session, err := p.Base.start(ctx, server)
-		if err != nil {
-			p.mu.Unlock()
-			return nil, err
-		}
-		worker = &pooledWorker{session: session}
-		p.workers[key] = worker
-	}
-	if worker.timer != nil {
-		worker.timer.Stop()
-		worker.timer = nil
-	}
-	worker.generation++
-	worker.active++
-	worker.lastUsed = time.Now()
-	p.mu.Unlock()
 
 	result, err := operation(worker.session)
 	p.mu.Lock()
 	if worker.active > 0 {
 		worker.active--
 	}
+	noActiveCallers := worker.active == 0
 	current := p.workers[key] == worker
-	if err != nil && current {
+	sessionInvalid := err != nil && !errors.Is(err, errRequestNotStarted)
+	if sessionInvalid && current {
 		delete(p.workers, key)
 	}
-	if err != nil {
+	if sessionInvalid {
 		p.mu.Unlock()
-		_ = worker.session.Close()
+		if noActiveCallers {
+			_ = worker.session.Close()
+		}
 		return nil, err
 	}
 	if !current {
 		p.mu.Unlock()
-		_ = worker.session.Close()
-		return result, nil
+		if noActiveCallers {
+			_ = worker.session.Close()
+		}
+		return result, err
 	}
 	worker.lastUsed = time.Now()
 	if worker.active == 0 {
@@ -435,7 +478,58 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 		worker.timer = time.AfterFunc(ttl, func() { p.expire(key, worker, generation) })
 	}
 	p.mu.Unlock()
-	return result, nil
+	return result, err
+}
+
+func (p *PooledChildClient) acquireWorker(ctx context.Context, key string, server ServerConfig) (*pooledWorker, error) {
+	p.mu.Lock()
+	if p.workers == nil {
+		p.workers = map[string]*pooledWorker{}
+	}
+	worker := p.workers[key]
+	if worker == nil {
+		worker = &pooledWorker{ready: make(chan struct{})}
+		p.workers[key] = worker
+		p.mu.Unlock()
+
+		session, err := p.Base.start(ctx, server)
+		p.mu.Lock()
+		worker.session = session
+		worker.startErr = err
+		close(worker.ready)
+		if err != nil && p.workers[key] == worker {
+			delete(p.workers, key)
+		}
+		p.mu.Unlock()
+		if err != nil {
+			return nil, err
+		}
+	} else if worker.ready != nil {
+		ready := worker.ready
+		p.mu.Unlock()
+		select {
+		case <-ready:
+			if worker.startErr != nil {
+				return nil, worker.startErr
+			}
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+	} else {
+		p.mu.Unlock()
+	}
+
+	p.mu.Lock()
+	if worker.timer != nil {
+		worker.timer.Stop()
+		worker.timer = nil
+	}
+	worker.ready = nil
+	worker.generation++
+	worker.active++
+	worker.lastUsed = time.Now()
+	p.mu.Unlock()
+	return worker, nil
 }
 
 func (p *PooledChildClient) removeWorkerIfCurrent(key string, expected *pooledWorker) {
@@ -468,8 +562,10 @@ func (p *PooledChildClient) Close() error {
 		if worker.timer != nil {
 			worker.timer.Stop()
 		}
-		if err := worker.session.Close(); err != nil {
-			errorsList = append(errorsList, err.Error())
+		if worker.session != nil {
+			if err := worker.session.Close(); err != nil {
+				errorsList = append(errorsList, err.Error())
+			}
 		}
 	}
 	if len(errorsList) > 0 {

@@ -16,7 +16,7 @@ $checks=$rules.rules | Where-Object type -eq 'required_status_checks'
 if (-not $checks.parameters.strict_required_status_checks_policy -or @($checks.parameters.required_status_checks).Count -lt 5) { throw 'required status-check policy is incomplete' }
 $release=Get-Content -Raw (Join-Path $root '.github/environments/release-policy.json') | ConvertFrom-Json -Depth 20
 $expectedSecrets=@('RELEASE_TAG_PUBLIC_KEY_BASE64','SIGNING_CERT_THUMBPRINT','SIGNING_PFX_BASE64','SIGNING_PFX_PASSWORD')
-if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
+if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or $release.deployment_branch_policy.allowed_branch_pattern -ne 'main' -or $release.deployment_branch_policy.allowed_tag_pattern -ne 'v*' -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
 $goVersion=(Get-Content -Raw (Join-Path $root '.go-version')).Trim()
 if ($goVersion -ne '1.26.5') { throw '.go-version must pin Go 1.26.5' }
 $workflowText=(Get-Content -Raw (Join-Path $root '.github/workflows/verify.yml')) + (Get-Content -Raw (Join-Path $root '.github/workflows/release.yml'))
@@ -24,13 +24,21 @@ $releaseWorkflow=Get-Content -Raw (Join-Path $root '.github/workflows/release.ym
 $windowsE2E=Get-Content -Raw (Join-Path $root 'scripts/windows-e2e.ps1')
 if ($windowsE2E -notmatch [regex]::Escape("if (`$Architecture -eq 'amd64')")) { throw 'Windows E2E must gate the race detector to supported windows/amd64 runners' }
 $requiredShellScripts=@('scripts/build.sh','scripts/check-benchmarks.sh','scripts/check-critical-coverage.sh','scripts/check-docs.sh','scripts/check-governance.sh','scripts/check-source-archive-build.sh','scripts/fuzz.sh','scripts/verify-source-manifest.sh','scripts/write-source-manifest.sh')
-foreach($script in $requiredShellScripts) {
-    $path=Join-Path $root $script
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required CI script is missing: $script" }
-    & bash -n $path
-    if ($LASTEXITCODE -ne 0) { throw "Required CI script has invalid Bash syntax: $script" }
+Push-Location $root
+try {
+    foreach($script in $requiredShellScripts) {
+        $path=Join-Path $root $script
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required CI script is missing: $script" }
+        # A relative path works with both Git for Windows Bash and WSL Bash;
+        # an absolute Windows path is not meaningful inside WSL.
+        & bash -n $script
+        if ($LASTEXITCODE -ne 0) { throw "Required CI script has invalid Bash syntax: $script" }
+    }
 }
-foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:', 'git/ref/tags/', "object\.type\s+-ne\s+'tag'", 'ref=refs/tags/\$tag')) {
+finally {
+    Pop-Location
+}
+foreach($requiredPattern in @('workflow_dispatch:', '(?m)^concurrency:', 'cancel-in-progress:\s*false', 'gh attestation verify', 'gh release create', 'timeout-minutes:', 'git/ref/tags/', "object\.type\s+-ne\s+'tag'", 'refs/tags/\$tag')) {
     if ($releaseWorkflow -notmatch $requiredPattern) { throw "Release workflow is missing required control: $requiredPattern" }
 }
 $preflightIndex=$releaseWorkflow.IndexOf('name: Validate requested release tag',[StringComparison]::Ordinal)
@@ -55,6 +63,9 @@ foreach($deprecatedAction in @(
     if ($workflowText -match [regex]::Escape($deprecatedAction)) { throw "Deprecated Node 20-era action pin remains: $deprecatedAction" }
 }
 if ($releaseWorkflow -match 'softprops/action-gh-release') { throw 'Release publication must use the authenticated GitHub CLI, not a third-party release action' }
+foreach($trustedTagCheck in @('git merge-base --is-ancestor', 'gitsign verify', 'verification.verified')) {
+    if ($releaseWorkflow -notmatch [regex]::Escape($trustedTagCheck)) { throw "Automatic versioning must enforce trusted tag baseline check: $trustedTagCheck" }
+}
 if ($workflowText -notmatch "go-version-file:\s*'\.go-version'") { throw 'GitHub workflows must use .go-version' }
 $circle=Get-Content -Raw (Join-Path $root '.circleci/config.yml')
 if ($circle -notmatch 'cimg/go:1\.26\.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b') { throw 'CircleCI image is not pinned to the reviewed digest' }

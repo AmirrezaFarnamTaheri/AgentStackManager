@@ -595,3 +595,27 @@ func TestPrepareStoreSurfacesRecoveryAndRetentionErrors(t *testing.T) {
 		t.Fatal("startup store preparation silently ignored recovery/retention error")
 	}
 }
+
+func TestPrepareStoreDoesNotRecoverTransactionWhileMutationLeaseIsLive(t *testing.T) {
+	store := state.NewStore(t.TempDir())
+	lease, err := store.AcquireLease("mutation", time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer lease.Close()
+	tx := model.Transaction{ID: "tx-live", Status: model.TransactionRunning, StartedAt: time.Now().UTC()}
+	if err := store.SaveTransaction(tx); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := prepareStore(store, time.Now().UTC()); err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := store.LoadTransaction(tx.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if loaded.Status != model.TransactionRunning {
+		t.Fatalf("live transaction was recovered as %s", loaded.Status)
+	}
+}

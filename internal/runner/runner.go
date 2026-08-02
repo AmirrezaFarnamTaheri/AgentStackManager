@@ -167,10 +167,18 @@ func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions
 			continue
 		}
 		if options.DryRun {
-			invocation, _ := invocationFor(action)
+			invocation, err := invocationFor(action)
 			record.Command, record.Args = invocation.Command, invocation.Args
-			record.Verified = true
-			record.Verification = "dry-run action resolved"
+			if err != nil {
+				record.ExitCode = -1
+				record.Error = err.Error()
+				record.Verification = "dry-run action could not be resolved"
+				tx.Status = model.TransactionFailed
+				failed[action.ComponentID] = record.Error
+			} else {
+				record.Verified = true
+				record.Verification = "dry-run action resolved"
+			}
 			record.FinishedAt = time.Now().UTC()
 			if !checkpoint(record) {
 				break

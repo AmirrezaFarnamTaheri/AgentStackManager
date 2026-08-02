@@ -2,7 +2,6 @@ package catalog
 
 import (
 	"embed"
-	"encoding/json"
 	"fmt"
 	"os"
 	"regexp"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/processctl"
+	"github.com/agentstack/agentstack/internal/strictjson"
 )
 
 //go:embed default.json
@@ -33,9 +33,7 @@ func LoadFile(path string) (model.Catalog, error) {
 
 func decode(data []byte) (model.Catalog, error) {
 	var c model.Catalog
-	decoder := json.NewDecoder(strings.NewReader(string(data)))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&c); err != nil {
+	if err := strictjson.Decode(data, &c); err != nil {
 		return model.Catalog{}, fmt.Errorf("decode catalog: %w", err)
 	}
 	if err := Validate(c); err != nil {

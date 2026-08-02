@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"testing"
 )
 
@@ -50,20 +51,35 @@ func TestLaunchStopsWhenInitializationFails(t *testing.T) {
 	}
 }
 
-func TestSessionExecHelperProcess(t *testing.T) {
-	if os.Getenv("AGENTSTACK_SESSION_HELPER") != "1" {
-		return
+func TestLaunchRejectsEmptyCommand(t *testing.T) {
+	if err := Launch(context.Background(), "", nil, nil, &fakeStarter{}); err == nil {
+		t.Fatal("empty session command was accepted")
 	}
-	if path := os.Getenv("AGENTSTACK_SESSION_OUTPUT"); path != "" {
-		_ = os.WriteFile(path, []byte(os.Getenv("AGENTSTACK_SESSION_VALUE")), 0o600)
+}
+
+func TestLaunchPropagatesStarterFailure(t *testing.T) {
+	expected := errors.New("start failed")
+	err := Launch(context.Background(), "codex", nil, nil, &fakeStarter{err: expected})
+	if !errors.Is(err, expected) {
+		t.Fatalf("starter error was not propagated: %v", err)
 	}
 }
 
 func TestExecStarterRunsManagedProcessWithEnvironment(t *testing.T) {
 	output := filepath.Join(t.TempDir(), "session.txt")
+	command := "sh"
+	args := []string{"-c", `printf %s "$AGENTSTACK_SESSION_VALUE" > "$AGENTSTACK_SESSION_OUTPUT"`}
+	if runtime.GOOS == "windows" {
+		command = "powershell.exe"
+		args = []string{"-NoProfile", "-NonInteractive", "-Command", `Set-Content -LiteralPath $env:AGENTSTACK_SESSION_OUTPUT -Value $env:AGENTSTACK_SESSION_VALUE -NoNewline`}
+	}
 	err := (ExecStarter{}).Run(context.Background(), StartRequest{
-		Command: os.Args[0], Args: []string{"-test.run=^TestSessionExecHelperProcess$"},
-		Env: map[string]string{"AGENTSTACK_SESSION_HELPER": "1", "AGENTSTACK_SESSION_OUTPUT": output, "AGENTSTACK_SESSION_VALUE": "ok"},
+		Command: command,
+		Args:    args,
+		Env: map[string]string{
+			"AGENTSTACK_SESSION_OUTPUT": output,
+			"AGENTSTACK_SESSION_VALUE":  "ok",
+		},
 	})
 	if err != nil {
 		t.Fatal(err)

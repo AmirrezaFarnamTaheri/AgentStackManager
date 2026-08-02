@@ -5,6 +5,7 @@
   "deployment_branch_policy": {
     "protected_branches": false,
     "custom_branch_policies": true,
+    "allowed_branch_pattern": "main",
     "allowed_tag_pattern": "v*"
   },
   "required_secrets": [

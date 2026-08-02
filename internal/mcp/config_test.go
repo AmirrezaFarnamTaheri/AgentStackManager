@@ -53,6 +53,16 @@ func TestWriteRouterConfigRoundTrip(t *testing.T) {
 	}
 }
 
+func TestLoadRouterConfigRejectsTrailingJSONContent(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "router.json")
+	if err := os.WriteFile(path, []byte(`{"version":1,"servers":{}} trailing`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := LoadRouterConfig(path); err == nil {
+		t.Fatal("router config with trailing content was accepted")
+	}
+}
+
 func TestRouterConfigEquivalentIgnoresUpdatedTimestamp(t *testing.T) {
 	left := RouterConfig{Version: 1, Profile: "essential", UpdatedAt: time.Unix(1, 0), Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}
 	right := RouterConfig{Version: 1, Profile: "essential", UpdatedAt: time.Unix(2, 0), Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}

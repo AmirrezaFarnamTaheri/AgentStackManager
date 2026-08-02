@@ -6,6 +6,8 @@
   --surface-muted: #e5eae8;
   --sidebar: #18201f;
   --sidebar-muted: #9ba8a5;
+  --sidebar-mark: #22302e;
+  --sidebar-mark-accent: #78b8ae;
   --text: #17201f;
   --text-soft: #596562;
   --line: #cbd3d0;
@@ -68,11 +70,11 @@ button { -webkit-tap-highlight-color: transparent; }
   gap: 3px;
   padding: 9px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  background: #22302e;
+  border-radius: var(--radius-control);
+  background: var(--sidebar-mark);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
-.brand-mark span { display: block; background: #78b8ae; border-radius: 2px; }
+.brand-mark span { display: block; background: var(--sidebar-mark-accent); border-radius: 2px; }
 .brand-mark span:nth-child(1) { height: 12px; }
 .brand-mark span:nth-child(2) { height: 20px; }
 .brand-mark span:nth-child(3) { height: 16px; }
@@ -133,7 +135,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .sidebar-foot strong, .sidebar-foot span, .sidebar-foot small { display: block; }
 .sidebar-foot strong { font-size: 12px; color: #e4ebe8; }
 .sidebar-foot span { margin-top: 4px; color: var(--sidebar-muted); font-size: 11px; line-height: 1.45; }
-.sidebar-foot small { margin-top: 12px; color: #71807c; font-family: var(--font-mono); font-size: 10px; }
+.sidebar-foot small { margin-top: 12px; color: var(--sidebar-muted); font-family: var(--font-mono); font-size: 10px; }
 
 main {
   width: 100%;
@@ -275,7 +277,6 @@ main {
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
 .field { display: grid; gap: 7px; color: var(--text); font-size: 12px; font-weight: 680; }
 .field select, .search-field input {
-  width: 100%;
   min-width: 0;
   width: 100%;
   border: 1px solid var(--line);
@@ -332,6 +333,7 @@ main {
 .component-card h4 { margin: 0; font-size: 13px; line-height: 1.35; }
 .component-card p { margin: 4px 0 0; color: var(--text-soft); font-size: 11px; line-height: 1.5; max-width: 76ch; }
 .component-card .login-hint { margin-top: 6px; color: var(--warning); }
+.component-card .health-message { margin-top: 6px; color: var(--danger-text, var(--danger-strong)); }
 .card-meta { display: flex; justify-content: flex-end; gap: 5px; flex-wrap: wrap; max-width: 280px; }
 .badge, .action-pill {
   display: inline-flex;
@@ -368,6 +370,8 @@ main {
 .empty-state strong { color: var(--text); font-size: 16px; }
 .empty-state span { margin-top: 7px; max-width: 48ch; font-size: 13px; line-height: 1.5; }
 .empty-state.compact { min-height: 140px; }
+.load-error { margin-bottom: 22px; border-color: var(--danger); }
+.load-error .button { margin-top: 14px; }
 .shutdown-state { margin-top: 12vh; }
 
 .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-panel); background: var(--surface-strong); }
@@ -480,6 +484,8 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
     --surface-muted: #25302d;
     --sidebar: #0c1110;
     --sidebar-muted: #8d9b97;
+    --sidebar-mark: #182723;
+    --sidebar-mark-accent: #78c8bd;
     --text: #edf4f1;
     --text-soft: #a6b3af;
     --line: #34413d;
@@ -489,8 +495,9 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
     --accent-soft: #1e3b37;
     --success: #6dc49b;
     --warning: #d7ae5e;
-    --danger: #df7a83;
-    --danger-strong: #b85b64;
+    --danger: #a43c45;
+    --danger-strong: #873039;
+    --danger-text: #f08f98;
     --focus: #76c7bb;
     --shadow-panel: 0 22px 48px rgba(0, 0, 0, 0.24);
     --shadow-float: 0 14px 32px rgba(0, 0, 0, 0.36);

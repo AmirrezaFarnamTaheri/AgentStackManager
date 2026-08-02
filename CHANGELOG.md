@@ -4,6 +4,9 @@
 
 - Automated releases from `main`: semantic versions are inferred from Conventional Commit signals, tags are keyless-signed through GitHub OIDC/Sigstore, interrupted unpublished tags are recovered safely, and trusted GPG tag pushes remain supported.
 - Hardened release dispatch with pre-checkout signed-tag validation, upgraded GitHub Actions to Node 24-compatible immutable pins, refreshed Playwright to 1.62.0, and cancelled superseded Verify runs.
+- Made startup recovery mutation-lease-aware so a second process cannot reclassify live work, and made multi-root quarantine collision-free with preflight and rollback.
+- Enforced single-value strict JSON decoding for catalogs and MCP configuration, and made dry-run planning surface invocation-resolution failures.
+- Added direct semantic-version, integrity, session-environment, and strict-decoder coverage; established LF policy and a project-local seven-server Codex MCP/agent baseline.
 - Removed Git executable-bit assumptions from CI and source-archive verification by invoking repository shell scripts explicitly through Bash.
 - Replaced PowerShell-dependent Windows ACL handling with native Win32 security-descriptor capture, canonical SDDL comparison, post-rename verification, and rollback on metadata drift.
 - Strengthened mutation coverage at resource-limit and preferred-provider boundaries without lowering the 75% efficacy threshold.

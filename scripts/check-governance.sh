@@ -19,7 +19,7 @@ jq -e '
   ([.rules[] | select(.type=="pull_request") | .parameters.dismiss_stale_reviews_on_push] | any) and
   ([.rules[] | select(.type=="required_status_checks") | .parameters.strict_required_status_checks_policy] | any)
 ' .github/rulesets/main-protection.json >/dev/null
-jq -e '.required_reviewers >= 1 and .prevent_self_review == true and (.required_secrets | sort) == (["RELEASE_TAG_PUBLIC_KEY_BASE64","SIGNING_CERT_THUMBPRINT","SIGNING_PFX_BASE64","SIGNING_PFX_PASSWORD"] | sort)' .github/environments/release-policy.json >/dev/null
+jq -e '.required_reviewers >= 1 and .prevent_self_review == true and .deployment_branch_policy.allowed_branch_pattern == "main" and .deployment_branch_policy.allowed_tag_pattern == "v*" and (.required_secrets | sort) == (["RELEASE_TAG_PUBLIC_KEY_BASE64","SIGNING_CERT_THUMBPRINT","SIGNING_PFX_BASE64","SIGNING_PFX_PASSWORD"] | sort)' .github/environments/release-policy.json >/dev/null
 test "$(cat .go-version)" = '1.26.5'
 grep -q 'cimg/go:1.26.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b' .circleci/config.yml
 grep -Rqs 'golang.org/x/vuln/cmd/govulncheck@v1.1.4' .github/workflows .circleci/config.yml
@@ -55,7 +55,10 @@ grep -q 'gh release create' "$release_workflow"
 grep -q 'timeout-minutes:' "$release_workflow"
 grep -Fq 'git/ref/tags/' "$release_workflow"
 grep -Fq "object.type -ne 'tag'" "$release_workflow"
-grep -Fq '"ref=refs/tags/$tag"' "$release_workflow"
+grep -Fq '"refs/tags/$tag"' "$release_workflow"
+grep -Fq 'git merge-base --is-ancestor' "$release_workflow"
+grep -Fq 'gitsign verify' "$release_workflow"
+grep -Fq 'verification.verified' "$release_workflow"
 preflight_line="$(grep -n -m1 'name: Validate requested release tag' "$release_workflow" | cut -d: -f1)"
 checkout_line="$(grep -n -m1 'uses: actions/checkout@' "$release_workflow" | cut -d: -f1)"
 if [[ -z "$preflight_line" || -z "$checkout_line" || "$preflight_line" -ge "$checkout_line" ]]; then

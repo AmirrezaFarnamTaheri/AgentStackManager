@@ -1,0 +1,64 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+persistent_instructions = "Follow project AGENTS.md guidance and use available MCP servers when they materially improve the work."
+
+[features]
+multi_agent = true
+
+[mcp_servers.supabase]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-supabase", "--read-only"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.playwright]
+command = "npm"
+args = ["exec", "--offline", "--", "playwright-mcp", "--extension"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.context7]
+command = "npm"
+args = ["exec", "--offline", "--", "context7-mcp"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.exa]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-remote", "https://mcp.exa.ai/mcp"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.github]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-remote", "https://api.githubcopilot.com/mcp/readonly"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.memory]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-memory"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[mcp_servers.sequential-thinking]
+command = "npm"
+args = ["exec", "--offline", "--", "mcp-server-sequential-thinking"]
+cwd = ".codex"
+startup_timeout_sec = 30
+
+[agents]
+max_threads = 6
+max_depth = 1
+
+[agents.explorer]
+description = "Read-only codebase explorer for evidence gathering."
+config_file = "agents/explorer.toml"
+
+[agents.reviewer]
+description = "Correctness and security reviewer focused on regressions and missing tests."
+config_file = "agents/reviewer.toml"
+
+[agents.docs_researcher]
+description = "Documentation specialist for API and release-note verification."
+config_file = "agents/docs-researcher.toml"

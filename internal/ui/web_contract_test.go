@@ -36,7 +36,7 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 
 	for _, id := range []string{
 		"refreshBtn", "installSelfBtn", "exitBtn", "buildPlanBtn", "doctorBtn",
-		"applyBtn", "mcpInitBtn", "mcpDoctorBtn",
+		"applyBtn", "mcpInitBtn", "mcpDoctorBtn", "retryLoadBtn",
 	} {
 		marker := `id="` + id + `"`
 		index := strings.Index(html, marker)
@@ -91,6 +91,18 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 	}
 	if !strings.Contains(js, "void runOperation(null, 'Load AgentStack Manager', refresh)") {
 		t.Fatal("startup refresh must not steal initial keyboard focus from the skip link")
+	}
+	for _, fragment := range []string{
+		`id="overviewLoadError"`, `id="retryLoadBtn"`, `role="alert"`,
+		`id="componentSearchStatus"`, `aria-describedby=`, `health-message`,
+		`$('shutdownTitle').focus`, `state.selected.delete(previousProvider)`,
+		`setCatalogControlsAvailable(false)`, `Reviewed plan applied.`,
+		`control.dataset.wasDisabled = available ? 'false' : 'true'`,
+		`$('planContent').hidden = true`,
+	} {
+		if !strings.Contains(html+js, fragment) {
+			t.Fatalf("recovery and accessibility contract missing %q", fragment)
+		}
 	}
 }
 

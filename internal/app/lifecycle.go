@@ -278,31 +278,55 @@ func (s *Service) quarantineOwnedPaths(id string, paths []string) ([]string, err
 	if err := os.MkdirAll(root, 0o700); err != nil {
 		return nil, err
 	}
-	var moved []string
+	type quarantineMove struct {
+		source      string
+		destination string
+	}
+	moves := make([]quarantineMove, 0, len(paths))
 	for index, source := range paths {
 		validated, err := s.validateOwnedSkillPath(source)
 		if err != nil {
-			return moved, err
+			return nil, err
 		}
 		info, err := os.Lstat(validated)
 		if errors.Is(err, os.ErrNotExist) {
 			continue
 		}
 		if err != nil {
-			return moved, err
+			return nil, err
 		}
 		if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
-			return moved, fmt.Errorf("refuse unsafe owned skill path %q: expected a real directory", validated)
+			return nil, fmt.Errorf("refuse unsafe owned skill path %q: expected a real directory", validated)
 		}
 		name := filepath.Base(validated)
 		if name == "." || name == string(filepath.Separator) || name == "" {
-			name = fmt.Sprintf("item-%d", index)
+			name = "skill"
 		}
-		destination := filepath.Join(root, name)
-		if err := os.Rename(validated, destination); err != nil {
-			return moved, fmt.Errorf("atomically quarantine %q: %w; source was preserved", validated, err)
+		destination := filepath.Join(root, fmt.Sprintf("%03d-%s", index, name))
+		if _, err := os.Lstat(destination); !errors.Is(err, os.ErrNotExist) {
+			if err == nil {
+				return nil, fmt.Errorf("refuse occupied quarantine destination %q", destination)
+			}
+			return nil, fmt.Errorf("inspect quarantine destination %q: %w", destination, err)
 		}
-		moved = append(moved, destination)
+		moves = append(moves, quarantineMove{source: validated, destination: destination})
+	}
+	moved := make([]string, 0, len(moves))
+	for _, move := range moves {
+		if err := os.Rename(move.source, move.destination); err != nil {
+			var rollbackErrors []string
+			for rollbackIndex := len(moved) - 1; rollbackIndex >= 0; rollbackIndex-- {
+				prior := moves[rollbackIndex]
+				if rollbackErr := os.Rename(prior.destination, prior.source); rollbackErr != nil {
+					rollbackErrors = append(rollbackErrors, rollbackErr.Error())
+				}
+			}
+			if len(rollbackErrors) > 0 {
+				return nil, fmt.Errorf("atomically quarantine %q: %w; rollback failed: %s", move.source, err, strings.Join(rollbackErrors, "; "))
+			}
+			return nil, fmt.Errorf("atomically quarantine %q: %w; all prior moves were rolled back", move.source, err)
+		}
+		moved = append(moved, move.destination)
 	}
 	return moved, nil
 }

@@ -1,2 +1,8 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Auto-detect text while keeping source and automation portable across
+# Windows, WSL, and Linux CI checkouts.
+* text=auto eol=lf
+*.go text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf

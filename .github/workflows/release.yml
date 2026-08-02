@@ -38,6 +38,26 @@ jobs:
       prerelease: ${{ steps.release.outputs.prerelease }}
       skip_release: ${{ steps.release.outputs.skip_release }}
     steps:
+      - name: Validate requested release tag
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PUSH_TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:PUSH_TAG.Trim()
+          $tagPattern = '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?$'
+          if ($tag -notmatch $tagPattern) {
+            throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
+          }
+          $ref = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json -Depth 20
+          if ($ref.ref -ne "refs/tags/$tag") { throw "GitHub returned an unexpected tag ref: $($ref.ref)" }
+          if ($ref.object.type -ne 'tag') { throw "$tag must be an annotated tag object" }
+          $tagObject = gh api "repos/$env:GH_REPO/git/tags/$($ref.object.sha)" | ConvertFrom-Json -Depth 20
+          if (-not $tagObject.verification.verified) { throw "$tag does not have a verified GitHub signature" }
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -96,7 +116,7 @@ jobs:
             throw "Checked-out source SHA mismatch: HEAD=$head expected=$env:SOURCE_SHA"
           }
 
-          $tagPattern = '^v(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$'
+          $tagPattern = '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?$'
           $tag = $null
           $trustMode = $null
           $skipRelease = 'false'
@@ -132,7 +152,25 @@ jobs:
             }
 
             if (-not $tag) {
-              $stableTags = @(git tag --list 'v*' --sort=-v:refname | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' })
+              $stableTags = @()
+              foreach ($candidateTag in @(git tag --list 'v*' --sort=-v:refname)) {
+                if ($candidateTag -notmatch '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { continue }
+                if ((git cat-file -t "refs/tags/$candidateTag").Trim() -ne 'tag') { continue }
+                git merge-base --is-ancestor "$candidateTag^{}" refs/remotes/origin/main
+                if ($LASTEXITCODE -ne 0) { continue }
+
+                $candidateObject = git cat-file -p "refs/tags/$candidateTag"
+                $workflowManaged = ($candidateObject -join "`n") -match 'Managed-By: AgentStackManager release workflow'
+                if ($workflowManaged) {
+                  gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$candidateTag" *> $null
+                  if ($LASTEXITCODE -ne 0) { continue }
+                } else {
+                  $candidateObjectSHA = (git rev-parse "refs/tags/$candidateTag^{tag}").Trim()
+                  $candidateVerification = gh api "repos/$env:GH_REPO/git/tags/$candidateObjectSHA" | ConvertFrom-Json -Depth 20
+                  if ($LASTEXITCODE -ne 0 -or -not $candidateVerification.verification.verified) { continue }
+                }
+                $stableTags += $candidateTag
+              }
               if ($stableTags.Count -eq 0) {
                 $major = 1
                 $minor = 0
