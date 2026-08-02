@@ -230,6 +230,11 @@ $baseFlags = "-s -w -X ${agentstackPackage}.version=$Version -X ${agentstackPack
         Assert-BuildInfo $setup $revision
     }
 
+    # Build the catalog generator for the runner, not the last cross-compiled
+    # Windows/ARM64 target left by Build-Binary.
+    $env:GOOS = ''
+    $env:GOARCH = ''
+    $env:CGO_ENABLED = '0'
     Invoke-Checked go @('run','./cmd/agentstack-sbom','--version',$Version,'--out',(Join-Path $dist 'agentstack-catalog.cdx.json'))
     foreach($arch in @('amd64','arm64')) {
         Invoke-Checked syft @((Join-Path $dist "agentstack-windows-$arch.exe"),'-o',"cyclonedx-json=$(Join-Path $dist "agentstack-binary-$arch.cdx.json")")
