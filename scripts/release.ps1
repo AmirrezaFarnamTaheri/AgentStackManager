@@ -194,7 +194,10 @@ try {
     Remove-Item $coverage -Force
     Invoke-Checked govulncheck @('./...')
 
-    $baseFlags = "-s -w -buildid= -X main.version=$Version -X main.revision=git:$revision"
+# Go 1.26's linker rejects an empty -buildid value when it is passed through
+# -ldflags. With trimpath and identical inputs, the generated build ID remains
+# deterministic, so omitting the flag preserves reproducible artifacts.
+$baseFlags = "-s -w -X main.version=$Version -X main.revision=git:$revision"
     foreach ($arch in @('amd64','arm64')) {
         $first = Join-Path $dist "agentstack-$arch.repro1.exe"
         $second = Join-Path $dist "agentstack-$arch.repro2.exe"
