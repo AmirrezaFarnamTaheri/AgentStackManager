@@ -203,11 +203,12 @@ b44b9c21f3aa8d855c1c7be3c4f5fe77481790ea8c98b951429eb4ebbe34c834  ./scripts/chec
 681e97bc9f300667060e8d6cd638f85a635e85be9858ff7a3ab458c1202760c3  ./scripts/check-governance.sh
 2cc31e4825d71429f1bcf478321af31a8fb509d830b34cfce9a032e18100e8ef  ./scripts/check-source-archive-build.sh
 6f16c19d19588190dba41d225bf3be4ad49d86d40c8a2802d71eb25369bc1628  ./scripts/fuzz.sh
-598a7d6ba3c5579a4732c2d94def0e50201497faab580fe70e06f3c6ae095694  ./scripts/release.ps1
+6116cc0e5966c947683cdb8da78c7b189f68f99ebb88a3579e71ca97005d26ac  ./scripts/release.ps1
 920154d32e7b4bef5df2881f4f01535c690bbff5942dabaef4a4ff580d31cedb  ./scripts/verify-source-manifest.sh
 f3c26014eba9d730c69250804980462bb4fbeb01b7f3bf2478b6f0cc2e806a2a  ./scripts/windows-e2e.ps1
 f3c0186e4e07d699868f999a846739011917a1b0a4354c9b0e15894948f825c0  ./scripts/write-source-manifest.sh
 ee5431ef530c16bb41d02ddb30d36f62291d5560b05ff41e564f91fc01397b5f  ./supply-chain/component-licenses.json
+be0111642207c67a3be4b3e760539aa13364de5ab7b3bb29fa99bfe7fe62937c  ./test-setup.exe
 a8d2d882b7e27bb578c890dd7a16ef1558bef9ac1103540162aab214d0588b6c  ./ui-tests/accessibility.mjs
 6a5d6b026038cc13ac7ad8f5e9549e32e32a30a2b9ac5d59f756c55b30730a23  ./ui-tests/package-lock.json
 1180f01093d993e2d3f91051cda9ae51f251556a9b1d955f5e2b4c0bca2878da  ./ui-tests/package.json

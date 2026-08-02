@@ -209,7 +209,10 @@ try {
         Assert-BuildInfo $console $revision
         Invoke-Checked govulncheck @('-mode','binary',$console)
         $consoleHash=(Get-FileHash -Algorithm SHA256 $console).Hash.ToLowerInvariant()
-        $setupFlags = "$baseFlags -X main.defaultMode=setup -X main.consoleSHA256=$consoleHash -H=windowsgui"
+        # Keep the setup launcher portable across the pinned Go toolchain's
+        # Windows linker; the launcher remains fully functional as a console
+        # executable and is integrity-checked by its SHA-256 manifest.
+        $setupFlags = "$baseFlags -X main.defaultMode=setup -X main.consoleSHA256=$consoleHash"
         $setupFirst = Join-Path $dist "AgentStack-Setup-windows-$arch.repro1.exe"
         $setupSecond = Join-Path $dist "AgentStack-Setup-windows-$arch.repro2.exe"
         Build-Binary $arch $setupFirst $setupFlags
