@@ -144,7 +144,7 @@ jobs:
                 break
               }
               if (-not $managedTag) { continue }
-              gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$existingTag"
+              gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer $issuer $existingTag
               if ($LASTEXITCODE -ne 0) { throw "Existing automated tag failed Sigstore verification: $existingTag" }
               $tag = $existingTag
               $trustMode = 'sigstore'
@@ -162,7 +162,7 @@ jobs:
                 $candidateObject = git cat-file -p "refs/tags/$candidateTag"
                 $workflowManaged = ($candidateObject -join "`n") -match 'Managed-By: AgentStackManager release workflow'
                 if ($workflowManaged) {
-                  gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$candidateTag" *> $null
+                  gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer $issuer $candidateTag *> $null
                   if ($LASTEXITCODE -ne 0) { continue }
                 } else {
                   $candidateObjectSHA = (git rev-parse "refs/tags/$candidateTag^{tag}").Trim()
@@ -215,7 +215,7 @@ jobs:
               ) -join "`n"
               git tag -s $tag -m $message
               if ($LASTEXITCODE -ne 0) { throw "Unable to create keyless signed tag: $tag" }
-              gitsign verify --certificate-identity $identity --certificate-oidc-issuer $issuer "refs/tags/$tag"
+              gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer $issuer $tag
               if ($LASTEXITCODE -ne 0) { throw "New automated tag failed Sigstore verification: $tag" }
               git push origin "refs/tags/$tag"
               if ($LASTEXITCODE -ne 0) { throw "Unable to push automated tag: $tag" }
@@ -259,7 +259,7 @@ jobs:
             git config --local gpg.format x509
             git config --local gpg.x509.program (Get-Command gitsign -ErrorAction Stop).Source
             $identity = "https://github.com/$env:WORKFLOW_REF"
-            gitsign verify --certificate-identity $identity --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' "refs/tags/$env:RELEASE_TAG"
+            gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' $env:RELEASE_TAG
             if ($LASTEXITCODE -ne 0) { throw 'Sigstore release-tag verification failed' }
           } else {
             if (-not $env:RELEASE_TAG_PUBLIC_KEY_BASE64) { throw 'Release tag public key is required for externally pushed tags' }
