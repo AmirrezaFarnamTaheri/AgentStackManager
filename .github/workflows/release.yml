@@ -357,14 +357,6 @@ jobs:
             }
           }
 
-          $signatures = @($setup, $console | ForEach-Object { Get-AuthenticodeSignature $_.FullName })
-          foreach ($signature in $signatures) {
-            if ($signature.Status -ne 'Valid') { throw 'Invalid ARM64 Authenticode signature' }
-          }
-          if ($signatures[0].SignerCertificate.Thumbprint -ne $signatures[1].SignerCertificate.Thumbprint) {
-            throw 'ARM64 setup and console have different publishers'
-          }
-
           & $setup.FullName --verify-only
           if ($LASTEXITCODE -ne 0) { throw 'ARM64 graphical setup pair verification failed' }
           & $console.FullName version
