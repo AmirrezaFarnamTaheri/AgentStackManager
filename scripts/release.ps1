@@ -197,7 +197,7 @@ try {
 # Use the complete package path for linker-injected variables. This is accepted
 # consistently by the Go 1.26 linker across console and setup builds.
 $agentstackPackage = 'github.com/agentstack/agentstack/cmd/agentstack'
-$baseFlags = "-s -w -buildid=none -X ${agentstackPackage}.version=$Version -X ${agentstackPackage}.revision=git:$revision"
+$baseFlags = "-s -w -X ${agentstackPackage}.version=$Version -X ${agentstackPackage}.revision=git:$revision"
     foreach ($arch in @('amd64','arm64')) {
         $first = Join-Path $dist "agentstack-$arch.repro1.exe"
         $second = Join-Path $dist "agentstack-$arch.repro2.exe"
