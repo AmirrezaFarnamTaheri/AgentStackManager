@@ -48,7 +48,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $tag = $env:PUSH_TAG.Trim()
-          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+          $tagPattern = '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?$'
+          if ($tag -notmatch $tagPattern) {
             throw "Release tag must match vX.Y.Z or vX.Y.Z-prerelease; received '$tag'"
           }
           $ref = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json -Depth 20
@@ -104,7 +105,7 @@ jobs:
           }
           if ($head -ne $env:SOURCE_SHA) { throw "Checked-out source SHA mismatch: HEAD=$head expected=$env:SOURCE_SHA" }
 
-          $tagPattern = '^v(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$'
+          $tagPattern = '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?$'
           $tag = $null
           $trustMode = $null
           $skipRelease = 'false'

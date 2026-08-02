@@ -159,6 +159,7 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
+		_ = stdin.Close()
 		emit("error", err.Error())
 		return nil, err
 	}
@@ -180,6 +181,8 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 	case <-ctx.Done():
 		go func() {
 			result := <-started
+			_ = stdin.Close()
+			_ = stdout.Close()
 			if result.process != nil {
 				_ = result.process.Terminate()
 			}
@@ -188,12 +191,15 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 		return nil, ctx.Err()
 	}
 	if err != nil {
+		_ = stdin.Close()
+		_ = stdout.Close()
 		emit("error", err.Error())
 		return nil, fmt.Errorf("start child %s: %w", server.Command, err)
 	}
 	session := &childSession{
 		process:      process,
 		stdin:        stdin,
+		stdout:       stdout,
 		reader:       bufio.NewReaderSize(stdout, 64*1024),
 		stderr:       stderr,
 		messageLimit: messageLimit,
@@ -217,6 +223,7 @@ func (c StdIOChildClient) start(ctx context.Context, server ServerConfig) (*chil
 type childSession struct {
 	process         *processctl.Process
 	stdin           io.WriteCloser
+	stdout          io.ReadCloser
 	reader          *bufio.Reader
 	stderr          *cappedThreadSafeBuffer
 	messageLimit    int
@@ -327,6 +334,7 @@ func (s *childSession) Close() error {
 	s.closed = true
 	s.stateMu.Unlock()
 	err := s.process.GracefulClose(s.stdin.Close, 2*time.Second)
+	_ = s.stdout.Close()
 	if s.observer != nil {
 		status := "ok"
 		message := ""
@@ -353,6 +361,7 @@ func (s *childSession) closeAfterOperation(ctx context.Context) {
 	s.closed = true
 	s.stateMu.Unlock()
 	_ = s.stdin.Close()
+	_ = s.stdout.Close()
 	_ = s.process.Terminate()
 	if s.observer != nil {
 		s.observer(ChildEvent{Type: "child.stop", ServerKey: s.serverKey, Command: s.command, Status: "timeout", Duration: time.Since(s.startedAt), Message: ctx.Err().Error()})

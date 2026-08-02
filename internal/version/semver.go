@@ -42,11 +42,14 @@ func Parse(input string) (Value, error) {
 		core = core[:index]
 	}
 	parts := strings.Split(core, ".")
-	if len(parts) == 0 || len(parts) > 4 {
+	if len(parts) == 0 || len(parts) > 3 {
 		return Value{}, fmt.Errorf("invalid semantic version %q", input)
 	}
 	values := []int{0, 0, 0}
-	for i := 0; i < len(parts) && i < 3; i++ {
+	for i := 0; i < len(parts); i++ {
+		if parts[i] == "" || strings.IndexFunc(parts[i], func(r rune) bool { return r < '0' || r > '9' }) >= 0 {
+			return Value{}, fmt.Errorf("invalid semantic version %q", input)
+		}
 		value, err := strconv.Atoi(parts[i])
 		if err != nil {
 			return Value{}, fmt.Errorf("invalid semantic version %q", input)

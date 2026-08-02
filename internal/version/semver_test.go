@@ -45,7 +45,9 @@ func TestParseCompareAndCompatible(t *testing.T) {
 	if compatible, err := Compatible("4.0.0", "2.0.0", "3.0.0"); err != nil || compatible {
 		t.Fatalf("expected upper-bound rejection: compatible=%v err=%v", compatible, err)
 	}
-	if _, err := Parse("invalid"); err == nil {
-		t.Fatal("invalid version was accepted")
+	for _, input := range []string{"invalid", "1.2.3.4", "1.-2.3", "+1.2.3", "1.+2.3"} {
+		if _, err := Parse(input); err == nil {
+			t.Fatalf("invalid version %q was accepted", input)
+		}
 	}
 }
