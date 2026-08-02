@@ -63,7 +63,7 @@ foreach($deprecatedAction in @(
     if ($workflowText -match [regex]::Escape($deprecatedAction)) { throw "Deprecated Node 20-era action pin remains: $deprecatedAction" }
 }
 if ($releaseWorkflow -match 'softprops/action-gh-release') { throw 'Release publication must use the authenticated GitHub CLI, not a third-party release action' }
-foreach($trustedTagCheck in @('git merge-base --is-ancestor', 'gitsign verify-tag', 'verification.verified')) {
+foreach($trustedTagCheck in @('git merge-base --is-ancestor', 'gitsign.rekorMode offline', 'gitsign verify-tag', 'verification.verified')) {
     if ($releaseWorkflow -notmatch [regex]::Escape($trustedTagCheck)) { throw "Automatic versioning must enforce trusted tag baseline check: $trustedTagCheck" }
 }
 if ($workflowText -notmatch "go-version-file:\s*'\.go-version'") { throw 'GitHub workflows must use .go-version' }

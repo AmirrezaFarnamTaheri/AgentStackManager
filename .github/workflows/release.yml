@@ -213,6 +213,10 @@ jobs:
                 "Source-Commit: $head",
                 "Workflow-Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
               ) -join "`n"
+              # Offline Rekor mode embeds the inclusion data in the signature.
+              # This avoids the legacy online lookup, which cannot reliably
+              # reconstruct Git's annotated-tag payload for verification.
+              git config --local gitsign.rekorMode offline
               git tag -s $tag -m $message
               if ($LASTEXITCODE -ne 0) { throw "Unable to create keyless signed tag: $tag" }
               gitsign verify-tag --certificate-identity $identity --certificate-oidc-issuer $issuer $tag
