@@ -42,6 +42,7 @@ function Assert-Governance {
 }
 function Build-Binary([string]$Arch,[string]$Destination,[string]$Flags) {
     $env:CGO_ENABLED='0'; $env:GOOS='windows'; $env:GOARCH=$Arch
+    Write-Host "Building $Arch -> $Destination with ldflags=[$Flags]"
     Invoke-Checked go @('build','-trimpath','-buildvcs=true','-ldflags',$Flags,'-o',$Destination,'./cmd/agentstack')
 }
 function Assert-BuildInfo([string]$Path,[string]$Revision) {
