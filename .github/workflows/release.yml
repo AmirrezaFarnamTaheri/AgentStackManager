@@ -274,28 +274,12 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'GPG release-tag verification failed' }
           }
 
-      - name: Import release certificate
-        if: steps.release.outputs.skip_release != 'true'
-        shell: pwsh
-        env:
-          SIGNING_PFX_BASE64: ${{ secrets.SIGNING_PFX_BASE64 }}
-          SIGNING_PFX_PASSWORD: ${{ secrets.SIGNING_PFX_PASSWORD }}
-        run: |
-          if (-not $env:SIGNING_PFX_BASE64 -or -not $env:SIGNING_PFX_PASSWORD) {
-            throw 'Signing secrets are required'
-          }
-          $pfxPath = Join-Path $env:RUNNER_TEMP 'signing.pfx'
-          [IO.File]::WriteAllBytes($pfxPath, [Convert]::FromBase64String($env:SIGNING_PFX_BASE64))
-          $secure = ConvertTo-SecureString $env:SIGNING_PFX_PASSWORD -AsPlainText -Force
-          Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\CurrentUser\My -Password $secure | Out-Null
-
       - name: Build, verify, sign, and package
         if: steps.release.outputs.skip_release != 'true'
         shell: pwsh
         env:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
-          SIGNING_CERT_THUMBPRINT: ${{ secrets.SIGNING_CERT_THUMBPRINT }}
-        run: ./scripts/release.ps1 -Version $env:RELEASE_VERSION -CertificateThumbprint $env:SIGNING_CERT_THUMBPRINT
+        run: ./scripts/release.ps1 -Version $env:RELEASE_VERSION
 
       - name: Attest release archive provenance
         if: steps.release.outputs.skip_release != 'true'

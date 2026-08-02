@@ -2,8 +2,6 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][ValidatePattern('^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$')][string]$Version,
-    [Parameter(Mandatory)][ValidatePattern('^[0-9A-Fa-f]{40}$')][string]$CertificateThumbprint,
-    [string]$TimestampUrl = 'http://timestamp.digicert.com',
     [string]$OutputDirectory = 'dist'
 )
 $ErrorActionPreference = 'Stop'
@@ -11,7 +9,6 @@ Set-StrictMode -Version Latest
 $root = Split-Path -Parent $PSScriptRoot
 $dist = Join-Path $root $OutputDirectory
 $tag = "v$Version"
-$thumbprint = ($CertificateThumbprint -replace '\s','').ToUpperInvariant()
 
 function Invoke-Checked([string]$File, [string[]]$Arguments) {
     & $File @Arguments
@@ -33,7 +30,7 @@ function Assert-CleanTaggedSource {
 function Assert-Toolchain {
     $versionText = (go version).Trim()
     if ($versionText -notmatch '\bgo1\.26\.5\b') { throw "Release requires Go 1.26.5; found $versionText" }
-    foreach ($tool in @('git','go','govulncheck','syft','signtool','tar','bash')) {
+    foreach ($tool in @('git','go','govulncheck','syft','tar','bash')) {
         if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) { throw "Required release tool is missing: $tool" }
     }
 }
@@ -52,21 +49,6 @@ function Assert-BuildInfo([string]$Path,[string]$Revision) {
     if ($metadata -notmatch "vcs\.revision=$Revision") { throw "$Path does not embed revision $Revision" }
     if ($metadata -notmatch 'vcs\.modified=false') { throw "$Path was built from a modified tree" }
     if ($metadata -notmatch 'go1\.26\.5') { throw "$Path was not built with Go 1.26.5" }
-}
-function Sign-And-Verify([string]$Path) {
-    Invoke-Checked signtool @('sign','/sha1',$thumbprint,'/fd','SHA256','/tr',$TimestampUrl,'/td','SHA256',$Path)
-    Invoke-Checked signtool @('verify','/pa','/all','/v',$Path)
-    $signature = Get-AuthenticodeSignature -LiteralPath $Path
-    if ($signature.Status -ne 'Valid') { throw "Invalid Authenticode signature for $Path: $($signature.Status)" }
-    if (($signature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant() -ne $thumbprint) { throw "Unexpected signer for $Path" }
-}
-function Sign-ScriptAndVerify([string]$Path) {
-    $certificate=Get-Item "Cert:\CurrentUser\My\$thumbprint" -ErrorAction Stop
-    $result=Set-AuthenticodeSignature -FilePath $Path -Certificate $certificate -TimestampServer $TimestampUrl -HashAlgorithm SHA256
-    if ($result.Status -ne 'Valid') { throw "Unable to sign PowerShell launcher: $($result.StatusMessage)" }
-    $signature=Get-AuthenticodeSignature -LiteralPath $Path
-    if ($signature.Status -ne 'Valid') { throw "Invalid PowerShell launcher signature: $($signature.Status)" }
-    if (($signature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant() -ne $thumbprint) { throw 'Unexpected PowerShell launcher signer' }
 }
 function Write-Checksums([string]$Directory) {
     Get-ChildItem $Directory -Recurse -File | Where-Object Name -ne 'SHA256SUMS.txt' | ForEach-Object {
@@ -179,21 +161,16 @@ function Assert-Bundle([string]$Archive,[string]$Arch) {
         $setup=Join-Path $bundleRoot 'AgentStack-Setup.exe'
         $console=Join-Path $bundleRoot "agentstack-windows-$Arch.exe"
         $script=Join-Path $bundleRoot 'AgentStack-Setup.ps1'
-        foreach($file in @($setup,$console,$script)) {
-            $signature=Get-AuthenticodeSignature -LiteralPath $file
-            if ($signature.Status -ne 'Valid') { throw "Invalid bundle signature: $file" }
-            if (($signature.SignerCertificate.Thumbprint -replace '\s','').ToUpperInvariant() -ne $thumbprint) { throw "Unexpected bundle signer: $file" }
-        }
         foreach($required in @('provenance.json','agentstack-catalog.cdx.json',"agentstack-binary-$Arch.cdx.json",'agentstack.openvex.json','component-licenses.json')) {
             if (-not (Test-Path -LiteralPath (Join-Path $bundleRoot $required))) { throw "Bundle assurance file missing: $required" }
         }
         if ($Arch -eq 'amd64') {
             & $setup --verify-only | Out-Null
-            if ($LASTEXITCODE -ne 0) { throw 'Signed x64 graphical setup pair verification failed' }
+            if ($LASTEXITCODE -ne 0) { throw 'x64 graphical setup pair verification failed' }
             & $console version | Out-Null
-            if ($LASTEXITCODE -ne 0) { throw 'Signed x64 console version smoke failed' }
+            if ($LASTEXITCODE -ne 0) { throw 'x64 console version smoke failed' }
             & $console catalog | Out-Null
-            if ($LASTEXITCODE -ne 0) { throw 'Signed x64 console catalog smoke failed' }
+            if ($LASTEXITCODE -ne 0) { throw 'x64 console catalog smoke failed' }
         }
     }
     finally { Remove-Item $extract -Recurse -Force -ErrorAction SilentlyContinue }
@@ -231,9 +208,8 @@ try {
         Move-Item $first $console
         Assert-BuildInfo $console $revision
         Invoke-Checked govulncheck @('-mode','binary',$console)
-        Sign-And-Verify $console
         $consoleHash=(Get-FileHash -Algorithm SHA256 $console).Hash.ToLowerInvariant()
-        $setupFlags = "$baseFlags -X main.defaultMode=setup -X main.consoleSHA256=$consoleHash -X main.publisherThumbprint=$thumbprint -H=windowsgui"
+        $setupFlags = "$baseFlags -X main.defaultMode=setup -X main.consoleSHA256=$consoleHash -H=windowsgui"
         $setupFirst = Join-Path $dist "AgentStack-Setup-windows-$arch.repro1.exe"
         $setupSecond = Join-Path $dist "AgentStack-Setup-windows-$arch.repro2.exe"
         Build-Binary $arch $setupFirst $setupFlags
@@ -245,7 +221,6 @@ try {
         $setup = Join-Path $dist "AgentStack-Setup-windows-$arch.exe"
         Move-Item $setupFirst $setup
         Assert-BuildInfo $setup $revision
-        Sign-And-Verify $setup
     }
 
     Invoke-Checked go @('run','./cmd/agentstack-sbom','--version',$Version,'--out',(Join-Path $dist 'agentstack-catalog.cdx.json'))
@@ -258,7 +233,6 @@ try {
     Copy-Item README.md,LICENSE,CHANGELOG.md $dist
     Copy-Item docs (Join-Path $dist 'docs') -Recurse
     Copy-Item scripts/AgentStack-Setup.ps1 $dist
-    Sign-ScriptAndVerify (Join-Path $dist 'AgentStack-Setup.ps1')
     Write-Provenance $revision
 
     foreach ($arch in @('amd64','arm64')) {

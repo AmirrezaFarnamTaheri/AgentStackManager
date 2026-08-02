@@ -27,8 +27,8 @@ MCP messages are size-bounded, protocol versions are negotiated, and `doctor` pe
 
 - Automatic npm, uv, and WinGet actions are exact-version and approved-source entries.
 - The essential skill pack is fetched at an exact audited Git commit, and the resolved commit plus expected skill inventory is verified before copying.
-- Public releases require a clean signed annotated tag, Go 1.26.5, source and binary vulnerability scans, reproducibility comparison, Authenticode signing, SBOMs, license inventory, OpenVEX, deterministic archives, and artifact attestations.
-- Setup verifies both its own Authenticode signer and the signed sibling console binary’s embedded digest and publisher thumbprint.
+- Public releases require a clean signed annotated tag, Go 1.26.5, source and binary vulnerability scans, reproducibility comparison, SBOMs, license inventory, OpenVEX, deterministic archives, checksum manifests, and artifact attestations.
+- Setup verifies the sibling console binary’s embedded digest and the release checksum manifest. Windows Authenticode is not required.
 
 A catalog change remains a privileged supply-chain decision and is protected by code-owner/review policy.
 

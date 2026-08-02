@@ -15,7 +15,7 @@ if (-not $pr.parameters.require_code_owner_review -or -not $pr.parameters.dismis
 $checks=$rules.rules | Where-Object type -eq 'required_status_checks'
 if (-not $checks.parameters.strict_required_status_checks_policy -or @($checks.parameters.required_status_checks).Count -lt 5) { throw 'required status-check policy is incomplete' }
 $release=Get-Content -Raw (Join-Path $root '.github/environments/release-policy.json') | ConvertFrom-Json -Depth 20
-$expectedSecrets=@('RELEASE_TAG_PUBLIC_KEY_BASE64','SIGNING_CERT_THUMBPRINT','SIGNING_PFX_BASE64','SIGNING_PFX_PASSWORD')
+$expectedSecrets=@('RELEASE_TAG_PUBLIC_KEY_BASE64')
 if ($release.required_reviewers -lt 1 -or -not $release.prevent_self_review -or $release.deployment_branch_policy.allowed_branch_pattern -ne 'main' -or $release.deployment_branch_policy.allowed_tag_pattern -ne 'v*' -or (Compare-Object (@($release.required_secrets) | Sort-Object) ($expectedSecrets | Sort-Object))) { throw 'release environment policy is incomplete' }
 $goVersion=(Get-Content -Raw (Join-Path $root '.go-version')).Trim()
 if ($goVersion -ne '1.26.5') { throw '.go-version must pin Go 1.26.5' }

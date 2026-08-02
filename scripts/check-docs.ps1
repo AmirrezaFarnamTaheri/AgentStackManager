@@ -27,7 +27,7 @@ try {
     foreach($pattern in @('agentstack apply --profile','terminates them after each request','terminates children after each call','Linux amd64 console CLI')) {
         if ($text -match [regex]::Escape($pattern)) { throw "Stale documentation contract: $pattern" }
     }
-    foreach($requiredText in @('agentstack apply --plan-id','agentstack backup restore --id','agentstack data policy','agentstack owned remove','Go 1.26.5','Authenticode','Windows Job Object resource ceilings','operation-status surface')) {
+    foreach($requiredText in @('agentstack apply --plan-id','agentstack backup restore --id','agentstack data policy','agentstack owned remove','Go 1.26.5','Windows Job Object resource ceilings','operation-status surface')) {
         if ($text -notmatch [regex]::Escape($requiredText)) { throw "Required documentation text missing: $requiredText" }
     }
     $catalog=Get-Content internal/catalog/default.json -Raw | ConvertFrom-Json
