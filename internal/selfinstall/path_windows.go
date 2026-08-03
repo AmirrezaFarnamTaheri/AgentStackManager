@@ -3,13 +3,13 @@
 package selfinstall
 
 import (
-	"bytes"
+	"context"
 	"fmt"
-	"os"
-	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/agentstack/agentstack/internal/pathenv"
+	"github.com/agentstack/agentstack/internal/supervisor"
 )
 
 func ensureUserPath(target string) (bool, string, error) {
@@ -23,23 +23,27 @@ func ensureUserPath(target string) (bool, string, error) {
 	}
 	encoded := pathenv.EncodeWindowsString(next)
 	script := `$value=[Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($env:AGENTSTACK_USER_PATH_B64)); [Environment]::SetEnvironmentVariable('Path',$value,'User')`
-	cmd := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script)
-	cmd.Env = append(os.Environ(), "AGENTSTACK_USER_PATH_B64="+encoded)
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		return false, "", fmt.Errorf("update user PATH: %w: %s", err, strings.TrimSpace(stderr.String()))
+	result := (supervisor.Runtime{}).Run(context.Background(), supervisor.Spec{
+		Command: "powershell.exe",
+		Args:    []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script},
+		Env:     map[string]string{"AGENTSTACK_USER_PATH_B64": encoded},
+	}, supervisor.RunOptions{Timeout: 30 * time.Second, MaxOutputBytes: 64 << 10})
+	if result.Err != nil {
+		return false, "", fmt.Errorf("update user PATH: %w: %s", result.Err, strings.TrimSpace(result.Stderr))
 	}
 	return true, "changed", nil
 }
 
 func readUserPath() (string, error) {
 	script := `$value=[Environment]::GetEnvironmentVariable('Path','User'); if($null -eq $value){$value=''}; [Console]::Out.Write([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($value)))`
-	output, err := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script).CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("read user PATH: %w: %s", err, strings.TrimSpace(string(output)))
+	result := (supervisor.Runtime{}).Run(context.Background(), supervisor.Spec{
+		Command: "powershell.exe",
+		Args:    []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script},
+	}, supervisor.RunOptions{Timeout: 30 * time.Second, MaxOutputBytes: pathenv.MaxWindowsStringTransportBytes})
+	if result.Err != nil {
+		return "", fmt.Errorf("read user PATH: %w: %s", result.Err, strings.TrimSpace(result.Stderr))
 	}
-	value, decodeErr := pathenv.DecodeWindowsString(string(output))
+	value, decodeErr := pathenv.DecodeWindowsString(result.Stdout)
 	if decodeErr != nil {
 		return "", fmt.Errorf("decode user PATH: %w", decodeErr)
 	}

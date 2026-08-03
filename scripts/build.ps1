@@ -6,43 +6,8 @@ $root = Split-Path -Parent $PSScriptRoot
 $dist = Join-Path $root 'dist-dev'
 
 function Assert-SourceManifest([string]$Root) {
-    $manifest = Join-Path $Root 'SOURCE_MANIFEST.sha256'
-    if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw 'SOURCE_MANIFEST.sha256 is missing' }
-
-    $expected = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::OrdinalIgnoreCase)
-    foreach ($line in Get-Content -LiteralPath $manifest) {
-        if ($line -notmatch '^([0-9a-fA-F]{64})  \./(.+)$') { throw "Invalid source manifest line: $line" }
-        $digest = $Matches[1].ToLowerInvariant()
-        $manifestRelative = './' + $Matches[2].Replace('\', '/')
-        if (-not $expected.TryAdd($manifestRelative, $digest)) {
-            throw "Source manifest contains a duplicate path: $manifestRelative"
-        }
-
-        $relative = $Matches[2].Replace('/', [IO.Path]::DirectorySeparatorChar)
-        $path = Join-Path $Root $relative
-        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Source manifest file is missing: $manifestRelative" }
-        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash
-        if ($actual.ToLowerInvariant() -ne $digest) { throw "Source manifest digest mismatch: $manifestRelative" }
-    }
-
-    $actualFiles = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    foreach ($item in Get-ChildItem -LiteralPath $Root -Force -Recurse) {
-        $relative = [IO.Path]::GetRelativePath($Root, $item.FullName).Replace('\', '/')
-        if ($relative -eq 'SOURCE_MANIFEST.sha256' -or $relative -match '^(?:\.git|dist|dist-dev)(?:/|$)') {
-            continue
-        }
-        if ($item.LinkType) { throw "Source tree contains an unsupported symbolic link: ./$relative" }
-        if ($item.PSIsContainer) { continue }
-        if (-not ($item -is [IO.FileInfo])) { throw "Source tree contains an unsupported filesystem node: ./$relative" }
-        [void]$actualFiles.Add("./$relative")
-    }
-
-    foreach ($path in $expected.Keys) {
-        if (-not $actualFiles.Contains($path)) { throw "Source manifest file is missing: $path" }
-    }
-    foreach ($path in $actualFiles) {
-        if (-not $expected.ContainsKey($path)) { throw "Source tree contains an unlisted file: $path" }
-    }
+    & go run ./cmd/releasepack --root $Root --manifest-mode verify
+    if ($LASTEXITCODE -ne 0) { throw 'Source closure verification failed' }
 }
 
 Push-Location $root

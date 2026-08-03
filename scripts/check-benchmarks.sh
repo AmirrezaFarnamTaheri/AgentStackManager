@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 output=${1:-benchmark-results.txt}
-packages=(./internal/mcp ./internal/planner ./internal/redact ./internal/ui)
+packages=(./internal/mcp ./internal/planner ./internal/redact ./internal/ui ./internal/resourcehub ./internal/contextengine ./internal/workspace ./internal/routines)
 if [[ "${BENCHMARK_INPUT_ONLY:-0}" == "1" ]]; then
   [[ -s "$output" ]] || { echo "benchmark results file is missing or empty: $output" >&2; exit 2; }
 else
-  go test -run '^$' -bench 'Benchmark(ChildListTools|BuildLargeCatalog|RedactText|OperationStoreGet)$' -benchmem -benchtime=500ms -count=5 "${packages[@]}" | tee "$output"
+  go test -run '^$' -bench 'Benchmark(ChildListTools|BuildLargeCatalog|RedactText|OperationStoreGet|AuditResource|ScanProject|SearchMemory|NextRun)$' -benchmem -benchtime=500ms -count=5 "${packages[@]}" | tee "$output"
 fi
-for benchmark in BenchmarkChildListTools BenchmarkBuildLargeCatalog BenchmarkRedactText BenchmarkOperationStoreGet; do
+for benchmark in BenchmarkChildListTools BenchmarkBuildLargeCatalog BenchmarkRedactText BenchmarkOperationStoreGet BenchmarkAuditResource BenchmarkScanProject BenchmarkSearchMemory BenchmarkNextRun; do
   count=$(grep -c "^${benchmark}\([\/-]\)" "$output" || true)
   if (( count < 5 )); then
     echo "benchmark evidence missing for $benchmark: expected 5 samples, found $count" >&2
@@ -49,4 +49,8 @@ require_max_ns 'BenchmarkChildListTools/persistent-' 1000000
 require_max_ns 'BenchmarkBuildLargeCatalog-' 5000000
 require_max_ns 'BenchmarkRedactText-' 250000
 require_max_ns 'BenchmarkOperationStoreGet-' 500
+require_max_ns 'BenchmarkAuditResource-' 20000000
+require_max_ns 'BenchmarkScanProject-' 10000000
+require_max_ns 'BenchmarkSearchMemory-' 50000000
+require_max_ns 'BenchmarkNextRun-' 50000
 echo "benchmark evidence gate passed: $output"

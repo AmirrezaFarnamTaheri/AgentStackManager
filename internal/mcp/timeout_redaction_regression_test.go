@@ -4,11 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/agentstack/agentstack/internal/processctl"
 )
 
 func TestTimeoutRegressionHangingHelper(t *testing.T) {
@@ -28,6 +32,12 @@ func TestTimeoutRegressionHangingHelper(t *testing.T) {
 		}
 		switch request["method"] {
 		case "initialize":
+			if marker := os.Getenv("GO_HANGING_INIT_PID_FILE"); marker != "" {
+				_ = os.WriteFile(marker, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600)
+				for {
+					time.Sleep(time.Hour)
+				}
+			}
 			if marker := os.Getenv("GO_DELAYED_INIT_MARKER"); marker != "" {
 				_ = os.WriteFile(marker, []byte("ready"), 0o600)
 				time.Sleep(600 * time.Millisecond)
@@ -239,5 +249,57 @@ func TestStaleIdleTimerCannotExpireReusedPooledWorker(t *testing.T) {
 	pool.expire("server", worker, 1)
 	if pool.workers["server"] != worker {
 		t.Fatal("stale idle timer removed a worker that had been reused")
+	}
+}
+
+func TestPooledClientCloseCancelsWorkerStillInitializing(t *testing.T) {
+	pidFile := filepath.Join(t.TempDir(), "child.pid")
+	server := ServerConfig{
+		Command: os.Args[0],
+		Args:    []string{"-test.run=TestTimeoutRegressionHangingHelper", "--"},
+		Env: map[string]string{
+			"GO_WANT_TIMEOUT_REGRESSION_HELPER": "1",
+			"GO_HANGING_INIT_PID_FILE":          pidFile,
+		},
+		Persistent: true,
+	}
+	client := &PooledChildClient{Base: StdIOChildClient{Timeout: 10 * time.Second}}
+	requestDone := make(chan error, 1)
+	go func() {
+		_, err := client.ListTools(context.Background(), server)
+		requestDone <- err
+	}()
+
+	var pid int
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		data, err := os.ReadFile(pidFile)
+		if err == nil {
+			pid, err = strconv.Atoi(string(data))
+			if err != nil {
+				t.Fatal(err)
+			}
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	if pid == 0 || !processctl.IsAlive(pid) {
+		t.Fatalf("initializing child did not become live: pid=%d", pid)
+	}
+
+	if err := client.Close(); err != nil {
+		t.Fatal(err)
+	}
+	deadline = time.Now().Add(time.Second)
+	for processctl.IsAlive(pid) && time.Now().Before(deadline) {
+		time.Sleep(10 * time.Millisecond)
+	}
+	if processctl.IsAlive(pid) {
+		t.Fatalf("Close() left initializing child process %d alive", pid)
+	}
+	select {
+	case <-requestDone:
+	case <-time.After(time.Second):
+		t.Fatal("request remained blocked after Close()")
 	}
 }

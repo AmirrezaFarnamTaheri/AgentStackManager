@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -38,6 +39,25 @@ func TestBuildRouterConfigIncludesOnlyActiveRouterActions(t *testing.T) {
 	}
 }
 
+func TestValidateRouterConfigRejectsIdleTTLOverflow(t *testing.T) {
+	config := RouterConfig{Version: 1, Servers: map[string]ServerConfig{
+		"overflow": {Command: "server", IdleTTLSeconds: int(^uint(0) >> 1)},
+	}}
+	if err := validateRouterConfig(config); err == nil || !strings.Contains(err.Error(), "idle TTL") {
+		t.Fatalf("expected oversized idle TTL rejection, got %v", err)
+	}
+}
+
+func TestMCPIdleTTLUsesFallbackForUnvalidatedValues(t *testing.T) {
+	fallback := 2 * time.Minute
+	if got := mcpIdleTTL(int(^uint(0)>>1), fallback); got != fallback {
+		t.Fatalf("overflowing idle TTL should use fallback, got %s", got)
+	}
+	if got := mcpIdleTTL(60, fallback); got != time.Minute {
+		t.Fatalf("valid idle TTL should be converted, got %s", got)
+	}
+}
+
 func TestWriteRouterConfigRoundTrip(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "router.json")
 	input := RouterConfig{Version: 1, Profile: "essential", Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}
@@ -60,6 +80,26 @@ func TestLoadRouterConfigRejectsTrailingJSONContent(t *testing.T) {
 	}
 	if _, err := LoadRouterConfig(path); err == nil {
 		t.Fatal("router config with trailing content was accepted")
+	}
+}
+
+func TestLoadRouterConfigRejectsInvalidServerCommand(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "router.json")
+	if err := os.WriteFile(path, []byte(`{"version":1,"servers":{"bad":{"command":""}}}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := LoadRouterConfig(path); err == nil || !strings.Contains(err.Error(), "command is invalid") {
+		t.Fatalf("expected invalid server command rejection, got %v", err)
+	}
+}
+
+func TestMergeAgyConfigRejectsDuplicateKeys(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "mcp_config.json")
+	if err := os.WriteFile(path, []byte(`{"mcpServers":{},"mcpServers":{"agentstack-router":{"command":"foreign"}}}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := MergeAgyConfig(path, "agentstack", []string{"mcp-router"}, t.TempDir()); err == nil || !strings.Contains(err.Error(), "duplicate") {
+		t.Fatalf("expected duplicate-key rejection, got %v", err)
 	}
 }
 

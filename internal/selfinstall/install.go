@@ -92,7 +92,11 @@ func FindReleaseConsoleSibling(setupPath, architecture string) (string, error) {
 		filepath.Join(dir, "agentstack.exe"),
 	}
 	for _, candidate := range candidates {
-		if samePath(candidate, setupPath) {
+		same, pathErr := samePath(candidate, setupPath)
+		if pathErr != nil {
+			return "", pathErr
+		}
+		if same {
 			continue
 		}
 		info, statErr := os.Stat(candidate)
@@ -139,10 +143,16 @@ func normalizeThumbprint(value string) string {
 	return strings.ToUpper(strings.ReplaceAll(strings.TrimSpace(value), " ", ""))
 }
 
-func samePath(left, right string) bool {
-	left, _ = filepath.Abs(left)
-	right, _ = filepath.Abs(right)
-	return filepath.Clean(left) == filepath.Clean(right)
+func samePath(left, right string) (bool, error) {
+	left, err := filepath.Abs(left)
+	if err != nil {
+		return false, err
+	}
+	right, err = filepath.Abs(right)
+	if err != nil {
+		return false, err
+	}
+	return filepath.Clean(left) == filepath.Clean(right), nil
 }
 
 func sameFileContent(left, right string) (bool, error) {

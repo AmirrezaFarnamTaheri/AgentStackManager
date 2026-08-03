@@ -39,3 +39,16 @@ func TestDecodeLabelsTrailingSyntaxErrors(t *testing.T) {
 		t.Fatalf("unexpected trailing error: %v", err)
 	}
 }
+
+func TestDecodeRejectsDuplicateObjectKeysAtAnyDepth(t *testing.T) {
+	for _, input := range []string{
+		`{"name":"first","name":"second"}`,
+		`{"outer":{"token":"first","token":"second"}}`,
+		`[{"id":1,"id":2}]`,
+	} {
+		var value any
+		if err := Decode([]byte(input), &value); err == nil || !strings.Contains(err.Error(), "duplicate JSON object key") {
+			t.Fatalf("duplicate-key document was accepted: input=%s err=%v", input, err)
+		}
+	}
+}

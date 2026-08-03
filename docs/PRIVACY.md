@@ -45,3 +45,11 @@ redaction is applied again when legacy events are read and when diagnostics or d
 are created. Authorization bearer values, JWTs, JSON token fields, common key/value secret
 forms, GitHub token prefixes, and OpenAI-style secret prefixes are removed. This layered
 boundary prevents historical unredacted records from being copied into support archives.
+
+## Unified fabric data
+
+The fabric stores only operator-created local state under the private AgentStack data root: canonical resource metadata/content, project context plans/backups, workspace records, scoped memory, artifacts, MCP-link intent/digest plans and registration-only recovery records, routines, and run receipts. MCP-link state never duplicates complete third-party client configurations or unrelated environment values.
+
+Memory entries expose source, scope, expiry, digest, explicit forget, and local search. Artifacts are copied locally and can be verified or removed. Routine receipts are bounded and recursively redact credential-bearing keys and common token forms before persistence. Project content is read only on operator request and is not uploaded by these planes.
+
+Provider credentials remain in provider or operating-system credential mechanisms. The fabric does not add a general credential vault.

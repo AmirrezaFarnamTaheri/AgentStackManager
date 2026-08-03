@@ -28,7 +28,7 @@ MCP messages are size-bounded, protocol versions are negotiated, and `doctor` pe
 - Automatic npm, uv, and WinGet actions are exact-version and approved-source entries.
 - The essential skill pack is fetched at an exact audited Git commit, and the resolved commit plus expected skill inventory is verified before copying.
 - Public releases require a clean signed annotated tag, Go 1.26.5, source and binary vulnerability scans, reproducibility comparison, SBOMs, license inventory, OpenVEX, deterministic archives, checksum manifests, and artifact attestations.
-- Setup verifies the sibling console binary’s embedded digest and the release checksum manifest. Windows Authenticode is not required.
+- Setup verifies the sibling console binary’s embedded digest and release checksum manifest. Public Windows console and setup artifacts must also carry a valid Authenticode signature from the configured publisher; setup rejects an invalid or unexpected signer.
 
 A catalog change remains a privileged supply-chain decision and is protected by code-owner/review policy.
 
@@ -43,3 +43,16 @@ AgentStack can restore indexed managed-file backups and ownership-scoped skill q
 ## Reporting
 
 Use `agentstack diagnostics` for a path-sanitized, secret-redacted support bundle. Never attach credentials, provider tokens, private keys, raw home-directory exports, or unreviewed machine inventory to an issue.
+
+## Unified fabric boundaries
+
+- Remote marketplace results and URL-shaped imports cannot install or activate resources. The trusted path begins with a local reviewed file or checkout.
+- Resource audit precedes normal sync planning. Blocking results require explicit `--allow-risk` in the plan and still cannot override foreign destination conflicts.
+- Project reads/searches canonicalize roots, reject traversal and symlink escape, and enforce file, scan, and result limits.
+- Git context runs only bounded read commands; context management never installs hooks or stages files.
+- MCP client linking preserves unrelated entries, rejects foreign or secret-bearing same-name entries, rejects duplicate-key JSON, and revalidates configuration immediately before apply. Plans retain only intent/digests and recovery records contain only the prior ASM registration, never the full client file.
+- Routine command steps invoke direct binaries through the supervised runner. They do not execute shell strings or persist environment variables.
+- Routine outputs and errors pass through recursive credential redaction before durable receipt storage.
+- Provider tokens, SMTP passwords, API keys, and private keys are not fields in unified fabric schemas. Routine admission rejects secret-bearing arguments; explicit environment/file/reference keys remain the supported indirection.
+- Resource admission is bounded by per-file, aggregate-byte, and file-count ceilings before canonical state changes.
+- Durable resource, workspace, routine, context, and MCP state is read through bounded regular-file admission. Symlinks, non-regular files, oversized payloads, duplicate JSON keys, unsupported schema versions, invalid identifiers, unconstrained commands, and path-confined record violations fail closed before use.

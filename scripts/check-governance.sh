@@ -24,6 +24,13 @@ test "$(cat .go-version)" = '1.26.5'
 grep -q 'cimg/go:1.26.5@sha256:6686a1ac4e71bc198b461caa82640547a0a44fa2378a4e4d450b1c8e63ddf31b' .circleci/config.yml
 grep -Rqs 'golang.org/x/vuln/cmd/govulncheck@v1.1.4' .github/workflows .circleci/config.yml
 grep -q 'github.com/rhysd/actionlint/cmd/actionlint@v1.7.12' .github/workflows/verify.yml
+test -f scripts/windows-mutation.ps1
+grep -q '^  windows-mutation-testing:' .github/workflows/verify.yml
+grep -q 'scripts/windows-mutation.ps1' .github/workflows/verify.yml
+if grep -Eq 'exclude-files:|cmd/|_windows\.go' .gremlins.yaml; then
+  echo 'Default mutation config must not contain blanket path or platform exclusions' >&2
+  exit 1
+fi
 if grep -Fq 'actionlint -color never' .github/workflows/verify.yml; then
   echo 'actionlint color mode must not be passed as a positional file argument' >&2
   exit 1

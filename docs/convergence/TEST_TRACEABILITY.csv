@@ -1,0 +1,61 @@
+test_node,record_ids,claim
+internal/contextengine/contextengine_test.go#TestScanScoreAndRefreshPreservesUserContent,CAL-FP,Primary acceptance evidence for deterministic repository fingerprint
+internal/contextengine/contextengine_test.go#TestScoreDetectsBrokenGroundingReference,CAL-SCORE,Primary acceptance evidence for context quality scoring
+internal/contextengine/contextengine_test.go#TestRefreshRejectsChangedProjectAndUnreviewedDigest,CAL-REFRESH,Primary acceptance evidence for multi-agent context regeneration and undo
+internal/contextengine/contextengine_test.go#TestContextTargetPathsAreTargetNativeAndDeduplicated,CAL-MULTI,Primary acceptance evidence for multi-agent context file generation
+internal/workspace/workspace_test.go#TestScopedMemoryRequiresExplicitScope,CAL-LEARN,Primary acceptance evidence for session learning and retained insights
+internal/contextengine/knowledge_test.go#TestGitInspectionUsesOnlyReadOnlyCommands,CAL-HOOKS,Primary acceptance evidence for automatic Git hook mutation and auto-staging
+internal/resourcehub/refresh_test.go#TestResourceRefreshRejectsSourceChangedAfterReview,CAL-SOURCES,Primary acceptance evidence for project context source selection
+internal/workspace/workspace_test.go#TestMemoryPrecedenceSearchExpiryAndForget,CS-LAYERS,Primary acceptance evidence for user/project/workspace/session context layers
+internal/cli/fabric_test.go#TestUnifiedWorkspaceMemoryArtifactAndRoutineCLI,CS-REMEMBER,Primary acceptance evidence for remember recall and search operations
+internal/contextengine/knowledge_test.go#TestReadFileAndSearchStayInsideWorkspace,CS-FILES,Primary acceptance evidence for safe project file read and content search
+internal/contextengine/knowledge_test.go#TestGitContextUsesBoundedRunner,CS-GIT,Primary acceptance evidence for Git branch revision status and diff context
+internal/workspace/workspace_test.go#TestLegacyWorkspaceStoresMigrateToVersionedEnvelopes,CS-MIGRATE,Primary acceptance evidence for schema migration and compatibility
+internal/workspace/workspace_test.go#TestWorkspaceAssociationsPersistAndCyclesAreRejected,CS-WORKSPACE,Primary acceptance evidence for workspace root detection and project profiling
+internal/app/service_test.go#TestRoutineCommandInvokesDirectBinaryWithoutShell,CS-NOTION,Primary acceptance evidence for built-in Notion credentialed integration
+internal/resourcehub/resourcehub_test.go#TestRegistryPreservesResourceMetadata,SS-REGISTRY,Primary acceptance evidence for canonical registry for skills agents extras and targets
+internal/resourcehub/resourcehub_test.go#TestPlanTreatsExternallyModifiedManagedTargetAsConflict,SS-SYNC,Primary acceptance evidence for copy link target sync and managed pruning
+internal/resourcehub/resourcehub_test.go#TestAuditBlocksPromptInjectionAndCredentialExfiltration,SS-AUDIT,Primary acceptance evidence for static skill and prompt security audit
+internal/resourcehub/resourcehub_test.go#TestResourceBackupCanBeListedAndRestored,SS-BACKUP,Primary acceptance evidence for resource backup cleanup and restore
+internal/resourcehub/refresh_test.go#TestReviewedResourceRefreshDetectsAndAppliesSourceChanges,SS-SOURCES,Primary acceptance evidence for tracked project and Git source update lifecycle
+internal/resourcehub/resourcehub_test.go#TestTargetDestinationsCoverSupportedAgents,SS-TARGETS,Primary acceptance evidence for agent target path adapters
+internal/ui/web_contract_test.go#TestEmbeddedUIOperationFeedbackContract,SS-UI,Primary acceptance evidence for CLI TUI and web resource operation surfaces
+internal/resourcehub/resourcehub_test.go#TestManagedResourceStoreListsTypedResourcesDeterministically,SH-STORE,Primary acceptance evidence for managed skills store with tags scope and tools
+internal/resourcehub/resourcehub_test.go#TestImportPlanAndApplyCopyTarget,SH-SYNC,Primary acceptance evidence for bulk sync engine and content hashes
+internal/routines/routines_test.go#TestDailyRoutineDueAndRun,SH-SCHEDULE,Primary acceptance evidence for scheduled skill update runs and result history
+internal/cli/fabric_test.go#TestResourceHubContextAndMCPClientCLI,SH-TOOLS,Primary acceptance evidence for built-in and custom tool adapters
+internal/resourcehub/resourcehub_test.go#TestImportDoesNotFetchRemoteSources,SH-ONLINE,Primary acceptance evidence for featured skills and GitHub online search
+internal/ui/web_contract_test.go#TestWebFabricStatusFailureDoesNotBlockPrimaryRefresh,SH-UI,Primary acceptance evidence for desktop managed/explore/update/settings views
+internal/mcplink/mcplink_test.go#TestPlanAndApplyLinksFileClientsPreservingForeignServers,ML-CLIENTS,Primary acceptance evidence for multi-client MCP configuration adapters
+internal/mcplink/mcplink_test.go#TestPlanReportsForeignNamedConflict,ML-SYNC,Primary acceptance evidence for cross-client MCP synchronization
+internal/mcplink/mcplink_test.go#TestUnlinkRemovesOnlyAgentStackEntry,ML-CRUD,Primary acceptance evidence for MCP server CRUD state
+internal/mcplink/mcplink_test.go#TestCodexRegistrationUsesReviewedPlan,ML-CODEX,Primary acceptance evidence for Codex TOML adapter
+internal/mcplink/mcplink_test.go#TestPlansAndBackupsDoNotPersistUnrelatedClientSecrets,ML-SECRETS,Primary acceptance evidence for encrypted saved MCP credentials
+internal/ui/server_test.go#TestFabricStatusEndpointReturnsUnifiedCounts,ML-UI,Primary acceptance evidence for desktop MCP discovery and management UI
+internal/workspace/workspace_test.go#TestRecursiveFolderDeleteRemovesChildren,AW-WORKSPACE,Primary acceptance evidence for multiple hierarchical workspaces
+internal/workspace/workspace_test.go#TestRenderPromptRejectsUnknownVariable,AW-PROMPT,Primary acceptance evidence for dynamic prompt variables
+internal/workspace/workspace_test.go#TestWorkspacePromptMemoryAndArtifacts,AW-ARTIFACT,Primary acceptance evidence for workspace artifacts and integrity
+internal/workspace/workspace_test.go#TestWorkspaceReadersFenceAndRecoverStaleTransactions,AW-LOCAL,Primary acceptance evidence for local reactive persistent user data
+internal/resourcehub/resourcehub_test.go#TestImportedExtensionRemainsInertUntilExplicitSync,AW-PLUGINS,Primary acceptance evidence for plugin installation and enablement
+internal/mcp/runtime_test.go#TestManagedChildRuntimeCloseCancelsOneShotInitialization,AW-MCP,Primary acceptance evidence for MCP client and plugin transport
+internal/routines/routines_test.go#TestWeekdayScheduleSkipsWeekend,LS-SCHEDULE,Primary acceptance evidence for morning and night schedule triggers
+internal/routines/routines_test.go#TestRoutineRunRequiresConfirmationAndStopsOnFailure,LS-PIPELINE,Primary acceptance evidence for sequential source summarize and deliver pipeline
+internal/routines/routines_test.go#TestRoutineLoadReconcilesPersistedRunReceipt,LS-RECEIPT,Primary acceptance evidence for run result history and recovery
+internal/app/service_test.go#TestRoutineCommandUsesSupervisedRunnerLimits,LS-WEATHER,Primary acceptance evidence for hard-coded weather HTTP fetch
+internal/routines/routines_test.go#TestRoutineRunReceiptsRedactSecrets,LS-SECRETS,Primary acceptance evidence for environment-configured email and provider secrets
+internal/app/service_test.go#TestFabricMutationsShareOneCrossProcessLease,CAL-REFRESH;CAL-LEARN;SS-SYNC;SS-BACKUP;ML-CLIENTS;AW-WORKSPACE;AW-ARTIFACT;AW-LOCAL;LS-PIPELINE,All fabric mutations share one cross-process authority lease.
+internal/redact/redact_test.go#TestValueRedactsTypedMapsAndStructs,LS-SECRETS,Structured routine and diagnostic values cross the shared recursive redaction boundary.
+internal/redact/redact_test.go#TestValueFailsClosedForUnserializableStructuredValue,LS-SECRETS,Unserializable structured evidence fails closed instead of leaking fields.
+internal/routines/routines_test.go#TestRoutineRunHasOverallDeadline,LS-PIPELINE;LS-SCHEDULE,A total routine deadline bounds the complete multi-step run.
+internal/routines/routines_test.go#TestRoutineAdmissionBoundsCommandShapeAndDefinitionSize,LS-PIPELINE;LS-SECRETS,"Routine admission bounds definition size, arguments, parameters, command shape, and credential references."
+internal/resourcehub/resourcehub_test.go#TestSyncRollsBackEarlierOperationsWhenLaterOperationFails,SS-SYNC,Target synchronization restores every earlier mutation after a later failure.
+internal/resourcehub/resourcehub_test.go#TestSyncRetainsRecoveryBackupAfterCommittedUpdate,SS-SYNC;SS-BACKUP,Committed target updates retain explicit recovery evidence.
+internal/resourcehub/refresh_test.go#TestRefreshRollsBackAllCanonicalResourcesOnFailure,CAL-SOURCES;SS-SOURCES,Source refresh rolls every canonical resource back when a later replacement fails.
+internal/contextengine/contextengine_test.go#TestContextRefreshRollsBackEarlierFilesWhenLaterWriteFails,CAL-REFRESH,Context refresh restores all earlier target files after a later write failure.
+internal/mcplink/mcplink_test.go#TestApplyRollsBackEarlierClientWhenLaterClientFails,ML-CLIENTS;ML-SYNC,Multi-client linking restores earlier client configuration after a later failure.
+internal/mcplink/mcplink_test.go#TestPlanRejectsDuplicateClientConfigurationKeys,ML-CLIENTS;ML-SYNC,Duplicate-key client configuration fails closed before a reviewed plan is created.
+internal/mcplink/mcplink_test.go#TestPlanPreservesSecretBearingNamedEntryAsForeignConflict,ML-CLIENTS;ML-SECRETS,Secret-bearing same-name entries remain foreign conflicts and are never rewritten or copied.
+internal/workspace/workspace_test.go#TestWorkspaceDeleteRollsBackAllStoresAndArtifacts,AW-WORKSPACE;AW-ARTIFACT;AW-LOCAL,"Recursive workspace deletion commits workspace, memory, artifact metadata, and artifact directories as one recoverable operation."
+internal/workspace/workspace_test.go#TestArtifactReplacementRollsBackWhenRegistryCommitFails,AW-ARTIFACT;AW-LOCAL,Artifact replacement restores prior content when metadata commit fails.
+internal/workspace/workspace_test.go#TestArtifactRemovalRollsBackWhenRegistryCommitFails,AW-ARTIFACT;AW-LOCAL,Artifact removal restores quarantined content when metadata commit fails.
+internal/workspace/workspace_test.go#TestCommittedArtifactMutationIsNotReportedFailedWhenCleanupIsDeferred,AW-ARTIFACT;AW-LOCAL,A committed artifact mutation remains successful when non-authoritative cleanup must be deferred.

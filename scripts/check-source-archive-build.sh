@@ -32,11 +32,16 @@ mkdir -p "$archive_root"
 ) | tar -xf - -C "$archive_root"
 echo "Writing ephemeral source provenance"
 printf '%s\n' "$REVISION" > "$archive_root/SOURCE_REVISION"
+revision_kind="${REVISION%%:*}"
+revision_hash="${REVISION#*:}"
 cat > "$archive_root/SOURCE_PROVENANCE.json" <<JSON
 {
   "schemaVersion": 1,
   "status": "source-archive-build-check",
-  "revision": "$REVISION",
+  "revision": "$revision_hash",
+  "baseRevision": "$revision_hash",
+  "candidateRevision": null,
+  "revisionKind": "$revision_kind",
   "note": "Ephemeral CI proof that the source archive verifies and builds without Git metadata."
 }
 JSON

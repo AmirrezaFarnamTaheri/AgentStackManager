@@ -150,7 +150,12 @@ func (s Store) ExportData(destination string) error {
 	}
 	sort.Strings(files)
 	for _, path := range files {
-		rel, _ := filepath.Rel(s.Root, path)
+		rel, err := filepath.Rel(s.Root, path)
+		if err != nil {
+			archive.Close()
+			temp.Close()
+			return err
+		}
 		info, err := os.Stat(path)
 		if err != nil {
 			archive.Close()

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -87,5 +88,25 @@ func TestExecStarterRunsManagedProcessWithEnvironment(t *testing.T) {
 	data, err := os.ReadFile(output)
 	if err != nil || string(data) != "ok" {
 		t.Fatalf("session process did not receive environment: data=%q err=%v", data, err)
+	}
+}
+
+func TestExecStarterReportsStartFailure(t *testing.T) {
+	err := (ExecStarter{}).Run(context.Background(), StartRequest{Command: "agentstack-command-that-does-not-exist"})
+	if err == nil || !strings.Contains(err.Error(), "start agentstack-command-that-does-not-exist") {
+		t.Fatalf("Run() error = %v, want start failure", err)
+	}
+}
+
+func TestExecStarterReportsProcessFailure(t *testing.T) {
+	command := "sh"
+	args := []string{"-c", "exit 7"}
+	if runtime.GOOS == "windows" {
+		command = "powershell.exe"
+		args = []string{"-NoProfile", "-NonInteractive", "-Command", "exit 7"}
+	}
+	err := (ExecStarter{}).Run(context.Background(), StartRequest{Command: command, Args: args})
+	if err == nil || !strings.Contains(err.Error(), "run "+command) {
+		t.Fatalf("Run() error = %v, want process failure", err)
 	}
 }

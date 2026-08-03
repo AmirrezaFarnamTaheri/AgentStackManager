@@ -63,13 +63,7 @@ function Write-Checksums([string]$Directory) {
     } | Set-Content (Join-Path $Directory 'SHA256SUMS.txt') -Encoding utf8NoBOM
 }
 function Write-SourceManifest([string]$Directory) {
-    $manifest=Join-Path $Directory 'SOURCE_MANIFEST.sha256'
-    Get-ChildItem $Directory -Recurse -File | Where-Object FullName -ne $manifest | ForEach-Object {
-        $relative=[IO.Path]::GetRelativePath($Directory,$_.FullName).Replace('\','/')
-        [pscustomobject]@{ Relative=$relative; Hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant() }
-    } | Sort-Object Relative | ForEach-Object {
-        "$($_.Hash)  ./$($_.Relative)"
-    } | Set-Content $manifest -Encoding utf8NoBOM
+    Invoke-Checked go @('run','./cmd/releasepack','--root',$Directory,'--manifest-mode','write')
 }
 function Assert-ReleaseOutput([string]$Directory) {
     $expected=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -197,7 +191,8 @@ try {
 
 # Use the complete package path for linker-injected variables. This is accepted
 # consistently by the Go 1.26 linker across console and setup builds.
-$baseFlags = "-s -w -X main.version=$Version -X main.revision=git:$revision"
+$agentstackPackage = 'github.com/agentstack/agentstack/cmd/agentstack'
+$baseFlags = "-s -w -buildid=none -X ${agentstackPackage}.version=$Version -X ${agentstackPackage}.revision=git:$revision"
     foreach ($arch in @('amd64','arm64')) {
         $first = Join-Path $dist "agentstack-$arch.repro1.exe"
         $second = Join-Path $dist "agentstack-$arch.repro2.exe"
@@ -215,7 +210,7 @@ $baseFlags = "-s -w -X main.version=$Version -X main.revision=git:$revision"
         # Keep the setup launcher portable across the pinned Go toolchain's
         # Windows linker; the launcher remains fully functional as a console
         # executable and is integrity-checked by its SHA-256 manifest.
-        $setupFlags = "$baseFlags -X main.defaultMode=setup -X main.consoleSHA256=$consoleHash"
+        $setupFlags = "$baseFlags -X ${agentstackPackage}.defaultMode=setup -X ${agentstackPackage}.consoleSHA256=$consoleHash"
         $setupFirst = Join-Path $dist "AgentStack-Setup-windows-$arch.repro1.exe"
         $setupSecond = Join-Path $dist "AgentStack-Setup-windows-$arch.repro2.exe"
         Build-Binary $arch $setupFirst $setupFlags
@@ -279,7 +274,7 @@ $baseFlags = "-s -w -X main.version=$Version -X main.revision=git:$revision"
         runId=$env:GITHUB_RUN_ID
     } | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $sourceRoot 'SOURCE_PROVENANCE.json') -Encoding utf8NoBOM
     Write-SourceManifest $sourceRoot
-    Invoke-Checked go @('run','./cmd/releasepack','--root',$sourceRoot,'--out',(Join-Path $dist "AgentStackManager-$Version-source.zip"),'--prefix',"AgentStackManager-$Version-source")
+    Invoke-Checked go @('run','./cmd/releasepack','--root',$sourceRoot,'--out',(Join-Path $dist "AgentStackManager-$Version-source.zip"),'--prefix',"AgentStackManager-$Version-source",'--manifest-mode','require')
     Remove-Item $sourceRoot -Recurse -Force
     Remove-Item (Join-Path $dist 'README.md'),(Join-Path $dist 'LICENSE'),(Join-Path $dist 'CHANGELOG.md') -Force
     Remove-Item (Join-Path $dist 'docs') -Recurse -Force

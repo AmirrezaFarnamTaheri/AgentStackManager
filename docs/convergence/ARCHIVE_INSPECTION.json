@@ -1,0 +1,108 @@
+[
+  {
+    "archive": "/mnt/data/AgentStackManager-reviewed-source.zip",
+    "sha256": "2602a7f5c02055c5818581a6aa7bca07d3c95eb7f86837db13670d35346b44fc",
+    "members": 228,
+    "uncompressed_bytes": 1177999,
+    "max_ratio": 6.8,
+    "top_levels": [
+      "AgentStackManager-reviewed-source"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/AIaW-master.zip",
+    "sha256": "5620f401fc4f10b56c4a7c8f664b8bcf1684f4c6b958b7e174471026db9c021c",
+    "members": 661,
+    "uncompressed_bytes": 10454230,
+    "max_ratio": 13.32,
+    "top_levels": [
+      "AIaW-master"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/LifeSync-AI-main.zip",
+    "sha256": "6881fd7ea29b1e4691ee811d8c8da76d99455ca2da47cc9f15220059a26c5828",
+    "members": 30,
+    "uncompressed_bytes": 81303,
+    "max_ratio": 4.46,
+    "top_levels": [
+      "LifeSync-AI-main"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/ai-setup-master.zip",
+    "sha256": "98678045ef7a19778d12e5662f0efb98d4a0900db4001c6ddaffd73e4558eb84",
+    "members": 441,
+    "uncompressed_bytes": 10170817,
+    "max_ratio": 71.83,
+    "top_levels": [
+      "ai-setup-master"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/context-sync-main.zip",
+    "sha256": "5c16ac402013c93907762a2fb6cddeb977776a1506e048a4c1898f46825b3e99",
+    "members": 68,
+    "uncompressed_bytes": 1043672,
+    "max_ratio": 6.48,
+    "top_levels": [
+      "context-sync-main"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/mcp-linker-main.zip",
+    "sha256": "b33d439bd08975b237ba0bb7ef21c4a34c7120126b32e55f8601c6641d5f454d",
+    "members": 373,
+    "uncompressed_bytes": 3779161,
+    "max_ratio": 8.07,
+    "top_levels": [
+      "mcp-linker-main"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/skillshare-main (1).zip",
+    "sha256": "8e43d998bd336be1ae031cb77fd8fe8c764ea547a68c1905a61ca3dc6eaee67a",
+    "members": 1306,
+    "uncompressed_bytes": 72319615,
+    "max_ratio": 8.6,
+    "top_levels": [
+      "skillshare-main"
+    ],
+    "symlinks": [
+      "skillshare-main/.devcontainer/bin/dev-servers"
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "archive": "/mnt/data/skills-hub-main.zip",
+    "sha256": "1943c6705e79bc878c93301f0853a68d12518719722f256aa618fd176771dcf7",
+    "members": 229,
+    "uncompressed_bytes": 4716170,
+    "max_ratio": 8.83,
+    "top_levels": [
+      "skills-hub-main"
+    ],
+    "symlinks": [],
+    "errors": [],
+    "warnings": []
+  }
+]

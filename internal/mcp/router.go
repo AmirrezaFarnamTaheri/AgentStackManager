@@ -41,7 +41,7 @@ type rpcResponse struct {
 
 func (r Router) Serve(ctx context.Context, input io.Reader, output io.Writer) error {
 	if r.Children == nil {
-		r.Children = &PooledChildClient{}
+		r.Children = NewManagedChildRuntime(ChildRuntimeOptions{})
 	}
 	if closer, ok := r.Children.(interface{ Close() error }); ok {
 		defer closer.Close()

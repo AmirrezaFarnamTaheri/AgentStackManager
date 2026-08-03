@@ -27,6 +27,7 @@
 
       <nav aria-label="Primary">
         <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Overview</span></button>
+        <button type="button" class="nav-item" data-section="fabric"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h6v6H4z"/><path d="M14 3h6v6h-6z"/><path d="M14 15h6v6h-6z"/><path d="M10 10h4"/><path d="M17 9v6"/></svg><span>Unified fabric</span></button>
         <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg><span>Components</span></button>
         <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg><span>Install plan</span></button>
         <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg><span>MCP router</span></button>
@@ -122,6 +123,46 @@
             </ul>
           </section>
         </div>
+      </section>
+
+
+      <section id="fabric" class="section" aria-labelledby="fabric-title">
+        <div class="section-heading">
+          <div><h2 id="fabric-title" tabindex="-1">Unified agent fabric</h2><p>One local authority for reusable resources, project context, workspaces, memory, artifacts, client links, and scheduled routines.</p></div>
+          <button id="refreshFabricBtn" class="button secondary" data-operation data-busy-label="Refreshing…">Refresh fabric</button>
+        </div>
+        <div class="metrics fabric-metrics" aria-label="Unified fabric summary">
+          <article><span>Resources</span><strong id="fabricResources" class="metric-value is-loading">0</strong><small>canonical skills and agent assets</small></article>
+          <article><span>Targets</span><strong id="fabricTargets" class="metric-value is-loading">0</strong><small>registered agent destinations</small></article>
+          <article><span>Workspaces</span><strong id="fabricWorkspaces" class="metric-value is-loading">0</strong><small>project control contexts</small></article>
+          <article><span>Artifacts</span><strong id="fabricArtifacts" class="metric-value is-loading">0</strong><small>content-addressed local files</small></article>
+          <article><span>Routines</span><strong id="fabricRoutines" class="metric-value is-loading">0</strong><small>bounded scheduled workflows</small></article>
+          <article><span>Due now</span><strong id="fabricDue" class="metric-value is-loading">0</strong><small>ready for explicit execution</small></article>
+        </div>
+        <div class="fabric-grid">
+          <section class="panel fabric-plane-list">
+            <div class="panel-head"><div><h3>Responsibility planes</h3><p>Donor capabilities are recomposed behind ASM-owned boundaries.</p></div><span class="record-seal">Local</span></div>
+            <dl>
+              <div><dt>Resource hub</dt><dd>Imports, audits, plans, and syncs skills, agents, rules, commands, prompts, and MCP definitions.</dd></div>
+              <div><dt>Context engine</dt><dd>Fingerprints projects, scores agent context quality, and refreshes managed blocks without replacing human guidance.</dd></div>
+              <div><dt>Workspace intelligence</dt><dd>Organizes projects, layered memory, prompt variables, and immutable artifact evidence.</dd></div>
+              <div><dt>MCP client links</dt><dd>Plans conflict-safe registration across Codex, Claude, Cursor, AGY, and OpenCode.</dd></div>
+              <div><dt>Routine scheduler</dt><dd>Runs bounded steps sequentially, records receipts, and never executes due work without confirmation.</dd></div>
+            </dl>
+          </section>
+          <section class="command-sheet fabric-command-sheet">
+            <h3>Operator entry points</h3>
+            <p>Every mutating flow is reviewable, digest-bound, or confirmation-gated.</p>
+            <pre><code>agentstack hub list
+agentstack context score --root .
+agentstack workspace list
+agentstack memory search --query architecture
+agentstack mcp clients plan --root .
+agentstack routine due</code></pre>
+            <div class="fabric-next"><span>Next scheduled run</span><strong id="fabricNext">None scheduled</strong></div>
+          </section>
+        </div>
+        <div id="fabricLoadError" class="empty-state compact load-error" role="alert" hidden><strong>Unified fabric status could not be loaded.</strong><span id="fabricLoadErrorDetail">Retry after checking the local data directory.</span></div>
       </section>
 
       <section id="components" class="section" aria-labelledby="components-title">

@@ -3,6 +3,8 @@
 package redact
 
 import (
+	"encoding/json"
+	"reflect"
 	"regexp"
 	"strings"
 )
@@ -49,9 +51,13 @@ func Fields(fields map[string]any) map[string]any {
 	return result
 }
 
-// Value recursively redacts maps, slices, and text values.
+// Value recursively redacts JSON-compatible maps, slices, structs, and text
+// values. Complex values are normalized through their JSON representation so
+// typed maps and response structs cannot bypass the structured privacy boundary.
 func Value(value any) any {
 	switch typed := value.(type) {
+	case nil:
+		return nil
 	case map[string]any:
 		return Fields(typed)
 	case []any:
@@ -65,8 +71,26 @@ func Value(value any) any {
 			return Replacement
 		}
 		return typed
-	default:
+	}
+
+	kind := reflect.TypeOf(value).Kind()
+	switch kind {
+	case reflect.Map, reflect.Slice, reflect.Array, reflect.Struct, reflect.Pointer, reflect.Interface:
+		data, err := json.Marshal(value)
+		if err != nil {
+			return Replacement
+		}
+		var normalized any
+		if err := json.Unmarshal(data, &normalized); err != nil {
+			return Replacement
+		}
+		return Value(normalized)
+	case reflect.Bool, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr,
+		reflect.Float32, reflect.Float64:
 		return value
+	default:
+		return Replacement
 	}
 }
 

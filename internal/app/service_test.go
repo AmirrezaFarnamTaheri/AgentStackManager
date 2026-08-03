@@ -13,9 +13,11 @@ import (
 	"github.com/agentstack/agentstack/internal/mcp"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/runner"
 	"github.com/agentstack/agentstack/internal/skills"
 	"github.com/agentstack/agentstack/internal/state"
+	"github.com/agentstack/agentstack/internal/workspace"
 )
 
 type appLocator map[string]string
@@ -617,5 +619,57 @@ func TestPrepareStoreDoesNotRecoverTransactionWhileMutationLeaseIsLive(t *testin
 	}
 	if loaded.Status != model.TransactionRunning {
 		t.Fatalf("live transaction was recovered as %s", loaded.Status)
+	}
+}
+
+func TestRoutineCommandInvokesDirectBinaryWithoutShell(t *testing.T) {
+	commands := &appRunner{}
+	service := minimalService(t, model.Catalog{Version: 1}, commands)
+	output, err := service.Execute(context.Background(), routines.Routine{ID: "direct"}, routines.Step{
+		ID: "command", Kind: routines.StepCommand, Command: "tool.exe", Args: []string{"--message", "hello world"}, TimeoutSeconds: 7,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output == nil || len(commands.calls) != 1 {
+		t.Fatalf("output=%#v calls=%#v", output, commands.calls)
+	}
+	call := commands.calls[0]
+	if call.Command != "tool.exe" || len(call.Args) != 2 || call.Args[1] != "hello world" {
+		t.Fatalf("command was rewritten through a shell: %#v", call)
+	}
+	if len(call.Env) != 0 || call.Timeout != 7*time.Second || call.MaxOutputBytes != 1<<20 {
+		t.Fatalf("command boundary was not minimal and bounded: %#v", call)
+	}
+}
+
+func TestRoutineCommandUsesSupervisedRunnerLimits(t *testing.T) {
+	commands := &appRunner{}
+	service := minimalService(t, model.Catalog{Version: 1}, commands)
+	if _, err := service.Execute(context.Background(), routines.Routine{ID: "bounded"}, routines.Step{
+		ID: "fetch", Kind: routines.StepCommand, Command: "weather-client", Args: []string{"--city", "Berlin"}, TimeoutSeconds: 3,
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if len(commands.calls) != 1 {
+		t.Fatalf("unexpected calls: %#v", commands.calls)
+	}
+	call := commands.calls[0]
+	if call.Timeout != 3*time.Second || call.MaxOutputBytes != 1<<20 || call.LongRunning {
+		t.Fatalf("routine command was not bounded: %#v", call)
+	}
+}
+
+func TestFabricMutationsShareOneCrossProcessLease(t *testing.T) {
+	service := minimalService(t, model.Catalog{Version: 1}, &appRunner{})
+	lease, err := service.Store.AcquireLease("fabric", time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer lease.Close()
+
+	_, err = service.CreateWorkspace(workspace.Item{ID: "blocked", Name: "Blocked", Type: workspace.TypeWorkspace, Root: t.TempDir()})
+	if !errors.Is(err, state.ErrMutationBusy) {
+		t.Fatalf("expected shared fabric mutation lease, got %v", err)
 	}
 }
