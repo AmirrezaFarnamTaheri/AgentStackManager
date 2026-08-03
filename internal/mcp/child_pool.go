@@ -114,9 +114,7 @@ func (p *PooledChildClient) withSession(ctx context.Context, server ServerConfig
 	worker.lastUsed = time.Now()
 	if worker.active == 0 {
 		ttl := p.IdleTTL
-		if server.IdleTTLSeconds > 0 {
-			ttl = time.Duration(server.IdleTTLSeconds) * time.Second
-		}
+		ttl = mcpIdleTTL(server.IdleTTLSeconds, ttl)
 		if ttl <= 0 {
 			ttl = 2 * time.Minute
 		}

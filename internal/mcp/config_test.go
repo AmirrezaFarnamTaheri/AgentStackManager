@@ -39,6 +39,25 @@ func TestBuildRouterConfigIncludesOnlyActiveRouterActions(t *testing.T) {
 	}
 }
 
+func TestValidateRouterConfigRejectsIdleTTLOverflow(t *testing.T) {
+	config := RouterConfig{Version: 1, Servers: map[string]ServerConfig{
+		"overflow": {Command: "server", IdleTTLSeconds: int(^uint(0) >> 1)},
+	}}
+	if err := validateRouterConfig(config); err == nil || !strings.Contains(err.Error(), "idle TTL") {
+		t.Fatalf("expected oversized idle TTL rejection, got %v", err)
+	}
+}
+
+func TestMCPIdleTTLUsesFallbackForUnvalidatedValues(t *testing.T) {
+	fallback := 2 * time.Minute
+	if got := mcpIdleTTL(int(^uint(0)>>1), fallback); got != fallback {
+		t.Fatalf("overflowing idle TTL should use fallback, got %s", got)
+	}
+	if got := mcpIdleTTL(60, fallback); got != time.Minute {
+		t.Fatalf("valid idle TTL should be converted, got %s", got)
+	}
+}
+
 func TestWriteRouterConfigRoundTrip(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "router.json")
 	input := RouterConfig{Version: 1, Profile: "essential", Servers: map[string]ServerConfig{"memory": {Command: "npx", Args: []string{"server"}}}}

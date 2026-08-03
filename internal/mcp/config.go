@@ -155,7 +155,7 @@ func validateRouterConfig(config RouterConfig) error {
 				return err
 			}
 		}
-		if server.IdleTTLSeconds < 0 || time.Duration(server.IdleTTLSeconds)*time.Second > maxMCPIdleTTL {
+		if server.IdleTTLSeconds < 0 || int64(server.IdleTTLSeconds) > maxMCPIdleTTLSeconds {
 			return fmt.Errorf("router server %q idle TTL is outside supported bounds", name)
 		}
 		if server.Limits.CPUPercent > 100 {
@@ -163,6 +163,17 @@ func validateRouterConfig(config RouterConfig) error {
 		}
 	}
 	return nil
+}
+
+const maxMCPIdleTTLSeconds = int64(maxMCPIdleTTL / time.Second)
+
+// mcpIdleTTL converts a validated seconds value without allowing duration
+// multiplication to overflow when a config is supplied directly by a caller.
+func mcpIdleTTL(seconds int, fallback time.Duration) time.Duration {
+	if seconds <= 0 || int64(seconds) > maxMCPIdleTTLSeconds {
+		return fallback
+	}
+	return time.Duration(seconds) * time.Second
 }
 
 func validateMCPCommand(label, command string, args []string, env map[string]string) error {
