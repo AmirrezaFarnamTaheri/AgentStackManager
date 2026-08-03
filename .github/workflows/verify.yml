@@ -93,7 +93,7 @@ jobs:
           go-version-file: '.go-version'
       - name: Install pinned Gremlins
         shell: pwsh
-        run: go install github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0
+        run: ./scripts/install-gremlins-windows.ps1 -Version v0.6.0
       - name: Windows-specific mutation quality gate
         shell: pwsh
         run: ./scripts/windows-mutation.ps1 -Output mutation-windows.json
