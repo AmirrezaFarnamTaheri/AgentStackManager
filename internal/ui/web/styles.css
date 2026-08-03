@@ -215,6 +215,7 @@ main {
 .operation-status-copy strong, .operation-status-copy small { display: block; }
 .operation-status-copy strong { font-size: 13px; }
 .operation-status-copy small { margin-top: 3px; color: var(--text-soft); font-size: 12px; line-height: 1.4; }
+.operation-status-copy .operation-status-meta { margin-top: 5px; color: var(--accent); font-family: var(--font-mono); font-size: 10px; }
 .operation-seal, .record-seal {
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -240,6 +241,32 @@ main {
 
 .section { display: none; }
 .active-section { display: block; animation: section-in 220ms var(--ease) both; }
+.workflow-guide, .activity-panel { margin: 0 0 22px; padding: 17px 18px; border: 1px solid var(--line); border-radius: var(--radius-panel); background: var(--surface-strong); box-shadow: var(--shadow-panel); }
+.workflow-guide { display: grid; grid-template-columns: minmax(230px, .8fr) minmax(0, 1.7fr); gap: 24px; align-items: center; }
+.workflow-guide h2, .activity-head h2 { margin: 0; font-size: 14px; letter-spacing: -0.01em; }
+.workflow-guide p, .activity-head p { margin: 5px 0 0; color: var(--text-soft); font-size: 12px; line-height: 1.45; }
+.workflow-guide ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0; margin: 0; list-style: none; }
+.workflow-guide li { display: flex; gap: 9px; min-width: 0; padding-left: 12px; border-left: 1px solid var(--line); }
+.workflow-guide li:first-child { border-left: 0; padding-left: 0; }
+.workflow-guide li > span { display: grid; place-items: center; flex: 0 0 23px; height: 23px; border-radius: 50%; background: var(--surface-muted); color: var(--text-soft); font: 700 10px var(--font-mono); }
+.workflow-guide li.active > span { background: var(--accent); color: #fff; }
+.workflow-guide li.complete > span { background: var(--success); color: #fff; }
+.workflow-guide strong, .workflow-guide small { display: block; }
+.workflow-guide strong { font-size: 12px; }
+.workflow-guide small { margin-top: 3px; color: var(--text-soft); font-size: 10px; line-height: 1.35; }
+.activity-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.compact-button { min-height: 44px; padding: 7px 9px; font-size: 11px; }
+.activity-log { display: grid; gap: 0; padding: 0; margin: 13px 0 0; list-style: none; border-top: 1px solid var(--line); }
+.activity-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.activity-item strong, .activity-item small { display: block; }
+.activity-item strong { font-size: 12px; }
+.activity-item small { margin-top: 2px; color: var(--text-soft); font-size: 11px; line-height: 1.4; }
+.activity-item time { color: var(--text-soft); font: 10px var(--font-mono); white-space: nowrap; }
+.activity-marker { width: 8px; height: 8px; margin-top: 4px; border-radius: 50%; background: var(--text-soft); }
+.activity-item.running .activity-marker { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.activity-item.success .activity-marker { background: var(--success); }
+.activity-item.error .activity-marker { background: var(--danger); }
+.activity-empty { padding: 11px 0; color: var(--text-soft); font-size: 12px; }
 .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin: 0 0 20px; }
 .section-heading h2 { margin: 0; font-size: 24px; line-height: 1.15; letter-spacing: -0.025em; }
 .section-heading p { margin: 7px 0 0; max-width: 680px; color: var(--text-soft); font-size: 13px; line-height: 1.55; }
@@ -382,6 +409,8 @@ tbody tr:last-child td { border-bottom: 0; }
 td small { color: var(--text-soft); font-family: var(--font-mono); }
 .authorization-block { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-top: 16px; padding: 17px 18px; border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--line)); border-radius: var(--radius-panel); background: color-mix(in srgb, var(--danger) 5%, var(--surface)); }
 .authorization-block .confirm-row { margin: 0; padding: 0; border: 0; max-width: 760px; }
+.authorization-action { display: grid; justify-items: end; gap: 8px; }
+.authorization-action > small { max-width: 250px; color: var(--text-soft); font-size: 11px; line-height: 1.4; text-align: right; }
 
 .router-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr); gap: 20px; align-items: stretch; }
 .command-sheet { padding: 22px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
@@ -430,6 +459,7 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
   .metrics article:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .metrics article:nth-child(3) { padding-left: 0; }
   .card-meta { max-width: 220px; }
+  .workflow-guide { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 800px) {
@@ -452,6 +482,10 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
   .component-card { grid-template-columns: auto minmax(0, 1fr); }
   .card-meta { grid-column: 2; justify-content: flex-start; max-width: none; }
   .authorization-block { display: grid; }
+  .workflow-guide ol { grid-template-columns: 1fr; gap: 9px; }
+  .workflow-guide li, .workflow-guide li:first-child { padding-left: 0; border-left: 0; }
+  .authorization-action { justify-items: stretch; }
+  .authorization-action > small { max-width: none; text-align: left; }
 }
 
 @media (max-width: 520px) {

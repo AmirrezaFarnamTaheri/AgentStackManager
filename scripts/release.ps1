@@ -24,7 +24,7 @@ function Assert-CleanTaggedSource {
     if (-not $originMain) { throw 'Release requires a fetched refs/remotes/origin/main' }
     if ($head -ne $originMain) { throw "Release tag $tag points to $head, but origin/main is $originMain" }
     if ((git cat-file -t "refs/tags/$tag").Trim() -ne 'tag') { throw "$tag must be an annotated tag" }
-    Invoke-Checked git @('tag','-v',$tag)
+    Invoke-Checked git @('tag','-v',$tag) | Out-Host
     return $head
 }
 function Assert-Toolchain {
@@ -42,6 +42,7 @@ function Assert-Governance {
 }
 function Build-Binary([string]$Arch,[string]$Destination,[string]$Flags) {
     $env:CGO_ENABLED='0'; $env:GOOS='windows'; $env:GOARCH=$Arch
+    Write-Host "Building $Arch -> $Destination with ldflags=[$Flags]"
     Invoke-Checked go @('build','-trimpath','-buildvcs=true','-ldflags',$Flags,'-o',$Destination,'./cmd/agentstack')
 }
 function Assert-BuildInfo([string]$Path,[string]$Revision) {
@@ -223,6 +224,11 @@ $baseFlags = "-s -w -buildid=none -X ${agentstackPackage}.version=$Version -X ${
         Assert-BuildInfo $setup $revision
     }
 
+    # Build the catalog generator for the runner, not the last cross-compiled
+    # Windows/ARM64 target left by Build-Binary.
+    $env:GOOS = ''
+    $env:GOARCH = ''
+    $env:CGO_ENABLED = '0'
     Invoke-Checked go @('run','./cmd/agentstack-sbom','--version',$Version,'--out',(Join-Path $dist 'agentstack-catalog.cdx.json'))
     foreach($arch in @('amd64','arm64')) {
         Invoke-Checked syft @((Join-Path $dist "agentstack-windows-$arch.exe"),'-o',"cyclonedx-json=$(Join-Path $dist "agentstack-binary-$arch.cdx.json")")

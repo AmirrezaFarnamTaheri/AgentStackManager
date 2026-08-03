@@ -16,12 +16,16 @@ const state = {
 
 const $ = id => document.getElementById(id);
 let activeOperation = null;
+let operationStartedAt = null;
+let operationTimer = null;
+let activeActivityID = null;
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
-const waitForOperation = async statusURL => {
+const waitForOperation = async (statusURL, onProgress) => {
   for (;;) {
     await delay(750);
     const operation = await api(statusURL);
+    onProgress?.(operation);
     if (operation.status === 'running') {
       continue;
     }
@@ -57,7 +61,7 @@ const api = async (path, options = {}) => {
     throw error;
   }
   if (response.status === 202 && data.operationId && data.statusUrl) {
-    return waitForOperation(data.statusUrl);
+    return waitForOperation(data.statusUrl, options.onProgress);
   }
   return data;
 };
@@ -84,6 +88,73 @@ function setOperationStatus(status, title, detail) {
   if (seal) {
     seal.textContent = { running: 'Running', success: 'Verified', error: 'Review', idle: 'Local' }[status] || 'Local';
   }
+}
+
+function formatElapsed(milliseconds) {
+  const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+  return seconds < 60 ? `${seconds}s elapsed` : `${Math.floor(seconds / 60)}m ${seconds % 60}s elapsed`;
+}
+
+function setOperationMeta(message) {
+  const meta = $('operationStatusMeta');
+  if (meta) meta.textContent = message;
+}
+
+function setWorkflowStep(step) {
+  document.querySelectorAll('[data-workflow-step]').forEach(item => {
+    const itemStep = Number(item.dataset.workflowStep);
+    item.classList.toggle('active', itemStep === step);
+    item.classList.toggle('complete', itemStep < step);
+    if (itemStep === step) item.setAttribute('aria-current', 'step');
+    else item.removeAttribute('aria-current');
+  });
+}
+
+function startOperationTimer(name) {
+  operationStartedAt = Date.now();
+  clearInterval(operationTimer);
+  operationTimer = setInterval(() => {
+    if (activeOperation && operationStartedAt) {
+      setOperationMeta(`${formatElapsed(Date.now() - operationStartedAt)} · ${name} is still running locally.`);
+    }
+  }, 1000);
+}
+
+function stopOperationTimer() {
+  clearInterval(operationTimer);
+  operationTimer = null;
+  return operationStartedAt ? Date.now() - operationStartedAt : 0;
+}
+
+function addActivity(level, title, detail, activityID = null) {
+  const log = $('activityLog');
+  const summary = $('activitySummary');
+  if (!log || !summary) return;
+  const existing = activityID ? log.querySelector(`[data-activity-id="${CSS.escape(activityID)}"]`) : null;
+  if (existing) {
+    existing.className = `activity-item ${level}`;
+    existing.querySelector('strong').textContent = title;
+    existing.querySelector('small').textContent = detail;
+    return;
+  }
+  const empty = log.querySelector('.activity-empty');
+  if (empty) empty.remove();
+  const item = document.createElement('li');
+  item.className = `activity-item ${level}`;
+  if (activityID) item.dataset.activityId = activityID;
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  item.innerHTML = `<span class="activity-marker" aria-hidden="true"></span><div><strong>${escapeHtml(title)}</strong><small>${escapeHtml(detail)}</small></div><time>${time}</time>`;
+  log.prepend(item);
+  while (log.children.length > 8) log.lastElementChild.remove();
+  summary.textContent = `Showing the latest ${log.children.length} local operation${log.children.length === 1 ? '' : 's'} from this browser session.`;
+}
+
+function clearActivity() {
+  const log = $('activityLog');
+  const summary = $('activitySummary');
+  if (!log || !summary) return;
+  log.innerHTML = '<li class="activity-empty">No activity recorded in this browser session.</li>';
+  summary.textContent = 'This browser session has not run an operation yet.';
 }
 
 function setOperationControlsBusy(activeButton, busy) {
@@ -131,14 +202,25 @@ async function runOperation(button, name, operation) {
   }
 
   activeOperation = name;
+  startOperationTimer(name);
+  activeActivityID = `${name}-${operationStartedAt}`;
   const previousFocus = document.activeElement;
   setOperationControlsBusy(button, true);
   setOperationStatus('running', name, 'AgentStack is working. Controls are temporarily locked to prevent conflicting changes.');
+  setOperationMeta('Starting locally…');
+  addActivity('running', name, 'Started. Changes remain blocked until this operation finishes.', activeActivityID);
 
   try {
-    const result = await operation();
+    const result = await operation(operationStatus => {
+      if (operationStatus.status === 'running') {
+        setOperationMeta(`${formatElapsed(Date.now() - operationStartedAt)} · Still working; checking the local operation record.`);
+      }
+    });
     const detail = result?.statusDetail || 'The operation completed successfully.';
     setOperationStatus('success', `${name} complete`, detail);
+    const elapsed = stopOperationTimer();
+    setOperationMeta(`${formatElapsed(elapsed)} · Completed locally.`);
+    addActivity('success', `${name} complete`, `${detail} (${formatElapsed(elapsed)})`, activeActivityID);
     return result;
   } catch (error) {
     if (name === 'Load AgentStack Manager' || name === 'Refresh inventory') {
@@ -147,6 +229,9 @@ async function runOperation(button, name, operation) {
       $('overviewLoadErrorDetail').textContent = error.message;
     }
     setOperationStatus('error', `${name} failed`, error.message);
+    const elapsed = stopOperationTimer();
+    setOperationMeta(`${formatElapsed(elapsed)} · Review the message and try again when ready.`);
+    addActivity('error', `${name} needs attention`, `${error.message} (${formatElapsed(elapsed)})`, activeActivityID);
     const output = $('routerOutput');
     if (output && error.data) {
       output.textContent = JSON.stringify(error.data, null, 2);
@@ -159,6 +244,7 @@ async function runOperation(button, name, operation) {
       setCatalogControlsAvailable(false);
     }
     activeOperation = null;
+    activeActivityID = null;
     updateApplyAvailability();
     const currentFocus = document.activeElement;
     const focusMovedByOperation = currentFocus && currentFocus !== document.body && currentFocus !== button;
@@ -190,10 +276,12 @@ function updateApplyAvailability() {
     return;
   }
   apply.disabled = Boolean(activeOperation) || !confirmation.checked || !state.plan;
+  $('applyHelp').textContent = !state.plan ? 'Build a new plan before authorizing changes.' : confirmation.checked ? 'Ready to apply. No changes occur until you select Apply reviewed plan.' : 'Check the authorization box to enable this action.';
 }
 
 function invalidatePlan() {
   state.plan = null;
+  setWorkflowStep(1);
   $('confirmApply').checked = false;
   updateApplyAvailability();
   $('planContent').hidden = true;
@@ -374,6 +462,7 @@ function componentCard(component) {
 
 function renderPlan(plan) {
   state.plan = plan;
+  setWorkflowStep(2);
   $('planEmpty').hidden = true;
   $('planContent').hidden = false;
   const counts = {};
@@ -406,6 +495,7 @@ function showSection(id, focus = true) {
       element.removeAttribute('aria-current');
     }
   });
+  $('skipLink')?.setAttribute('href', `#${id}-title`);
   if (focus) {
     const heading = document.querySelector(`#${id} h2`);
     if (heading) {
@@ -453,17 +543,18 @@ async function refresh(options = {}) {
 async function buildPlan() {
   const plan = await api('plan', { method: 'POST', body: JSON.stringify(buildRequest()) });
   renderPlan(plan);
-  toast('Reviewed plan generated');
+  toast('Sealed plan ready for review');
   return { statusDetail: `Plan ${plan.id} is sealed to the current catalog and inventory.` };
 }
 
-async function applyPlan() {
+async function applyPlan(onProgress) {
   if (!$('confirmApply').checked || !state.plan) {
     throw new Error('Review and confirm a sealed plan before applying it.');
   }
   const report = await api('apply', {
     method: 'POST',
     body: JSON.stringify({ planId: state.plan.id, digest: state.plan.digest, confirm: true }),
+    onProgress,
   });
   $('routerOutput').textContent = JSON.stringify(report, null, 2);
   toast('Reviewed plan applied and postconditions verified');
@@ -493,8 +584,8 @@ async function doctor() {
   return { statusDetail: 'Every configured MCP child completed initialize and tools/list.' };
 }
 
-async function installSelf() {
-  const report = await api('install-self', { method: 'POST', body: JSON.stringify({ confirm: true }) });
+async function installSelf(onProgress) {
+  const report = await api('install-self', { method: 'POST', body: JSON.stringify({ confirm: true }), onProgress });
   toast(report.pathChanged ? 'Installed and added to PATH' : 'AgentStack installation is already current');
   return { statusDetail: report.pathChanged ? 'AgentStack is installed and the user PATH was updated.' : 'The installed AgentStack binary and PATH entry are already current.' };
 }
@@ -568,6 +659,8 @@ $('componentGroups').addEventListener('change', event => {
   updateMetrics();
 });
 $('confirmApply').addEventListener('change', updateApplyAvailability);
+$('confirmApply').addEventListener('change', event => setWorkflowStep(event.target.checked ? 3 : 2));
+$('clearActivityBtn').addEventListener('click', clearActivity);
 
 $('refreshBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh inventory', refresh));
 $('refreshFabricBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh unified fabric', refreshFabric));
@@ -586,4 +679,6 @@ $('installSelfBtn').addEventListener('click', event => confirmThenRun(
 $('exitBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Stop manager', shutdown));
 
 showSection('overview', false);
+clearActivity();
+setWorkflowStep(1);
 void runOperation(null, 'Load AgentStack Manager', refresh);

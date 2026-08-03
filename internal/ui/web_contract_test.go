@@ -28,6 +28,10 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 		`aria-live="polite"`,
 		`aria-atomic="true"`,
 		`data-state="idle"`,
+		`id="operationStatusMeta"`,
+		`id="activityLog"`,
+		`id="clearActivityBtn"`,
+		`id="workflow-title"`,
 	} {
 		if !strings.Contains(html, fragment) {
 			t.Fatalf("operation status contract missing %q", fragment)
@@ -60,6 +64,10 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 		"data-original-label",
 		"main.setAttribute('aria-busy', 'true')",
 		"function isVisible(",
+		"function addActivity(",
+		"function formatElapsed(",
+		"function setWorkflowStep(",
+		"onProgress?.(operation)",
 	} {
 		if !strings.Contains(js, fragment) {
 			t.Fatalf("busy-state implementation missing %q", fragment)
@@ -78,6 +86,8 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 		".button.is-busy",
 		"@keyframes operation-spin",
 		"prefers-reduced-motion",
+		".activity-log",
+		".workflow-guide",
 	} {
 		if !strings.Contains(css, fragment) {
 			t.Fatalf("busy-state styling missing %q", fragment)
