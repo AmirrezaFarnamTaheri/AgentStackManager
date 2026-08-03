@@ -12,22 +12,27 @@ import (
 	"time"
 
 	"github.com/agentstack/agentstack/internal/catalog"
+	"github.com/agentstack/agentstack/internal/contextengine"
 	"github.com/agentstack/agentstack/internal/diagnostics"
 	"github.com/agentstack/agentstack/internal/integrity"
 	"github.com/agentstack/agentstack/internal/inventory"
 	"github.com/agentstack/agentstack/internal/mcp"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/resourcehub"
+	"github.com/agentstack/agentstack/internal/reviewedplan"
+	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/runner"
 	"github.com/agentstack/agentstack/internal/safefile"
 	"github.com/agentstack/agentstack/internal/security"
 	"github.com/agentstack/agentstack/internal/skills"
 	"github.com/agentstack/agentstack/internal/state"
+	"github.com/agentstack/agentstack/internal/workspace"
 )
 
-var ErrConfirmationRequired = errors.New("explicit confirmation is required before applying changes")
-var ErrPlanStale = errors.New("reviewed plan is stale; rebuild and review the plan")
-var ErrPlanMismatch = errors.New("reviewed plan digest does not match")
+var ErrConfirmationRequired = reviewedplan.ErrConfirmationRequired
+var ErrPlanStale = reviewedplan.ErrPlanStale
+var ErrPlanMismatch = reviewedplan.ErrPlanMismatch
 
 type Service struct {
 	Catalog    model.Catalog
@@ -40,6 +45,11 @@ type Service struct {
 	SkillRoots []string
 	PlanTTL    time.Duration
 	DoctorTTL  time.Duration
+
+	ResourceHub resourcehub.Manager
+	Context     contextengine.Manager
+	Workspaces  workspace.Manager
+	Routines    routines.Manager
 
 	doctorMu      sync.Mutex
 	doctorCached  DoctorReport
@@ -123,16 +133,20 @@ func NewDefault() (*Service, error) {
 	skillRoots := skills.DefaultTargets()
 	skillInstaller := skills.Installer{Commands: commands, Targets: skillRoots}
 	service := &Service{
-		Catalog:    c,
-		Scanner:    inventory.NewScanner(),
-		Store:      state.NewStore(paths.DataRoot),
-		Installer:  runner.Engine{Commands: commands, Skills: skillInstaller, Catalog: c},
-		Commands:   commands,
-		Paths:      paths,
-		LookPath:   defaultLocator{},
-		SkillRoots: skillRoots,
-		PlanTTL:    planner.DefaultPlanTTL,
-		DoctorTTL:  30 * time.Second,
+		Catalog:     c,
+		Scanner:     inventory.NewScanner(),
+		Store:       state.NewStore(paths.DataRoot),
+		Installer:   runner.Engine{Commands: commands, Skills: skillInstaller, Catalog: c},
+		Commands:    commands,
+		Paths:       paths,
+		LookPath:    defaultLocator{},
+		SkillRoots:  skillRoots,
+		PlanTTL:     planner.DefaultPlanTTL,
+		DoctorTTL:   30 * time.Second,
+		ResourceHub: resourcehub.New(filepath.Join(paths.DataRoot, "hub")),
+		Context:     contextengine.New(filepath.Join(paths.DataRoot, "context")),
+		Workspaces:  workspace.New(filepath.Join(paths.DataRoot, "workspace")),
+		Routines:    routines.New(filepath.Join(paths.DataRoot, "routines")),
 	}
 	service.Installer.Verifier = inventory.Verifier{Scanner: service.Scanner, Catalog: c}
 	if err := prepareStore(service.Store, time.Now().UTC()); err != nil {
@@ -236,70 +250,27 @@ func (s *Service) Plan(ctx context.Context, request planner.Request) (model.Plan
 }
 
 func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confirmed bool) (ApplyReport, error) {
-	if !confirmed {
-		return ApplyReport{}, ErrConfirmationRequired
-	}
-	lease, err := s.Store.AcquireLease("mutation", 6*time.Hour)
-	if err != nil {
-		return ApplyReport{}, err
-	}
-	defer lease.Close()
-	_ = s.logEvent(state.Event{Level: "info", Type: "apply.started", CorrelationID: planID})
-	saved, err := s.Store.LoadPlan(planID)
-	if err != nil {
-		return ApplyReport{}, err
-	}
-	plan := saved.Plan
-	if digest == "" || digest != plan.Digest {
-		return ApplyReport{}, ErrPlanMismatch
-	}
-	computedDigest, err := planner.PlanDigest(plan)
-	if err != nil || computedDigest != plan.Digest {
-		return ApplyReport{}, ErrPlanMismatch
-	}
-	if time.Now().UTC().After(plan.ExpiresAt) {
-		return ApplyReport{}, ErrPlanStale
-	}
-	catalogHash, err := integrity.DigestJSON(s.Catalog)
-	if err != nil || catalogHash != plan.CatalogHash {
-		return ApplyReport{}, ErrPlanStale
-	}
-	current, err := s.Inventory(ctx)
-	if err != nil {
-		return ApplyReport{}, err
-	}
-	inventoryHash, err := planner.InventoryDigest(current)
-	if err != nil || inventoryHash != plan.InventoryHash {
-		return ApplyReport{}, ErrPlanStale
-	}
-	if err := lease.Touch(); err != nil {
-		return ApplyReport{}, err
-	}
-	// A reviewed plan is a single-use authorization token. Consume it before
-	// the first external mutation so cleanup failures or partial installs cannot
-	// make an old approval replayable. A failed operation must be re-planned
-	// against the resulting machine state.
-	if err := s.Store.DeletePlan(planID); err != nil {
-		return ApplyReport{}, fmt.Errorf("consume reviewed plan before mutation: %w", err)
-	}
-	transaction := s.Installer.Apply(ctx, plan, runner.ApplyOptions{
-		CorrelationID: plan.ID,
-		OnUpdate: func(tx model.Transaction) error {
-			if err := lease.Touch(); err != nil {
-				return err
-			}
-			return s.Store.SaveTransaction(tx)
+	execution, err := (reviewedplan.Executor{
+		Catalog:                  s.Catalog,
+		Store:                    s.Store,
+		Installer:                s.Installer,
+		Inventory:                s.Inventory,
+		RecordSuccessfulInstalls: s.recordSuccessfulInstalls,
+		LogEvent: func(event state.Event) {
+			_ = s.logEvent(event)
 		},
-	})
-	if err := s.Store.SaveTransaction(transaction); err != nil {
-		return ApplyReport{}, err
+	}).Execute(ctx, reviewedplan.Request{PlanID: planID, Digest: digest, Confirmed: confirmed})
+	report := ApplyReport{Plan: execution.Saved.Plan, Transaction: execution.Transaction}
+	if err != nil {
+		if execution.Transaction.Status == model.TransactionFailed {
+			_ = s.logEvent(state.Event{Level: "error", Type: "apply.failed", CorrelationID: planID, Fields: map[string]any{"transactionId": execution.Transaction.ID, "status": execution.Transaction.Status}})
+		}
+		return report, err
 	}
-	if err := s.recordSuccessfulInstalls(plan, transaction); err != nil {
-		return ApplyReport{}, err
-	}
-	report := ApplyReport{Plan: plan, Transaction: transaction}
-	if transaction.Status != model.TransactionFailed && planHasRouterActions(s.Catalog, plan) {
-		routerReport, routerErr := s.configureRouter(ctx, plan, MCPInitOptions{Request: saved.Request, RegisterClients: true, Warm: true})
+	plan := execution.Saved.Plan
+	transaction := execution.Transaction
+	if planHasRouterActions(s.Catalog, plan) {
+		routerReport, routerErr := s.configureRouter(ctx, plan, MCPInitOptions{Request: execution.Saved.Request, RegisterClients: true, Warm: true})
 		report.Router = &routerReport
 		if routerErr != nil {
 			transaction.Status = model.TransactionPartial
@@ -311,10 +282,6 @@ func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confi
 			_ = s.logEvent(state.Event{Level: "error", Type: "apply.partial", CorrelationID: plan.ID, Message: routerErr.Error(), Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
 			return report, routerErr
 		}
-	}
-	if transaction.Status == model.TransactionFailed {
-		_ = s.logEvent(state.Event{Level: "error", Type: "apply.failed", CorrelationID: plan.ID, Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
-		return report, fmt.Errorf("one or more selected installations failed; see transaction %s", transaction.ID)
 	}
 	_ = s.logEvent(state.Event{Level: "info", Type: "apply.completed", CorrelationID: plan.ID, Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
 	return report, nil
@@ -538,7 +505,8 @@ func (s *Service) MCPDoctor(ctx context.Context) (DoctorReport, error) {
 	if err != nil {
 		return DoctorReport{Healthy: false, Config: s.Paths.RouterConfig, CheckedAt: time.Now().UTC(), Duration: time.Since(started)}, err
 	}
-	child := mcp.StdIOChildClient{Observer: s.MCPChildObserver()}
+	child := mcp.NewManagedChildRuntime(mcp.ChildRuntimeOptions{Observer: s.MCPChildObserver()})
+	defer child.Close()
 	report := DoctorReport{Healthy: true, Config: s.Paths.RouterConfig, Servers: map[string]mcp.DoctorItem{}, CheckedAt: time.Now().UTC()}
 	for _, name := range mcp.SortedServerNames(config) {
 		item := child.Doctor(ctx, config.Servers[name])
@@ -742,9 +710,18 @@ func restorePreviousTarget(target, rollbackPath string, existed bool) error {
 }
 
 func (s *Service) validateRestoreCandidate(target, candidate string) (bool, string, error) {
-	cleanTarget, _ := filepath.Abs(target)
-	routerPath, _ := filepath.Abs(s.Paths.RouterConfig)
-	agyPath, _ := filepath.Abs(s.Paths.AgyConfig)
+	cleanTarget, err := filepath.Abs(target)
+	if err != nil {
+		return false, "restore target path is invalid", err
+	}
+	routerPath, err := filepath.Abs(s.Paths.RouterConfig)
+	if err != nil {
+		return false, "router configuration path is invalid", err
+	}
+	agyPath, err := filepath.Abs(s.Paths.AgyConfig)
+	if err != nil {
+		return false, "AGY configuration path is invalid", err
+	}
 	switch cleanTarget {
 	case routerPath:
 		if _, err := mcp.LoadRouterConfig(candidate); err != nil {
@@ -774,8 +751,14 @@ func (s *Service) validateRestoredTarget(ctx context.Context, target string) (va
 	if structuralErr != nil {
 		return false, false, structuralMessage, nil, structuralErr
 	}
-	cleanTarget, _ := filepath.Abs(target)
-	routerPath, _ := filepath.Abs(s.Paths.RouterConfig)
+	cleanTarget, err := filepath.Abs(target)
+	if err != nil {
+		return false, false, "restored target path is invalid", nil, err
+	}
+	routerPath, err := filepath.Abs(s.Paths.RouterConfig)
+	if err != nil {
+		return false, false, "router configuration path is invalid", nil, err
+	}
 	if cleanTarget != routerPath {
 		return structural, false, structuralMessage, nil, nil
 	}

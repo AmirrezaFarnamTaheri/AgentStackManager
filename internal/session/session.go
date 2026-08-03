@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 
-	"github.com/agentstack/agentstack/internal/processctl"
+	"github.com/agentstack/agentstack/internal/supervisor"
 )
 
 type StartRequest struct {
@@ -22,18 +21,14 @@ type Starter interface {
 type ExecStarter struct{}
 
 func (ExecStarter) Run(ctx context.Context, request StartRequest) error {
-	cmd := exec.Command(request.Command, request.Args...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if len(request.Env) > 0 {
-		env := os.Environ()
-		for key, value := range request.Env {
-			env = append(env, key+"="+value)
-		}
-		cmd.Env = env
-	}
-	process, err := processctl.Start(cmd)
+	process, err := (supervisor.Runtime{}).Start(ctx, supervisor.Spec{
+		Command: request.Command,
+		Args:    append([]string(nil), request.Args...),
+		Env:     request.Env,
+		Stdin:   os.Stdin,
+		Stdout:  os.Stdout,
+		Stderr:  os.Stderr,
+	})
 	if err != nil {
 		return fmt.Errorf("start %s: %w", request.Command, err)
 	}

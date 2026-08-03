@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -60,6 +61,26 @@ func TestLoadRouterConfigRejectsTrailingJSONContent(t *testing.T) {
 	}
 	if _, err := LoadRouterConfig(path); err == nil {
 		t.Fatal("router config with trailing content was accepted")
+	}
+}
+
+func TestLoadRouterConfigRejectsInvalidServerCommand(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "router.json")
+	if err := os.WriteFile(path, []byte(`{"version":1,"servers":{"bad":{"command":""}}}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := LoadRouterConfig(path); err == nil || !strings.Contains(err.Error(), "command is invalid") {
+		t.Fatalf("expected invalid server command rejection, got %v", err)
+	}
+}
+
+func TestMergeAgyConfigRejectsDuplicateKeys(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "mcp_config.json")
+	if err := os.WriteFile(path, []byte(`{"mcpServers":{},"mcpServers":{"agentstack-router":{"command":"foreign"}}}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := MergeAgyConfig(path, "agentstack", []string{"mcp-router"}, t.TempDir()); err == nil || !strings.Contains(err.Error(), "duplicate") {
+		t.Fatalf("expected duplicate-key rejection, got %v", err)
 	}
 }
 

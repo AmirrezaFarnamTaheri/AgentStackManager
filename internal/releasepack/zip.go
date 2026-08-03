@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/agentstack/agentstack/internal/safefile"
 )
 
 var fixedTime = time.Date(1980, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -18,36 +20,55 @@ func sanitizePrefix(prefix string) (string, error) {
 	if prefix == "" {
 		return "", nil
 	}
-	prefix = strings.ReplaceAll(prefix, "\\", "/")
-	prefix = strings.TrimPrefix(prefix, "./")
-	prefix = strings.TrimPrefix(prefix, "/")
-	cleaned := path.Clean(prefix)
-	if cleaned == "." || cleaned == "" {
-		return "", nil
+	normalized := strings.ReplaceAll(prefix, "\\", "/")
+	normalized = strings.TrimPrefix(normalized, "./")
+	normalized = strings.TrimSuffix(normalized, "/")
+	cleaned, err := sanitizeArchivePath(normalized, "prefix")
+	if err != nil {
+		return "", err
 	}
-	if strings.HasPrefix(cleaned, "..") || strings.Contains(cleaned, "/../") {
-		return "", fmt.Errorf("invalid prefix path traversal: %s", prefix)
+	if cleaned == "" {
+		return "", nil
 	}
 	return cleaned + "/", nil
 }
 
+func sanitizeArchivePath(value, kind string) (string, error) {
+	if value == "" {
+		return "", nil
+	}
+	if strings.ContainsRune(value, '\x00') || strings.Contains(value, "\\") || path.IsAbs(value) || strings.Contains(value, ":") {
+		return "", fmt.Errorf("invalid %s archive path: %s", kind, value)
+	}
+	cleaned := path.Clean(value)
+	if cleaned == "." {
+		return "", nil
+	}
+	if cleaned != value || cleaned == ".." || strings.HasPrefix(cleaned, "../") {
+		return "", fmt.Errorf("invalid %s archive path: %s", kind, value)
+	}
+	return cleaned, nil
+}
+
 func Pack(root, destination, prefix string) error {
-	cleanPrefix, err := sanitizePrefix(prefix)
+	root, err := filepath.Abs(root)
 	if err != nil {
 		return err
 	}
-	root, err = filepath.Abs(root)
+	absDest, err := filepath.Abs(destination)
 	if err != nil {
-		return err
+		return fmt.Errorf("resolve release destination: %w", err)
 	}
-	absDest, _ := filepath.Abs(destination)
 
 	var files []string
 	err = filepath.Walk(root, func(p string, info os.FileInfo, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
-		absP, _ := filepath.Abs(p)
+		absP, absErr := filepath.Abs(p)
+		if absErr != nil {
+			return fmt.Errorf("resolve release member %s: %w", p, absErr)
+		}
 		if absP == absDest {
 			return nil
 		}
@@ -68,12 +89,29 @@ func Pack(root, destination, prefix string) error {
 		if info.IsDir() {
 			return nil
 		}
-		files = append(files, p)
+		rel, err := filepath.Rel(root, p)
+		if err != nil {
+			return err
+		}
+		files = append(files, filepath.ToSlash(rel))
 		return nil
 	})
 	if err != nil {
 		return err
 	}
+	return packRelativeFiles(root, destination, prefix, files)
+}
+
+func packRelativeFiles(root, destination, prefix string, relativeFiles []string) error {
+	cleanPrefix, err := sanitizePrefix(prefix)
+	if err != nil {
+		return err
+	}
+	root, err = filepath.Abs(root)
+	if err != nil {
+		return err
+	}
+	files := append([]string(nil), relativeFiles...)
 	sort.Strings(files)
 	if err := os.MkdirAll(filepath.Dir(destination), 0o700); err != nil {
 		return err
@@ -85,58 +123,73 @@ func Pack(root, destination, prefix string) error {
 	name := temp.Name()
 	defer os.Remove(name)
 	archive := zip.NewWriter(temp)
-	for _, pathStr := range files {
-		rel, err := filepath.Rel(root, pathStr)
+	for _, rel := range files {
+		cleanRel, pathErr := sanitizeArchivePath(rel, "release member")
+		if pathErr != nil || cleanRel == "" {
+			_ = archive.Close()
+			_ = temp.Close()
+			if pathErr != nil {
+				return pathErr
+			}
+			return fmt.Errorf("invalid release archive path: %s", rel)
+		}
+		pathStr := filepath.Join(root, filepath.FromSlash(rel))
+		info, err := os.Lstat(pathStr)
 		if err != nil {
-			archive.Close()
-			temp.Close()
+			_ = archive.Close()
+			_ = temp.Close()
 			return err
 		}
-		entry := cleanPrefix + filepath.ToSlash(rel)
+		if !info.Mode().IsRegular() {
+			_ = archive.Close()
+			_ = temp.Close()
+			return fmt.Errorf("release archive path is not a regular file: %s", rel)
+		}
+		entry := cleanPrefix + rel
 		header := &zip.FileHeader{Name: entry, Method: zip.Deflate}
 		header.SetModTime(fixedTime)
 		mode := os.FileMode(0o644)
-		if info, err := os.Stat(pathStr); err == nil && info.Mode()&0o111 != 0 {
+		if info.Mode()&0o111 != 0 {
 			mode = 0o755
 		}
 		header.SetMode(mode)
 		writer, err := archive.CreateHeader(header)
 		if err != nil {
-			archive.Close()
-			temp.Close()
+			_ = archive.Close()
+			_ = temp.Close()
 			return err
 		}
 		input, err := os.Open(pathStr)
 		if err != nil {
-			archive.Close()
-			temp.Close()
+			_ = archive.Close()
+			_ = temp.Close()
 			return err
 		}
 		_, copyErr := io.Copy(writer, input)
 		closeErr := input.Close()
 		if copyErr != nil {
-			archive.Close()
-			temp.Close()
+			_ = archive.Close()
+			_ = temp.Close()
 			return copyErr
 		}
 		if closeErr != nil {
-			archive.Close()
-			temp.Close()
+			_ = archive.Close()
+			_ = temp.Close()
 			return closeErr
 		}
 	}
 	if err := archive.Close(); err != nil {
-		temp.Close()
+		_ = temp.Close()
 		return err
 	}
 	if err := temp.Sync(); err != nil {
-		temp.Close()
+		_ = temp.Close()
 		return err
 	}
 	if err := temp.Close(); err != nil {
 		return err
 	}
-	if err := os.Rename(name, destination); err != nil {
+	if err := safefile.Replace(name, destination); err != nil {
 		return fmt.Errorf("publish release archive: %w", err)
 	}
 	return nil

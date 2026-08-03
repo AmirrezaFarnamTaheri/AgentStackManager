@@ -74,6 +74,8 @@ if ($workflowText -notmatch 'github.com/rhysd/actionlint/cmd/actionlint@v1\.7\.1
 if ($workflowText -match 'actionlint -color never') { throw 'actionlint color mode must not be passed as a positional file argument' }
 if ($workflowText -notmatch '(?m)^\s+actionlint\s*$') { throw 'Verify workflow must invoke actionlint without positional arguments' }
 if ($workflowText -notmatch 'github.com/anchore/syft/cmd/syft@v1\.50\.0') { throw 'Syft is not pinned to v1.50.0' }
+$gremlinsText = Get-Content -Raw (Join-Path $root '.gremlins.yaml')
+if ($gremlinsText -match 'exclude-files:|cmd/|_windows\.go') { throw 'Default mutation config contains a blanket path or platform exclusion' }
 $workflowLines=Get-ChildItem (Join-Path $root '.github/workflows') -Filter '*.yml' | ForEach-Object { Get-Content $_.FullName }
 $uses=@($workflowLines | Where-Object { $_ -match '^\s*-?\s*uses:\s*[^@\s]+@' })
 if (-not $uses) { throw 'No GitHub Action references were found' }

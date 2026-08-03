@@ -3,12 +3,14 @@
 package runner
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/agentstack/agentstack/internal/pathenv"
+	"github.com/agentstack/agentstack/internal/supervisor"
 )
 
 func refreshProcessPath() error {
@@ -29,13 +31,15 @@ func refreshProcessPath() error {
 
 func readWindowsPath(scope string) (string, error) {
 	script := `$value=[Environment]::GetEnvironmentVariable('Path',$env:AGENTSTACK_PATH_SCOPE); if($null -eq $value){$value=''}; [Console]::Out.Write([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($value)))`
-	cmd := exec.Command("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script)
-	cmd.Env = append(os.Environ(), "AGENTSTACK_PATH_SCOPE="+scope)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("read Windows %s PATH: %w: %s", scope, err, strings.TrimSpace(string(output)))
+	result := (supervisor.Runtime{}).Run(context.Background(), supervisor.Spec{
+		Command: "powershell.exe",
+		Args:    []string{"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script},
+		Env:     map[string]string{"AGENTSTACK_PATH_SCOPE": scope},
+	}, supervisor.RunOptions{Timeout: 30 * time.Second, MaxOutputBytes: pathenv.MaxWindowsStringTransportBytes})
+	if result.Err != nil {
+		return "", fmt.Errorf("read Windows %s PATH: %w: %s", scope, result.Err, strings.TrimSpace(result.Stderr))
 	}
-	value, decodeErr := pathenv.DecodeWindowsString(string(output))
+	value, decodeErr := pathenv.DecodeWindowsString(result.Stdout)
 	if decodeErr != nil {
 		return "", fmt.Errorf("decode Windows %s PATH: %w", scope, decodeErr)
 	}

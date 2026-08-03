@@ -79,11 +79,15 @@ deliberately tolerant latency ceilings that reject order-of-magnitude regression
 remaining stable on shared CI hosts. Fuzz campaigns use one worker per target and a hard
 per-target timeout so a pathological case fails visibly instead of stalling the workflow.
 
+GitHub runs the default mutation gate on Linux without excluding command entry points. A separate native Windows mutation job generates a temporary exclusion set that leaves only `_windows.go` production files eligible for mutation, closing the platform-specific blind spot without duplicating the entire common-code matrix.
+
 GitHub additionally runs native Windows setup/PATH/ACL/plan/apply/router/session smoke tests on both x64 and ARM64. The Go race detector runs on Linux and Windows x64; the Windows ARM64 runner executes the complete native non-race suite because upstream Go does not support race instrumentation on windows/arm64. The native suite includes explicit DACL continuity across atomic replacement and a runnable suspended-before-assignment Job Object with memory, CPU-rate, and active-process ceilings. Playwright/axe checks keyboard navigation, reduced motion, operation busy feedback, focus restoration, and authenticated shutdown on Windows.
 
 ## Reproducibility statement
 
 AgentStack claims reproducibility only for the **unsigned** binary build performed twice from the same clean signed tag, toolchain, target, flags, and source tree. Authenticode timestamps and archive signing/attestation metadata are expected to differ. The release script compares unsigned outputs before signing and records the exact source revision and toolchain in provenance.
+
+The release-specific ship gates, staged rollout, failure paths, and rollback triggers are maintained in [Launch readiness and pre-mortem](LAUNCH_READINESS.md).
 
 ## Rollback
 
@@ -101,6 +105,8 @@ identity of a modified, uncommitted source candidate.
 
 ## Source archive verification
 
+Source packaging uses the `internal/releasepack` provenance capsule rather than shell-specific manifest logic. The `write` and `verify` modes establish metadata and exact source closure. The protected `require` mode packages only paths named by the verified manifest, includes the manifest itself, then reopens the ZIP and verifies exact membership and every digest before the file can be published. Ignored working-tree directories therefore cannot leak into a source artifact.
+
 Every source bundle carries `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and
 `SOURCE_MANIFEST.sha256`. A bundle without `.git` is accepted only after the
 manifest verifies both every digest and the exact source file set, and the revision is either `git:<40-hex>` or the explicitly
@@ -110,3 +116,17 @@ place it inside an unrelated parent Git repository, regenerate and verify its ma
 prove an unlisted file is rejected, and execute the supported archive build path.
 This proves archive buildability; it does not turn an unreleased workspace into
 protected release evidence.
+
+## Convergence release evidence
+
+A convergence release additionally requires:
+
+1. combined and donor-slice adoption-ledger validation;
+2. donor surface hash verification against the extracted evidence roots;
+3. unique convergence test-node resolution;
+4. full target regression, race, vet, coverage, governance, documentation, and benchmark gates;
+5. Windows amd64/arm64 test compilation and protected native execution;
+6. deterministic source packaging that includes convergence docs/matrices but excludes donor trees and investigation caches;
+7. clean extraction, manifest verification, tests, and builds from the exact packaged source.
+
+The final release receipt records donor archive hashes, ledger and surface-matrix hashes, target source hash, archive hash, toolchains, validation statuses, and residual protected-CI gates.

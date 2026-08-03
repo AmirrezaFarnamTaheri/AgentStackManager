@@ -15,6 +15,16 @@ required=(
   docs/RELEASE.md
   docs/architecture.md
   docs/UX_DESIGN.md
+  docs/CONVERGENCE.md
+  docs/convergence/DONOR_ANALYSIS.md
+  docs/convergence/TRUST_AND_STATE.md
+  docs/convergence/OMISSION_AUDIT.md
+  docs/convergence/PREMORTEM.md
+  docs/convergence/VALIDATION.md
+  docs/convergence/RUNBOOK.md
+  docs/convergence/ADOPTION.csv
+  docs/convergence/SURFACES.csv
+  docs/convergence/TEST_TRACEABILITY.csv
   docs/audit/ASM-001-040-closure.md
   docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.md
   docs/audit/EXTERNAL-REPORT-ACCEPTED-ITEMS.json

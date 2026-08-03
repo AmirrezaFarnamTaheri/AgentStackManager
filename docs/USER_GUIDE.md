@@ -109,3 +109,26 @@ Default retention is 24 hours for sealed plans, 30 days for completed transactio
 ```
 
 AgentStack applies a current-user-only DACL to its Windows data directory and audits it in native Windows tests. The loopback UI token protects the browser session but does not defend against malicious software already running as the same user.
+
+## Manage the unified fabric
+
+Start with project evidence:
+
+```powershell
+agentstack context scan --root C:\src\project
+agentstack context score --root C:\src\project --target codex
+```
+
+Import and audit a local resource, register a destination, then review and apply a sync plan:
+
+```powershell
+agentstack hub import --id my-skill --kind skill --path C:\src\my-skill --target codex
+agentstack hub audit --id my-skill
+agentstack hub target-add --id project --agent codex --root C:\src\project --mode copy
+agentstack hub plan-sync --target project --resource my-skill
+agentstack hub apply-sync --plan-id <ID> --digest <SHA> --yes
+```
+
+Use workspaces to group project roots, resources, routines, prompt templates, memory, and artifacts. Use routines for confirmed repeatable sequences; inspect redacted results with `agentstack routine history`.
+
+The complete command set and safety rules are documented in [CLI Reference](CLI_REFERENCE.md) and [Convergence Runbook](convergence/RUNBOOK.md).

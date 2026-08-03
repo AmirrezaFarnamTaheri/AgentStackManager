@@ -46,3 +46,17 @@ Entry points include CLI arguments, loopback HTTP, catalog data, package-manager
 - bypass release checks with a dirty tree, lightweight tag, unsupported toolchain, or unsigned artifact.
 
 Each case is covered by automated checks or a fail-closed release/runtime control. Windows end-to-end and accessibility evidence are required release gates rather than assumed from cross-compilation.
+
+## Convergence-specific threats
+
+| Threat | Control |
+| --- | --- |
+| Malicious donor prompt or extension content | inert local import, static audit, reviewed sync, no execution from registry state |
+| Remote marketplace supply-chain substitution | no direct remote install; operator supplies local reviewed checkout with tracked digest |
+| Workspace traversal or symlink escape | canonical-root confinement and bounded file/search operations |
+| Hidden Git mutation | read-only bounded Git commands; no hook installation or staging |
+| Cross-client MCP config destruction | foreign-entry preservation, same-name conflict, before-state digest, backup |
+| Routine shell injection | direct executable and argument array; no shell string |
+| Credential leakage in automation evidence | recursive structured/text redaction before receipt persistence |
+| State-version confusion | explicit schemas, legacy migration, unknown-version rejection |
+| Duplicate product authority | one service and one durable owner per plane; UI status is non-authoritative |

@@ -19,3 +19,9 @@ Required checks are:
 - signed release environment approval for tags.
 
 Workflow and release-policy changes require code-owner review. Signing secrets are scoped to the protected release environment and are never available to pull-request workflows.
+
+## Peer adoption governance
+
+Every future donor-derived change must update the convergence ledger when it changes a recorded capability, target node, invariant, or test. New remote acquisition, credential storage, UI authority, shell execution, or durable schema requires an explicit trust-boundary review and migration/rollback plan.
+
+File-level accounting is necessary but insufficient. Each material adopted, rejected, superseded, or inspired unit needs a decision rationale and suitable evidence. Shared smoke tests cannot stand in for independent semantics.

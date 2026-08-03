@@ -510,3 +510,37 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
   *, *::before, *::after { scroll-behavior:auto!important;transition-duration:0s!important;animation-duration:0s!important;animation-iteration-count:1!important; }
   .operation-spinner, .button.is-busy::before { animation: none; }
 }
+
+
+.fabric-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fabric-metrics article:nth-child(3n) { border-right: 0; }
+.fabric-metrics article:nth-child(n + 4) { border-top: 1px solid var(--line); }
+.fabric-metrics article:nth-child(4) { padding-left: 0; }
+.fabric-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 24px; align-items: start; }
+.fabric-plane-list dl { margin: 0; display: grid; }
+.fabric-plane-list dl > div { display: grid; grid-template-columns: minmax(150px, .34fr) minmax(0, 1fr); gap: 20px; padding: 15px 0; border-top: 1px solid var(--line); }
+.fabric-plane-list dl > div:first-child { border-top: 0; padding-top: 0; }
+.fabric-plane-list dt { font-weight: 700; font-size: 14px; }
+.fabric-plane-list dd { margin: 0; color: var(--text-soft); font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+.fabric-command-sheet { min-width: 0; }
+.fabric-command-sheet pre { overflow-x: auto; }
+.fabric-next { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
+.fabric-next span, .fabric-next strong { display: block; }
+.fabric-next span { color: var(--text-soft); font-size: 12px; font-weight: 650; }
+.fabric-next strong { margin-top: 6px; overflow-wrap: anywhere; font-size: 14px; }
+
+@media (max-width: 1120px) {
+  .fabric-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 800px) {
+  .fabric-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fabric-metrics article:nth-child(3n) { border-right: 1px solid var(--line); }
+  .fabric-metrics article:nth-child(2n) { border-right: 0; }
+  .fabric-metrics article:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  .fabric-metrics article:nth-child(3), .fabric-metrics article:nth-child(5) { padding-left: 0; }
+}
+
+@media (max-width: 520px) {
+  .fabric-plane-list dl > div { grid-template-columns: 1fr; gap: 5px; }
+}

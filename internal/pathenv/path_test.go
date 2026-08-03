@@ -1,6 +1,9 @@
 package pathenv
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestMergeWindowsPreservesOrderAndRemovesEquivalentSegments(t *testing.T) {
 	got := MergeWindows(`C:\Windows; C:\Tools\;`, `c:\tools;C:\Users\Me\bin;;`)
@@ -90,5 +93,12 @@ func TestDecodeWindowsStringRejectsMalformedPayload(t *testing.T) {
 		if _, err := DecodeWindowsString(value); err == nil {
 			t.Fatalf("malformed UTF-16 transport accepted: %q", value)
 		}
+	}
+}
+
+func TestWindowsStringTransportBudgetCoversMaximumEnvironmentValue(t *testing.T) {
+	value := strings.Repeat("x", 32767)
+	if encoded := EncodeWindowsString(value); len(encoded) > MaxWindowsStringTransportBytes {
+		t.Fatalf("encoded maximum environment value uses %d bytes, budget is %d", len(encoded), MaxWindowsStringTransportBytes)
 	}
 }

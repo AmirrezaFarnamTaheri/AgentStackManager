@@ -2,6 +2,26 @@
 
 ## Unreleased — forensic remediation
 
+- Converged seven peer projects into five target-native ASM planes: audited resource hub, project context, workspace/memory/artifacts, MCP client linking, and scheduled routines.
+- Added 53-record donor adoption ledger, 2,673-row surface-accountability matrix, hash-verified donor slices, omission audit, trust/state map, runbook, validation record, and launch pre-mortem.
+- Added deterministic project scanning/scoring, confined file retrieval/search, read-only Git evidence, and reviewed multi-agent context refresh preserving human-authored text.
+- Added typed local resources with tracked sources, admission audit, target-native copy/link distribution, foreign-file protection, managed pruning, reviewed source refresh, backups, and confirmed restore.
+- Added hierarchical workspaces, scoped layered memory, strict prompt variables, content-addressed artifacts, versioned local schemas, legacy migration, and future-version rejection.
+- Added reviewed MCP linking for Codex, Claude, Cursor, AGY/Gemini, and OpenCode while retaining the existing managed router as the sole process authority.
+- Added manual/daily/weekday/interval routines, bounded sequential steps, explicit confirmation, redacted versioned receipts, bounded history, and interrupted-persistence reconciliation.
+- Hardened convergence state with bounded resource trees/audits, secret-rejecting routine admission, durable workspace transaction journals, digest-only MCP plans, registration-only MCP recovery records, duplicate-key rejection, and deferred non-authoritative artifact cleanup.
+- Added bounded regular-file admission and structural validation for resource, workspace, routine, context, MCP, and recovery state; rejected symlink substitution, oversized stores, malformed identifiers, invalid digests, unconstrained commands, and unsupported persisted graphs.
+- Enforced a 1 MiB pre-decode ceiling for strict workspace and routine JSON input, preserved UTF-8 boundaries during context truncation, and corrected public-release documentation to require the Authenticode signer checks already enforced by setup and release CI.
+- Rejected hidden Git mutation, direct remote marketplace activation, product-specific credential storage/connectors, shell-string automation, duplicate donor daemons, and UI-owned authority.
+
+- Closed review findings in archive path validation, MCP shutdown cancellation, reviewed-plan identity binding, releasepack argument handling, and full-range Windows PATH transport.
+- Added an explicit launch pre-mortem, staged rollout, rollback triggers, owners, checkpoints, and protected ship gates.
+
+- Added four deep module boundaries: closed source-provenance packaging, reviewed-plan transaction execution, managed MCP child lifecycle, and supervised process execution.
+- Replaced duplicated process launching in runner, inventory, session, MCP, self-install, and Windows PATH helpers with one bounded, resource-aware supervisor.
+- Split MCP child handling into focused client, session, pool, protocol, and buffer units while preserving the single `ManagedChildRuntime` interface.
+- Removed blanket `cmd/` and `_windows.go` mutation exclusions and added a native Windows mutation gate that exclusively targets `_windows.go` production paths.
+- Source archives now contain only manifest-listed files and are reopened for exact-set and digest verification before publication.
 - Automated releases from `main`: semantic versions are inferred from Conventional Commit signals, tags are keyless-signed through GitHub OIDC/Sigstore, interrupted unpublished tags are recovered safely, and trusted GPG tag pushes remain supported.
 - Hardened release dispatch with pre-checkout signed-tag validation, upgraded GitHub Actions to Node 24-compatible immutable pins, refreshed Playwright to 1.62.0, and cancelled superseded Verify runs.
 - Made startup recovery mutation-lease-aware so a second process cannot reclassify live work, and made multi-root quarantine collision-free with preflight and rollback.

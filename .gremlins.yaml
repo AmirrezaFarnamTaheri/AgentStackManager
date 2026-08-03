@@ -6,6 +6,3 @@ unleash:
   threshold:
     efficacy: 75
     mutant-coverage: 65
-  exclude-files:
-    - "_windows\\.go$"
-    - "cmd/"

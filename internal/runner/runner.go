@@ -5,11 +5,10 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"os/exec"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/model"
-	"github.com/agentstack/agentstack/internal/processctl"
+	"github.com/agentstack/agentstack/internal/supervisor"
 )
 
 type Invocation struct {
@@ -52,45 +51,22 @@ func (r ExecRunner) Run(ctx context.Context, invocation Invocation) Result {
 			timeout = 20 * time.Minute
 		}
 	}
-	if timeout > 0 {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, timeout)
-		defer cancel()
-	}
-	cmd := exec.Command(invocation.Command, invocation.Args...)
-	if len(invocation.Env) > 0 {
-		env := cmd.Environ()
-		for key, value := range invocation.Env {
-			env = append(env, key+"="+value)
-		}
-		cmd.Env = env
-	}
 	limit := invocation.MaxOutputBytes
 	if limit <= 0 {
 		limit = r.MaxOutputBytes
 	}
-	if limit <= 0 {
-		limit = 1 << 20
+	outcome := (supervisor.Runtime{}).Run(ctx, supervisor.Spec{
+		Command: invocation.Command,
+		Args:    append([]string(nil), invocation.Args...),
+		Env:     invocation.Env,
+	}, supervisor.RunOptions{Timeout: timeout, MaxOutputBytes: limit})
+	return Result{
+		Stdout:    outcome.Stdout,
+		Stderr:    outcome.Stderr,
+		ExitCode:  outcome.ExitCode,
+		Err:       outcome.Err,
+		Truncated: outcome.Truncated,
 	}
-	stdout, stderr := newLimitedBuffer(limit), newLimitedBuffer(limit)
-	cmd.Stdout, cmd.Stderr = stdout, stderr
-	process, startErr := processctl.Start(cmd)
-	var err error
-	if startErr != nil {
-		err = startErr
-	} else {
-		err = process.Wait(ctx)
-	}
-	result := Result{Stdout: stdout.String(), Stderr: stderr.String(), Err: err, Truncated: stdout.Truncated() || stderr.Truncated()}
-	if err == nil {
-		return result
-	}
-	if exitErr, ok := err.(*exec.ExitError); ok {
-		result.ExitCode = exitErr.ExitCode()
-	} else {
-		result.ExitCode = -1
-	}
-	return result
 }
 
 type Engine struct {

@@ -8,6 +8,10 @@ import (
 	"unicode/utf16"
 )
 
+// MaxWindowsStringTransportBytes bounds captured Base64 UTF-16 output while
+// covering the maximum practical Windows environment variable value.
+const MaxWindowsStringTransportBytes = 128 << 10
+
 // EncodeWindowsString transports a Windows UTF-16 string through an
 // ASCII-only process boundary without depending on the active console code
 // page. PowerShell's [Text.Encoding]::Unicode uses UTF-16 little endian.

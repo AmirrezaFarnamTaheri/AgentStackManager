@@ -61,3 +61,17 @@ is `succeeded` or `failed`. The backend operation uses the manager process conte
 than the request context, so a client disconnect or the server's 60-second write deadline
 cannot turn a completed mutation into an apparent request failure. Shutdown remains locked
 while a mutation is active.
+
+## Unified fabric operations
+
+Use the sequence `inspect -> plan -> review -> apply -> verify` for context refresh, resource synchronization/source refresh, and MCP client linking. Keep the returned plan ID and digest together; changes to source, registry, project fingerprint, destination, or client configuration invalidate apply.
+
+Run `agentstack routine history` after scheduled work. The latest durable receipt repairs stale schedule fields after an interrupted state write. Receipt history is capped at 4,096 entries.
+
+MCP-link plans do not contain rewritten client configuration. Apply re-reads and revalidates the live file, reconstructs the reviewed AgentStack-only change, and emits a minimal registration-only recovery record. A duplicate-key document or secret-bearing same-name entry blocks the operation.
+
+Resource replacement and removal create recoverable backups. List them with `agentstack hub backups`; restore with the exact backup ID and `--yes`. Target sync preserves foreign files and prunes only paths recorded as AgentStack-managed.
+
+Legacy workspace, memory, artifact, and routine stores migrate on the next successful mutation. Back up the AgentStack data root before a release upgrade when local state is operationally critical.
+
+Workspace multi-file commits publish an active transaction pointer and snapshot journal. Live readers are fenced while the transaction is fresh; stale interrupted transactions restore their snapshots. Cleanup after a committed artifact mutation is non-authoritative and may be deferred without converting a successful commit into a failed operation.

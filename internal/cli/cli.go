@@ -120,6 +120,18 @@ func (c *CLI) Run(ctx context.Context, args []string) int {
 		return c.printJSON(result)
 	case "mcp":
 		return c.runMCP(ctx, args[1:])
+	case "hub":
+		return c.runHub(args[1:])
+	case "context":
+		return c.runContext(args[1:])
+	case "workspace":
+		return c.runWorkspace(args[1:])
+	case "memory":
+		return c.runMemory(args[1:])
+	case "artifact":
+		return c.runArtifact(args[1:])
+	case "routine":
+		return c.runRoutine(ctx, args[1:])
 	case "mcp-router":
 		return c.runRouter(ctx, args[1:])
 	case "codex", "agy":
@@ -202,16 +214,36 @@ func (c *CLI) runReleasepack(args []string) int {
 	root := fs.String("root", "", "root directory")
 	out := fs.String("out", "", "output ZIP")
 	prefix := fs.String("prefix", "", "archive prefix")
+	manifestMode := fs.String("manifest-mode", "none", "source manifest mode: none, write, verify, or require")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	if fs.NArg() != 0 {
 		return c.failUsage(fmt.Errorf("unexpected releasepack positional argument: %s", fs.Arg(0)))
 	}
-	if *root == "" || *out == "" {
-		return c.failUsage(fmt.Errorf("--root and --out are required"))
+	if *root == "" {
+		return c.failUsage(fmt.Errorf("--root is required"))
 	}
-	if err := releasepack.Pack(*root, *out, *prefix); err != nil {
+	var err error
+	switch *manifestMode {
+	case "none":
+		if *out == "" {
+			return c.failUsage(fmt.Errorf("--out is required when --manifest-mode=none"))
+		}
+		err = releasepack.Pack(*root, *out, *prefix)
+	case "write":
+		_, err = releasepack.WriteSourceManifest(*root)
+	case "verify":
+		_, err = releasepack.VerifySourceClosure(*root)
+	case "require":
+		if *out == "" {
+			return c.failUsage(fmt.Errorf("--out is required when --manifest-mode=require"))
+		}
+		_, err = releasepack.PackVerifiedSource(*root, *out, *prefix)
+	default:
+		return c.failUsage(fmt.Errorf("invalid --manifest-mode %q", *manifestMode))
+	}
+	if err != nil {
 		return c.fail(err)
 	}
 	return 0
@@ -283,6 +315,11 @@ func (c *CLI) runStatus(ctx context.Context) int {
 		"detectedComponents": installed,
 		"externalSources":    sortedExternalKeys(current.External),
 	}
+	if fabric, fabricErr := c.Service.FabricStatus(time.Now().UTC()); fabricErr == nil {
+		status["fabric"] = fabric
+	} else {
+		status["fabricError"] = fabricErr.Error()
+	}
 	if _, err := os.Stat(c.Service.Paths.RouterConfig); err == nil {
 		doctor, doctorErr := c.Service.MCPDoctor(ctx)
 		status["mcpDoctor"] = doctor
@@ -297,7 +334,7 @@ func (c *CLI) runStatus(ctx context.Context) int {
 
 func (c *CLI) runMCP(ctx context.Context, args []string) int {
 	if len(args) == 0 {
-		return c.failUsage(fmt.Errorf("mcp requires init, doctor, or list"))
+		return c.failUsage(fmt.Errorf("mcp requires init, doctor, list, or clients"))
 	}
 	switch args[0] {
 	case "init":
@@ -331,6 +368,8 @@ func (c *CLI) runMCP(ctx context.Context, args []string) int {
 			return 1
 		}
 		return c.printJSON(report)
+	case "clients":
+		return c.runMCPLink(ctx, args[1:])
 	case "list":
 		config, err := mcp.LoadRouterConfig(c.Service.Paths.RouterConfig)
 		if err != nil {
@@ -353,7 +392,7 @@ func (c *CLI) runRouter(ctx context.Context, args []string) int {
 	if err != nil {
 		return c.fail(err)
 	}
-	children := &mcp.PooledChildClient{Base: mcp.StdIOChildClient{Observer: c.Service.MCPChildObserver()}}
+	children := mcp.NewManagedChildRuntime(mcp.ChildRuntimeOptions{Observer: c.Service.MCPChildObserver()})
 	router := mcp.Router{Config: config, Children: children}
 	if err := router.Serve(ctx, os.Stdin, os.Stdout); err != nil {
 		return c.fail(err)
@@ -676,8 +715,16 @@ Usage:
   agentstack [ui]
   agentstack setup [--no-launch]
   agentstack status | inventory | catalog | profiles | integrations
+  agentstack hub list | import | audit | targets | target-add | backups | restore
+  agentstack hub plan-sync | apply-sync | plan-refresh | apply-refresh | remove
+  agentstack context scan | score | read | search | git | plan | apply
+  agentstack workspace list | show | create | update | render | delete
+  agentstack memory remember | recall | search | forget
+  agentstack artifact add | list | verify | remove
+  agentstack routine put | list | due | history | run | run-due | remove
+  agentstack mcp clients plan | apply
   agentstack sbom [--version VERSION] [--licenses PATH] [--out FILE]
-  agentstack releasepack --root DIR --out ZIP [--prefix NAME]
+  agentstack releasepack --root DIR [--out ZIP] [--prefix NAME] [--manifest-mode none|write|verify|require]
   agentstack plan [selection options]
   agentstack apply --plan-id ID --digest SHA256 --yes
   agentstack mcp init [selection options] --yes [--no-warm] [--no-register]
@@ -712,7 +759,10 @@ Safety:
   Apply consumes only an unexpired plan ID and digest emitted by 'agentstack plan'.
   Existing packages, skills, MCP entries, and unrelated configuration are not
   automatically removed. Removal commands operate only on recorded AgentStack-owned
-  resources, require --yes, and preserve skill content in quarantine. Credential
-  integrations and incompatible-runtime upgrades require explicit consent.
+  resources, require --yes, and preserve skill content in quarantine. Hub sync,
+  source refresh, context refresh, and MCP client linking consume digest-bound,
+  expiring plans. Routine execution, memory deletion, artifact removal, workspace
+  deletion, resource removal, and resource rollback require explicit confirmation.
+  Credential integrations and incompatible-runtime upgrades require explicit consent.
 `, strings.Join(profileLines, "\n"))
 }

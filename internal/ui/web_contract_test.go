@@ -35,7 +35,7 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 	}
 
 	for _, id := range []string{
-		"refreshBtn", "installSelfBtn", "exitBtn", "buildPlanBtn", "doctorBtn",
+		"refreshBtn", "refreshFabricBtn", "installSelfBtn", "exitBtn", "buildPlanBtn", "doctorBtn",
 		"applyBtn", "mcpInitBtn", "mcpDoctorBtn", "retryLoadBtn",
 	} {
 		marker := `id="` + id + `"`
@@ -89,6 +89,14 @@ func TestEmbeddedUIOperationFeedbackContract(t *testing.T) {
 	if strings.Contains(css, "transition-duration:.01ms!important") || strings.Contains(css, "animation-duration:.01ms!important") {
 		t.Fatal("reduced-motion contract retains nonzero animation timing")
 	}
+
+	if strings.Contains(js, "Promise.all([api('catalog'), api('inventory'), api('fabric')])") {
+		t.Fatal("optional fabric status must not block the primary catalog and inventory workflow")
+	}
+	if !strings.Contains(js, "api('fabric').then(value => ({ value })).catch(error => ({ error }))") || !strings.Contains(js, "showFabricError(fabricResult.error)") {
+		t.Fatal("fabric status does not degrade independently when its endpoint fails")
+	}
+
 	if !strings.Contains(js, "void runOperation(null, 'Load AgentStack Manager', refresh)") {
 		t.Fatal("startup refresh must not steal initial keyboard focus from the skip link")
 	}
@@ -119,5 +127,24 @@ func TestEmbeddedUINavigationUsesOneIconLanguage(t *testing.T) {
 	}
 	if strings.Contains(html, `aria-hidden="true">⌂`) || strings.Contains(html, `aria-hidden="true">□`) || strings.Contains(html, `aria-hidden="true">⌘`) {
 		t.Fatal("navigation still mixes Unicode symbols with the SVG icon system")
+	}
+}
+
+func TestWebFabricStatusFailureDoesNotBlockPrimaryRefresh(t *testing.T) {
+	jsBytes, err := webAssets.ReadFile("web/app.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	js := string(jsBytes)
+	if strings.Contains(js, "Promise.all([api('catalog'), api('inventory'), api('fabric')])") {
+		t.Fatal("optional fabric status must not block the primary catalog and inventory workflow")
+	}
+	for _, fragment := range []string{
+		"api('fabric').then(value => ({ value })).catch(error => ({ error }))",
+		"showFabricError(fabricResult.error)",
+	} {
+		if !strings.Contains(js, fragment) {
+			t.Fatalf("independent fabric degradation contract missing %q", fragment)
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package inventory
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -16,8 +15,8 @@ import (
 
 	"github.com/agentstack/agentstack/internal/integrity"
 	"github.com/agentstack/agentstack/internal/model"
-	"github.com/agentstack/agentstack/internal/processctl"
 	"github.com/agentstack/agentstack/internal/runner"
+	"github.com/agentstack/agentstack/internal/supervisor"
 	versionutil "github.com/agentstack/agentstack/internal/version"
 )
 
@@ -56,58 +55,22 @@ func (p OSProbe) Run(parent context.Context, command string, args ...string) Com
 	if timeout <= 0 {
 		timeout = defaultProbeTimeout
 	}
-	ctx, cancel := context.WithTimeout(parent, timeout)
-	defer cancel()
 	limit := p.MaxOutputBytes
 	if limit <= 0 {
 		limit = defaultProbeLimit
 	}
-	cmd := exec.Command(command, args...)
-	var stdout, stderr cappedBuffer
-	stdout.limit, stderr.limit = limit, limit
-	cmd.Stdout, cmd.Stderr = &stdout, &stderr
-	process, startErr := processctl.Start(cmd)
-	var err error
-	if startErr != nil {
-		err = startErr
-	} else {
-		err = process.Wait(ctx)
+	outcome := (supervisor.Runtime{}).Run(parent, supervisor.Spec{
+		Command: command,
+		Args:    append([]string(nil), args...),
+	}, supervisor.RunOptions{Timeout: timeout, MaxOutputBytes: limit})
+	return CommandResult{
+		Stdout:    outcome.Stdout,
+		Stderr:    outcome.Stderr,
+		ExitCode:  outcome.ExitCode,
+		Err:       outcome.Err,
+		Truncated: outcome.Truncated,
 	}
-	result := CommandResult{Stdout: stdout.String(), Stderr: stderr.String(), Err: err, Truncated: stdout.truncated || stderr.truncated}
-	if err == nil {
-		return result
-	}
-	if exitErr, ok := err.(*exec.ExitError); ok {
-		result.ExitCode = exitErr.ExitCode()
-	} else {
-		result.ExitCode = -1
-	}
-	return result
 }
-
-type cappedBuffer struct {
-	data      bytes.Buffer
-	limit     int
-	truncated bool
-}
-
-func (b *cappedBuffer) Write(p []byte) (int, error) {
-	original := len(p)
-	remaining := b.limit - b.data.Len()
-	if remaining > 0 {
-		if len(p) > remaining {
-			_, _ = b.data.Write(p[:remaining])
-			b.truncated = true
-		} else {
-			_, _ = b.data.Write(p)
-		}
-	} else if len(p) > 0 {
-		b.truncated = true
-	}
-	return original, nil
-}
-
-func (b *cappedBuffer) String() string { return b.data.String() }
 
 type Scanner struct {
 	Locator    Locator

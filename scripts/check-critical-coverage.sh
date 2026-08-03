@@ -33,9 +33,12 @@ require_function 'internal/app/lifecycle.go:.*RemoveOwned' 50
 require_function 'internal/runner/runner.go:.*[[:space:]]Run[[:space:]]' 85
 require_function 'internal/inventory/inventory.go:.*[[:space:]]Run[[:space:]]' 70
 require_function 'internal/session/session.go:.*[[:space:]]Run[[:space:]]' 70
+require_function 'internal/supervisor/runtime.go:.*[[:space:]]Run[[:space:]]' 85
+require_function 'internal/reviewedplan/executor.go:.*[[:space:]]Execute[[:space:]]' 70
+require_function 'internal/releasepack/source.go:.*PackVerifiedSource' 60
 require_function 'internal/ui/server.go:.*[[:space:]]Run[[:space:]]' 50
 require_function 'internal/ui/operations.go:.*[[:space:]]start[[:space:]]' 70
-require_function 'internal/mcp/child.go:.*operationContext' 70
+require_function 'internal/mcp/child_client.go:.*operationContext' 70
 require_function 'internal/state/data.go:.*SanitizeEvent' 100
 require_function 'internal/skills/installer.go:.*ValidateSkillInventory' 80
 require_function 'internal/catalog/catalog.go:.*validateRouterAcquisition' 70
@@ -50,5 +53,33 @@ require_function 'internal/pathenv/path.go:.*AppendWindows' 75
 require_function 'internal/pathenv/transport.go:.*EncodeWindowsString' 90
 require_function 'internal/pathenv/transport.go:.*DecodeWindowsString' 75
 require_function 'internal/selfinstall/install.go:.*InstallFrom' 65
+
+# Unified fabric boundaries.
+require_function 'internal/resourcehub/audit.go:.*[[:space:]]Audit[[:space:]]' 65
+require_function 'internal/resourcehub/sync.go:.*PlanSync' 50
+require_function 'internal/resourcehub/sync.go:.*ApplySync' 50
+require_function 'internal/resourcehub/refresh.go:.*ApplyRefresh' 65
+require_function 'internal/resourcehub/manager.go:.*RestoreBackup' 65
+require_function 'internal/contextengine/scan.go:.*[[:space:]]Scan[[:space:]]' 75
+require_function 'internal/contextengine/score.go:.*[[:space:]]Score[[:space:]]' 85
+require_function 'internal/contextengine/knowledge.go:.*ReadFile' 70
+require_function 'internal/contextengine/knowledge.go:.*[[:space:]]Search[[:space:]]' 60
+require_function 'internal/contextengine/knowledge.go:.*[[:space:]]Git[[:space:]]' 75
+require_function 'internal/contextengine/refresh.go:.*PlanRefresh' 80
+require_function 'internal/contextengine/refresh.go:.*ApplyRefresh' 65
+require_function 'internal/workspace/store.go:.*[[:space:]]Create[[:space:]]' 70
+require_function 'internal/workspace/store.go:.*[[:space:]]Delete[[:space:]]' 60
+require_function 'internal/workspace/memory.go:.*[[:space:]]Remember[[:space:]]' 65
+require_function 'internal/workspace/memory.go:.*[[:space:]]Recall[[:space:]]' 80
+require_function 'internal/workspace/memory.go:.*SearchMemory' 60
+require_function 'internal/workspace/prompt.go:.*RenderPrompt' 85
+require_function 'internal/workspace/artifact.go:.*AddArtifact' 60
+require_function 'internal/workspace/artifact.go:.*VerifyArtifact' 65
+require_function 'internal/mcplink/manager.go:.*[[:space:]]Plan[[:space:]]' 70
+require_function 'internal/mcplink/manager.go:.*[[:space:]]Apply[[:space:]]' 65
+require_function 'internal/routines/manager.go:.*[[:space:]]Run[[:space:]]' 80
+require_function 'internal/routines/manager.go:.*ListRuns' 70
+require_function 'internal/routines/manager.go:.*reconcileRuns' 80
+require_function 'internal/routines/schedule.go:.*NextRun' 55
 
 echo "critical coverage gate passed (total ${total}%)"

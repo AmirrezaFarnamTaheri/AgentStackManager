@@ -62,13 +62,7 @@ function Write-Checksums([string]$Directory) {
     } | Set-Content (Join-Path $Directory 'SHA256SUMS.txt') -Encoding utf8NoBOM
 }
 function Write-SourceManifest([string]$Directory) {
-    $manifest=Join-Path $Directory 'SOURCE_MANIFEST.sha256'
-    Get-ChildItem $Directory -Recurse -File | Where-Object FullName -ne $manifest | ForEach-Object {
-        $relative=[IO.Path]::GetRelativePath($Directory,$_.FullName).Replace('\','/')
-        [pscustomobject]@{ Relative=$relative; Hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant() }
-    } | Sort-Object Relative | ForEach-Object {
-        "$($_.Hash)  ./$($_.Relative)"
-    } | Set-Content $manifest -Encoding utf8NoBOM
+    Invoke-Checked go @('run','./cmd/releasepack','--root',$Directory,'--manifest-mode','write')
 }
 function Assert-ReleaseOutput([string]$Directory) {
     $expected=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -274,7 +268,7 @@ $baseFlags = "-s -w -buildid=none -X ${agentstackPackage}.version=$Version -X ${
         runId=$env:GITHUB_RUN_ID
     } | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $sourceRoot 'SOURCE_PROVENANCE.json') -Encoding utf8NoBOM
     Write-SourceManifest $sourceRoot
-    Invoke-Checked go @('run','./cmd/releasepack','--root',$sourceRoot,'--out',(Join-Path $dist "AgentStackManager-$Version-source.zip"),'--prefix',"AgentStackManager-$Version-source")
+    Invoke-Checked go @('run','./cmd/releasepack','--root',$sourceRoot,'--out',(Join-Path $dist "AgentStackManager-$Version-source.zip"),'--prefix',"AgentStackManager-$Version-source",'--manifest-mode','require')
     Remove-Item $sourceRoot -Recurse -Force
     Remove-Item (Join-Path $dist 'README.md'),(Join-Path $dist 'LICENSE'),(Join-Path $dist 'CHANGELOG.md') -Force
     Remove-Item (Join-Path $dist 'docs') -Recurse -Force

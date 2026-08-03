@@ -11,6 +11,7 @@ const state = {
   allowCredentials: false,
   allowUpgrades: false,
   providerOverrides: {},
+  fabric: null,
 };
 
 const $ = id => document.getElementById(id);
@@ -245,6 +246,56 @@ function setCatalogControlsAvailable(available) {
   });
 }
 
+function setFabricLoading(loading) {
+  const section = $('fabric');
+  if (section) {
+    section.setAttribute('aria-busy', loading ? 'true' : 'false');
+  }
+  ['fabricResources', 'fabricTargets', 'fabricWorkspaces', 'fabricArtifacts', 'fabricRoutines', 'fabricDue'].forEach(id => {
+    const element = $(id);
+    if (element) {
+      element.classList.toggle('is-loading', loading);
+    }
+  });
+}
+
+function showFabricError(error) {
+  setFabricLoading(false);
+  $('fabricLoadError').hidden = false;
+  $('fabricLoadErrorDetail').textContent = error?.message || 'Unified fabric status is unavailable.';
+}
+
+function renderFabric() {
+  if (!state.fabric) {
+    return;
+  }
+  $('fabricResources').textContent = state.fabric.resources ?? 0;
+  $('fabricTargets').textContent = state.fabric.resourceTargets ?? 0;
+  $('fabricWorkspaces').textContent = state.fabric.workspaces ?? 0;
+  $('fabricArtifacts').textContent = state.fabric.artifacts ?? 0;
+  $('fabricRoutines').textContent = state.fabric.routines ?? 0;
+  $('fabricDue').textContent = state.fabric.dueRoutines ?? 0;
+  const next = state.fabric.nextRoutine;
+  const nextDate = next ? new Date(next) : null;
+  $('fabricNext').textContent = nextDate && !Number.isNaN(nextDate.getTime())
+    ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(nextDate)
+    : 'None scheduled';
+  $('fabricLoadError').hidden = true;
+  setFabricLoading(false);
+}
+
+async function refreshFabric() {
+  setFabricLoading(true);
+  try {
+    state.fabric = await api('fabric');
+    renderFabric();
+    return { statusDetail: 'Unified resource, context, workspace, client-link, and routine state is current.' };
+  } catch (error) {
+    showFabricError(error);
+    throw error;
+  }
+}
+
 function updateMetrics() {
   if (!state.inventory || !state.catalog) {
     return;
@@ -375,11 +426,23 @@ function escapeHtml(value) {
 async function refresh(options = {}) {
   setMetricsLoading(true);
   setCatalogControlsAvailable(false);
-  [state.catalog, state.inventory] = await Promise.all([api('catalog'), api('inventory')]);
+  const [catalog, inventory, fabricResult] = await Promise.all([
+    api('catalog'),
+    api('inventory'),
+    api('fabric').then(value => ({ value })).catch(error => ({ error })),
+  ]);
+  state.catalog = catalog;
+  state.inventory = inventory;
   $('overviewLoadError').hidden = true;
   setCatalogControlsAvailable(true);
   renderProfiles();
   renderProviders();
+  if (fabricResult.error) {
+    showFabricError(fabricResult.error);
+  } else {
+    state.fabric = fabricResult.value;
+    renderFabric();
+  }
   applyProfile();
   if (!options.silent) {
     toast('Inventory refreshed');
@@ -507,6 +570,7 @@ $('componentGroups').addEventListener('change', event => {
 $('confirmApply').addEventListener('change', updateApplyAvailability);
 
 $('refreshBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh inventory', refresh));
+$('refreshFabricBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh unified fabric', refreshFabric));
 $('retryLoadBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Load AgentStack Manager', refresh));
 $('buildPlanBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Build reviewed plan', buildPlan));
 $('applyBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Apply reviewed plan', applyPlan));

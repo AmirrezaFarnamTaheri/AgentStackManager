@@ -40,6 +40,10 @@ type Backend interface {
 	MCPDoctor(context.Context) (app.DoctorReport, error)
 }
 
+type fabricStatusBackend interface {
+	FabricStatus(time.Time) (app.FabricStatus, error)
+}
+
 type HandlerOptions struct {
 	Backend     Backend
 	Context     context.Context
@@ -164,6 +168,23 @@ func NewHandler(options HandlerOptions) http.Handler {
 			return
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"name": "AgentStack Manager", "version": options.Version, "revision": options.Revision, "localOnly": true})
+	}))
+	mux.HandleFunc(apiBase+"fabric", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		backend, ok := options.Backend.(fabricStatusBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("unified fabric status is unavailable"))
+			return
+		}
+		result, err := backend.FabricStatus(time.Now().UTC())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, result)
 	}))
 	mux.HandleFunc(apiBase+"catalog", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

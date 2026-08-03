@@ -13,6 +13,7 @@ AgentStack Manager is a preservation-first Windows control plane for local engin
 - Credential integrations require explicit selection and never store provider credentials.
 - AgentStack-owned resources can be previewed, deactivated, removed, quarantined, backed up, restored, exported, or cleared without treating unrelated software as owned.
 - The managed MCP router negotiates protocol versions, bounds output, performs live health probes, and reuses healthy child processes.
+- High-risk workflows are enclosed by four deep modules: supervised process execution, reviewed-plan transactions, managed MCP child lifecycle, and closed source-provenance packaging.
 - Catalog-managed MCP children use explicit Windows Job Object resource ceilings for job memory, CPU rate, and active process count.
 - Public release automation is fail-closed on a clean signed tag, supported Go toolchain, vulnerability scans, reproducibility checks, SHA-256 manifests, SBOM/license/VEX evidence, artifact attestations, and Windows runtime gates.
 
@@ -61,4 +62,17 @@ Run `agentstack profiles` or `agentstack help` for the authoritative embedded ca
 - [Threat model](docs/THREAT_MODEL.md)
 - [Repository governance](docs/GOVERNANCE.md)
 - [Release process](docs/RELEASE.md)
+- [Launch readiness and pre-mortem](docs/LAUNCH_READINESS.md)
 - [Audit closure ledger](docs/audit/ASM-001-040-closure.md)
+
+## Unified agent fabric
+
+AgentStack Manager now includes five target-native management planes:
+
+- `agentstack hub` — audited canonical resources, tracked sources, targets, reviewed sync/refresh, backups, and restore;
+- `agentstack context` — project scanning, scoring, confined read/search, read-only Git evidence, and reviewed multi-agent context refresh;
+- `agentstack workspace`, `memory`, and `artifact` — hierarchical projects, scoped local knowledge, strict prompt variables, and content-addressed files;
+- `agentstack mcp clients` — reviewed linking for Codex, Claude, Cursor, AGY/Gemini, and OpenCode;
+- `agentstack routine` — confirmed bounded schedules, typed steps, redacted receipts, and recovery-aware history.
+
+The implementation converges mechanisms from seven peer projects without retaining parallel donor runtimes or authorities. See [Peer Project Convergence](docs/CONVERGENCE.md) and the [operator runbook](docs/convergence/RUNBOOK.md).

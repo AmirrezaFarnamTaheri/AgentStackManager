@@ -13,7 +13,7 @@ A public build requires:
 - a clean tree at a verified signed annotated `v*` tag;
 - Go 1.26.5;
 - exact pinned assurance tools;
-- `go test`, race, vet, fuzz seed campaigns, mutation testing, critical-path coverage, governance/docs checks;
+- `go test`, race, vet, fuzz seed campaigns, Linux/common mutation testing, native Windows-specific mutation testing, critical-path coverage, governance/docs checks;
 - source and Windows-binary `govulncheck`;
 - two-build unsigned reproducibility comparison per binary;
 - valid Authenticode signatures and expected publisher thumbprint;
@@ -46,4 +46,10 @@ files/directories with no symbolic links. Copying iterates only the audited allo
 Source bundles include `SOURCE_REVISION`, `SOURCE_PROVENANCE.json`, and a full
 `SOURCE_MANIFEST.sha256`. An unreleased archive explicitly identifies only its historical
 base and carries no candidate commit. Protected release automation overwrites those fields
-with the signed-tag commit and CI run evidence before packaging.
+with the signed-tag commit and CI run evidence before packaging. The provenance capsule packages only manifest-listed regular files and reopens the ZIP to verify exact membership and content digests, so caches, ignored directories, development databases, and compiled executables cannot enter a source bundle through working-tree contamination.
+
+## Donor convergence provenance
+
+Seven donor archives were validated before extraction, hashed file-by-file, and recorded in `docs/convergence/SURFACES.csv`. `docs/convergence/ADOPTION.csv` connects independently meaningful donor units to target symbols, invariants, dispositions, and unique tests.
+
+No donor package manager, build output, vendored dependency tree, browser database, or binary is shipped as an authoritative runtime. Adopted behavior was implemented in the existing Go target and passes the target's source-manifest and release-pack boundaries.

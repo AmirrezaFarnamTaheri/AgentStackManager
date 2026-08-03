@@ -101,7 +101,7 @@ func waitForAcceptedOperation(t *testing.T, handler http.Handler, response *http
 
 func TestEveryAPIEndpointRequiresToken(t *testing.T) {
 	handler := newTestHandler(&fakeBackend{})
-	for _, path := range []string{"status", "catalog", "inventory", "mcp/doctor"} {
+	for _, path := range []string{"status", "fabric", "catalog", "inventory", "mcp/doctor"} {
 		response := httptest.NewRecorder()
 		handler.ServeHTTP(response, httptest.NewRequest(http.MethodGet, testBase+"api/"+path, nil))
 		if response.Code != http.StatusForbidden {
@@ -421,5 +421,27 @@ func TestLongMutationSurvivesHTTPWriteTimeoutViaOperationReceipt(t *testing.T) {
 			t.Fatalf("backend completed but operation was not observable: %+v", operation)
 		}
 		time.Sleep(10 * time.Millisecond)
+	}
+}
+
+type fakeFabricBackend struct{ fakeBackend }
+
+func (f *fakeFabricBackend) FabricStatus(time.Time) (app.FabricStatus, error) {
+	return app.FabricStatus{Resources: 7, Workspaces: 2, Routines: 3, DueRoutines: 1}, nil
+}
+
+func TestFabricStatusEndpointReturnsUnifiedCounts(t *testing.T) {
+	handler := newTestHandler(&fakeFabricBackend{})
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, authorizedRequest(http.MethodGet, "fabric", ""))
+	if response.Code != http.StatusOK {
+		t.Fatalf("fabric status=%d body=%s", response.Code, response.Body.String())
+	}
+	var status app.FabricStatus
+	if err := json.Unmarshal(response.Body.Bytes(), &status); err != nil {
+		t.Fatal(err)
+	}
+	if status.Resources != 7 || status.Workspaces != 2 || status.DueRoutines != 1 {
+		t.Fatalf("unexpected fabric status: %#v", status)
 	}
 }

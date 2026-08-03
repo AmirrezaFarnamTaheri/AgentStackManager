@@ -33,6 +33,19 @@ type RouterConfig struct {
 	Servers   map[string]ServerConfig `json:"servers"`
 }
 
+const maxMCPConfigBytes = 4 << 20
+
+const (
+	maxMCPServers       = 256
+	maxMCPCommandBytes  = 4 << 10
+	maxMCPArguments     = 128
+	maxMCPArgumentBytes = 16 << 10
+	maxMCPEnvEntries    = 256
+	maxMCPEnvKeyBytes   = 256
+	maxMCPEnvValueBytes = 64 << 10
+	maxMCPIdleTTL       = 24 * time.Hour
+)
+
 func BuildRouterConfig(c model.Catalog, plan model.Plan, dataDir string) (RouterConfig, error) {
 	result := RouterConfig{Version: 1, Profile: plan.Profile, UpdatedAt: time.Now().UTC(), Servers: map[string]ServerConfig{}}
 	for _, action := range plan.Actions {
@@ -88,11 +101,11 @@ func expandDataPath(value, dataDir string) string {
 }
 
 func WriteRouterConfig(path string, config RouterConfig) error {
-	if config.Version < 1 {
-		return fmt.Errorf("router config version must be positive")
-	}
 	if config.Servers == nil {
 		config.Servers = map[string]ServerConfig{}
+	}
+	if err := validateRouterConfig(config); err != nil {
+		return err
 	}
 	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		return err
@@ -106,7 +119,7 @@ func WriteRouterConfig(path string, config RouterConfig) error {
 }
 
 func LoadRouterConfig(path string) (RouterConfig, error) {
-	data, err := os.ReadFile(path)
+	data, err := safefile.ReadBoundedRegular(path, maxMCPConfigBytes)
 	if err != nil {
 		return RouterConfig{}, err
 	}
@@ -114,13 +127,65 @@ func LoadRouterConfig(path string) (RouterConfig, error) {
 	if err := strictjson.Decode(data, &config); err != nil {
 		return RouterConfig{}, fmt.Errorf("decode router config: %w", err)
 	}
-	if config.Version < 1 {
-		return RouterConfig{}, fmt.Errorf("router config version must be positive")
-	}
 	if config.Servers == nil {
 		config.Servers = map[string]ServerConfig{}
 	}
+	if err := validateRouterConfig(config); err != nil {
+		return RouterConfig{}, err
+	}
 	return config, nil
+}
+
+func validateRouterConfig(config RouterConfig) error {
+	if config.Version < 1 {
+		return fmt.Errorf("router config version must be positive")
+	}
+	if len(config.Servers) > maxMCPServers {
+		return fmt.Errorf("router config exceeds %d servers", maxMCPServers)
+	}
+	for name, server := range config.Servers {
+		if strings.TrimSpace(name) == "" || len(name) > maxMCPEnvKeyBytes || strings.ContainsAny(name, "\x00\r\n") {
+			return fmt.Errorf("router server name is invalid")
+		}
+		if err := validateMCPCommand(name, server.Command, server.Args, server.Env); err != nil {
+			return err
+		}
+		if server.Warm != nil {
+			if err := validateMCPCommand(name+" warm command", server.Warm.Command, server.Warm.Args, server.Warm.Env); err != nil {
+				return err
+			}
+		}
+		if server.IdleTTLSeconds < 0 || time.Duration(server.IdleTTLSeconds)*time.Second > maxMCPIdleTTL {
+			return fmt.Errorf("router server %q idle TTL is outside supported bounds", name)
+		}
+		if server.Limits.CPUPercent > 100 {
+			return fmt.Errorf("router server %q CPU limit exceeds 100 percent", name)
+		}
+	}
+	return nil
+}
+
+func validateMCPCommand(label, command string, args []string, env map[string]string) error {
+	if strings.TrimSpace(command) == "" || len(command) > maxMCPCommandBytes || strings.ContainsAny(command, "\x00\r\n") {
+		return fmt.Errorf("router server %q command is invalid", label)
+	}
+	if len(args) > maxMCPArguments {
+		return fmt.Errorf("router server %q exceeds %d arguments", label, maxMCPArguments)
+	}
+	for _, argument := range args {
+		if len(argument) > maxMCPArgumentBytes || strings.ContainsRune(argument, '\x00') {
+			return fmt.Errorf("router server %q contains an invalid argument", label)
+		}
+	}
+	if len(env) > maxMCPEnvEntries {
+		return fmt.Errorf("router server %q exceeds %d environment entries", label, maxMCPEnvEntries)
+	}
+	for key, value := range env {
+		if strings.TrimSpace(key) == "" || len(key) > maxMCPEnvKeyBytes || strings.ContainsAny(key, "=\x00\r\n") || len(value) > maxMCPEnvValueBytes || strings.ContainsRune(value, '\x00') {
+			return fmt.Errorf("router server %q contains an invalid environment entry", label)
+		}
+	}
+	return nil
 }
 
 func RouterConfigEquivalent(left, right RouterConfig) bool {
@@ -141,8 +206,8 @@ type MergeResult struct {
 func MergeAgyConfig(path, executable string, args []string, backupDir string) (MergeResult, error) {
 	result := MergeResult{Path: path}
 	root := map[string]any{}
-	if data, err := os.ReadFile(path); err == nil {
-		if err := json.Unmarshal(data, &root); err != nil {
+	if data, err := safefile.ReadBoundedRegular(path, maxMCPConfigBytes); err == nil {
+		if err := strictjson.Decode(data, &root); err != nil {
 			return result, fmt.Errorf("decode existing AGY config: %w", err)
 		}
 	} else if !os.IsNotExist(err) {
