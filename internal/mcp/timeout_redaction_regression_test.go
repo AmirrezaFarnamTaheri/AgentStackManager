@@ -275,7 +275,12 @@ func TestPooledClientCloseCancelsWorkerStillInitializing(t *testing.T) {
 	for time.Now().Before(deadline) {
 		data, err := os.ReadFile(pidFile)
 		if err == nil {
-			pid, err = strconv.Atoi(string(data))
+			value := strings.TrimSpace(string(data))
+			if value == "" {
+				time.Sleep(10 * time.Millisecond)
+				continue
+			}
+			pid, err = strconv.Atoi(value)
 			if err != nil {
 				t.Fatal(err)
 			}
