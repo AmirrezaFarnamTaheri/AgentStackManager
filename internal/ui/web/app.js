@@ -546,7 +546,10 @@ function updateHealthBadge() {
 
 function openPlanModal(plan) {
   const modal = $('planModal');
-  if (!modal || typeof modal.showModal !== 'function') return;
+  if (!modal || typeof modal.showModal !== 'function') {
+    showSection('plan');
+    return;
+  }
   const summaryGrid = $('modalSummaryGrid');
   const rows = $('modalPlanRows');
   const meta = $('modalPlanMeta');
@@ -655,7 +658,7 @@ async function loadSharingMatrix() {
         <td>${item.agy ? '✅' : '❌'}</td>
         <td>${item.claude ? '✅' : '❌'}</td>
         <td>${item.cursor ? '✅' : '❌'}</td>
-        <td><button type="button" class="button secondary compact-button" onclick="linkResource('${escapeHtml(item.resource)}')">Link Capability</button></td>
+        <td><button type="button" class="button secondary compact-button" onclick="linkResource(${escapeHtml(JSON.stringify(item.resource))})">Link Capability</button></td>
       </tr>
     `).join('');
   } catch (err) {
@@ -666,9 +669,9 @@ async function loadSharingMatrix() {
 async function linkResource(resource) {
   try {
     await api('hub/link', { method: 'POST', body: JSON.stringify({ resource }) });
-    showToast(`Linked ${resource} across active agents!`);
+    toast(`Linked ${resource} across active agents!`);
   } catch (err) {
-    showToast('Failed to link resource');
+    toast('Failed to link resource', true);
   }
 }
 
@@ -691,7 +694,7 @@ async function loadErrorDiagnostics() {
 }
 
 $('triggerAutoRepairBtn')?.addEventListener('click', () => {
-  showToast('Ran 1-Click Auto-Repair: All subprocesses healthy!');
+  toast('Ran 1-Click Auto-Repair: All subprocesses healthy!');
 });
 
 
@@ -709,7 +712,7 @@ async function loadMCPServers() {
           </div>
           <span class="record-seal">${escapeHtml(server.status)}</span>
         </div>
-        <button type="button" class="button primary compact-button" onclick="runMCPTest('${escapeHtml(server.id)}')">Run Test Invocation</button>
+        <button type="button" class="button primary compact-button" onclick="runMCPTest(${escapeHtml(JSON.stringify(server.id))})">Run Test Invocation</button>
       </article>
     `).join('');
   } catch (err) {
@@ -745,7 +748,7 @@ async function loadRoutines() {
           <span class="record-seal">${escapeHtml(routine.status)}</span>
         </div>
         <div class="button-row" style="margin-top:12px;">
-          <button type="button" class="button secondary compact-button" onclick="triggerRoutine('${escapeHtml(routine.id)}')">⚡ Run Now</button>
+          <button type="button" class="button secondary compact-button" onclick="triggerRoutine(${escapeHtml(JSON.stringify(routine.id))})">⚡ Run Now</button>
         </div>
       </article>
     `).join('');
@@ -755,7 +758,7 @@ async function loadRoutines() {
 }
 
 async function triggerRoutine(routineId) {
-  showToast(`Triggered routine ${routineId} successfully!`);
+  toast(`Triggered routine ${routineId} successfully!`);
 }
 
 async function loadWorkspaces() {
@@ -924,11 +927,18 @@ $('copyOutputBtn')?.addEventListener('click', () => {
   navigator.clipboard.writeText(content).then(() => toast('Output JSON copied to clipboard')).catch(() => toast('Could not copy JSON', true));
 });
 
-document.querySelectorAll('.workflow-guide li').forEach(item => {
-  item.addEventListener('click', () => {
+document.querySelectorAll('[data-workflow-step]').forEach(item => {
+  const activate = () => {
     const step = Number(item.dataset.workflowStep);
     if (step === 1) showSection('overview');
     else if (step === 2 || step === 3) showSection('plan');
+  };
+  item.addEventListener('click', activate);
+  item.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      activate();
+    }
   });
 });
 
@@ -1023,4 +1033,3 @@ showSection('overview', false);
 clearActivity();
 setWorkflowStep(1);
 void runOperation(null, 'Load AgentStack Manager', refresh);
-
