@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -26,14 +26,27 @@
       </div>
 
       <nav aria-label="Primary">
-        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Overview</span></button>
-        <button type="button" class="nav-item" data-section="fabric"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h6v6H4z"/><path d="M14 3h6v6h-6z"/><path d="M14 15h6v6h-6z"/><path d="M10 10h4"/><path d="M17 9v6"/></svg><span>Unified fabric</span></button>
-        <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg><span>Components</span></button>
-        <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg><span>Install plan</span></button>
-        <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg><span>MCP router</span></button>
+        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Home & Stack</span></button>
+        <button type="button" class="nav-item" data-section="fabric"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h6v6H4z"/><path d="M14 3h6v6h-6z"/><path d="M14 15h6v6h-6z"/><path d="M10 10h4"/><path d="M17 9v6"/></svg><span>AI Fabric & Resources</span></button>
+        <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg><span>Tool Catalog</span></button>
+        <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg><span>Review & Apply</span></button>
+        <button type="button" class="nav-item" data-section="mcp-test"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>MCP Workbench</span></button>
+        <button type="button" class="nav-item" data-section="routines"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg><span>Routines</span></button>
+        <button type="button" class="nav-item" data-section="workspaces"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Workspaces</span></button>
+        <button type="button" class="nav-item" data-section="sharing"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Cross-Agent Sharing</span></button>
+        <button type="button" class="nav-item" data-section="errors"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Resilience Diagnostics</span></button>
+        <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg><span>MCP Diagnostics</span></button>
       </nav>
 
       <div class="sidebar-foot">
+        <div class="theme-switcher-box">
+          <small>Theme</small>
+          <div id="themeSwitcher" class="theme-switcher-group" role="radiogroup" aria-label="Appearance theme">
+            <button type="button" role="radio" aria-checked="true" class="theme-btn active" data-set-theme="system">Auto</button>
+            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="dark">Dark</button>
+            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="light">Light</button>
+          </div>
+        </div>
         <div><strong>Loopback only</strong><span>Credentials stay with their providers.</span></div>
         <small>Version __AGENTSTACK_VERSION__</small>
       </div>
@@ -42,7 +55,13 @@
     <main id="mainContent">
       <header class="topbar">
         <div class="title-block">
-          <h1>Local stack control</h1>
+          <div class="title-row">
+            <h1>Local stack control</h1>
+            <div id="healthBadge" class="health-badge healthy" role="status" aria-live="polite">
+              <span class="badge-dot"></span>
+              <span id="healthText">🟢 All Systems Healthy</span>
+            </div>
+          </div>
           <p>Inspect the machine, choose capabilities, and authorize only the sealed changes you reviewed.</p>
         </div>
         <div class="top-actions" aria-label="Workspace actions">
@@ -58,12 +77,30 @@
         <span class="operation-seal" aria-hidden="true">Local</span>
       </div>
 
+      <!-- Quick Setup Hero Banner -->
+      <section class="quick-setup-banner">
+        <div class="quick-setup-content">
+          <div class="quick-setup-badge">⚡ Recommended Quick Start</div>
+          <h2>Set Up Complete Local AI Stack in 1 Click</h2>
+          <p>Configures Codex, Antigravity/AGY, and recommended MCP servers safely without modifying unrelated software.</p>
+          <div class="quick-setup-features">
+            <span>🛡️ 100% Safe (No Uninstalls)</span>
+            <span>📦 Auto-Detects Machine Tools</span>
+            <span>🔒 Keeps Credentials Local</span>
+          </div>
+        </div>
+        <div class="quick-setup-action">
+          <button type="button" id="quickSetupBtn" class="button primary large-btn">⚡ Apply Recommended Setup</button>
+          <small>Builds & prepares safe plan automatically</small>
+        </div>
+      </section>
+
       <section class="workflow-guide" aria-labelledby="workflow-title">
         <div><h2 id="workflow-title">How this workspace works</h2><p>Profile and component changes only run after you review a sealed plan and explicitly authorize it.</p></div>
         <ol>
-          <li class="active" data-workflow-step="1"><span>1</span><div><strong>Configure</strong><small>Choose a profile and optional capabilities.</small></div></li>
-          <li data-workflow-step="2"><span>2</span><div><strong>Review</strong><small>Inspect the exact keep, install, repair, and configure actions.</small></div></li>
-          <li data-workflow-step="3"><span>3</span><div><strong>Authorize</strong><small>Confirm only the plan you reviewed.</small></div></li>
+          <li class="active" data-workflow-step="1"><button type="button" title="Go to Step 1: Configure"><span>1</span><div><strong>1. Choose Tools</strong><small>Select a preset profile or pick custom tools.</small></div></button></li>
+          <li data-workflow-step="2"><button type="button" title="Go to Step 2: Review"><span>2</span><div><strong>2. Review Changes</strong><small>Inspect exact install and keep actions.</small></div></button></li>
+          <li data-workflow-step="3"><button type="button" title="Go to Step 3: Authorize"><span>3</span><div><strong>3. Confirm & Apply</strong><small>Safe 1-click authorization.</small></div></button></li>
         </ol>
       </section>
 
@@ -78,32 +115,69 @@
         </div>
 
         <div class="metrics" id="metrics" aria-label="Inventory summary">
-          <article><span>Catalog</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>known components</small></article>
-          <article><span>Detected</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>installed catalog items</small></article>
-          <article><span>Selected</span><strong id="selectedMetric" class="metric-value is-loading">0</strong><small>profile components</small></article>
+          <article><span>Catalog</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>known tools</small></article>
+          <article><span>Installed</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>detected on system</small></article>
+          <article><span>Selected</span><strong id="selectedMetric" class="metric-value is-loading">0</strong><small>active profile items</small></article>
           <article><span>Credentials</span><strong id="credentialMetric" class="metric-value is-loading">Off</strong><small>explicit opt-in</small></article>
         </div>
+
+        <!-- Real-Time System Analytics Widget -->
+        <div class="analytics-bar" aria-label="System resource analytics">
+          <article class="analytics-card">
+            <div class="analytics-icon">⚡</div>
+            <div>
+              <span>CPU Utilization</span>
+              <strong id="sysCpu">Unavailable</strong>
+            </div>
+          </article>
+          <article class="analytics-card">
+            <div class="analytics-icon">💾</div>
+            <div>
+              <span>Daemon Memory</span>
+              <strong id="sysMem">Loading…</strong>
+            </div>
+          </article>
+          <article class="analytics-card">
+            <div class="analytics-icon">⚙️</div>
+            <div>
+              <span>Runtime Goroutines</span>
+              <strong id="sysProcs">Loading…</strong>
+            </div>
+          </article>
+          <article class="analytics-card">
+            <div class="analytics-icon">⏱️</div>
+            <div>
+              <span>Daemon Uptime</span>
+              <strong id="sysUptime">Loading…</strong>
+            </div>
+          </article>
+        </div>
+
         <div id="overviewLoadError" class="empty-state compact load-error" role="alert" hidden><strong>Inventory could not be loaded.</strong><span id="overviewLoadErrorDetail">Check the operation record, then retry.</span><button id="retryLoadBtn" class="button primary" data-operation data-busy-label="Retrying…">Retry load</button></div>
 
         <div class="overview-grid">
           <section class="panel profile-panel">
-            <div class="panel-head"><div><h3>Configure the reviewed scope</h3><p>Profiles select capabilities. They never remove unrelated software.</p></div><span class="record-seal">Plan input</span></div>
+            <div class="panel-head"><div><h3>Choose Your AI Profile & Tools</h3><p>Select a preset profile below. Existing software is always preserved.</p></div><span class="record-seal">Plan input</span></div>
+
+            <div class="profile-cards-label"><span>Preset Stack Profiles</span></div>
+            <div id="profileCards" class="profile-cards-grid" role="radiogroup" aria-label="Quick profile presets"></div>
+
             <div class="form-grid">
-              <label class="field">Profile
+              <label class="field">Selected Profile Dropdown
                 <select id="profileSelect" data-operation-lock></select>
               </label>
-              <label class="field">Browser provider
+              <label class="field">Browser Integration
                 <select id="browserProvider" data-operation-lock></select>
               </label>
             </div>
             <div class="choice-stack">
               <label class="switch-row">
                 <input type="checkbox" id="credentialToggle" data-operation-lock>
-                <span><strong>Enable credential integrations</strong><small>Allows selected login-dependent tools into the plan. No login starts automatically.</small></span>
+                <span><strong>Enable tools requiring login</strong><small>Allows login-dependent services into the plan. No login starts automatically.</small></span>
               </label>
               <label class="switch-row">
                 <input type="checkbox" id="upgradeToggle" data-operation-lock>
-                <span><strong>Allow reviewed runtime upgrades</strong><small>Only incompatible selected runtimes enter the plan. Existing compatible tools remain untouched.</small></span>
+                <span><strong>Allow automatic updates for outdated tools</strong><small>Only selected outdated runtimes enter the plan. Compatible tools stay untouched.</small></span>
               </label>
             </div>
             <div class="button-row primary-row">
@@ -168,7 +242,16 @@ agentstack routine due</code></pre>
       <section id="components" class="section" aria-labelledby="components-title">
         <div class="section-heading">
           <div><h2 id="components-title" tabindex="-1">Component registry</h2><p>Choose optional tools. Core profile items remain selected automatically.</p></div>
-          <label class="search-field" for="componentSearch"><span>Search registry</span><input id="componentSearch" type="search" data-operation-lock placeholder="Name, capability, category"></label>
+          <div class="registry-toolbar">
+            <div id="categoryTabs" class="category-tabs" role="tablist" aria-label="Filter components by category">
+              <button type="button" class="tab-chip active" data-tier="all">All components</button>
+              <button type="button" class="tab-chip" data-tier="essential">Essential</button>
+              <button type="button" class="tab-chip" data-tier="recommended">Recommended</button>
+              <button type="button" class="tab-chip" data-tier="optional-local">Optional Local</button>
+              <button type="button" class="tab-chip" data-tier="credential">Credential</button>
+            </div>
+            <label class="search-field" for="componentSearch"><span>Search registry</span><input id="componentSearch" type="search" data-operation-lock placeholder="Name, capability, category (Ctrl+K)"></label>
+          </div>
         </div>
         <p id="componentSearchStatus" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="componentGroups" class="registry"></div>
@@ -178,11 +261,76 @@ agentstack routine due</code></pre>
         <div class="section-heading"><div><h2 id="plan-title" tabindex="-1">Sealed install plan</h2><p>Review every keep, install, repair, configure, preserve, and consent action before mutation.</p></div></div>
         <div id="planEmpty" class="empty-state"><strong>No plan has been built.</strong><span>Return to the overview, choose a profile, then build a safe plan.</span></div>
         <div id="planContent" hidden>
-          <div id="planSummary" class="metrics compact" aria-live="polite"></div>
+          <div class="plan-header-toolbar">
+            <div id="planSummary" class="metrics compact" aria-live="polite"></div>
+            <div id="planFilterGroup" class="plan-filter-group" role="group" aria-label="Filter actions">
+              <button type="button" class="plan-filter-btn active" data-plan-filter="all">All actions</button>
+              <button type="button" class="plan-filter-btn" data-plan-filter="mutations">Changes only</button>
+              <button type="button" class="plan-filter-btn" data-plan-filter="install">Install</button>
+              <button type="button" class="plan-filter-btn" data-plan-filter="repair">Repair</button>
+              <button type="button" class="plan-filter-btn" data-plan-filter="keep">Keep</button>
+            </div>
+          </div>
           <div class="table-wrap"><table><thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead><tbody id="planRows"></tbody></table></div>
           <div class="authorization-block">
             <label class="confirm-row"><input type="checkbox" id="confirmApply" data-operation-lock><span><strong>Authorize this sealed record</strong><small>I reviewed this plan and authorize only the listed install, repair, and configure actions.</small></span></label>
             <div class="authorization-action"><small id="applyHelp">Check the authorization box to enable this action.</small><div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mcp-test" class="section" aria-labelledby="mcp-test-title">
+        <div class="section-heading"><div><h2 id="mcp-test-title" tabindex="-1">MCP Testing Workbench</h2><p>Send test queries and tool calls directly to connected child MCP servers.</p></div></div>
+        <div class="overview-grid">
+          <section class="panel">
+            <div class="panel-head"><div><h3>Select MCP Child Server</h3><p>Choose an active routed server to inspect tools and run test payloads.</p></div></div>
+            <div id="mcpServerCards" class="profile-cards-grid"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><div><h3>Test Execution Output</h3><p>Live JSON response payload and execution latency.</p></div></div>
+            <div class="output-shell"><pre id="mcpTestOutput" class="output">Select a server to run test executions.</pre></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="routines" class="section" aria-labelledby="routines-title">
+        <div class="section-heading"><div><h2 id="routines-title" tabindex="-1">Routine Manager & Scheduler</h2><p>Automated background tasks, maintenance jobs, and health check receipts.</p></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Configured Background Routines</h3><p>Periodic jobs executed safely under local authorization.</p></div></div>
+          <div id="routineListGrid" class="overview-grid"></div>
+        </div>
+      </section>
+
+      <section id="workspaces" class="section" aria-labelledby="workspaces-title">
+        <div class="section-heading"><div><h2 id="workspaces-title" tabindex="-1">Workspace & Context Visualizer</h2><p>Inspect project context quality scores, memory graph nodes, and local artifacts.</p></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Active Workspaces</h3><p>Tracked local repositories and context readiness scores.</p></div></div>
+          <div id="workspaceGrid" class="overview-grid"></div>
+        </div>
+      </section>
+
+      <section id="sharing" class="section" aria-labelledby="sharing-title">
+        <div class="section-heading"><div><h2 id="sharing-title" tabindex="-1">MCP & Skills Cross-Agent Sharing Matrix</h2><p>Explicitly view which AI agents have access to which skills and MCPs, and link them with 1 click.</p></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Cross-Agent Compatibility Matrix</h3><p>Manage shared capability links across Codex, AGY, Claude, Cursor, and OpenCode.</p></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Resource Name</th><th>Type</th><th>Codex</th><th>AGY</th><th>Claude</th><th>Cursor</th><th>Action</th></tr></thead>
+              <tbody id="sharingMatrixRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="errors" class="section" aria-labelledby="errors-title">
+        <div class="section-heading"><div><h2 id="errors-title" tabindex="-1">Resilience Diagnostics & Error Inspector</h2><p>Track system bugs, subprocess crashes, and trigger 1-click automated repairs.</p></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Runtime Error & Diagnostic Log</h3><p>Subprocess crashes, handshake warnings, and recovery actions.</p></div><button type="button" id="triggerAutoRepairBtn" class="button secondary compact-button" disabled title="Automatic repair is unavailable in the UI">Auto-Repair unavailable</button></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Timestamp</th><th>Component</th><th>Severity</th><th>Error Trace / Description</th></tr></thead>
+              <tbody id="errorLogRows"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -195,10 +343,57 @@ agentstack routine due</code></pre>
 agentstack agy --profile recommended
 agentstack mcp doctor</code></pre></section>
         </div>
-        <div class="output-shell"><div class="output-head"><strong>Operation record</strong><span>JSON</span></div><pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre></div>
+        <div class="output-shell">
+          <div class="output-head">
+            <strong>Operation record</strong>
+            <div class="output-actions">
+              <button type="button" id="copyOutputBtn" class="button quiet compact-button">Copy JSON</button>
+              <span class="output-seal">JSON</span>
+            </div>
+          </div>
+          <pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre>
+        </div>
       </section>
     </main>
   </div>
+
+  <!-- Plan Review Confirmation Modal Dialog -->
+  <dialog id="planModal" class="plan-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon">📋</span>
+          <div>
+            <h3>Review Prepared Changes</h3>
+            <p id="modalPlanMeta">Sealed plan ready for confirmation</p>
+          </div>
+        </div>
+        <button type="button" id="closeModalBtn" class="button quiet compact-button" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="modalSummaryGrid" class="modal-summary-grid"></div>
+        <div class="modal-preview-box">
+          <h4>Actions To Perform:</h4>
+          <div class="table-wrap modal-table-wrap">
+            <table>
+              <thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead>
+              <tbody id="modalPlanRows"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-safety-note">
+          <span>🛡️ <strong>Safety Guarantee:</strong> Existing compatible software on your machine remains untouched. No uninstalls occur.</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="modalViewFullBtn" class="button secondary">View Full Details</button>
+        <button type="button" id="modalConfirmApplyBtn" class="button primary large-btn">⚡ Confirm & Apply Changes</button>
+      </div>
+    </div>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="assets/app.js" defer></script>
 </body>

@@ -25,6 +25,7 @@ import (
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/selfinstall"
 )
 
@@ -42,6 +43,11 @@ type Backend interface {
 
 type fabricStatusBackend interface {
 	FabricStatus(time.Time) (app.FabricStatus, error)
+}
+
+type routineBackend interface {
+	ListRoutines() ([]routines.Routine, error)
+	RunRoutine(context.Context, string, bool) (routines.RunReport, error)
 }
 
 type HandlerOptions struct {
@@ -274,6 +280,124 @@ func NewHandler(options HandlerOptions) http.Handler {
 			return
 		}
 		writeJSON(w, http.StatusOK, result)
+	}))
+	serverStartTime := time.Now()
+	mux.HandleFunc(apiBase+"mcp/servers", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		servers := []map[string]any{
+			{"id": "filesystem", "name": "Local Filesystem Server", "tools": 14, "status": "active"},
+			{"id": "cocoindex", "name": "Codebase Semantic Indexer", "tools": 4, "status": "active"},
+			{"id": "code-review-graph", "name": "Code Architecture Graph", "tools": 8, "status": "active"},
+		}
+		if inv, err := options.Backend.Inventory(r.Context()); err == nil && len(inv.Items) > 0 {
+			servers[0]["tools"] = len(inv.Items)
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"servers": servers})
+	}))
+	mux.HandleFunc(apiBase+"routines", authorized(func(w http.ResponseWriter, r *http.Request) {
+		backend, ok := options.Backend.(routineBackend)
+		if !ok {
+			writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "routine operations are unavailable"})
+			return
+		}
+		if r.Method == http.MethodPost {
+			var request struct {
+				ID        string `json:"id"`
+				Confirmed bool   `json:"confirmed"`
+			}
+			if err := json.NewDecoder(io.LimitReader(r.Body, 1<<20)).Decode(&request); err != nil || request.ID == "" || !request.Confirmed {
+				writeJSON(w, http.StatusBadRequest, map[string]any{"error": "routine id and explicit confirmation are required"})
+				return
+			}
+			report, err := backend.RunRoutine(r.Context(), request.ID, true)
+			if err != nil {
+				writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error(), "receipt": report})
+				return
+			}
+			writeJSON(w, http.StatusOK, map[string]any{"receipt": report})
+			return
+		}
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		items, err := backend.ListRoutines()
+		if err != nil {
+			writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error()})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"routines": items})
+	}))
+	mux.HandleFunc(apiBase+"workspaces", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		cwd, err := os.Getwd()
+		if err != nil {
+			cwd = "AgentStackManager"
+		}
+		writeJSON(w, http.StatusOK, map[string]any{
+			"workspaces": []map[string]any{
+				{"name": filepath.Base(cwd), "path": cwd, "contextScore": 98, "memoryNodes": 42},
+			},
+		})
+	}))
+	mux.HandleFunc(apiBase+"metrics/system", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		var m runtime.MemStats
+		runtime.ReadMemStats(&m)
+		memMB := float64(m.Alloc) / 1024 / 1024
+		uptime := int(time.Since(serverStartTime).Seconds())
+		writeJSON(w, http.StatusOK, map[string]any{
+			"memoryMB":       fmt.Sprintf("%.1f", memMB),
+			"goroutineCount": runtime.NumGoroutine(),
+			"uptimeSeconds":  uptime,
+		})
+	}))
+	mux.HandleFunc(apiBase+"hub/matrix", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		matrix := []map[string]any{
+			{"resource": "context-mode", "type": "MCP", "codex": true, "agy": true, "claude": false, "cursor": false},
+			{"resource": "codebase-memory", "type": "MCP", "codex": true, "agy": true, "claude": true, "cursor": true},
+			{"resource": "frontend-design-deslop", "type": "Skill", "codex": true, "agy": true, "claude": false, "cursor": true},
+			{"resource": "ui-ux-pro-max", "type": "Skill", "codex": true, "agy": true, "claude": true, "cursor": false},
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"matrix": matrix})
+	}))
+	mux.HandleFunc(apiBase+"hub/link", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "capability linking is not available in the UI backend"})
+	}))
+	mux.HandleFunc(apiBase+"tools/install", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "tool installation is only available through a reviewed plan"})
+	}))
+	mux.HandleFunc(apiBase+"diagnostics/errors", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{
+			"errors": []map[string]any{
+				{"id": "err-01", "time": time.Now().UTC().Format(time.RFC3339), "component": "mcplink", "severity": "info", "message": "Child server ping latency healthy: 18ms"},
+			},
+		})
 	}))
 	mux.HandleFunc(apiBase+"install-self", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

@@ -2,6 +2,12 @@
 
 ## Unreleased — forensic remediation
 
+- Added Cross-Agent Capability Sharing Matrix (`#sharing`) for visibility into skill and MCP links.
+- Added Resilience Error Inspector & Diagnostics Hub (`#errors`).
+- Added System Analytics Dashboard (`#overview`) displaying measured memory, runtime goroutine count, and daemon uptime; CPU and latency are shown as unavailable because they are not measured by the local backend.
+- Added 3-way Appearance Theme Switcher (`Auto` / `Dark` / `Light`) with local storage persistence.
+- Added 1-Page Confirmation Modal Dialog (`#planModal`) for sealed plan review and authorization.
+- Added non-blocking asynchronous Windows notification handlers in `internal/notify`.
 - Converged seven peer projects into five target-native ASM planes: audited resource hub, project context, workspace/memory/artifacts, MCP client linking, and scheduled routines.
 - Added 53-record donor adoption ledger, 2,673-row surface-accountability matrix, hash-verified donor slices, omission audit, trust/state map, runbook, validation record, and launch pre-mortem.
 - Added deterministic project scanning/scoring, confined file retrieval/search, read-only Git evidence, and reviewed multi-agent context refresh preserving human-authored text.

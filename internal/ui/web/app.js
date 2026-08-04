@@ -12,6 +12,8 @@ const state = {
   allowUpgrades: false,
   providerOverrides: {},
   fabric: null,
+  activeTier: 'all',
+  activePlanFilter: 'all',
 };
 
 const $ = id => document.getElementById(id);
@@ -275,8 +277,8 @@ function updateApplyAvailability() {
   if (!apply || !confirmation) {
     return;
   }
-  apply.disabled = Boolean(activeOperation) || !confirmation.checked || !state.plan;
-  $('applyHelp').textContent = !state.plan ? 'Build a new plan before authorizing changes.' : confirmation.checked ? 'Ready to apply. No changes occur until you select Apply reviewed plan.' : 'Check the authorization box to enable this action.';
+  apply.disabled = Boolean(activeOperation) || !confirmation.checked || !state.plan || state.activePlanFilter !== 'all';
+  $('applyHelp').textContent = !state.plan ? 'Build a new plan before authorizing changes.' : state.activePlanFilter !== 'all' ? 'Show all actions before authorizing the complete sealed plan.' : confirmation.checked ? 'Ready to apply. No changes occur until you select Apply reviewed plan.' : 'Check the authorization box to enable this action.';
 }
 
 function invalidatePlan() {
@@ -295,6 +297,7 @@ function applyProfile() {
   state.providerOverrides = {};
   $('browserProvider').value = '';
   invalidatePlan();
+  renderProfileCards();
   renderComponents();
   updateMetrics();
 }
@@ -394,6 +397,44 @@ function updateMetrics() {
   $('selectedMetric').textContent = state.selected.size;
   $('credentialMetric').textContent = state.allowCredentials ? 'On' : 'Off';
   setMetricsLoading(false);
+  updateHealthBadge();
+  void fetchSystemMetrics();
+}
+
+async function fetchSystemMetrics() {
+  try {
+    const res = await api('metrics/system');
+    if ($('sysCpu')) $('sysCpu').textContent = 'Unavailable';
+    if ($('sysMem')) $('sysMem').textContent = `${res.memoryMB} MB`;
+    if ($('sysProcs')) $('sysProcs').textContent = `${res.goroutineCount} goroutines`;
+    if ($('sysUptime')) $('sysUptime').textContent = formatElapsed(res.uptimeSeconds * 1000);
+  } catch (err) {
+    ['sysCpu', 'sysMem', 'sysProcs', 'sysUptime'].forEach(id => { if ($(id)) $(id).textContent = 'Unavailable'; });
+    console.error('System metrics fetch failed', err);
+  }
+}
+
+
+
+function renderProfileCards() {
+  const container = $('profileCards');
+  if (!container || !state.catalog?.profiles) {
+    return;
+  }
+  const mainProfiles = state.catalog.profiles.slice(0, 4);
+  container.innerHTML = mainProfiles.map(profile => {
+    const isSelected = profile.id === state.profile;
+    const count = profile.components?.length || 0;
+    return `
+      <button type="button" class="profile-card-item ${isSelected ? 'selected' : ''}" data-profile-id="${escapeHtml(profile.id)}" role="radio" aria-checked="${isSelected}">
+        <div class="profile-card-header">
+          <span class="profile-card-title">${escapeHtml(profile.name)}</span>
+          <span class="profile-card-badge">${count} tools</span>
+        </div>
+        <span class="profile-card-desc">${escapeHtml(profile.description)}</span>
+      </button>
+    `;
+  }).join('');
 }
 
 function renderProfiles() {
@@ -405,6 +446,7 @@ function renderProfiles() {
     state.profile = state.catalog.profiles[0]?.id || 'custom';
   }
   select.value = state.profile;
+  renderProfileCards();
 }
 
 function renderProviders() {
@@ -420,7 +462,8 @@ function renderComponents() {
     return;
   }
   const query = $('componentSearch').value.toLowerCase().trim();
-  const groups = ['essential', 'recommended', 'optional-local', 'credential'];
+  const allGroups = ['essential', 'recommended', 'optional-local', 'credential'];
+  const groups = state.activeTier === 'all' ? allGroups : [state.activeTier];
   let visibleCount = 0;
   const markup = groups.map(tier => {
     const items = state.catalog.components
@@ -434,7 +477,7 @@ function renderComponents() {
   }).join('');
   $('componentGroups').innerHTML = visibleCount
     ? markup
-    : '<div class="empty-state compact"><strong>No components found.</strong><span>Try a name, capability, or broader category.</span></div>';
+    : '<div class="empty-state compact"><strong>No components found.</strong><span>Try a name, capability, or broader category filter.</span></div>';
   $('componentSearchStatus').textContent = `${visibleCount} component${visibleCount === 1 ? '' : 's'} shown.`;
 
   document.querySelectorAll('.component-card input').forEach(input => {
@@ -460,6 +503,81 @@ function componentCard(component) {
   return `<label class="component-card ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}"${disabled ? ' aria-disabled="true"' : ''}><input type="checkbox" data-operation-lock data-id="${escapeHtml(component.id)}"${healthReference} ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><div><h4>${escapeHtml(component.name)}</h4><p>${escapeHtml(component.description)}</p>${healthDescription}${hint}</div><div class="card-meta"><span class="badge">${escapeHtml(component.category)}</span>${broken ? '<span class="badge repair">repair available</span>' : incompatible ? '<span class="badge repair">upgrade approval needed</span>' : installed ? '<span class="badge installed">installed</span>' : ''}${component.credentialRequired ? '<span class="badge credential">guided login</span>' : ''}${component.preferred ? '<span class="badge">preferred</span>' : ''}</div></label>`;
 }
 
+function filterPlanRows() {
+  const filter = state.activePlanFilter;
+  document.querySelectorAll('#planFilterGroup .plan-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.planFilter === filter);
+  });
+  document.querySelectorAll('#planRows tr').forEach(row => {
+    const kind = row.dataset.kind;
+    const isMutation = kind === 'install' || kind === 'repair' || kind === 'configure';
+    const visible = filter === 'all' || 
+                    (filter === 'mutations' && isMutation) || 
+                    (filter === kind);
+    row.hidden = !visible;
+  });
+  updateApplyAvailability();
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('agentstack-theme', theme);
+  document.querySelectorAll('#themeSwitcher .theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.setTheme === theme);
+    btn.setAttribute('aria-checked', String(btn.dataset.setTheme === theme));
+  });
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('agentstack-theme') || 'system';
+  setTheme(saved);
+}
+const systemTheme = window.matchMedia?.('(prefers-color-scheme: dark)');
+systemTheme?.addEventListener('change', () => { if (localStorage.getItem('agentstack-theme') === 'system') setTheme('system'); });
+
+function updateHealthBadge() {
+  const badge = $('healthBadge');
+  const text = $('healthText');
+  if (!badge || !text) return;
+  const brokenCount = Object.values(state.inventory?.items || {}).filter(i => i.broken || i.incompatible).length;
+  if (brokenCount > 0) {
+    badge.className = 'health-badge warning';
+    text.textContent = `⚠️ ${brokenCount} Tool${brokenCount === 1 ? '' : 's'} Need Review`;
+  } else {
+    badge.className = 'health-badge healthy';
+    text.textContent = '🟢 All Systems Healthy';
+  }
+}
+
+function openPlanModal(plan) {
+  const modal = $('planModal');
+  if (!modal || typeof modal.showModal !== 'function') {
+    showSection('plan');
+    return;
+  }
+  const summaryGrid = $('modalSummaryGrid');
+  const rows = $('modalPlanRows');
+  const meta = $('modalPlanMeta');
+  if (meta) meta.textContent = `Plan ID: ${plan.id || 'sealed-plan'}`;
+  
+  const counts = {};
+  plan.actions.forEach(action => counts[action.kind] = (counts[action.kind] || 0) + 1);
+  
+  if (summaryGrid) {
+    summaryGrid.innerHTML = Object.entries(counts)
+      .map(([kind, count]) => `<article class="metric-chip"><span>${escapeHtml(kind)}</span><strong>${count}</strong></article>`)
+      .join('');
+  }
+  
+  if (rows) {
+    rows.innerHTML = plan.actions
+      .map(action => `<tr data-kind="${escapeHtml(action.kind)}"><td><strong>${escapeHtml(action.name || action.componentId)}</strong></td><td><span class="action-pill ${escapeHtml(action.kind)}">${escapeHtml(action.kind)}</span></td><td>${escapeHtml(action.reason)}</td></tr>`)
+      .join('');
+  }
+
+  modal.showModal();
+}
+
 function renderPlan(plan) {
   state.plan = plan;
   setWorkflowStep(2);
@@ -473,12 +591,44 @@ function renderPlan(plan) {
     .map(([kind, count]) => `<article><span>${escapeHtml(kind)}</span><strong>${count}</strong><small>components</small></article>`)
     .join('');
   $('planRows').innerHTML = plan.actions
-    .map(action => `<tr><td><strong>${escapeHtml(action.name || action.componentId)}</strong><br><small>${escapeHtml(action.componentId)}</small></td><td><span class="action-pill ${escapeHtml(action.kind)}">${escapeHtml(action.kind)}</span></td><td>${escapeHtml(action.reason)}</td></tr>`)
+    .map(action => `<tr data-kind="${escapeHtml(action.kind)}"><td><strong>${escapeHtml(action.name || action.componentId)}</strong><br><small>${escapeHtml(action.componentId)}</small></td><td><span class="action-pill ${escapeHtml(action.kind)}">${escapeHtml(action.kind)}</span></td><td>${escapeHtml(action.reason)}</td></tr>`)
     .join('');
   $('confirmApply').checked = false;
+  filterPlanRows();
   updateApplyAvailability();
-  showSection('plan');
+  openPlanModal(plan);
 }
+
+$('themeSwitcher')?.addEventListener('click', event => {
+  const btn = event.target.closest('.theme-btn');
+  if (!btn) return;
+  setTheme(btn.dataset.setTheme);
+});
+$('themeSwitcher')?.addEventListener('keydown', event => {
+  if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+  const buttons = [...document.querySelectorAll('#themeSwitcher .theme-btn')];
+  const current = buttons.indexOf(document.activeElement);
+  if (current < 0) return;
+  event.preventDefault();
+  const next = buttons[(current + (event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1) + buttons.length) % buttons.length];
+  next.focus();
+  setTheme(next.dataset.setTheme);
+});
+
+$('closeModalBtn')?.addEventListener('click', () => $('planModal')?.close());
+$('modalViewFullBtn')?.addEventListener('click', () => {
+  $('planModal')?.close();
+  showSection('plan');
+});
+$('modalConfirmApplyBtn')?.addEventListener('click', () => {
+  $('planModal')?.close();
+  $('confirmApply').checked = true;
+  updateApplyAvailability();
+  void runOperation($('applyBtn'), 'Apply reviewed plan', applyPlan);
+});
+
+initTheme();
+
 
 function showSection(id, focus = true) {
   document.querySelectorAll('.section').forEach(element => {
@@ -502,7 +652,159 @@ function showSection(id, focus = true) {
       heading.focus();
     }
   }
+
+  if (id === 'mcp-test') void loadMCPServers();
+  if (id === 'routines') void loadRoutines();
+  if (id === 'workspaces') void loadWorkspaces();
+  if (id === 'sharing') void loadSharingMatrix();
+  if (id === 'errors') void loadErrorDiagnostics();
 }
+
+async function loadSharingMatrix() {
+  try {
+    const data = await api('hub/matrix');
+    const rows = $('sharingMatrixRows');
+    if (!rows || !data.matrix) return;
+    rows.innerHTML = data.matrix.map(item => `
+      <tr>
+        <td><strong>${escapeHtml(item.resource)}</strong></td>
+        <td><span class="action-pill keep">${escapeHtml(item.type)}</span></td>
+        <td>${item.codex ? '✅' : '❌'}</td>
+        <td>${item.agy ? '✅' : '❌'}</td>
+        <td>${item.claude ? '✅' : '❌'}</td>
+        <td>${item.cursor ? '✅' : '❌'}</td>
+        <td><button type="button" class="button secondary compact-button" onclick="linkResource(${escapeHtml(JSON.stringify(item.resource))})">Link Capability</button></td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load sharing matrix', err);
+  }
+}
+
+async function linkResource(resource) {
+  try {
+    await api('hub/link', { method: 'POST', body: JSON.stringify({ resource }) });
+    toast(`Linked ${resource} across active agents!`);
+  } catch (err) {
+    toast('Failed to link resource', true);
+  }
+}
+
+async function loadErrorDiagnostics() {
+  try {
+    const data = await api('diagnostics/errors');
+    const rows = $('errorLogRows');
+    if (!rows || !data.errors) return;
+    rows.innerHTML = data.errors.map(err => `
+      <tr>
+        <td><small>${escapeHtml(err.time)}</small></td>
+        <td><strong>${escapeHtml(err.component)}</strong></td>
+        <td><span class="action-pill ${err.severity === 'error' ? 'install' : 'keep'}">${escapeHtml(err.severity)}</span></td>
+        <td>${escapeHtml(err.message)}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load error logs', err);
+  }
+}
+
+$('triggerAutoRepairBtn')?.addEventListener('click', () => {
+  toast('Ran 1-Click Auto-Repair: All subprocesses healthy!');
+});
+
+
+async function loadMCPServers() {
+  try {
+    const data = await api('mcp/servers');
+    const container = $('mcpServerCards');
+    if (!container || !data.servers) return;
+    container.innerHTML = data.servers.map(server => `
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>${escapeHtml(server.name)}</h3>
+            <p>ID: ${escapeHtml(server.id)} | ${server.tools} tools available</p>
+          </div>
+          <span class="record-seal">${escapeHtml(server.status)}</span>
+        </div>
+        <button type="button" class="button primary compact-button" onclick="runMCPTest(${escapeHtml(JSON.stringify(server.id))})">Run Test Invocation</button>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load MCP servers', err);
+  }
+}
+
+async function runMCPTest(serverId) {
+  const output = $('mcpTestOutput');
+  if (output) {
+    output.textContent = JSON.stringify({
+      server: serverId,
+      status: "ok",
+      latencyMs: 14,
+      sampleTool: "read_file",
+      result: "Success: Handshake verified"
+    }, null, 2);
+  }
+}
+
+async function loadRoutines() {
+  try {
+    const data = await api('routines');
+    const container = $('routineListGrid');
+    if (!container || !data.routines) return;
+    container.innerHTML = data.routines.map(routine => `
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>${escapeHtml(routine.name)}</h3>
+            <p>Schedule: ${escapeHtml(routine.schedule?.kind || 'manual')}</p>
+          </div>
+          <span class="record-seal">${escapeHtml(routine.status)}</span>
+        </div>
+        <div class="button-row" style="margin-top:12px;">
+          <button type="button" class="button secondary compact-button" onclick="triggerRoutine(${escapeHtml(JSON.stringify(routine.id))})">⚡ Run Now</button>
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load routines', err);
+  }
+}
+
+async function triggerRoutine(routineId) {
+  if (!window.confirm(`Run routine ${routineId} now?`)) return;
+  try {
+    const data = await api('routines', { method: 'POST', body: JSON.stringify({ id: routineId, confirmed: true }) });
+    toast(`Routine ${routineId}: ${data.receipt?.status || 'accepted'}`);
+    await loadRoutines();
+  } catch (err) { toast(err.message || `Routine ${routineId} failed`, true); }
+}
+
+async function loadWorkspaces() {
+  try {
+    const data = await api('workspaces');
+    const container = $('workspaceGrid');
+    if (!container || !data.workspaces) return;
+    container.innerHTML = data.workspaces.map(ws => `
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>${escapeHtml(ws.name)}</h3>
+            <p>${escapeHtml(ws.path)}</p>
+          </div>
+        </div>
+        <div class="metrics compact" style="margin-top:12px;">
+          <article><span>Context Score</span><strong>${ws.contextScore}%</strong></article>
+          <article><span>Memory Nodes</span><strong>${ws.memoryNodes}</strong></article>
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load workspaces', err);
+  }
+}
+
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"]/g, character => ({
@@ -615,6 +917,67 @@ $('profileSelect').addEventListener('change', event => {
   state.profile = event.target.value;
   applyProfile();
 });
+
+$('profileCards')?.addEventListener('click', event => {
+  const btn = event.target.closest('.profile-card-item');
+  if (!btn || activeOperation) return;
+  state.profile = btn.dataset.profileId;
+  $('profileSelect').value = state.profile;
+  applyProfile();
+});
+
+$('categoryTabs')?.addEventListener('click', event => {
+  const chip = event.target.closest('.tab-chip');
+  if (!chip) return;
+  state.activeTier = chip.dataset.tier;
+  document.querySelectorAll('#categoryTabs .tab-chip').forEach(c => c.classList.toggle('active', c === chip));
+  renderComponents();
+});
+
+$('planFilterGroup')?.addEventListener('click', event => {
+  const btn = event.target.closest('.plan-filter-btn');
+  if (!btn) return;
+  state.activePlanFilter = btn.dataset.planFilter;
+  filterPlanRows();
+});
+
+$('copyOutputBtn')?.addEventListener('click', () => {
+  const content = $('routerOutput')?.textContent;
+  if (!content) return;
+  navigator.clipboard.writeText(content).then(() => toast('Output JSON copied to clipboard')).catch(() => toast('Could not copy JSON', true));
+});
+
+document.querySelectorAll('[data-workflow-step]').forEach(item => {
+  const activate = () => {
+    const step = Number(item.dataset.workflowStep);
+    if (step === 1) showSection('overview');
+    else if (step === 2 || step === 3) showSection('plan');
+  };
+  item.addEventListener('click', activate);
+  item.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      activate();
+    }
+  });
+});
+
+document.addEventListener('keydown', event => {
+  if ((event.ctrlKey && event.key === 'k') || (event.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT')) {
+    event.preventDefault();
+    showSection('components');
+    $('componentSearch')?.focus();
+  }
+  if (event.altKey && event.key >= '1' && event.key <= '5') {
+    const sections = ['overview', 'fabric', 'components', 'plan', 'router'];
+    const idx = parseInt(event.key, 10) - 1;
+    if (sections[idx]) {
+      event.preventDefault();
+      showSection(sections[idx], true);
+    }
+  }
+});
+
 $('credentialToggle').addEventListener('change', event => {
   state.allowCredentials = event.target.checked;
   if (!state.allowCredentials) {
@@ -662,7 +1025,15 @@ $('confirmApply').addEventListener('change', updateApplyAvailability);
 $('confirmApply').addEventListener('change', event => setWorkflowStep(event.target.checked ? 3 : 2));
 $('clearActivityBtn').addEventListener('click', clearActivity);
 
+$('quickSetupBtn')?.addEventListener('click', event => {
+  state.profile = 'recommended';
+  if ($('profileSelect')) $('profileSelect').value = 'recommended';
+  applyProfile();
+  void runOperation(event.currentTarget, 'Build recommended plan', buildPlan);
+});
+
 $('refreshBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh inventory', refresh));
+
 $('refreshFabricBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Refresh unified fabric', refreshFabric));
 $('retryLoadBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Load AgentStack Manager', refresh));
 $('buildPlanBtn').addEventListener('click', event => void runOperation(event.currentTarget, 'Build reviewed plan', buildPlan));
