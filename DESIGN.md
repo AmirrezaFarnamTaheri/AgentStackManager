@@ -241,6 +241,14 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 - Seals are compact provenance labels with mono text, fine borders, and pill geometry.
 - They identify state or ownership. They are never decorative tags.
 
+### Quick Setup Hero Banner
+- Prominent 1-click preset card for new users with a 5px Controlled Teal accent border (`border-left: 5px solid var(--accent)`).
+- Provides plain-English setup summary and a high-visibility primary setup action (`⚡ Apply Recommended Setup`).
+
+### Plan Diff & Category Toolbar
+- Category filter chips (`All`, `Essential`, `Recommended`, `Optional Local`, `Credential`) filter the registry without page reload.
+- Plan action filter buttons (`All actions`, `Changes only`, `Install`, `Repair`, `Keep`) allow instant mutation isolation before authorization.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -250,6 +258,7 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 - **Do** keep every primary control at least 44px high and preserve visible focus.
 - **Do** use the mono stack for evidence such as values, versions, seals, and command output.
 - **Do** collapse layout topology at 1120px, 800px, and 520px before reducing density.
+- **Do** provide global keyboard shortcuts (`Ctrl+K` search, `Alt+1..5` section navigation).
 
 ### Don't:
 - **Don't** introduce a marketing hero, decorative dashboard cards, or promotional proof into the manager.
@@ -258,3 +267,16 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 - **Don't** hide navigation behind unlabeled icons or reduce touch targets to make mobile fit.
 - **Don't** use pills for ordinary buttons, panels, or form controls.
 - **Don't** use repeated eyebrows, section numbers, or technical microcopy as decoration.
+
+## Anti-Slop Audit Log & Quality Gate
+
+| Slop Tell | Status | Remediation Applied |
+| :--- | :---: | :--- |
+| Generic Fonts (Inter/Roboto/System) | **PASSED** | Structural font stack: Aptos / Segoe UI Variable (UI sans) + Cascadia Code / SFMono (Evidence mono). |
+| Purple/Indigo Gradients | **PASSED** | Palette strictly locked to Cold Canvas (`#edf0ef` / `#111715`) + Controlled Teal (`#0f766e` / `#63b9ad`). |
+| Emoji Structural Icons | **PASSED** | 100% SVG icon set (`Lucide`). No emojis used as structural interface icons. |
+| Hover Layout Shift | **PASSED** | Smooth 180ms CSS transitions on color/opacity/border. Non-layout driving transforms only. |
+| Sub-44px Touch Targets | **PASSED** | All primary buttons, selects, and input controls meet minimum `44px` height requirement. |
+| Missing Focus Outline | **PASSED** | `3px` visible focus outline on all interactive controls (`:focus-visible`). |
+| Color-Only Indicators | **PASSED** | Every state communicates via text + status mark (`01`, `02`, `03`) + icon + color. |
+

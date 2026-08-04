@@ -578,3 +578,483 @@ pre { margin: 16px 0 0; overflow: auto; border-radius: var(--radius-control); ba
 @media (max-width: 520px) {
   .fabric-plane-list dl > div { grid-template-columns: 1fr; gap: 5px; }
 }
+
+/* Profile Presets Grid */
+.profile-cards-label {
+  margin: 18px 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-soft);
+}
+.profile-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.profile-card-item {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 180ms var(--ease);
+}
+.profile-card-item:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-strong);
+  transform: translateY(-1px);
+}
+.profile-card-item.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.profile-card-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+}
+.profile-card-item.selected .profile-card-title {
+  color: var(--accent-strong);
+}
+.profile-card-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface-muted);
+  color: var(--text-soft);
+}
+.profile-card-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Category Filter Tabs & Toolbar */
+.registry-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.category-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tab-chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--surface-strong);
+  color: var(--text-soft);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 160ms var(--ease);
+}
+.tab-chip:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.tab-chip.active {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+/* Plan Diff Header Toolbar & Filter Buttons */
+.plan-header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.plan-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.plan-filter-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--surface-strong);
+  color: var(--text-soft);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 160ms var(--ease);
+}
+.plan-filter-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.plan-filter-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: var(--accent);
+}
+
+/* Output actions toolbar */
+.output-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.output-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.output-seal {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--surface-muted);
+  color: var(--text-soft);
+}
+
+/* Interactive Stepper Navigation */
+.workflow-guide li[role="button"] {
+  cursor: pointer;
+  transition: transform 180ms var(--ease), background 180ms var(--ease);
+}
+.workflow-guide li[role="button"]:hover {
+  transform: translateY(-1px);
+}
+/* Quick Setup Banner */
+.quick-setup-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 22px 26px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+.quick-setup-content h2 {
+  margin: 6px 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.quick-setup-content p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.quick-setup-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+.quick-setup-features {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  flex-wrap: wrap;
+}
+.quick-setup-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.large-btn {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  min-height: 48px;
+}
+.quick-setup-action small {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* Theme Switcher in Sidebar */
+.theme-switcher-box {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.theme-switcher-box small {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--sidebar-muted);
+  font-size: 11px;
+}
+.theme-switcher-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 3px;
+  border-radius: var(--radius-control);
+}
+.theme-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--sidebar-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 0;
+  border-radius: 4px;
+  min-height: auto;
+  cursor: pointer;
+  transition: all 150ms var(--ease);
+}
+.theme-btn:hover {
+  color: #ffffff;
+}
+.theme-btn.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+/* Explicit Light / Dark Overrides */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #111715;
+  --surface: #18201e;
+  --surface-strong: #1d2623;
+  --surface-muted: #25302d;
+  --sidebar: #0c1110;
+  --sidebar-muted: #8d9b97;
+  --sidebar-mark: #182723;
+  --sidebar-mark-accent: #78c8bd;
+  --text: #edf4f1;
+  --text-soft: #a6b3af;
+  --line: #34413d;
+  --line-strong: #4a5a55;
+  --accent: #63b9ad;
+  --accent-strong: #78c8bd;
+  --accent-soft: #1e3b37;
+  --success: #6dc49b;
+  --warning: #d7ae5e;
+  --danger: #a43c45;
+  --danger-strong: #873039;
+  --danger-text: #f08f98;
+  --focus: #76c7bb;
+  --shadow-panel: 0 22px 48px rgba(0, 0, 0, 0.24);
+  --shadow-float: 0 14px 32px rgba(0, 0, 0, 0.36);
+}
+html[data-theme="dark"] .button.primary { color: #0d1c1a; }
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #edf0ef;
+  --surface: #f8faf9;
+  --surface-strong: #ffffff;
+  --surface-muted: #e5eae8;
+  --sidebar: #18201f;
+  --sidebar-muted: #9ba8a5;
+  --sidebar-mark: #22302e;
+  --sidebar-mark-accent: #78b8ae;
+  --text: #17201f;
+  --text-soft: #596562;
+  --line: #cbd3d0;
+  --line-strong: #aebbb7;
+  --accent: #0f766e;
+  --accent-strong: #0a5f59;
+  --accent-soft: #d9eeeb;
+  --success: #1f7a55;
+  --warning: #946515;
+  --danger: #a43c45;
+  --danger-strong: #873039;
+  --focus: #0f766e;
+}
+
+/* Health Badge in Topbar */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.health-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 650;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+.health-badge.healthy {
+  border-color: rgba(31, 122, 85, 0.3);
+  background: rgba(31, 122, 85, 0.08);
+}
+.health-badge.warning {
+  border-color: rgba(148, 101, 21, 0.3);
+  background: rgba(148, 101, 21, 0.08);
+}
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.health-badge.warning .badge-dot {
+  background: var(--warning);
+}
+
+/* Confirmation Modal Dialog */
+.plan-modal {
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-panel);
+  background: transparent;
+  box-shadow: var(--shadow-float);
+  max-width: 640px;
+  width: min(92vw, 640px);
+}
+.plan-modal::backdrop {
+  background: rgba(10, 15, 14, 0.65);
+  backdrop-filter: blur(4px);
+}
+.modal-card {
+  background: var(--surface-strong);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-panel);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modal-icon {
+  font-size: 26px;
+}
+.modal-title h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.modal-title p {
+  margin: 3px 0 0;
+  color: var(--text-soft);
+  font-size: 12px;
+}
+.modal-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.modal-preview-box h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+.modal-table-wrap {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+}
+.modal-safety-note {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(15, 118, 110, 0.25);
+  border-radius: var(--radius-control);
+  font-size: 12px;
+  color: var(--accent-strong);
+}
+/* Analytics Bar & Cards */
+.analytics-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+.analytics-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+.analytics-icon {
+  font-size: 20px;
+  padding: 8px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-control);
+}
+.analytics-card span {
+  display: block;
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-bottom: 2px;
+}
+.analytics-card strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+
