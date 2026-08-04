@@ -277,8 +277,8 @@ function updateApplyAvailability() {
   if (!apply || !confirmation) {
     return;
   }
-  apply.disabled = Boolean(activeOperation) || !confirmation.checked || !state.plan;
-  $('applyHelp').textContent = !state.plan ? 'Build a new plan before authorizing changes.' : confirmation.checked ? 'Ready to apply. No changes occur until you select Apply reviewed plan.' : 'Check the authorization box to enable this action.';
+  apply.disabled = Boolean(activeOperation) || !confirmation.checked || !state.plan || state.activePlanFilter !== 'all';
+  $('applyHelp').textContent = !state.plan ? 'Build a new plan before authorizing changes.' : state.activePlanFilter !== 'all' ? 'Show all actions before authorizing the complete sealed plan.' : confirmation.checked ? 'Ready to apply. No changes occur until you select Apply reviewed plan.' : 'Check the authorization box to enable this action.';
 }
 
 function invalidatePlan() {
@@ -515,6 +515,7 @@ function filterPlanRows() {
                     (filter === kind);
     row.hidden = !visible;
   });
+  updateApplyAvailability();
 }
 
 function setTheme(theme) {
@@ -522,6 +523,7 @@ function setTheme(theme) {
   localStorage.setItem('agentstack-theme', theme);
   document.querySelectorAll('#themeSwitcher .theme-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.setTheme === theme);
+    btn.setAttribute('aria-checked', String(btn.dataset.setTheme === theme));
   });
 }
 
@@ -529,6 +531,8 @@ function initTheme() {
   const saved = localStorage.getItem('agentstack-theme') || 'system';
   setTheme(saved);
 }
+const systemTheme = window.matchMedia?.('(prefers-color-scheme: dark)');
+systemTheme?.addEventListener('change', () => { if (localStorage.getItem('agentstack-theme') === 'system') setTheme('system'); });
 
 function updateHealthBadge() {
   const badge = $('healthBadge');
@@ -598,6 +602,16 @@ $('themeSwitcher')?.addEventListener('click', event => {
   const btn = event.target.closest('.theme-btn');
   if (!btn) return;
   setTheme(btn.dataset.setTheme);
+});
+$('themeSwitcher')?.addEventListener('keydown', event => {
+  if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+  const buttons = [...document.querySelectorAll('#themeSwitcher .theme-btn')];
+  const current = buttons.indexOf(document.activeElement);
+  if (current < 0) return;
+  event.preventDefault();
+  const next = buttons[(current + (event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1) + buttons.length) % buttons.length];
+  next.focus();
+  setTheme(next.dataset.setTheme);
 });
 
 $('closeModalBtn')?.addEventListener('click', () => $('planModal')?.close());
@@ -743,7 +757,7 @@ async function loadRoutines() {
         <div class="panel-head">
           <div>
             <h3>${escapeHtml(routine.name)}</h3>
-            <p>Schedule: ${escapeHtml(routine.schedule)}</p>
+            <p>Schedule: ${escapeHtml(routine.schedule?.kind || 'manual')}</p>
           </div>
           <span class="record-seal">${escapeHtml(routine.status)}</span>
         </div>
@@ -758,7 +772,12 @@ async function loadRoutines() {
 }
 
 async function triggerRoutine(routineId) {
-  toast(`Triggered routine ${routineId} successfully!`);
+  if (!window.confirm(`Run routine ${routineId} now?`)) return;
+  try {
+    const data = await api('routines', { method: 'POST', body: JSON.stringify({ id: routineId, confirmed: true }) });
+    toast(`Routine ${routineId}: ${data.receipt?.status || 'accepted'}`);
+    await loadRoutines();
+  } catch (err) { toast(err.message || `Routine ${routineId} failed`, true); }
 }
 
 async function loadWorkspaces() {

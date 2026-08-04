@@ -42,9 +42,9 @@
         <div class="theme-switcher-box">
           <small>Theme</small>
           <div id="themeSwitcher" class="theme-switcher-group" role="radiogroup" aria-label="Appearance theme">
-            <button type="button" class="theme-btn active" data-set-theme="system">Auto</button>
-            <button type="button" class="theme-btn" data-set-theme="dark">Dark</button>
-            <button type="button" class="theme-btn" data-set-theme="light">Light</button>
+            <button type="button" role="radio" aria-checked="true" class="theme-btn active" data-set-theme="system">Auto</button>
+            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="dark">Dark</button>
+            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="light">Light</button>
           </div>
         </div>
         <div><strong>Loopback only</strong><span>Credentials stay with their providers.</span></div>
@@ -325,7 +325,7 @@ agentstack routine due</code></pre>
       <section id="errors" class="section" aria-labelledby="errors-title">
         <div class="section-heading"><div><h2 id="errors-title" tabindex="-1">Resilience Diagnostics & Error Inspector</h2><p>Track system bugs, subprocess crashes, and trigger 1-click automated repairs.</p></div></div>
         <div class="panel">
-          <div class="panel-head"><div><h3>Runtime Error & Diagnostic Log</h3><p>Subprocess crashes, handshake warnings, and recovery actions.</p></div><button type="button" id="triggerAutoRepairBtn" class="button secondary compact-button">⚡ Run 1-Click Auto-Repair</button></div>
+          <div class="panel-head"><div><h3>Runtime Error & Diagnostic Log</h3><p>Subprocess crashes, handshake warnings, and recovery actions.</p></div><button type="button" id="triggerAutoRepairBtn" class="button secondary compact-button" disabled title="Automatic repair is unavailable in the UI">Auto-Repair unavailable</button></div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Timestamp</th><th>Component</th><th>Severity</th><th>Error Trace / Description</th></tr></thead>
@@ -398,4 +398,3 @@ agentstack mcp doctor</code></pre></section>
   <script src="assets/app.js" defer></script>
 </body>
 </html>
-

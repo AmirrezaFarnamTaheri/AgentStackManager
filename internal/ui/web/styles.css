@@ -925,6 +925,12 @@ html[data-theme="light"] {
   --danger-strong: #873039;
   --focus: #0f766e;
 }
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] { color-scheme: dark; --canvas: #111715; --surface: #18201f; --surface-strong: #202b28; --surface-muted: #263431; --text: #edf4f1; --text-soft: #b8c6c1; --line: #3b4b47; --line-strong: #52645e; }
+}
+@media (prefers-color-scheme: light) {
+  html[data-theme="system"] { color-scheme: light; }
+}
 
 /* Health Badge in Topbar */
 .title-row {

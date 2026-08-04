@@ -25,6 +25,7 @@ import (
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/selfinstall"
 )
 
@@ -42,6 +43,11 @@ type Backend interface {
 
 type fabricStatusBackend interface {
 	FabricStatus(time.Time) (app.FabricStatus, error)
+}
+
+type routineBackend interface {
+	ListRoutines() ([]routines.Routine, error)
+	RunRoutine(context.Context, string, bool) (routines.RunReport, error)
 }
 
 type HandlerOptions struct {
@@ -292,17 +298,38 @@ func NewHandler(options HandlerOptions) http.Handler {
 		writeJSON(w, http.StatusOK, map[string]any{"servers": servers})
 	}))
 	mux.HandleFunc(apiBase+"routines", authorized(func(w http.ResponseWriter, r *http.Request) {
+		backend, ok := options.Backend.(routineBackend)
+		if !ok {
+			writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "routine operations are unavailable"})
+			return
+		}
+		if r.Method == http.MethodPost {
+			var request struct {
+				ID        string `json:"id"`
+				Confirmed bool   `json:"confirmed"`
+			}
+			if err := json.NewDecoder(io.LimitReader(r.Body, 1<<20)).Decode(&request); err != nil || request.ID == "" || !request.Confirmed {
+				writeJSON(w, http.StatusBadRequest, map[string]any{"error": "routine id and explicit confirmation are required"})
+				return
+			}
+			report, err := backend.RunRoutine(r.Context(), request.ID, true)
+			if err != nil {
+				writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error(), "receipt": report})
+				return
+			}
+			writeJSON(w, http.StatusOK, map[string]any{"receipt": report})
+			return
+		}
 		if r.Method != http.MethodGet {
 			methodNotAllowed(w)
 			return
 		}
-		now := time.Now().UTC().Format(time.RFC3339)
-		writeJSON(w, http.StatusOK, map[string]any{
-			"routines": []map[string]any{
-				{"id": "health-audit", "name": "Daily MCP Health Audit", "schedule": "Daily at 08:00", "lastRun": now, "status": "success"},
-				{"id": "backup-rotate", "name": "Weekly Configuration Backup", "schedule": "Weekly on Sunday", "lastRun": now, "status": "success"},
-			},
-		})
+		items, err := backend.ListRoutines()
+		if err != nil {
+			writeJSON(w, http.StatusConflict, map[string]any{"error": err.Error()})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"routines": items})
 	}))
 	mux.HandleFunc(apiBase+"workspaces", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -358,14 +385,14 @@ func NewHandler(options HandlerOptions) http.Handler {
 			methodNotAllowed(w)
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]any{"status": "linked", "message": "Resource linked to target agent successfully"})
+		writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "capability linking is not available in the UI backend"})
 	}))
 	mux.HandleFunc(apiBase+"tools/install", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			methodNotAllowed(w)
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]any{"status": "installed", "progress": 100, "log": "Package installed cleanly without modifications to existing tools."})
+		writeJSON(w, http.StatusNotImplemented, map[string]any{"error": "tool installation is only available through a reviewed plan"})
 	}))
 	mux.HandleFunc(apiBase+"diagnostics/errors", authorized(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

@@ -2,9 +2,8 @@
 
 ## Unreleased — forensic remediation
 
-- Added Cross-Agent Capability Sharing Matrix (`#sharing`) for 1-click skill and MCP linking across Codex, AGY, Claude, Cursor, and OpenCode.
-- Added Live Background Tool Installer & Progress Tracker API (`POST /api/tools/install`).
-- Added Resilience Error Inspector & Diagnostics Hub (`#errors`) with 1-click Auto-Repair trigger.
+- Added Cross-Agent Capability Sharing Matrix (`#sharing`) for visibility into skill and MCP links.
+- Added Resilience Error Inspector & Diagnostics Hub (`#errors`).
 - Added Real-Time System Analytics Dashboard (`#overview`) displaying live CPU %, Memory MB (`runtime.ReadMemStats`), Goroutine counter, and Daemon Uptime (`time.Since(serverStartTime)`).
 - Added 3-way Appearance Theme Switcher (`Auto` / `Dark` / `Light`) with local storage persistence.
 - Added 1-Page Confirmation Modal Dialog (`#planModal`) for sealed plan review and authorization.

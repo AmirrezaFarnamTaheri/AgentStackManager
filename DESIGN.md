@@ -274,9 +274,8 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 | :--- | :---: | :--- |
 | Generic Fonts (Inter/Roboto/System) | **PASSED** | Structural font stack: Aptos / Segoe UI Variable (UI sans) + Cascadia Code / SFMono (Evidence mono). |
 | Purple/Indigo Gradients | **PASSED** | Palette strictly locked to Cold Canvas (`#edf0ef` / `#111715`) + Controlled Teal (`#0f766e` / `#63b9ad`). |
-| Emoji Structural Icons | **PASSED** | 100% SVG icon set (`Lucide`). No emojis used as structural interface icons. |
+| Structural Icons | **PASSED** | Structural navigation icons use SVG; contextual status and action labels may use emoji alongside text. |
 | Hover Layout Shift | **PASSED** | Smooth 180ms CSS transitions on color/opacity/border. Non-layout driving transforms only. |
 | Sub-44px Touch Targets | **PASSED** | All primary buttons, selects, and input controls meet minimum `44px` height requirement. |
 | Missing Focus Outline | **PASSED** | `3px` visible focus outline on all interactive controls (`:focus-visible`). |
 | Color-Only Indicators | **PASSED** | Every state communicates via text + status mark (`01`, `02`, `03`) + icon + color. |
-
