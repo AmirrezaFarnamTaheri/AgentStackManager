@@ -404,11 +404,12 @@ function updateMetrics() {
 async function fetchSystemMetrics() {
   try {
     const res = await api('metrics/system');
-    if ($('sysCpu')) $('sysCpu').textContent = `${res.cpuPercent}%`;
+    if ($('sysCpu')) $('sysCpu').textContent = 'Unavailable';
     if ($('sysMem')) $('sysMem').textContent = `${res.memoryMB} MB`;
-    if ($('sysProcs')) $('sysProcs').textContent = `${res.activeProcesses} workers`;
+    if ($('sysProcs')) $('sysProcs').textContent = `${res.goroutineCount} goroutines`;
     if ($('sysUptime')) $('sysUptime').textContent = formatElapsed(res.uptimeSeconds * 1000);
   } catch (err) {
+    ['sysCpu', 'sysMem', 'sysProcs', 'sysUptime'].forEach(id => { if ($(id)) $(id).textContent = 'Unavailable'; });
     console.error('System metrics fetch failed', err);
   }
 }

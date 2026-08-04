@@ -4,7 +4,7 @@
 
 - Added Cross-Agent Capability Sharing Matrix (`#sharing`) for visibility into skill and MCP links.
 - Added Resilience Error Inspector & Diagnostics Hub (`#errors`).
-- Added Real-Time System Analytics Dashboard (`#overview`) displaying live CPU %, Memory MB (`runtime.ReadMemStats`), Goroutine counter, and Daemon Uptime (`time.Since(serverStartTime)`).
+- Added System Analytics Dashboard (`#overview`) displaying measured memory, runtime goroutine count, and daemon uptime; CPU and latency are shown as unavailable because they are not measured by the local backend.
 - Added 3-way Appearance Theme Switcher (`Auto` / `Dark` / `Light`) with local storage persistence.
 - Added 1-Page Confirmation Modal Dialog (`#planModal`) for sealed plan review and authorization.
 - Added non-blocking asynchronous Windows notification handlers in `internal/notify`.

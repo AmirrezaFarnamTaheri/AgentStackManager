@@ -356,15 +356,9 @@ func NewHandler(options HandlerOptions) http.Handler {
 		memMB := float64(m.Alloc) / 1024 / 1024
 		uptime := int(time.Since(serverStartTime).Seconds())
 		writeJSON(w, http.StatusOK, map[string]any{
-			"cpuPercent":      1.8,
-			"memoryMB":        fmt.Sprintf("%.1f", memMB),
-			"activeProcesses": runtime.NumGoroutine(),
-			"uptimeSeconds":   uptime,
-			"latencyMap": map[string]int{
-				"filesystem":        8,
-				"cocoindex":         14,
-				"code-review-graph": 18,
-			},
+			"memoryMB":       fmt.Sprintf("%.1f", memMB),
+			"goroutineCount": runtime.NumGoroutine(),
+			"uptimeSeconds":  uptime,
 		})
 	}))
 	mux.HandleFunc(apiBase+"hub/matrix", authorized(func(w http.ResponseWriter, r *http.Request) {
