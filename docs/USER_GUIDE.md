@@ -6,6 +6,19 @@ Extract the complete signed release ZIP. Keep `AgentStack-Setup.exe`, the archit
 
 The public setup path is fail-closed on the exact SHA-256 of its sibling console binary and the release checksum manifest. Artifacts are integrity-attested by GitHub Actions; Windows Authenticode is not required.
 
+
+## Unified desktop launch
+
+`agentstack ui` starts one desktop application window and owns the internal server for the lifetime of that window. Backend child processes run without visible console windows. Their raw commands, arguments, environment, stdout, and stderr are not displayed in the application. Use `agentstack ui --browser` only for explicit browser-based development, or `agentstack ui --no-open` when another local client should open the printed URL.
+
+## Sharing, synchronization, and deduplication
+
+Select several verified targets in **Environments** to connect or pause them together. Discovery requires executable, application-registration, configuration-schema, or existing managed-target evidence; a folder alone is not classified as a confirmed installation.
+
+In **Sharing & Sync**, select canonical resources and target installations, build an immutable plan, review its digest-bound child operations, then approve it. Independent target roots may apply concurrently up to the selected bound. The manager serializes operations that share a canonical root, revalidates current state before mutation, and preserves successful independent targets when another target fails.
+
+Duplicate classes are explicit: exact duplicates may be consolidated through a reviewed plan; equivalent target renderings remain installations of one canonical resource; version duplicates, shadows, or divergent name collisions require review. Foreign and unmanaged files are never automatically deleted.
+
 ## Preservation-first workflow
 
 1. Run `agentstack inventory`.
@@ -24,11 +37,25 @@ agentstack apply --plan-id $plan.id --digest $plan.digest --yes
 A plan expires and is invalidated by relevant machine, catalog, or selection changes. AgentStack does not automatically upgrade, uninstall, or claim ownership of pre-existing software.
 
 
-## Browser manager feedback
+## Desktop manager lifecycle
 
-Every long-running manager action uses the same operation surface. The initiating button shows a task-specific spinner and busy label, mutation-related controls are locked, and a polite live region reports running, successful, or failed state. Focus returns to the initiating control unless the operation intentionally navigates to a result section. Navigation uses one locally embedded Lucide outline icon family; no icon CDN or runtime font is loaded.
+The manager has five primary areas:
 
-Client-side locking is not an authorization boundary. The server still enforces the mutation gate, sealed-plan identity, and cross-process lease.
+1. **Home** summarizes readiness, attention items, recent work, and one recommended next action.
+2. **Environments** shows evidence-backed discovery for AI applications, IDEs, CLIs, profiles, repositories, MCP servers, and workspaces. Multiple verified targets can be connected, paused, or reconnected in one reviewed batch.
+3. **Sharing & Sync** separates canonical resources from their installations and shows Managed, Installed, Contained, In sync, Drifted, Duplicates, Conflicts, Plans, and History.
+4. **Changes** keeps profile and tool selection, the inline estimate, exact pending changes, approval, and the only tool-install apply action in one place.
+5. **Activity** shows the live parallel installation tracker, completed and partial transaction history, classified root causes, maintenance actions, system checks, and sanitized technical details.
+
+### Apply and progress
+
+Choose tools in Changes and select **Create changes**. Review every item, check the approval control, and select **Approve and apply**. The reviewed plan is single-use. The Activity tracker reports the server-provided stage—Preparing, Installing, Configuring, Verifying, or Complete—plus completed/total counts and each item's state. It does not estimate progress from a timer.
+
+### Recover from a partial failure
+
+If some installations fail, successful changes remain recorded. The consumed plan is cleared and cannot be retried. Activity offers **Review failed items** and **Create fresh plan**; both refresh inventory and build a new reviewed change set. Desktop messages use stable, plain-language failure codes and never expose the plan-store path, executable command, arguments, or raw subprocess output.
+
+Every long-running manager action uses the same authenticated operation controller. Conflicting controls are locked while work is active, live regions announce complete state, and focus returns predictably. Client-side locking is not an authorization boundary: the server still enforces reviewed-plan identity, confirmation, the cross-process lease, mutation authority, and postcondition verification.
 
 ## Install and repair semantics
 
@@ -132,3 +159,15 @@ agentstack hub apply-sync --plan-id <ID> --digest <SHA> --yes
 Use workspaces to group project roots, resources, routines, prompt templates, memory, and artifacts. Use routines for confirmed repeatable sequences; inspect redacted results with `agentstack routine history`.
 
 The complete command set and safety rules are documented in [CLI Reference](CLI_REFERENCE.md) and [Convergence Runbook](convergence/RUNBOOK.md).
+
+## Connect AI applications
+
+Open **Environments** and select an AI application. AgentStack detects supported user configuration folders for Codex, Claude, AGY/Gemini, OpenCode, Cursor, and GitHub Copilot. Choose **Connect** to register an AgentStack-managed Resource Hub target, **Reconnect** to repair a paused target, or **Pause** to stop synchronization without deleting the application's own files.
+
+Connection state is derived from registered targets and detected local configuration; it is not a decorative toggle. Credentialed resources still require their own provider sign-in.
+
+## Understand a failed change
+
+The Activity result names the root cause, installation method, normalized error code when available, observed evidence, affected tools, and the safest next action. Expand **Technical details** for sanitized diagnostic metadata. AgentStack does not expose raw commands, private paths, tokens, stdout, or stderr in the browser.
+
+Use **Retry failed items** only after applying the listed fix. A fresh plan rechecks the current inventory and package catalog before any mutation.

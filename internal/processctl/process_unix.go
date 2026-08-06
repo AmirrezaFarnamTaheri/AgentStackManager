@@ -5,8 +5,10 @@ package processctl
 import (
 	"errors"
 	"fmt"
-	"os/exec"
+	"os"
+	"path/filepath"
 	"syscall"
+	"time"
 )
 
 type unixController struct {
@@ -17,6 +19,7 @@ type unixController struct {
 	readIdentity    func(int) (string, error)
 	getpgid         func(int) (int, error)
 	kill            func(int, syscall.Signal) error
+	cgroupPath      string
 }
 
 func processAlive(pid int) bool {
@@ -27,25 +30,12 @@ func processAlive(pid int) bool {
 	return err == nil || err == syscall.EPERM
 }
 
-func prepareCommand(cmd *exec.Cmd) {
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-}
-
-func validatePlatformLimits(limits Limits) error {
-	if limits.Disabled() {
-		return nil
-	}
-	return ErrResourceLimitsUnsupported
-}
-
-func attachCommand(cmd *exec.Cmd, _ Limits) (platformController, error) {
-	if cmd.Process == nil {
-		return nil, errors.New("process was not started")
-	}
-	controller, err := newUnixController(cmd.Process.Pid, platformProcessIdentity, syscall.Getpgid, syscall.Kill)
+func attachUnixCommand(cmdPID int, cgroupPath string) (platformController, error) {
+	controller, err := newUnixController(cmdPID, platformProcessIdentity, syscall.Getpgid, syscall.Kill)
 	if err != nil {
 		return nil, err
 	}
+	controller.cgroupPath = cgroupPath
 	return controller, nil
 }
 
@@ -87,6 +77,15 @@ func newUnixController(
 func (c unixController) terminate() error {
 	if c.pid <= 0 || c.pgid <= 0 {
 		return nil
+	}
+	if c.cgroupPath != "" {
+		err := os.WriteFile(filepath.Join(c.cgroupPath, "cgroup.kill"), []byte("1"), 0o600)
+		if err == nil {
+			return nil
+		}
+		if !errors.Is(err, os.ErrNotExist) && !errors.Is(err, syscall.EOPNOTSUPP) {
+			return fmt.Errorf("terminate Linux cgroup: %w", err)
+		}
 	}
 	getpgid := c.getpgid
 	if getpgid == nil {
@@ -151,4 +150,20 @@ func (c unixController) terminate() error {
 	}
 }
 
-func (unixController) close() error { return nil }
+func (c unixController) close() error {
+	if c.cgroupPath == "" {
+		return nil
+	}
+	terminationErr := c.terminate()
+	deadline := time.Now().Add(500 * time.Millisecond)
+	for {
+		err := os.Remove(c.cgroupPath)
+		if err == nil || errors.Is(err, os.ErrNotExist) {
+			return terminationErr
+		}
+		if (!errors.Is(err, syscall.EBUSY) && !errors.Is(err, syscall.ENOTEMPTY)) || time.Now().After(deadline) {
+			return errors.Join(terminationErr, fmt.Errorf("remove process cgroup: %w", err))
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+}

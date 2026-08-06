@@ -23,6 +23,8 @@ var defaultMode = "ui"
 var consoleSHA256 = ""
 var publisherThumbprint = ""
 
+const elevationMarker = "--agentstack-elevated"
+
 type launchConfig struct {
 	Version             string
 	Revision            string
@@ -41,6 +43,7 @@ type launchDependencies struct {
 	Stdout             io.Writer
 	Stderr             io.Writer
 	Architecture       string
+	EnsureElevated     func([]string, bool) (bool, error)
 }
 
 func main() {
@@ -66,11 +69,25 @@ func defaultLaunchDependencies() launchDependencies {
 		Stdout:             os.Stdout,
 		Stderr:             os.Stderr,
 		Architecture:       runtime.GOARCH,
+		EnsureElevated:     ensureElevated,
 	}
 }
 
 func run(ctx context.Context, args []string, config launchConfig, dependencies launchDependencies) int {
 	dependencies = normalizeLaunchDependencies(dependencies)
+	cleanArgs, markerPresent := stripElevationMarker(args)
+	args = cleanArgs
+	if markerPresent || requiresElevation(config.DefaultMode, args) {
+		relaunched, err := dependencies.EnsureElevated(args, markerPresent)
+		if err != nil {
+			fmt.Fprintln(dependencies.Stderr, "error: request administrator access:", err)
+			dependencies.NotifyError("AgentStack Manager", "Administrator access is required to manage system tools. "+err.Error())
+			return 1
+		}
+		if relaunched {
+			return 0
+		}
+	}
 	setupBinary := strings.EqualFold(config.DefaultMode, "setup")
 	originalArgs := append([]string(nil), args...)
 	setupDefault := setupBinary && (len(originalArgs) == 0 || (len(originalArgs) == 1 && originalArgs[0] == "--no-launch"))
@@ -137,6 +154,29 @@ func run(ctx context.Context, args []string, config launchConfig, dependencies l
 	return code
 }
 
+func stripElevationMarker(args []string) ([]string, bool) {
+	clean := make([]string, 0, len(args))
+	markerPresent := false
+	for _, arg := range args {
+		if arg == elevationMarker {
+			markerPresent = true
+			continue
+		}
+		clean = append(clean, arg)
+	}
+	return clean, markerPresent
+}
+
+func requiresElevation(defaultMode string, args []string) bool {
+	if strings.EqualFold(defaultMode, "setup") {
+		return !(len(args) == 1 && args[0] == "--verify-only")
+	}
+	if !strings.EqualFold(defaultMode, "ui") {
+		return false
+	}
+	return len(args) == 0 || strings.EqualFold(args[0], "ui")
+}
+
 func normalizeLaunchDependencies(dependencies launchDependencies) launchDependencies {
 	defaults := defaultLaunchDependencies()
 	if dependencies.Executable == nil {
@@ -165,6 +205,9 @@ func normalizeLaunchDependencies(dependencies launchDependencies) launchDependen
 	}
 	if dependencies.Architecture == "" {
 		dependencies.Architecture = defaults.Architecture
+	}
+	if dependencies.EnsureElevated == nil {
+		dependencies.EnsureElevated = defaults.EnsureElevated
 	}
 	return dependencies
 }

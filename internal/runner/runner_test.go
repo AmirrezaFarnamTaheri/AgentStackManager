@@ -3,6 +3,7 @@ package runner
 import (
 	"context"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 	"time"
@@ -123,8 +124,8 @@ func TestEngineRefreshesPathAfterSuccessfulWingetInstall(t *testing.T) {
 	if tx.Status != model.TransactionSucceeded {
 		t.Fatalf("unexpected transaction: %#v", tx)
 	}
-	if paths.calls != 1 {
-		t.Fatalf("expected one PATH refresh, got %d", paths.calls)
+	if paths.calls != 2 {
+		t.Fatalf("expected a preflight and post-install PATH refresh, got %d", paths.calls)
 	}
 }
 
@@ -316,4 +317,95 @@ func equalInts(a, b []int) bool {
 		}
 	}
 	return true
+}
+
+func TestApplyPublishesActionStartBeforeCompletion(t *testing.T) {
+	commands := &fakeCommandRunner{}
+	engine := Engine{Commands: commands, Path: &fakePathRefresher{}}
+	plan := model.Plan{Actions: []model.PlanAction{
+		{ComponentID: "tool-a", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolA"}},
+		{ComponentID: "tool-b", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolB"}},
+	}}
+	var events []string
+	lastActions := 0
+	tx := engine.Apply(context.Background(), plan, ApplyOptions{
+		OnActionStart: func(action model.PlanAction) error {
+			events = append(events, "start:"+action.ComponentID)
+			return nil
+		},
+		OnUpdate: func(tx model.Transaction) error {
+			for lastActions < len(tx.Actions) {
+				events = append(events, "done:"+tx.Actions[lastActions].ComponentID)
+				lastActions++
+			}
+			return nil
+		},
+	})
+	if tx.Status != model.TransactionSucceeded {
+		t.Fatalf("Apply() transaction = %#v", tx)
+	}
+	want := []string{"start:tool-a", "done:tool-a", "start:tool-b", "done:tool-b"}
+	if !equalStrings(events, want) {
+		t.Fatalf("events = %#v, want %#v", events, want)
+	}
+}
+
+func TestApplyActionStartFailurePreventsExternalCommand(t *testing.T) {
+	commands := &fakeCommandRunner{}
+	engine := Engine{Commands: commands}
+	plan := model.Plan{Actions: []model.PlanAction{{ComponentID: "tool-a", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolA"}}}}
+	tx := engine.Apply(context.Background(), plan, ApplyOptions{OnActionStart: func(model.PlanAction) error { return assertErr("progress unavailable") }})
+	if tx.Status != model.TransactionFailed || len(commands.calls) != 0 {
+		t.Fatalf("callback failure did not fail closed: tx=%#v calls=%#v", tx, commands.calls)
+	}
+	if len(tx.Actions) != 1 || !strings.Contains(tx.Actions[0].Error, "progress unavailable") {
+		t.Fatalf("callback failure was not journaled: %#v", tx.Actions)
+	}
+}
+
+type orderingPathRefresher struct{ refreshed bool }
+
+func (f *orderingPathRefresher) Refresh() error {
+	f.refreshed = true
+	return nil
+}
+
+type orderingCommandRunner struct {
+	path             *orderingPathRefresher
+	sawRefreshedPath bool
+}
+
+func (f *orderingCommandRunner) Run(context.Context, Invocation) Result {
+	f.sawRefreshedPath = f.path.refreshed
+	return Result{ExitCode: 0}
+}
+
+func TestEngineRefreshesProcessPathBeforeFirstInstallerCommand(t *testing.T) {
+	paths := &orderingPathRefresher{}
+	commands := &orderingCommandRunner{path: paths}
+	engine := Engine{Commands: commands, Path: paths}
+	plan := model.Plan{Actions: []model.PlanAction{{ComponentID: "git", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Git.Git"}}}}
+	tx := engine.Apply(context.Background(), plan, ApplyOptions{})
+	if tx.Status != model.TransactionSucceeded || !commands.sawRefreshedPath {
+		t.Fatalf("installer did not receive refreshed PATH: tx=%#v command=%#v", tx, commands)
+	}
+}
+
+func TestEngineCollapsesRepeatedMissingInstallerFailures(t *testing.T) {
+	commands := &fakeCommandRunner{fail: map[string]error{"winget install": exec.ErrNotFound}}
+	engine := Engine{Commands: commands, Path: &fakePathRefresher{}}
+	plan := model.Plan{Actions: []model.PlanAction{
+		{ComponentID: "one", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.One"}},
+		{ComponentID: "two", Kind: model.ActionInstall, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.Two"}},
+		{ComponentID: "three", Kind: model.ActionRepair, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.Three"}},
+	}}
+	tx := engine.Apply(context.Background(), plan, ApplyOptions{})
+	if tx.Status != model.TransactionFailed || len(commands.calls) != 1 || len(tx.Actions) != 3 {
+		t.Fatalf("missing installer was not collapsed: tx=%#v calls=%#v", tx, commands.calls)
+	}
+	for _, action := range tx.Actions[1:] {
+		if !strings.Contains(action.Error, "installer prerequisite winget unavailable") {
+			t.Fatalf("collapsed action = %#v", action)
+		}
+	}
 }

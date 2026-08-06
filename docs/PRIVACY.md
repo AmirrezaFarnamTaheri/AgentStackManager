@@ -53,3 +53,7 @@ The fabric stores only operator-created local state under the private AgentStack
 Memory entries expose source, scope, expiry, digest, explicit forget, and local search. Artifacts are copied locally and can be verified or removed. Routine receipts are bounded and recursively redact credential-bearing keys and common token forms before persistence. Project content is read only on operator request and is not uploaded by these planes.
 
 Provider credentials remain in provider or operating-system credential mechanisms. The fabric does not add a general credential vault.
+
+## SQLite shadow metadata privacy
+
+`<data-root>/fabric/metadata.db` contains canonical resource metadata, source/CAS identifiers, digests, timestamps, target bindings, provenance fields, and sealed migration receipts. It does not contain resource payload bytes, provider credentials, secret values, third-party client configuration files, or MCP traffic. The file is local, private, disposable, and rebuildable from Resource Hub and CAS. Verified backups are created only at an explicit operator-selected path and are never uploaded by ASM.

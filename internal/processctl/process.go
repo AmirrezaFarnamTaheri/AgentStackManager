@@ -36,23 +36,18 @@ func StartWithLimits(cmd *exec.Cmd, limits Limits) (*Process, error) {
 	if err := limits.Validate(); err != nil {
 		return nil, err
 	}
-	if err := validatePlatformLimits(limits); err != nil {
-		return nil, err
-	}
-	prepareCommand(cmd)
-	if err := cmd.Start(); err != nil {
-		return nil, err
-	}
-	controller, err := attachCommand(cmd, limits)
+	controller, err := startPlatformCommand(cmd, limits)
 	if err != nil {
-		_ = cmd.Process.Kill()
-		_ = cmd.Wait()
+		if cmd.Process != nil {
+			_ = cmd.Process.Kill()
+			_ = cmd.Wait()
+		}
 		return nil, err
 	}
 	process := &Process{Cmd: cmd, controller: controller, waitDone: make(chan struct{})}
 	go func() {
 		err := cmd.Wait()
-		_ = controller.close()
+		err = errors.Join(err, controller.close())
 		process.waitMu.Lock()
 		process.waitErr = err
 		process.waitMu.Unlock()

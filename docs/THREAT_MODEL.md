@@ -60,3 +60,15 @@ Each case is covered by automated checks or a fail-closed release/runtime contro
 | Credential leakage in automation evidence | recursive structured/text redaction before receipt persistence |
 | State-version confusion | explicit schemas, legacy migration, unknown-version rejection |
 | Duplicate product authority | one service and one durable owner per plane; UI status is non-authoritative |
+
+### SQLite shadow metadata threats
+
+| Threat | Control |
+| --- | --- |
+| Wrong database path damages another application | application-ID and empty-schema admission before persistent pragmas or migrations |
+| Database symlink/path substitution | regular-file and no-symlink path walk plus pre/post-open file identity checks |
+| Logical row tampering | sealed receipt validation and byte-for-byte artifact/resource row comparison |
+| SQLite structural corruption | quick check, foreign-key check, supported schema and migration-ledger validation |
+| Backup overwrites operator data | explicit confirmation, online backup to incomplete file, verification, hard-link no-replace publication |
+| SQLite becomes a second authority | database is shadow-only; current verification resolves back to Resource Hub and CAS |
+| Platform silently falls back to another format | CGO-disabled backend fails closed with `ErrUnavailable` |

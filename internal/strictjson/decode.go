@@ -29,6 +29,33 @@ func Decode(data []byte, destination any) error {
 	return nil
 }
 
+// Canonicalize parses exactly one JSON value, rejects duplicate object keys,
+// and returns its deterministic encoding. Numbers are retained as json.Number
+// values so large integer identifiers are not rounded through float64.
+func Canonicalize(data []byte) ([]byte, error) {
+	if err := rejectDuplicateKeys(data); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	var value any
+	if err := decoder.Decode(&value); err != nil {
+		return nil, err
+	}
+	var trailing any
+	if err := decoder.Decode(&trailing); err != io.EOF {
+		if err == nil {
+			return nil, fmt.Errorf("trailing JSON content")
+		}
+		return nil, fmt.Errorf("trailing JSON content: %w", err)
+	}
+	canonical, err := json.Marshal(value)
+	if err != nil {
+		return nil, fmt.Errorf("marshal canonical JSON: %w", err)
+	}
+	return canonical, nil
+}
+
 func rejectDuplicateKeys(data []byte) error {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	decoder.UseNumber()
@@ -91,4 +118,15 @@ func scanValue(decoder *json.Decoder) error {
 		return fmt.Errorf("unexpected JSON delimiter %q", delim)
 	}
 	return nil
+}
+
+// MarshalCanonical marshals a typed value and returns its deterministic JSON
+// encoding after applying the same duplicate-key and single-value admission
+// rules as Canonicalize.
+func MarshalCanonical(value any) ([]byte, error) {
+	encoded, err := json.Marshal(value)
+	if err != nil {
+		return nil, err
+	}
+	return Canonicalize(encoded)
 }

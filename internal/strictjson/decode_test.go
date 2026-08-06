@@ -1,6 +1,7 @@
 package strictjson
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 )
@@ -50,5 +51,38 @@ func TestDecodeRejectsDuplicateObjectKeysAtAnyDepth(t *testing.T) {
 		if err := Decode([]byte(input), &value); err == nil || !strings.Contains(err.Error(), "duplicate JSON object key") {
 			t.Fatalf("duplicate-key document was accepted: input=%s err=%v", input, err)
 		}
+	}
+}
+
+func TestCanonicalizeSortsObjectKeysAndPreservesLargeNumbers(t *testing.T) {
+	left, err := Canonicalize([]byte(` { "z": 9007199254740993, "a": {"b":2,"a":1} } `))
+	if err != nil {
+		t.Fatal(err)
+	}
+	right, err := Canonicalize([]byte(`{"a":{"a":1,"b":2},"z":9007199254740993}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(left, right) {
+		t.Fatalf("canonical JSON differs:\nleft:  %s\nright: %s", left, right)
+	}
+}
+
+func TestCanonicalizeRejectsDuplicateKeysAndTrailingContent(t *testing.T) {
+	for _, input := range []string{`{"a":1,"a":2}`, `{"a":1} {}`} {
+		if _, err := Canonicalize([]byte(input)); err == nil {
+			t.Fatalf("invalid JSON was canonicalized: %s", input)
+		}
+	}
+}
+
+func TestMarshalCanonicalSortsNestedMaps(t *testing.T) {
+	left, err := MarshalCanonical(map[string]any{"z": 2, "a": map[string]any{"b": 2, "a": 1}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	right := []byte(`{"a":{"a":1,"b":2},"z":2}`)
+	if !bytes.Equal(left, right) {
+		t.Fatalf("canonical JSON=%s", left)
 	}
 }

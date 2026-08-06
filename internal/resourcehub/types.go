@@ -3,7 +3,11 @@
 // them to supported coding-agent targets through digest-bound plans.
 package resourcehub
 
-import "time"
+import (
+	"time"
+
+	"github.com/agentstack/agentstack/internal/adapters"
+)
 
 type Kind string
 
@@ -20,12 +24,25 @@ const (
 type Agent string
 
 const (
-	AgentCodex    Agent = "codex"
-	AgentClaude   Agent = "claude"
-	AgentCursor   Agent = "cursor"
-	AgentOpenCode Agent = "opencode"
-	AgentCopilot  Agent = "github-copilot"
-	AgentGeneric  Agent = "generic"
+	AgentCodex         Agent = "codex"
+	AgentClaude        Agent = "claude"
+	AgentAGY           Agent = "agy"
+	AgentCursor        Agent = "cursor"
+	AgentOpenCode      Agent = "opencode"
+	AgentCopilot       Agent = "github-copilot"
+	AgentGeneric       Agent = "generic"
+	AgentVSCode        Agent = "vscode"
+	AgentJetBrains     Agent = "jetbrains"
+	AgentWindsurf      Agent = "windsurf"
+	AgentZed           Agent = "zed"
+	AgentKiro          Agent = "kiro"
+	AgentTrae          Agent = "trae"
+	AgentCline         Agent = "cline"
+	AgentRooCode       Agent = "roo-code"
+	AgentContinue      Agent = "continue"
+	AgentAider         Agent = "aider"
+	AgentGoose         Agent = "goose"
+	AgentClaudeDesktop Agent = "claude-desktop"
 )
 
 type SyncMode string
@@ -59,6 +76,9 @@ type Target struct {
 	Root    string   `json:"root"`
 	Mode    SyncMode `json:"mode"`
 	Enabled bool     `json:"enabled"`
+	Scope   string   `json:"scope,omitempty"`
+	Label   string   `json:"label,omitempty"`
+	Profile string   `json:"profile,omitempty"`
 }
 
 type Registry struct {
@@ -124,42 +144,55 @@ const (
 )
 
 type SyncOperation struct {
-	ResourceID    string     `json:"resourceId,omitempty"`
-	Kind          Kind       `json:"kind,omitempty"`
-	Action        SyncAction `json:"action"`
-	Source        string     `json:"source,omitempty"`
-	Destination   string     `json:"destination"`
-	DesiredDigest string     `json:"desiredDigest,omitempty"`
-	CurrentDigest string     `json:"currentDigest,omitempty"`
-	Reason        string     `json:"reason"`
+	AdapterID        string            `json:"adapterId"`
+	AdapterVersion   string            `json:"adapterVersion"`
+	CapabilityDigest string            `json:"capabilityDigest"`
+	LossReportDigest string            `json:"lossReportDigest"`
+	Fidelity         adapters.Fidelity `json:"fidelity"`
+	Losses           []adapters.Loss   `json:"losses,omitempty"`
+	ResourceID       string            `json:"resourceId,omitempty"`
+	Kind             Kind              `json:"kind,omitempty"`
+	Action           SyncAction        `json:"action"`
+	Source           string            `json:"source,omitempty"`
+	Destination      string            `json:"destination"`
+	DesiredDigest    string            `json:"desiredDigest,omitempty"`
+	CurrentDigest    string            `json:"currentDigest,omitempty"`
+	Reason           string            `json:"reason"`
 }
 
 type SyncPlan struct {
-	ID             string          `json:"id"`
-	Digest         string          `json:"digest"`
-	TargetID       string          `json:"targetId"`
-	GeneratedAt    time.Time       `json:"generatedAt"`
-	ExpiresAt      time.Time       `json:"expiresAt"`
-	RegistryDigest string          `json:"registryDigest"`
-	AllowRisk      bool            `json:"allowRisk"`
-	Prune          bool            `json:"prune"`
-	Operations     []SyncOperation `json:"operations"`
+	ID               string              `json:"id"`
+	Digest           string              `json:"digest"`
+	TargetID         string              `json:"targetId"`
+	GeneratedAt      time.Time           `json:"generatedAt"`
+	ExpiresAt        time.Time           `json:"expiresAt"`
+	RegistryDigest   string              `json:"registryDigest"`
+	AllowRisk        bool                `json:"allowRisk"`
+	Prune            bool                `json:"prune"`
+	DenyLoss         bool                `json:"denyLoss"`
+	AdapterID        string              `json:"adapterId"`
+	AdapterVersion   string              `json:"adapterVersion"`
+	CapabilityDigest string              `json:"capabilityDigest"`
+	LossReport       adapters.LossReport `json:"lossReport"`
+	Operations       []SyncOperation     `json:"operations"`
 }
 
 type PlanOptions struct {
 	TTL       time.Duration
 	AllowRisk bool
 	Prune     bool
+	DenyLoss  bool
 }
 
 type SyncReport struct {
-	PlanID     string          `json:"planId"`
-	TargetID   string          `json:"targetId"`
-	StartedAt  time.Time       `json:"startedAt"`
-	FinishedAt time.Time       `json:"finishedAt"`
-	Applied    []SyncOperation `json:"applied"`
-	Skipped    []SyncOperation `json:"skipped,omitempty"`
-	Backups    []string        `json:"backups,omitempty"`
+	PlanID     string              `json:"planId"`
+	TargetID   string              `json:"targetId"`
+	StartedAt  time.Time           `json:"startedAt"`
+	FinishedAt time.Time           `json:"finishedAt"`
+	Applied    []SyncOperation     `json:"applied"`
+	Skipped    []SyncOperation     `json:"skipped,omitempty"`
+	Backups    []string            `json:"backups,omitempty"`
+	LossReport adapters.LossReport `json:"lossReport"`
 }
 
 type managedEntry struct {
@@ -217,4 +250,105 @@ type BackupInfo struct {
 	Digest     string    `json:"digest"`
 	CreatedAt  time.Time `json:"createdAt"`
 	Path       string    `json:"-"`
+}
+
+type InstallationState string
+
+const (
+	InstallationMissing   InstallationState = "missing"
+	InstallationInSync    InstallationState = "in-sync"
+	InstallationDrifted   InstallationState = "drifted"
+	InstallationConflict  InstallationState = "conflict"
+	InstallationOrphan    InstallationState = "orphan"
+	InstallationUnmanaged InstallationState = "unmanaged"
+)
+
+type ResourceInstallation struct {
+	TargetID      string            `json:"targetId"`
+	Agent         Agent             `json:"agent"`
+	Scope         string            `json:"scope,omitempty"`
+	State         InstallationState `json:"state"`
+	DesiredDigest string            `json:"desiredDigest,omitempty"`
+	CurrentDigest string            `json:"currentDigest,omitempty"`
+	Managed       bool              `json:"managed"`
+	Message       string            `json:"message"`
+}
+
+type CanonicalResource struct {
+	Identity      string                 `json:"identity"`
+	ResourceIDs   []string               `json:"resourceIds"`
+	Kind          Kind                   `json:"kind"`
+	Namespace     string                 `json:"namespace"`
+	Name          string                 `json:"name"`
+	Version       string                 `json:"version,omitempty"`
+	Digest        string                 `json:"digest"`
+	Contained     bool                   `json:"contained"`
+	Installations []ResourceInstallation `json:"installations,omitempty"`
+}
+
+type DuplicateClass string
+
+const (
+	DuplicateExact      DuplicateClass = "exact"
+	DuplicateEquivalent DuplicateClass = "equivalent"
+	DuplicateVersion    DuplicateClass = "version"
+	DuplicateCollision  DuplicateClass = "collision"
+	DuplicateShadowed   DuplicateClass = "shadowed"
+	DuplicateOrphan     DuplicateClass = "orphan"
+)
+
+type DuplicateGroup struct {
+	Class       DuplicateClass `json:"class"`
+	Key         string         `json:"key"`
+	ResourceIDs []string       `json:"resourceIds,omitempty"`
+	TargetIDs   []string       `json:"targetIds,omitempty"`
+	Message     string         `json:"message"`
+	Review      bool           `json:"review"`
+}
+
+type SyncInspectionCounts struct {
+	Managed    int `json:"managed"`
+	Installed  int `json:"installed"`
+	Contained  int `json:"contained"`
+	InSync     int `json:"inSync"`
+	Drifted    int `json:"drifted"`
+	Duplicates int `json:"duplicates"`
+	Conflicts  int `json:"conflicts"`
+	Orphans    int `json:"orphans"`
+	Unmanaged  int `json:"unmanaged"`
+}
+
+type SyncInspection struct {
+	GeneratedAt time.Time            `json:"generatedAt"`
+	Counts      SyncInspectionCounts `json:"counts"`
+	Resources   []CanonicalResource  `json:"resources"`
+	Duplicates  []DuplicateGroup     `json:"duplicates,omitempty"`
+}
+
+type BatchSyncPlan struct {
+	ID          string     `json:"id"`
+	Digest      string     `json:"digest"`
+	GeneratedAt time.Time  `json:"generatedAt"`
+	ExpiresAt   time.Time  `json:"expiresAt"`
+	MaxParallel int        `json:"maxParallel"`
+	Children    []SyncPlan `json:"children"`
+}
+
+type BatchSyncTargetResult struct {
+	TargetID        string      `json:"targetId"`
+	Status          string      `json:"status"`
+	Report          *SyncReport `json:"report,omitempty"`
+	FailureCategory string      `json:"failureCategory,omitempty"`
+	Message         string      `json:"message,omitempty"`
+	Recovery        string      `json:"recovery,omitempty"`
+}
+
+type BatchSyncReport struct {
+	PlanID     string                  `json:"planId"`
+	StartedAt  time.Time               `json:"startedAt"`
+	FinishedAt time.Time               `json:"finishedAt"`
+	Succeeded  int                     `json:"succeeded"`
+	Failed     int                     `json:"failed"`
+	Cancelled  int                     `json:"cancelled"`
+	Results    []BatchSyncTargetResult `json:"results"`
 }

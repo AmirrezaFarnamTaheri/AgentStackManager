@@ -4,7 +4,9 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	"os/exec"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/model"
@@ -70,11 +72,13 @@ func (r ExecRunner) Run(ctx context.Context, invocation Invocation) Result {
 }
 
 type Engine struct {
-	Commands CommandRunner
-	Skills   SkillInstaller
-	Catalog  model.Catalog
-	Path     PathRefresher
-	Verifier ComponentVerifier
+	Commands             CommandRunner
+	Skills               SkillInstaller
+	Catalog              model.Catalog
+	Path                 PathRefresher
+	Verifier             ComponentVerifier
+	MaxParallel          int
+	InstallerParallelism map[model.InstallKind]int
 }
 
 type VerificationResult struct {
@@ -89,15 +93,29 @@ type ComponentVerifier interface {
 type ApplyOptions struct {
 	DryRun        bool
 	CorrelationID string
+	OnActionStart func(model.PlanAction) error
 	OnUpdate      func(model.Transaction) error
 }
 
 func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions) model.Transaction {
+	if e.MaxParallel > 1 && !options.DryRun {
+		return e.applyParallel(ctx, plan, options)
+	}
+	return e.applySerial(ctx, plan, options)
+}
+
+func (e Engine) applySerial(ctx context.Context, plan model.Plan, options ApplyOptions) model.Transaction {
 	if e.Commands == nil {
 		e.Commands = ExecRunner{}
 	}
 	if e.Path == nil {
 		e.Path = defaultPathRefresher{}
+	}
+	if !options.DryRun && planHasInstallerActions(plan) {
+		// GUI-launched Windows processes can inherit a stale PATH. Refresh it
+		// before resolving the first installer, but do not fail closed because
+		// the existing process PATH may still be usable.
+		_ = e.Path.Refresh()
 	}
 	tx := model.Transaction{ID: newID(), CorrelationID: options.CorrelationID, StartedAt: time.Now().UTC(), DryRun: options.DryRun, Status: model.TransactionRunning}
 	if options.DryRun {
@@ -120,8 +138,19 @@ func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions
 	}
 
 	failed := map[string]string{}
+	unavailableInstallers := map[model.InstallKind]bool{}
 	for _, action := range plan.Actions {
 		record := model.TransactionAction{ComponentID: action.ComponentID, Kind: action.Kind, StartedAt: time.Now().UTC()}
+		if options.OnActionStart != nil {
+			if err := options.OnActionStart(action); err != nil {
+				record.ExitCode = -1
+				record.Error = "start action callback: " + err.Error()
+				record.FinishedAt = time.Now().UTC()
+				tx.Status = model.TransactionFailed
+				_ = checkpoint(record)
+				break
+			}
+		}
 		if action.Kind != model.ActionInstall && action.Kind != model.ActionRepair {
 			record.Verified = true
 			record.Verification = "no installer action required"
@@ -134,6 +163,17 @@ func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions
 		if dependency, message := e.failedDependency(action.ComponentID, failed); dependency != "" {
 			record.ExitCode = -1
 			record.Error = fmt.Sprintf("dependency %s failed: %s", dependency, message)
+			record.FinishedAt = time.Now().UTC()
+			tx.Status = model.TransactionFailed
+			failed[action.ComponentID] = record.Error
+			if !checkpoint(record) {
+				break
+			}
+			continue
+		}
+		if unavailableInstallers[action.Install.Kind] {
+			record.ExitCode = -1
+			record.Error = fmt.Sprintf("installer prerequisite %s unavailable", action.Install.Kind)
 			record.FinishedAt = time.Now().UTC()
 			tx.Status = model.TransactionFailed
 			failed[action.ComponentID] = record.Error
@@ -189,6 +229,9 @@ func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions
 			}
 		}
 		if result.Err != nil {
+			if errors.Is(result.Err, exec.ErrNotFound) {
+				unavailableInstallers[action.Install.Kind] = true
+			}
 			record.Error = result.Err.Error()
 			if result.Stderr != "" {
 				record.Error += ": " + result.Stderr
@@ -230,6 +273,15 @@ func (e Engine) Apply(ctx context.Context, plan model.Plan, options ApplyOptions
 		tx.Actions = append(tx.Actions, journalFailureAction(err))
 	}
 	return tx
+}
+
+func planHasInstallerActions(plan model.Plan) bool {
+	for _, action := range plan.Actions {
+		if action.Kind == model.ActionInstall || action.Kind == model.ActionRepair {
+			return true
+		}
+	}
+	return false
 }
 
 func journalFailureAction(err error) model.TransactionAction {

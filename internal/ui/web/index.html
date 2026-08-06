@@ -2,399 +2,395 @@
 <html lang="en" data-theme="system">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="agentstack-token" content="__AGENTSTACK_TOKEN__">
-  <meta name="agentstack-version" content="__AGENTSTACK_VERSION__">
   <meta name="agentstack-base" content="__AGENTSTACK_BASE__">
-  <meta name="theme-color" content="#edf0ef">
+  <meta name="agentstack-version" content="__AGENTSTACK_VERSION__">
   <title>AgentStack Manager</title>
-  <link rel="stylesheet" href="assets/styles.css">
-  <link rel="stylesheet" href="assets/accessibility.css">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=__AGENTSTACK_ASSET_VERSION__">
+  <link rel="stylesheet" href="assets/styles.css?v=__AGENTSTACK_ASSET_VERSION__">
 </head>
 <body>
-  <a id="skipLink" class="skip-link" href="#overview-title">Skip to main content</a>
-  <div class="shell">
-    <aside class="sidebar" aria-label="AgentStack workspace">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
-        <div class="brand-copy"><strong>AgentStack</strong><span>Local control plane</span></div>
+  <!--
+  THESIS: AgentStack is a calm lifecycle workspace, not a dashboard wall; one task and one next action lead each view.
+  OWN-WORLD: Restrained slate surfaces, ink typography, quiet teal for progress, amber for attention, and flat ledger rows.
+  STORY: See what exists, choose changes, approve once, follow installation, and recover without losing successful work.
+  FIRST VIEWPORT: Persistent four-item rail, concise system summary, one primary action, and a dormant tracker that appears only during work.
+  FORM: Operate-mode lifecycle workspace; seed key lifecycle-ledger-20260805.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
+  <div class="app-shell">
+    <aside class="workspace-rail" aria-label="AgentStack workspace">
+      <div class="brand-block">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="brand-glyph">A</span><span class="brand-glyph">S</span>
+        </span>
+        <div>
+          <strong>AgentStack</strong>
+          <span>Manager</span>
+        </div>
       </div>
 
-      <div class="workspace-note">
-        <strong>Preserve. Review. Apply.</strong>
-        <span>Every mutation starts with an inventory-bound plan.</span>
-      </div>
-
-      <nav aria-label="Primary">
-        <button type="button" class="nav-item active" data-section="overview" aria-current="page"><svg class="nav-icon lucide-layout-dashboard" aria-hidden="true" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Home & Stack</span></button>
-        <button type="button" class="nav-item" data-section="fabric"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h6v6H4z"/><path d="M14 3h6v6h-6z"/><path d="M14 15h6v6h-6z"/><path d="M10 10h4"/><path d="M17 9v6"/></svg><span>AI Fabric & Resources</span></button>
-        <button type="button" class="nav-item" data-section="components"><svg class="nav-icon lucide-package" aria-hidden="true" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg><span>Tool Catalog</span></button>
-        <button type="button" class="nav-item" data-section="plan"><svg class="nav-icon lucide-list-check" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 5H3"/><path d="M16 12H3"/><path d="M11 19H3"/><path d="m15 18 2 2 4-4"/></svg><span>Review & Apply</span></button>
-        <button type="button" class="nav-item" data-section="mcp-test"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>MCP Workbench</span></button>
-        <button type="button" class="nav-item" data-section="routines"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg><span>Routines</span></button>
-        <button type="button" class="nav-item" data-section="workspaces"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Workspaces</span></button>
-        <button type="button" class="nav-item" data-section="sharing"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Cross-Agent Sharing</span></button>
-        <button type="button" class="nav-item" data-section="errors"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Resilience Diagnostics</span></button>
-        <button type="button" class="nav-item" data-section="router"><svg class="nav-icon lucide-router" aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6.01 18H6"/><path d="M10.01 18H10"/><path d="M15 10v4"/><path d="M17.84 7.17a4 4 0 0 0-5.66 0"/><path d="M20.66 4.34a8 8 0 0 0-11.31 0"/></svg><span>MCP Diagnostics</span></button>
+      <nav class="primary-nav" aria-label="Primary">
+        <button class="nav-item" type="button" data-section="home" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20H4zM9 20v-6h6v6"/></svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" type="button" data-section="environments">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg>
+          <span>Environments</span>
+        </button>
+        <button class="nav-item" type="button" data-section="sync">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-2.5-2.5M17 17H7l2.5 2.5"/><path d="M17 7l2.5 2.5L17 12M7 17l-2.5-2.5L7 12"/></svg>
+          <span>Sharing &amp; Sync</span>
+        </button>
+        <button class="nav-item" type="button" data-section="changes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m17 16 2 2 3-4"/></svg>
+          <span>Changes</span>
+        </button>
+        <button class="nav-item" type="button" data-section="activity">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h3l2-5 4 10 2-5h5"/><circle cx="12" cy="12" r="9"/></svg>
+          <span>Activity</span>
+        </button>
       </nav>
 
-      <div class="sidebar-foot">
-        <div class="theme-switcher-box">
-          <small>Theme</small>
-          <div id="themeSwitcher" class="theme-switcher-group" role="radiogroup" aria-label="Appearance theme">
-            <button type="button" role="radio" aria-checked="true" class="theme-btn active" data-set-theme="system">Auto</button>
-            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="dark">Dark</button>
-            <button type="button" role="radio" aria-checked="false" class="theme-btn" data-set-theme="light">Light</button>
+      <div class="rail-footer">
+        <details class="app-menu">
+          <summary>Settings</summary>
+          <div class="app-menu-popover">
+            <fieldset>
+              <legend>Appearance</legend>
+              <div class="segmented-control" role="group" aria-label="Appearance">
+                <button class="theme-btn" type="button" data-theme-choice="light">Light</button>
+                <button class="theme-btn" type="button" data-theme-choice="dark">Dark</button>
+                <button class="theme-btn" type="button" data-theme-choice="system">System</button>
+              </div>
+            </fieldset>
+            <button id="installSelfBtn" class="text-button" type="button" data-operation data-busy-label="Installing…">Install command shortcut</button>
+            <button id="shutdownBtn" class="text-button danger-text" type="button">Stop AgentStack Manager</button>
           </div>
-        </div>
-        <div><strong>Loopback only</strong><span>Credentials stay with their providers.</span></div>
-        <small>Version __AGENTSTACK_VERSION__</small>
+        </details>
+        <span class="version-copy">Version __AGENTSTACK_VERSION__</span>
       </div>
     </aside>
 
-    <main id="mainContent">
+    <main id="mainContent" class="main-workspace" tabindex="-1">
       <header class="topbar">
-        <div class="title-block">
-          <div class="title-row">
-            <h1>Local stack control</h1>
-            <div id="healthBadge" class="health-badge healthy" role="status" aria-live="polite">
-              <span class="badge-dot"></span>
-              <span id="healthText">🟢 All Systems Healthy</span>
-            </div>
-          </div>
-          <p>Inspect the machine, choose capabilities, and authorize only the sealed changes you reviewed.</p>
+        <div>
+          <h1 id="pageTitle">Home</h1>
+          <p id="pageSubtitle">See what needs attention and continue from one clear next step.</p>
         </div>
-        <div class="top-actions" aria-label="Workspace actions">
-          <button id="refreshBtn" class="button secondary" data-operation data-busy-label="Refreshing…">Refresh inventory</button>
-          <button id="installSelfBtn" class="button secondary" data-operation data-busy-label="Checking…">Install locally</button>
-          <button id="exitBtn" class="button quiet" data-operation data-busy-label="Stopping…">Exit</button>
+        <div class="topbar-actions">
+          <span id="systemState" class="state-badge neutral" role="status" aria-live="polite" aria-atomic="true">Checking system</span>
+          <button id="refreshBtn" class="secondary-button" type="button" data-operation data-busy-label="Refreshing…">Refresh</button>
         </div>
       </header>
 
-      <div id="operationStatus" class="operation-status" data-state="idle" role="status" aria-live="polite" aria-atomic="true">
-        <span class="operation-status-icon" aria-hidden="true"><span class="operation-spinner"></span></span>
-        <span class="operation-status-copy"><strong id="operationStatusTitle">Ready</strong><small id="operationStatusDetail">No operation is running.</small><small id="operationStatusMeta" class="operation-status-meta" aria-hidden="true">Choose a profile to begin.</small></span>
-        <span class="operation-seal" aria-hidden="true">Local</span>
-      </div>
+      <section id="operationNotice" class="operation-notice" role="status" aria-live="polite" aria-atomic="true" hidden>
+        <div>
+          <strong id="operationNoticeTitle"></strong>
+          <p id="operationNoticeMessage"></p>
+        </div>
+        <button id="operationNoticeAction" class="secondary-button" type="button" hidden></button>
+      </section>
 
-      <!-- Quick Setup Hero Banner -->
-      <section class="quick-setup-banner">
-        <div class="quick-setup-content">
-          <div class="quick-setup-badge">⚡ Recommended Quick Start</div>
-          <h2>Set Up Complete Local AI Stack in 1 Click</h2>
-          <p>Configures Codex, Antigravity/AGY, and recommended MCP servers safely without modifying unrelated software.</p>
-          <div class="quick-setup-features">
-            <span>🛡️ 100% Safe (No Uninstalls)</span>
-            <span>📦 Auto-Detects Machine Tools</span>
-            <span>🔒 Keeps Credentials Local</span>
+      <section id="installTracker" class="install-tracker" aria-labelledby="installStage" hidden>
+        <div class="tracker-heading">
+          <div>
+            <h2 id="installStage">Run in progress</h2>
+            <p id="installCount">0 of 0 processed</p>
           </div>
+          <span id="installOutcomeBadge" class="state-badge running">In progress</span>
         </div>
-        <div class="quick-setup-action">
-          <button type="button" id="quickSetupBtn" class="button primary large-btn">⚡ Apply Recommended Setup</button>
-          <small>Builds & prepares safe plan automatically</small>
+        <div id="progressRegion" class="progress-region">
+          <progress id="installProgress" max="100" value="0">0%</progress>
+          <span id="installPercent" class="tracker-percent">0%</span>
         </div>
+
+        <section id="outcomeSummary" class="outcome-summary" aria-labelledby="outcomeTitle" hidden>
+          <div>
+            <h3 id="outcomeTitle">Run finished</h3>
+            <p id="outcomeDetail">The final result will appear here.</p>
+          </div>
+          <dl id="outcomeStats" class="outcome-stats"></dl>
+        </section>
+
+        <section id="causeSummary" class="cause-summary" aria-labelledby="causeHeading" hidden>
+          <h3 id="causeHeading">What needs attention</h3>
+          <div id="causeGroups"></div>
+        </section>
+
+        <div id="resultFilters" class="result-toolbar" hidden>
+          <div class="result-filters" role="group" aria-label="Filter run results">
+            <button class="filter-button active" type="button" data-result-filter="all" data-result-label="All" aria-pressed="true">All</button>
+            <button class="filter-button" type="button" data-result-filter="failed" data-result-label="Failed" aria-pressed="false">Failed</button>
+            <button class="filter-button" type="button" data-result-filter="succeeded" data-result-label="Succeeded" aria-pressed="false">Succeeded</button>
+            <button class="filter-button" type="button" data-result-filter="skipped" data-result-label="Skipped" aria-pressed="false">Skipped</button>
+          </div>
+          <label class="result-sort" for="resultSort">Sort
+            <select id="resultSort">
+              <option value="status">Result</option>
+              <option value="tool">Tool</option>
+              <option value="action">Change</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="result-table-wrap">
+          <table id="resultTable" class="result-table">
+            <thead><tr><th scope="col">Tool</th><th scope="col">Change</th><th scope="col">Result</th><th scope="col">Reason</th><th scope="col">Next action</th></tr></thead>
+            <tbody id="installItems" aria-live="polite" aria-atomic="true"></tbody>
+          </table>
+        </div>
+
+        <div class="tracker-actions">
+          <button id="retryFailedBtn" class="primary-button" type="button" hidden>Retry failed items</button>
+          <button id="reviewFailedBtn" class="secondary-button" type="button" hidden>Review failed items</button>
+          <button id="createFreshPlanBtn" class="text-button" type="button" hidden>Create fresh plan</button>
+        </div>
+        <details id="technicalDetails" class="technical-details">
+          <summary>Technical details</summary>
+          <p id="technicalSummary">No technical details yet.</p>
+          <div id="technicalDiagnostics" class="technical-diagnostics"></div>
+        </details>
       </section>
 
-      <section class="workflow-guide" aria-labelledby="workflow-title">
-        <div><h2 id="workflow-title">How this workspace works</h2><p>Profile and component changes only run after you review a sealed plan and explicitly authorize it.</p></div>
-        <ol>
-          <li class="active" data-workflow-step="1"><button type="button" title="Go to Step 1: Configure"><span>1</span><div><strong>1. Choose Tools</strong><small>Select a preset profile or pick custom tools.</small></div></button></li>
-          <li data-workflow-step="2"><button type="button" title="Go to Step 2: Review"><span>2</span><div><strong>2. Review Changes</strong><small>Inspect exact install and keep actions.</small></div></button></li>
-          <li data-workflow-step="3"><button type="button" title="Go to Step 3: Authorize"><span>3</span><div><strong>3. Confirm & Apply</strong><small>Safe 1-click authorization.</small></div></button></li>
-        </ol>
-      </section>
-
-      <section class="activity-panel" aria-labelledby="activity-title">
-        <div class="activity-head"><div><h2 id="activity-title">Recent activity</h2><p id="activitySummary">This browser session has not run an operation yet.</p></div><button id="clearActivityBtn" class="button quiet compact-button" type="button">Clear activity</button></div>
-        <ol id="activityLog" class="activity-log" aria-live="polite" aria-label="Recent local activity"></ol>
-      </section>
-
-      <section id="overview" class="section active-section" aria-labelledby="overview-title">
-        <div class="section-heading compact-heading">
-          <div><h2 id="overview-title" tabindex="-1">Machine overview</h2><p>Current inventory and the controls that determine the next sealed plan.</p></div>
-        </div>
-
-        <div class="metrics" id="metrics" aria-label="Inventory summary">
-          <article><span>Catalog</span><strong id="detectedMetric" class="metric-value is-loading">0</strong><small>known tools</small></article>
-          <article><span>Installed</span><strong id="preservedMetric" class="metric-value is-loading">0</strong><small>detected on system</small></article>
-          <article><span>Selected</span><strong id="selectedMetric" class="metric-value is-loading">0</strong><small>active profile items</small></article>
-          <article><span>Credentials</span><strong id="credentialMetric" class="metric-value is-loading">Off</strong><small>explicit opt-in</small></article>
-        </div>
-
-        <!-- Real-Time System Analytics Widget -->
-        <div class="analytics-bar" aria-label="System resource analytics">
-          <article class="analytics-card">
-            <div class="analytics-icon">⚡</div>
-            <div>
-              <span>CPU Utilization</span>
-              <strong id="sysCpu">Unavailable</strong>
-            </div>
-          </article>
-          <article class="analytics-card">
-            <div class="analytics-icon">💾</div>
-            <div>
-              <span>Daemon Memory</span>
-              <strong id="sysMem">Loading…</strong>
-            </div>
-          </article>
-          <article class="analytics-card">
-            <div class="analytics-icon">⚙️</div>
-            <div>
-              <span>Runtime Goroutines</span>
-              <strong id="sysProcs">Loading…</strong>
-            </div>
-          </article>
-          <article class="analytics-card">
-            <div class="analytics-icon">⏱️</div>
-            <div>
-              <span>Daemon Uptime</span>
-              <strong id="sysUptime">Loading…</strong>
-            </div>
-          </article>
-        </div>
-
-        <div id="overviewLoadError" class="empty-state compact load-error" role="alert" hidden><strong>Inventory could not be loaded.</strong><span id="overviewLoadErrorDetail">Check the operation record, then retry.</span><button id="retryLoadBtn" class="button primary" data-operation data-busy-label="Retrying…">Retry load</button></div>
-
-        <div class="overview-grid">
-          <section class="panel profile-panel">
-            <div class="panel-head"><div><h3>Choose Your AI Profile & Tools</h3><p>Select a preset profile below. Existing software is always preserved.</p></div><span class="record-seal">Plan input</span></div>
-
-            <div class="profile-cards-label"><span>Preset Stack Profiles</span></div>
-            <div id="profileCards" class="profile-cards-grid" role="radiogroup" aria-label="Quick profile presets"></div>
-
-            <div class="form-grid">
-              <label class="field">Selected Profile Dropdown
-                <select id="profileSelect" data-operation-lock></select>
-              </label>
-              <label class="field">Browser Integration
-                <select id="browserProvider" data-operation-lock></select>
-              </label>
-            </div>
-            <div class="choice-stack">
-              <label class="switch-row">
-                <input type="checkbox" id="credentialToggle" data-operation-lock>
-                <span><strong>Enable tools requiring login</strong><small>Allows login-dependent services into the plan. No login starts automatically.</small></span>
-              </label>
-              <label class="switch-row">
-                <input type="checkbox" id="upgradeToggle" data-operation-lock>
-                <span><strong>Allow automatic updates for outdated tools</strong><small>Only selected outdated runtimes enter the plan. Compatible tools stay untouched.</small></span>
-              </label>
-            </div>
-            <div class="button-row primary-row">
-              <button id="buildPlanBtn" class="button primary" data-operation data-busy-label="Building plan…">Build safe plan</button>
-              <button id="doctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Run MCP doctor</button>
-            </div>
-          </section>
-
-          <section class="assurance" aria-labelledby="assurance-title">
-            <div class="panel-head"><div><h3 id="assurance-title">Protection register</h3><p>Invariants enforced for every transaction.</p></div></div>
-            <ul>
-              <li><span class="state-mark" aria-hidden="true">01</span><div><strong>No automatic uninstall</strong><small>Dominated providers remain installed and become inactive only in AgentStack profiles.</small></div></li>
-              <li><span class="state-mark" aria-hidden="true">02</span><div><strong>No silent upgrade</strong><small>Missing packages use non-upgrading install commands.</small></div></li>
-              <li><span class="state-mark" aria-hidden="true">03</span><div><strong>Repair only managed resources</strong><small>Broken owned components can be revived. Unrelated installations stay untouched.</small></div></li>
-              <li><span class="state-mark" aria-hidden="true">04</span><div><strong>Back up before merge</strong><small>Existing AGY and managed router configuration is copied before mutation.</small></div></li>
-              <li><span class="state-mark" aria-hidden="true">05</span><div><strong>One routed MCP surface</strong><small>Child MCP servers start lazily through the AgentStack binary.</small></div></li>
-            </ul>
-          </section>
-        </div>
-      </section>
-
-
-      <section id="fabric" class="section" aria-labelledby="fabric-title">
+      <section id="home" class="workspace-section active" data-workspace-section="home" aria-labelledby="homeHeading">
         <div class="section-heading">
-          <div><h2 id="fabric-title" tabindex="-1">Unified agent fabric</h2><p>One local authority for reusable resources, project context, workspaces, memory, artifacts, client links, and scheduled routines.</p></div>
-          <button id="refreshFabricBtn" class="button secondary" data-operation data-busy-label="Refreshing…">Refresh fabric</button>
+          <div>
+            <h2 id="homeHeading">Your local AI workspace</h2>
+            <p>Review what is ready, what needs attention, and the safest next action.</p>
+          </div>
         </div>
-        <div class="metrics fabric-metrics" aria-label="Unified fabric summary">
-          <article><span>Resources</span><strong id="fabricResources" class="metric-value is-loading">0</strong><small>canonical skills and agent assets</small></article>
-          <article><span>Targets</span><strong id="fabricTargets" class="metric-value is-loading">0</strong><small>registered agent destinations</small></article>
-          <article><span>Workspaces</span><strong id="fabricWorkspaces" class="metric-value is-loading">0</strong><small>project control contexts</small></article>
-          <article><span>Artifacts</span><strong id="fabricArtifacts" class="metric-value is-loading">0</strong><small>content-addressed local files</small></article>
-          <article><span>Routines</span><strong id="fabricRoutines" class="metric-value is-loading">0</strong><small>bounded scheduled workflows</small></article>
-          <article><span>Due now</span><strong id="fabricDue" class="metric-value is-loading">0</strong><small>ready for explicit execution</small></article>
+
+        <div class="home-summary">
+          <div class="readiness-copy">
+            <span id="homeState" class="state-badge neutral">Loading</span>
+            <h3 id="homeSummary">Checking your environments and tools…</h3>
+            <p id="homeDetail">AgentStack is reading local state without changing it.</p>
+            <button id="homeNextAction" class="primary-button" type="button" data-target-section="changes">Review recommended changes</button>
+          </div>
+          <dl id="homeStats" class="summary-stats">
+            <div><dt>Environments</dt><dd>—</dd></div>
+            <div><dt>Installed tools</dt><dd>—</dd></div>
+            <div><dt>Needs attention</dt><dd>—</dd></div>
+          </dl>
         </div>
-        <div class="fabric-grid">
-          <section class="panel fabric-plane-list">
-            <div class="panel-head"><div><h3>Responsibility planes</h3><p>Donor capabilities are recomposed behind ASM-owned boundaries.</p></div><span class="record-seal">Local</span></div>
-            <dl>
-              <div><dt>Resource hub</dt><dd>Imports, audits, plans, and syncs skills, agents, rules, commands, prompts, and MCP definitions.</dd></div>
-              <div><dt>Context engine</dt><dd>Fingerprints projects, scores agent context quality, and refreshes managed blocks without replacing human guidance.</dd></div>
-              <div><dt>Workspace intelligence</dt><dd>Organizes projects, layered memory, prompt variables, and immutable artifact evidence.</dd></div>
-              <div><dt>MCP client links</dt><dd>Plans conflict-safe registration across Codex, Claude, Cursor, AGY, and OpenCode.</dd></div>
-              <div><dt>Routine scheduler</dt><dd>Runs bounded steps sequentially, records receipts, and never executes due work without confirmation.</dd></div>
-            </dl>
+
+        <div class="home-columns">
+          <section class="plain-section" aria-labelledby="nextHeading">
+            <h3 id="nextHeading">Next recommended step</h3>
+            <div id="homeRecommendation" class="recommendation-row">
+              <div>
+                <strong>Loading recommendation</strong>
+                <p>AgentStack will suggest one next action after the local scan completes.</p>
+              </div>
+            </div>
           </section>
-          <section class="command-sheet fabric-command-sheet">
-            <h3>Operator entry points</h3>
-            <p>Every mutating flow is reviewable, digest-bound, or confirmation-gated.</p>
-            <pre><code>agentstack hub list
-agentstack context score --root .
-agentstack workspace list
-agentstack memory search --query architecture
-agentstack mcp clients plan --root .
-agentstack routine due</code></pre>
-            <div class="fabric-next"><span>Next scheduled run</span><strong id="fabricNext">None scheduled</strong></div>
+          <section class="plain-section" aria-labelledby="recentHeading">
+            <div class="section-line">
+              <h3 id="recentHeading">Recent activity</h3>
+              <button class="text-button" type="button" data-target-section="activity">View all</button>
+            </div>
+            <ol id="homeActivity" class="compact-activity">
+              <li class="empty-state">No recorded activity yet.</li>
+            </ol>
           </section>
         </div>
-        <div id="fabricLoadError" class="empty-state compact load-error" role="alert" hidden><strong>Unified fabric status could not be loaded.</strong><span id="fabricLoadErrorDetail">Retry after checking the local data directory.</span></div>
       </section>
 
-      <section id="components" class="section" aria-labelledby="components-title">
+      <section id="environments" class="workspace-section" data-workspace-section="environments" aria-label="Environments" hidden>
+        <section id="environmentHealthSummary" class="health-strip" aria-label="Environment health" aria-live="polite">
+          <div><strong>Checking environment health…</strong><p>AgentStack is reviewing connections and tool state.</p></div>
+        </section>
+        <div class="workspace-actions">
+          <button class="primary-button" type="button" data-target-section="changes">Review tools</button>
+        </div>
+        <div class="environment-toolbar" role="group" aria-label="Filter environments">
+          <button class="filter-button active" type="button" data-environment-kind="all" aria-pressed="true">All</button>
+          <button class="filter-button" type="button" data-environment-kind="ai-app" aria-pressed="false">AI apps</button>
+          <button class="filter-button" type="button" data-environment-kind="ide" aria-pressed="false">IDEs</button>
+          <button class="filter-button" type="button" data-environment-kind="cli" aria-pressed="false">Command line</button>
+          <button class="filter-button" type="button" data-environment-kind="mcp" aria-pressed="false">MCP servers</button>
+          <button class="filter-button" type="button" data-environment-kind="workspace" aria-pressed="false">Workspaces</button>
+        </div>
+
+        <div class="environment-workspace">
+          <div id="environmentList" class="environment-list" aria-label="Available environments">
+            <p class="empty-state">Loading environments…</p>
+          </div>
+          <aside id="environmentDetail" class="environment-detail" aria-live="polite" aria-atomic="true">
+            <h3>Select an environment</h3>
+            <p>Choose an item to see the tools and resources available there.</p>
+          </aside>
+        </div>
+
+        <section class="plain-section connections-section" aria-labelledby="connectionsHeading">
+          <div class="section-line">
+            <div>
+              <h3 id="connectionsHeading">Sharing and sync</h3>
+              <p>See which AgentStack-managed resources are already available. Connection changes use their own reviewed sync plan.</p>
+            </div>
+          </div>
+          <div id="connectionList" class="connection-list">
+            <p class="empty-state">No connections loaded.</p>
+          </div>
+        </section>
+      </section>
+
+
+      <section id="sync" class="workspace-section" data-workspace-section="sync" aria-label="Sharing and Sync" hidden>
         <div class="section-heading">
-          <div><h2 id="components-title" tabindex="-1">Component registry</h2><p>Choose optional tools. Core profile items remain selected automatically.</p></div>
-          <div class="registry-toolbar">
-            <div id="categoryTabs" class="category-tabs" role="tablist" aria-label="Filter components by category">
-              <button type="button" class="tab-chip active" data-tier="all">All components</button>
-              <button type="button" class="tab-chip" data-tier="essential">Essential</button>
-              <button type="button" class="tab-chip" data-tier="recommended">Recommended</button>
-              <button type="button" class="tab-chip" data-tier="optional-local">Optional Local</button>
-              <button type="button" class="tab-chip" data-tier="credential">Credential</button>
-            </div>
-            <label class="search-field" for="componentSearch"><span>Search registry</span><input id="componentSearch" type="search" data-operation-lock placeholder="Name, capability, category (Ctrl+K)"></label>
+          <div>
+            <h2>Sharing &amp; Sync</h2>
+            <p>One canonical inventory for managed resources, every connected target, duplicate groups, drift, and reviewed synchronization.</p>
+          </div>
+          <div class="workspace-actions">
+            <button id="syncScanBtn" class="secondary-button" type="button">Scan all targets</button>
+            <button id="syncBuildPlanBtn" class="primary-button" type="button" disabled>Build sync plan</button>
           </div>
         </div>
-        <p id="componentSearchStatus" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
-        <div id="componentGroups" class="registry"></div>
-      </section>
 
-      <section id="plan" class="section" aria-labelledby="plan-title">
-        <div class="section-heading"><div><h2 id="plan-title" tabindex="-1">Sealed install plan</h2><p>Review every keep, install, repair, configure, preserve, and consent action before mutation.</p></div></div>
-        <div id="planEmpty" class="empty-state"><strong>No plan has been built.</strong><span>Return to the overview, choose a profile, then build a safe plan.</span></div>
-        <div id="planContent" hidden>
-          <div class="plan-header-toolbar">
-            <div id="planSummary" class="metrics compact" aria-live="polite"></div>
-            <div id="planFilterGroup" class="plan-filter-group" role="group" aria-label="Filter actions">
-              <button type="button" class="plan-filter-btn active" data-plan-filter="all">All actions</button>
-              <button type="button" class="plan-filter-btn" data-plan-filter="mutations">Changes only</button>
-              <button type="button" class="plan-filter-btn" data-plan-filter="install">Install</button>
-              <button type="button" class="plan-filter-btn" data-plan-filter="repair">Repair</button>
-              <button type="button" class="plan-filter-btn" data-plan-filter="keep">Keep</button>
-            </div>
-          </div>
-          <div class="table-wrap"><table><thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead><tbody id="planRows"></tbody></table></div>
-          <div class="authorization-block">
-            <label class="confirm-row"><input type="checkbox" id="confirmApply" data-operation-lock><span><strong>Authorize this sealed record</strong><small>I reviewed this plan and authorize only the listed install, repair, and configure actions.</small></span></label>
-            <div class="authorization-action"><small id="applyHelp">Check the authorization box to enable this action.</small><div class="button-row"><button id="applyBtn" class="button danger" data-operation data-busy-label="Applying…" disabled>Apply reviewed plan</button></div></div>
-          </div>
+        <dl id="syncStats" class="sync-card-grid" aria-label="Synchronization summary">
+          <div><dt>Managed</dt><dd>—</dd></div><div><dt>Installed</dt><dd>—</dd></div><div><dt>Contained</dt><dd>—</dd></div>
+          <div><dt>In sync</dt><dd>—</dd></div><div><dt>Drifted</dt><dd>—</dd></div><div><dt>Duplicates</dt><dd>—</dd></div><div><dt>Conflicts</dt><dd>—</dd></div>
+        </dl>
+
+        <div class="sync-toolbar">
+          <label class="search-field" for="syncSearch"><span>Search resources</span><input id="syncSearch" type="search" autocomplete="off" placeholder="Search by resource, namespace, kind, or target"></label>
+          <label class="result-sort" for="syncStateFilter">State<select id="syncStateFilter"><option value="all">All states</option><option value="installed">Already installed</option><option value="contained">Contained</option><option value="in-sync">In sync</option><option value="drifted">Drifted</option><option value="conflict">Conflicts</option><option value="missing">Not installed</option></select></label>
+          <label class="result-sort" for="syncParallelism">Parallel targets<select id="syncParallelism"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="6">6</option><option value="8">8</option></select></label>
         </div>
-      </section>
 
-      <section id="mcp-test" class="section" aria-labelledby="mcp-test-title">
-        <div class="section-heading"><div><h2 id="mcp-test-title" tabindex="-1">MCP Testing Workbench</h2><p>Send test queries and tool calls directly to connected child MCP servers.</p></div></div>
-        <div class="overview-grid">
-          <section class="panel">
-            <div class="panel-head"><div><h3>Select MCP Child Server</h3><p>Choose an active routed server to inspect tools and run test payloads.</p></div></div>
-            <div id="mcpServerCards" class="profile-cards-grid"></div>
+        <div class="sync-layout">
+          <section class="plain-section" aria-labelledby="syncResourcesHeading">
+            <div class="section-line"><div><h3 id="syncResourcesHeading">Managed resources</h3><p>Select canonical resources and connected targets. No target is modified until the generated plan is reviewed and approved.</p></div></div>
+            <div id="syncTargetSelector" class="sync-target-selector" aria-label="Connected sync targets"></div>
+            <div id="syncResourceList" class="sync-resource-list"><p class="empty-state">Loading canonical resource inventory…</p></div>
           </section>
-          <section class="panel">
-            <div class="panel-head"><div><h3>Test Execution Output</h3><p>Live JSON response payload and execution latency.</p></div></div>
-            <div class="output-shell"><pre id="mcpTestOutput" class="output">Select a server to run test executions.</pre></div>
-          </section>
+          <aside id="syncPlanPanel" class="sync-plan-panel" aria-labelledby="syncPlanHeading">
+            <h3 id="syncPlanHeading">Reviewed sync plan</h3>
+            <p id="syncPlanSummary">Select resources and targets, then build a fresh immutable plan.</p>
+            <ol id="syncPlanChildren" class="change-list"><li class="empty-state">No pending sync plan.</li></ol>
+            <label class="approval-check"><input id="confirmSyncApply" type="checkbox" disabled><span><strong>I reviewed every target plan</strong><small>The plan is digest-bound and expires if the target state changes.</small></span></label>
+            <button id="syncApplyBtn" class="primary-button full-width" type="button" disabled>Apply approved sync plan</button>
+          </aside>
         </div>
+
+        <section class="plain-section" aria-labelledby="syncDuplicatesHeading">
+          <div class="section-line"><div><h3 id="syncDuplicatesHeading">Duplicates and conflicts</h3><p>Exact copies are grouped. Divergent content, multiple versions, and orphan ownership records require review and are never deleted automatically.</p></div></div>
+          <div id="syncDuplicateList" class="sync-duplicate-list"><p class="empty-state">No duplicate groups loaded.</p></div>
+        </section>
       </section>
 
-      <section id="routines" class="section" aria-labelledby="routines-title">
-        <div class="section-heading"><div><h2 id="routines-title" tabindex="-1">Routine Manager & Scheduler</h2><p>Automated background tasks, maintenance jobs, and health check receipts.</p></div></div>
-        <div class="panel">
-          <div class="panel-head"><div><h3>Configured Background Routines</h3><p>Periodic jobs executed safely under local authorization.</p></div></div>
-          <div id="routineListGrid" class="overview-grid"></div>
-        </div>
-      </section>
+      <section id="changes" class="workspace-section" data-workspace-section="changes" aria-label="Changes" hidden>
+        <div class="change-workspace">
+          <div class="change-picker">
+            <section class="plain-section" aria-labelledby="profileHeading">
+              <h3 id="profileHeading">Choose a starting point</h3>
+              <div id="profileList" class="profile-list" role="radiogroup" aria-label="Profiles"></div>
+            </section>
 
-      <section id="workspaces" class="section" aria-labelledby="workspaces-title">
-        <div class="section-heading"><div><h2 id="workspaces-title" tabindex="-1">Workspace & Context Visualizer</h2><p>Inspect project context quality scores, memory graph nodes, and local artifacts.</p></div></div>
-        <div class="panel">
-          <div class="panel-head"><div><h3>Active Workspaces</h3><p>Tracked local repositories and context readiness scores.</p></div></div>
-          <div id="workspaceGrid" class="overview-grid"></div>
-        </div>
-      </section>
+            <section class="plain-section" aria-labelledby="toolsHeading">
+              <div class="section-line">
+                <div>
+                  <h3 id="toolsHeading">Choose tools</h3>
+                  <p id="selectionSummary">Loading available tools…</p>
+                </div>
+              </div>
+              <label class="search-field" for="componentSearch">
+                <span>Search tools</span>
+                <input id="componentSearch" type="search" autocomplete="off" placeholder="Search by name or purpose">
+              </label>
+              <div id="tierFilters" class="filter-row" role="group" aria-label="Filter tools">
+                <button class="filter-button active" type="button" data-tier="all" aria-pressed="true">All</button>
+                <button class="filter-button" type="button" data-tier="essential" aria-pressed="false">Essential</button>
+                <button class="filter-button" type="button" data-tier="recommended" aria-pressed="false">Recommended</button>
+                <button class="filter-button" type="button" data-tier="optional-local" aria-pressed="false">Optional</button>
+                <button class="filter-button" type="button" data-tier="credential" aria-pressed="false">Sign-in required</button>
+              </div>
+              <div id="componentList" class="component-list" aria-live="polite" aria-atomic="true"></div>
+            </section>
 
-      <section id="sharing" class="section" aria-labelledby="sharing-title">
-        <div class="section-heading"><div><h2 id="sharing-title" tabindex="-1">MCP & Skills Cross-Agent Sharing Matrix</h2><p>Explicitly view which AI agents have access to which skills and MCPs, and link them with 1 click.</p></div></div>
-        <div class="panel">
-          <div class="panel-head"><div><h3>Cross-Agent Compatibility Matrix</h3><p>Manage shared capability links across Codex, AGY, Claude, Cursor, and OpenCode.</p></div></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Resource Name</th><th>Type</th><th>Codex</th><th>AGY</th><th>Claude</th><th>Cursor</th><th>Action</th></tr></thead>
-              <tbody id="sharingMatrixRows"></tbody>
-            </table>
+            <details class="options-disclosure">
+              <summary>Installation preferences</summary>
+              <div class="option-stack">
+                <label class="toggle-row"><input id="allowCredentialed" type="checkbox"><span><strong>Include tools that require sign-in</strong><small>You will still complete sign-in separately.</small></span></label>
+                <label class="toggle-row"><input id="allowUpgrades" type="checkbox"><span><strong>Allow version upgrades</strong><small>Off by default. Existing compatible versions are preserved.</small></span></label>
+                <label class="select-row" for="browserProvider"><span><strong>Browser automation provider</strong><small>Used only when a selected tool needs browser control.</small></span><select id="browserProvider" aria-label="Browser automation provider"><option value="">Automatic</option></select></label>
+                <div id="selectionIssues" class="selection-issues" role="alert" aria-live="assertive" aria-atomic="true" hidden></div>
+              </div>
+            </details>
+
+            <button id="createPlanBtn" class="primary-button full-width" type="button" data-operation data-busy-label="Creating changes…">Create changes</button>
           </div>
+
+          <aside class="change-review" aria-labelledby="pendingHeading">
+            <div class="review-heading">
+              <div>
+                <h3 id="pendingHeading">Pending changes</h3>
+                <p id="pendingSummary">Choose tools, then create changes to see exactly what AgentStack will do.</p>
+              </div>
+              <span id="planState" class="state-badge neutral">Not prepared</span>
+            </div>
+            <ol id="changeList" class="change-list">
+              <li class="empty-state">No pending changes.</li>
+            </ol>
+            <div class="approval-panel">
+              <label class="approval-check"><input id="confirmApply" type="checkbox" disabled><span><strong>I reviewed these changes</strong><small>Only the listed items will be applied. Unrelated tools stay untouched.</small></span></label>
+              <button id="applyBtn" class="primary-button full-width" type="button" data-operation data-busy-label="Applying…" disabled>Approve and apply</button>
+            </div>
+          </aside>
         </div>
       </section>
 
-      <section id="errors" class="section" aria-labelledby="errors-title">
-        <div class="section-heading"><div><h2 id="errors-title" tabindex="-1">Resilience Diagnostics & Error Inspector</h2><p>Track system bugs, subprocess crashes, and trigger 1-click automated repairs.</p></div></div>
-        <div class="panel">
-          <div class="panel-head"><div><h3>Runtime Error & Diagnostic Log</h3><p>Subprocess crashes, handshake warnings, and recovery actions.</p></div><button type="button" id="triggerAutoRepairBtn" class="button secondary compact-button" disabled title="Automatic repair is unavailable in the UI">Auto-Repair unavailable</button></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Timestamp</th><th>Component</th><th>Severity</th><th>Error Trace / Description</th></tr></thead>
-              <tbody id="errorLogRows"></tbody>
-            </table>
-          </div>
+      <section id="activity" class="workspace-section" data-workspace-section="activity" aria-label="Activity" hidden>
+        <section id="repairQueueSummary" class="health-strip" aria-label="Repair queue" aria-live="polite">
+          <div><strong>No active repair queue</strong><p>Failed changes will appear here with a specific cause and next action.</p></div>
+        </section>
+        <div class="workspace-actions">
+          <button id="refreshActivityBtn" class="secondary-button" type="button">Refresh activity</button>
         </div>
-      </section>
-
-      <section id="router" class="section" aria-labelledby="router-title">
-        <div class="section-heading"><div><h2 id="router-title" tabindex="-1">MCP router</h2><p>Prepare one managed endpoint for Codex and AGY, then verify each selected child.</p></div></div>
-        <div class="router-grid">
-          <section class="panel"><div class="panel-head"><div><h3>Prepare a session</h3><p>Review selected router changes in a sealed plan before any configuration or client registration is written.</p></div><span class="record-seal">Managed</span></div><div class="button-row"><button id="mcpInitBtn" class="button primary" data-operation data-busy-label="Building…">Review MCP plan</button><button id="mcpDoctorBtn" class="button secondary" data-operation data-busy-label="Checking…">Doctor</button></div></section>
-          <section class="command-sheet"><h3>CLI launchers</h3><p>Use the same reviewed profile from a terminal.</p><pre><code>agentstack codex --profile core
-agentstack agy --profile recommended
-agentstack mcp doctor</code></pre></section>
-        </div>
-        <div class="output-shell">
-          <div class="output-head">
-            <strong>Operation record</strong>
-            <div class="output-actions">
-              <button type="button" id="copyOutputBtn" class="button quiet compact-button">Copy JSON</button>
-              <span class="output-seal">JSON</span>
+        <section class="plain-section" aria-labelledby="historyHeading">
+          <div class="section-line">
+            <div>
+              <h3 id="historyHeading">Installation history</h3>
+              <p>Recent transactions are stored locally with sensitive command output removed.</p>
             </div>
           </div>
-          <pre id="routerOutput" class="output" aria-live="polite">No router operation has run yet.</pre>
+          <div class="history-toolbar">
+            <label class="search-field" for="historySearch"><span>Search history</span><input id="historySearch" type="search" autocomplete="off" placeholder="Search by transaction, status, or tool"></label>
+            <label class="result-sort" for="historyStatusFilter">Status<select id="historyStatusFilter"><option value="all">All statuses</option><option value="attention">Needs attention</option><option value="succeeded">Succeeded</option><option value="cancelled">Cancelled</option></select></label>
+          </div>
+          <ol id="transactionList" class="transaction-list">
+            <li class="empty-state">Loading activity…</li>
+          </ol>
+        </section>
+
+        <div class="activity-columns">
+          <section class="plain-section" aria-labelledby="routineHeading">
+            <h3 id="routineHeading">Maintenance</h3>
+            <div id="routineList"><p class="empty-state">Loading maintenance routines…</p></div>
+          </section>
+          <section class="plain-section" aria-labelledby="diagnosticsHeading">
+            <div class="section-line">
+              <h3 id="diagnosticsHeading">System checks</h3>
+              <button id="runDoctorBtn" class="text-button" type="button">Run check</button>
+            </div>
+            <div id="diagnosticList"><p class="empty-state">No recent system checks.</p></div>
+          </section>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- Plan Review Confirmation Modal Dialog -->
-  <dialog id="planModal" class="plan-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span class="modal-icon">📋</span>
-          <div>
-            <h3>Review Prepared Changes</h3>
-            <p id="modalPlanMeta">Sealed plan ready for confirmation</p>
-          </div>
-        </div>
-        <button type="button" id="closeModalBtn" class="button quiet compact-button" aria-label="Close dialog">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div id="modalSummaryGrid" class="modal-summary-grid"></div>
-        <div class="modal-preview-box">
-          <h4>Actions To Perform:</h4>
-          <div class="table-wrap modal-table-wrap">
-            <table>
-              <thead><tr><th>Component</th><th>Action</th><th>Reason</th></tr></thead>
-              <tbody id="modalPlanRows"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="modal-safety-note">
-          <span>🛡️ <strong>Safety Guarantee:</strong> Existing compatible software on your machine remains untouched. No uninstalls occur.</span>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" id="modalViewFullBtn" class="button secondary">View Full Details</button>
-        <button type="button" id="modalConfirmApplyBtn" class="button primary large-btn">⚡ Confirm & Apply Changes</button>
-      </div>
-    </div>
-  </dialog>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="assets/app.js" defer></script>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script defer src="assets/core.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
+  <script defer src="assets/changes.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
+  <script defer src="assets/environments.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
+  <script defer src="assets/activity.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
+  <script defer src="assets/sync.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
+  <script defer src="assets/app.js?v=__AGENTSTACK_ASSET_VERSION__"></script>
 </body>
 </html>

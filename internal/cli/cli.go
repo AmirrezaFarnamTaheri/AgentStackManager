@@ -15,6 +15,7 @@ import (
 
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/catalog"
+	"github.com/agentstack/agentstack/internal/desktop"
 	"github.com/agentstack/agentstack/internal/mcp"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
@@ -282,12 +283,23 @@ func (c *CLI) selfInstaller() func() (selfinstall.Report, error) {
 func (c *CLI) runUI(ctx context.Context, args []string) int {
 	fs := flag.NewFlagSet("ui", flag.ContinueOnError)
 	fs.SetOutput(c.errWriter())
-	noOpen := fs.Bool("no-open", false, "do not open the browser automatically")
+	noOpen := fs.Bool("no-open", false, "start the loopback UI without opening a window")
+	browser := fs.Bool("browser", false, "open the UI in the system browser instead of the desktop window")
 	listen := fs.String("listen", "127.0.0.1:0", "loopback listen address")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	err := ui.Run(ctx, ui.HandlerOptions{Backend: c.Service, Version: c.Version, Revision: c.Revision}, ui.RunOptions{ListenAddress: *listen, OpenBrowser: !*noOpen})
+	var launcher ui.WindowLauncher
+	if !*noOpen && !*browser {
+		launcher = desktop.Launch
+	}
+	err := ui.Run(ctx, ui.HandlerOptions{Backend: c.Service, Version: c.Version, Revision: c.Revision}, ui.RunOptions{
+		ListenAddress: *listen,
+		OpenBrowser:   *browser && !*noOpen,
+		Launcher:      launcher,
+		PrintURL:      *noOpen,
+		Output:        c.Out,
+	})
 	if errors.Is(err, context.Canceled) {
 		return 0
 	}
@@ -715,7 +727,9 @@ Usage:
   agentstack [ui]
   agentstack setup [--no-launch]
   agentstack status | inventory | catalog | profiles | integrations
-  agentstack hub list | import | audit | targets | target-add | backups | restore
+  agentstack hub list | graph | adapters | adapter-conformance | adapter-external-conformance | cas-stage | cas-verify | cas-restore
+  agentstack hub db-stage | db-inspect | db-verify | db-backup
+  agentstack hub import | audit | targets | target-add | backups | restore
   agentstack hub plan-sync | apply-sync | plan-refresh | apply-refresh | remove
   agentstack context scan | score | read | search | git | plan | apply
   agentstack workspace list | show | create | update | render | delete
