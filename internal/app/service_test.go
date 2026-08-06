@@ -673,3 +673,93 @@ func TestFabricMutationsShareOneCrossProcessLease(t *testing.T) {
 		t.Fatalf("expected shared fabric mutation lease, got %v", err)
 	}
 }
+
+func TestApplyPlannedWithProgressReportsLifecycle(t *testing.T) {
+	catalog := model.Catalog{
+		Version: 1,
+		Components: []model.Component{
+			{ID: "tool-a", Name: "Tool A", Tier: model.TierEssential, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolA"}},
+			{ID: "tool-b", Name: "Tool B", Tier: model.TierEssential, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolB"}},
+		},
+		Profiles: []model.Profile{{ID: "essential", Components: []string{"tool-a", "tool-b"}}},
+	}
+	service := minimalService(t, catalog, &appRunner{})
+	plan, err := service.Plan(context.Background(), planner.Request{Profile: "essential"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var snapshots []ApplyProgress
+	report, err := service.ApplyPlannedWithProgress(context.Background(), plan.ID, plan.Digest, true, func(progress ApplyProgress) {
+		snapshots = append(snapshots, progress)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.Transaction.Status != model.TransactionSucceeded || len(snapshots) == 0 {
+		t.Fatalf("report=%#v progress=%#v", report, snapshots)
+	}
+	if snapshots[0].Phase != "preparing" || snapshots[0].Total != 2 {
+		t.Fatalf("first progress = %#v", snapshots[0])
+	}
+	last := snapshots[len(snapshots)-1]
+	if last.Phase != "complete" || last.Completed != 2 || last.Total != 2 {
+		t.Fatalf("last progress = %#v", last)
+	}
+	seenRunning := false
+	for _, snapshot := range snapshots {
+		if snapshot.Phase == "installing" && snapshot.CurrentID != "" {
+			seenRunning = true
+		}
+	}
+	if !seenRunning {
+		t.Fatalf("no action-start progress: %#v", snapshots)
+	}
+	for _, item := range last.Items {
+		if item.Status != "succeeded" {
+			t.Fatalf("final item = %#v", item)
+		}
+	}
+}
+
+type secondToolFailRunner struct{}
+
+func (secondToolFailRunner) Run(_ context.Context, invocation runner.Invocation) runner.Result {
+	for _, arg := range invocation.Args {
+		if arg == "Vendor.ToolB" {
+			return runner.Result{ExitCode: 1, Err: errors.New("simulated second tool failure")}
+		}
+	}
+	return runner.Result{ExitCode: 0, Stdout: "ok"}
+}
+
+func TestApplyPlannedWithProgressKeepsPartialResult(t *testing.T) {
+	catalog := model.Catalog{
+		Version: 1,
+		Components: []model.Component{
+			{ID: "tool-a", Name: "Tool A", Tier: model.TierEssential, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolA"}},
+			{ID: "tool-b", Name: "Tool B", Tier: model.TierEssential, Install: model.InstallSpec{Kind: model.InstallWinget, WingetID: "Vendor.ToolB"}},
+		},
+		Profiles: []model.Profile{{ID: "essential", Components: []string{"tool-a", "tool-b"}}},
+	}
+	service := minimalService(t, catalog, &appRunner{})
+	service.Installer.Commands = secondToolFailRunner{}
+	plan, err := service.Plan(context.Background(), planner.Request{Profile: "essential"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var last ApplyProgress
+	report, err := service.ApplyPlannedWithProgress(context.Background(), plan.ID, plan.Digest, true, func(progress ApplyProgress) { last = progress })
+	if err == nil {
+		t.Fatal("expected partial installation failure")
+	}
+	if report.Transaction.Status != model.TransactionFailed || last.Phase != "complete" || last.Completed != 2 {
+		t.Fatalf("report=%#v progress=%#v err=%v", report, last, err)
+	}
+	statuses := map[string]string{}
+	for _, item := range last.Items {
+		statuses[item.ID] = item.Status
+	}
+	if statuses["tool-a"] != "succeeded" || statuses["tool-b"] != "failed" {
+		t.Fatalf("item statuses = %#v", statuses)
+	}
+}

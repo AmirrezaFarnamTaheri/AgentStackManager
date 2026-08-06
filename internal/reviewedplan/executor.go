@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/agentstack/agentstack/internal/integrity"
@@ -15,6 +16,7 @@ import (
 
 var ErrConfirmationRequired = errors.New("explicit confirmation is required before applying changes")
 var ErrPlanStale = errors.New("reviewed plan is stale; rebuild and review the plan")
+var ErrPlanUnavailable = errors.New("reviewed plan is unavailable; create and review a fresh plan")
 var ErrPlanMismatch = errors.New("reviewed plan digest does not match")
 
 type Request struct {
@@ -38,6 +40,9 @@ type Executor struct {
 	Inventory                func(context.Context) (model.Inventory, error)
 	RecordSuccessfulInstalls func(model.Plan, model.Transaction) error
 	LogEvent                 func(state.Event)
+	OnPlanReady              func(model.Plan) error
+	OnActionStart            func(model.PlanAction) error
+	OnTransaction            func(model.Transaction) error
 	LeaseTTL                 time.Duration
 	Now                      func() time.Time
 }
@@ -59,6 +64,9 @@ func (e Executor) Execute(ctx context.Context, request Request) (Result, error) 
 
 	saved, err := e.Store.LoadPlan(request.PlanID)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return Result{}, ErrPlanUnavailable
+		}
 		return Result{}, err
 	}
 	plan := saved.Plan
@@ -93,6 +101,11 @@ func (e Executor) Execute(ctx context.Context, request Request) (Result, error) 
 	if err := lease.Touch(); err != nil {
 		return Result{}, err
 	}
+	if e.OnPlanReady != nil {
+		if err := e.OnPlanReady(plan); err != nil {
+			return Result{}, fmt.Errorf("publish reviewed plan readiness: %w", err)
+		}
+	}
 	// Consume approval before first external mutation. A partial or failed run
 	// must be reviewed again against resulting machine state.
 	if err := e.Store.DeletePlan(request.PlanID); err != nil {
@@ -101,11 +114,23 @@ func (e Executor) Execute(ctx context.Context, request Request) (Result, error) 
 
 	transaction := e.Installer.Apply(ctx, plan, runner.ApplyOptions{
 		CorrelationID: plan.ID,
+		OnActionStart: func(action model.PlanAction) error {
+			if e.OnActionStart == nil {
+				return nil
+			}
+			return e.OnActionStart(action)
+		},
 		OnUpdate: func(tx model.Transaction) error {
 			if err := lease.Touch(); err != nil {
 				return err
 			}
-			return e.Store.SaveTransaction(tx)
+			if err := e.Store.SaveTransaction(tx); err != nil {
+				return err
+			}
+			if e.OnTransaction != nil {
+				return e.OnTransaction(tx)
+			}
+			return nil
 		},
 	})
 	result := Result{Saved: saved, Transaction: transaction}

@@ -13,6 +13,7 @@ import (
 const (
 	createSuspended                    = 0x00000004
 	createNewProcessGroup              = 0x00000200
+	createNoWindow                     = 0x08000000
 	jobObjectExtendedLimitInformation  = 9
 	jobObjectCpuRateControlInformation = 15
 	jobObjectLimitKillOnJobClose       = 0x00002000
@@ -75,8 +76,6 @@ type cpuRateControlInformation struct {
 	CPURate      uint32
 }
 
-func validatePlatformLimits(Limits) error { return nil }
-
 func buildExtendedLimitInformation(limits Limits) extendedLimitInformation {
 	info := extendedLimitInformation{}
 	info.BasicLimitInformation.LimitFlags = jobObjectLimitKillOnJobClose
@@ -117,14 +116,23 @@ func processAlive(pid int) bool {
 	return ok != 0 && code == stillActive
 }
 
-func prepareCommand(cmd *exec.Cmd) {
+func prepareWindowsCommand(cmd *exec.Cmd) {
 	if cmd.SysProcAttr == nil {
 		cmd.SysProcAttr = &syscall.SysProcAttr{}
 	}
-	cmd.SysProcAttr.CreationFlags |= createNewProcessGroup | createSuspended
+	cmd.SysProcAttr.HideWindow = true
+	cmd.SysProcAttr.CreationFlags |= createNewProcessGroup | createSuspended | createNoWindow
 }
 
-func attachCommand(cmd *exec.Cmd, limits Limits) (platformController, error) {
+func startPlatformCommand(cmd *exec.Cmd, limits Limits) (platformController, error) {
+	prepareWindowsCommand(cmd)
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	return attachWindowsCommand(cmd, limits)
+}
+
+func attachWindowsCommand(cmd *exec.Cmd, limits Limits) (platformController, error) {
 	if cmd.Process == nil {
 		return nil, errors.New("process was not started")
 	}

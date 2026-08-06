@@ -11,22 +11,34 @@ import (
 
 func TestConvergenceEvidenceLinksResolveToTestsAndRecords(t *testing.T) {
 	root := repositoryRoot(t)
-	ledger := readCSV(t, filepath.Join(root, "docs", "convergence", "ADOPTION.csv"))
+	ledgers := [][]map[string]string{
+		readCSV(t, filepath.Join(root, "docs", "convergence", "ADOPTION.csv")),
+		readCSV(t, filepath.Join(root, "docs", "convergence", "FABRIC_ADOPTION.csv")),
+	}
 	trace := readCSV(t, filepath.Join(root, "docs", "convergence", "TEST_TRACEABILITY.csv"))
 
-	records := make(map[string]struct{}, len(ledger))
+	records := map[string]struct{}{}
 	ledgerTests := map[string]struct{}{}
-	for _, row := range ledger {
-		id := strings.TrimSpace(row["record_id"])
-		if id == "" {
-			t.Fatal("convergence ledger contains an empty record_id")
-		}
-		if _, exists := records[id]; exists {
-			t.Fatalf("duplicate convergence record %q", id)
-		}
-		records[id] = struct{}{}
-		if testNode := strings.TrimSpace(row["test_node"]); testNode != "" && testNode != "n/a" {
-			ledgerTests[testNode] = struct{}{}
+	for _, ledger := range ledgers {
+		for _, row := range ledger {
+			id := strings.TrimSpace(row["record_id"])
+			if id == "" {
+				t.Fatal("convergence ledger contains an empty record_id")
+			}
+			if _, exists := records[id]; exists {
+				t.Fatalf("duplicate convergence record %q", id)
+			}
+			records[id] = struct{}{}
+			declared := strings.TrimSpace(row["test_node"])
+			if declared == "" {
+				declared = strings.TrimSpace(row["test_nodes"])
+			}
+			for _, testNode := range strings.Split(declared, ";") {
+				testNode = strings.TrimSpace(testNode)
+				if testNode != "" && testNode != "n/a" && strings.Contains(testNode, "#") {
+					ledgerTests[testNode] = struct{}{}
+				}
+			}
 		}
 	}
 
@@ -51,6 +63,43 @@ func TestConvergenceEvidenceLinksResolveToTestsAndRecords(t *testing.T) {
 	for testNode := range ledgerTests {
 		if _, exists := traced[testNode]; !exists {
 			t.Fatalf("ledger test %q is absent from TEST_TRACEABILITY.csv", testNode)
+		}
+	}
+}
+
+func TestEveryFabricSurfaceLinksToKnownEvidence(t *testing.T) {
+	root := repositoryRoot(t)
+	ledger := readCSV(t, filepath.Join(root, "docs", "convergence", "FABRIC_ADOPTION.csv"))
+	surfaces := readCSV(t, filepath.Join(root, "docs", "convergence", "FABRIC_SURFACES.csv"))
+	records := map[string]struct{}{}
+	for _, row := range ledger {
+		records[strings.TrimSpace(row["record_id"])] = struct{}{}
+	}
+	if len(surfaces) == 0 {
+		t.Fatal("Fabric surface matrix is empty")
+	}
+	seen := map[string]struct{}{}
+	for index, row := range surfaces {
+		path := strings.TrimSpace(row["path"])
+		if path == "" {
+			t.Fatalf("Fabric surface row %d has an empty path", index+2)
+		}
+		if _, duplicate := seen[path]; duplicate {
+			t.Fatalf("duplicate Fabric surface path %q", path)
+		}
+		seen[path] = struct{}{}
+		if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(path))); err != nil {
+			t.Fatalf("Fabric surface %q is unavailable: %v", path, err)
+		}
+		refs := strings.TrimSpace(row["record_ids"])
+		if refs == "" {
+			t.Fatalf("Fabric surface row %d (%s) has no evidence", index+2, path)
+		}
+		for _, recordID := range strings.Split(refs, ";") {
+			recordID = strings.TrimSpace(recordID)
+			if _, exists := records[recordID]; !exists {
+				t.Fatalf("Fabric surface row %d references unknown record %q", index+2, recordID)
+			}
 		}
 	}
 }

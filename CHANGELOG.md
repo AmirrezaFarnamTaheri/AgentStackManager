@@ -1,12 +1,37 @@
 # Changelog
 
+## 0.3.0-unreleased — 2026-08-06
+
+- Added a unified Windows desktop launch path: the executable starts the loopback service, opens one dedicated address-bar-free application window, owns its lifetime, and hides all child consoles and raw package-manager output. Explicit `ui --browser` and `ui --no-open` modes remain available for development and diagnostics.
+- Added simultaneous multi-target discovery and connection management for verified Codex, Claude Code, Gemini CLI, OpenCode, Cursor, and GitHub Copilot adapters, plus evidence-labelled read-only catalogue entries for additional IDEs, agents, and desktop clients.
+- Added canonical Sharing & Sync inventory with managed, installed, contained, in-sync, drifted, duplicate, conflict, orphan, and unmanaged states. Canonical resources fan out to multiple target installations without being counted as unrelated copies.
+- Added digest-bound multi-target sync plans, stale-state revalidation, bounded parallel target application, per-root serialization, independent failure isolation, deterministic receipts, and cancellation.
+- Added dependency-aware parallel tool installation with global and per-installer concurrency limits while preserving deterministic transaction order and post-install verification.
+- Added structured, privacy-safe root-cause diagnostics and official WinGet HRESULT decoding. Public endpoints no longer serialize commands, arguments, stdout, stderr, environment data, or private paths.
+- Added deterministic Windows PE resources for the AgentStack icon and application manifest, generated without optional external resource compilers.
+- Added responsive Sharing & Sync, connection batch actions, duplicate/conflict review, repair intelligence, searchable history, and five-area mobile navigation.
+
 ## Unreleased — forensic remediation
 
+- Added cache-busted embedded UI assets and no-store responses so new builds cannot reuse stale result-table JavaScript or CSS; hardened the sidebar logo and added an application favicon.
+- Added default Windows UAC elevation for UI/setup launches, with loop-safe relaunch handling and clear cancellation errors.
+- Added real AI-app target discovery and connect/pause controls for Codex, Claude, AGY/Gemini, OpenCode, Cursor, and GitHub Copilot, backed by Resource Hub registration rather than cosmetic status toggles.
+- Added method-aware failure intelligence with normalized WinGet error codes, direct evidence, affected-tool groups, concrete repair instructions, and privacy-safe unknown-error fallback copy.
+- Added environment health scoring, a repair queue, searchable/filterable installation history, and responsive result widgets without one-character wrapping.
+- Corrected current verified WinGet pins for yq, Trivy, and scc, including the `BenBoyter.scc` identifier that resolves WinGet package-not-found failures.
+- Validated and deduplicated three external due-diligence reports into a 30-item evidence ledger; remediated confirmed UI legibility, navigation, focus, contrast, touch-target, live-region, activity-bound, and plan-continuity defects; added Linux cgroup v2 process ceilings and external-adapter limit flags while preserving release and mutation authority gates.
+- Replaced the historical Setup / Tools / Review / Operate shell with a debloated lifecycle workspace—Home, Environments, Changes, and Activity. Added read-only AI/IDE/CLI/MCP/workspace and connection visibility, server-reported installation stages and per-item progress, retained partial transaction results, safe consumed-plan recovery, path-free browser failures, transaction history, and one continuous selection-to-approval flow without changing backend mutation authority.
+- Added the constrained `fabric.asm.dev/external-adapter/v1alpha1` process protocol, SHA-256-pinned executable admission, fresh-process deadlines and output ceilings, synthetic environment isolation, reviewed capability intersection, Phase 5 differential execution, sealed external conformance reports, and a read-only CLI command without external adapter activation.
+- Added the embedded `fabric.asm.dev/adapter-conformance/v1alpha1` target oracle, 64-case differential and candidate-preserving round-trip suite, sealed read-only conformance reports, omission-aware fidelity evidence, and corrected no-op/MCP capability postconditions for adapter implementation version `1.1.0`.
+- Added the versioned `fabric.asm.dev/adapter/v1alpha1` target contract, digest-bound structural capability snapshots, deterministic fidelity/loss reports, built-in Codex/Claude/Cursor/AGY/OpenCode/Copilot/generic projections, Resource Hub `--deny-loss`, and capability-drift checks while retaining existing reviewed mutation authorities.
+- Added the additive `fabric.asm.dev/v1alpha1` canonical artifact graph with stable IDs, deterministic extension JSON, content/envelope digests, target bindings, execution classes, and field provenance while retaining Resource Hub v1 as the sole mutation authority.
+- Added an immutable blob/tree content-addressed shadow store, deterministic reachability marks, digest-bound Resource Hub migration receipts, stale-source verification, and explicit-confirmation restore to new paths with atomic no-replace publication and retained incomplete-tree evidence.
+- Added a versioned SQLite shadow metadata index with WAL, strict schema migrations, immutable receipt history, canonical row verification, stale-authority checks, read-only inspection, unrelated-database rejection, and verified no-overwrite online backups while retaining Resource Hub v1 as the sole write authority.
 - Added Cross-Agent Capability Sharing Matrix (`#sharing`) for visibility into skill and MCP links.
 - Added Resilience Error Inspector & Diagnostics Hub (`#errors`).
-- Added System Analytics Dashboard (`#overview`) displaying measured memory, runtime goroutine count, and daemon uptime; CPU and latency are shown as unavailable because they are not measured by the local backend.
+- Added measured runtime details for memory, goroutine count, and daemon uptime inside the Setup disclosure; CPU remains unavailable because the local backend does not measure it.
 - Added 3-way Appearance Theme Switcher (`Auto` / `Dark` / `Light`) with local storage persistence.
-- Added 1-Page Confirmation Modal Dialog (`#planModal`) for sealed plan review and authorization.
+- Kept exact review and authorization inside Changes as the sole browser apply path; no duplicate confirmation modal or stale-plan retry path remains.
 - Added non-blocking asynchronous Windows notification handlers in `internal/notify`.
 - Converged seven peer projects into five target-native ASM planes: audited resource hub, project context, workspace/memory/artifacts, MCP client linking, and scheduled routines.
 - Added 53-record donor adoption ledger, 2,673-row surface-accountability matrix, hash-verified donor slices, omission audit, trust/state map, runbook, validation record, and launch pre-mortem.
@@ -52,6 +77,11 @@
 - Added one-time plan consumption, atomic skill publication, signed setup-pair runtime verification, canonical `.go-version` pinning, and schema-valid deterministic CycloneDX identities.
 - Corrected assurance-tool pins to official `govulncheck v1.1.4` and source-built `Syft v1.50.0`.
 - Added a gated GitHub Release workflow with signed-tag/manual dispatch, per-tag concurrency, job-scoped permissions, provenance/SBOM attestations, native ARM64 proof, checksum verification, and `gh release create` publication. CI now lints all workflows with pinned `actionlint v1.7.12`.
+
+- Hardened the publication candidate: coverage-instrumented external adapters now redirect Go coverage into their private sandbox without inheriting the caller path or weakening successful-stderr rejection.
+- Replaced the monolithic benchmark invocation with bounded, evidence-preserving per-case execution; optimized workspace schema admission to reduce `BenchmarkSearchMemory` from roughly 24 ms, 11.2 MiB, and 281k allocations to roughly 15-18 ms, 7.3 MiB, and 148k allocations on the audit host.
+- Replaced absolute safety and one-click claims in the loopback UI with precise reviewed-plan, preservation, and explicit-authorization language; removed decorative emoji-dependent state communication and flattened promotional surfaces.
+- Added weekly dependency automation for the `.codex` MCP runtime and reconciled publication, provenance, SQLite-preview, launch, and rollback documentation.
 
 ## 0.1.0 — 2026-07-31
 

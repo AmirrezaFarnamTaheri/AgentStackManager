@@ -1,0 +1,1245 @@
+{
+  "apiVersion": "fabric.asm.dev/adapter-conformance/v1alpha1",
+  "adapterContract": "fabric.asm.dev/adapter/v1alpha1",
+  "targets": [
+    {
+      "target": "codex",
+      "adapterId": "asm.builtin.codex",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "aliases": [
+        "openai-codex"
+      ],
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "native",
+        "registrationMode": "command",
+        "locationKind": "literal",
+        "location": "codex:mcp:agentstack-router",
+        "rootKey": "mcpServers",
+        "entryName": "agentstack-router",
+        "transports": [
+          "stdio"
+        ]
+      },
+      "artifacts": [
+        {
+          "kind": "Skill",
+          "support": "native",
+          "fidelity": "full",
+          "directory": ".agents/skills",
+          "format": "agent-skill-directory",
+          "fields": {
+            "content": "native",
+            "metadata.name": "native",
+            "metadata.scope": "mapped"
+          },
+          "relativeDestination": ".agents/skills/{{name}}"
+        },
+        {
+          "kind": "Agent",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".codex/agents",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".codex/agents/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Rule",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".agents/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".agents/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".agents/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".agents/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".codex/prompts",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".codex/prompts/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".codex/prompts",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".codex/prompts/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp",
+          "format": "json",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp/{{name}}.json",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-registration-not-rendered"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "claude",
+      "adapterId": "asm.builtin.claude",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "aliases": [
+        "claude-code"
+      ],
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "native",
+        "registrationMode": "json-file",
+        "locationKind": "project-relative",
+        "location": ".mcp.json",
+        "rootKey": "mcpServers",
+        "entryName": "agentstack-router",
+        "transports": [
+          "stdio"
+        ]
+      },
+      "artifacts": [
+        {
+          "kind": "Skill",
+          "support": "native",
+          "fidelity": "full",
+          "directory": ".claude/skills",
+          "format": "agent-skill-directory",
+          "fields": {
+            "content": "native",
+            "metadata.name": "native",
+            "metadata.scope": "mapped"
+          },
+          "relativeDestination": ".claude/skills/{{name}}"
+        },
+        {
+          "kind": "Agent",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".claude/agents",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".claude/agents/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Rule",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".claude/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".claude/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".claude/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".claude/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".claude/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".claude/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".claude/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".claude/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp",
+          "format": "json",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp/{{name}}.json",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-registration-not-rendered"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "cursor",
+      "adapterId": "asm.builtin.cursor",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "native",
+        "registrationMode": "json-file",
+        "locationKind": "project-relative",
+        "location": ".cursor/mcp.json",
+        "rootKey": "mcpServers",
+        "entryName": "agentstack-router",
+        "transports": [
+          "stdio"
+        ]
+      },
+      "artifacts": [
+        {
+          "kind": "Skill",
+          "support": "native",
+          "fidelity": "full",
+          "directory": ".cursor/skills",
+          "format": "agent-skill-directory",
+          "fields": {
+            "content": "native",
+            "metadata.name": "native",
+            "metadata.scope": "mapped"
+          },
+          "relativeDestination": ".cursor/skills/{{name}}"
+        },
+        {
+          "kind": "Agent",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".cursor/agents",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".cursor/agents/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Rule",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".cursor/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".cursor/rules/{{name}}.mdc",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".cursor/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".cursor/rules/{{name}}.mdc",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".cursor/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".cursor/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".cursor/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".cursor/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp",
+          "format": "json",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp/{{name}}.json",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-registration-not-rendered"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "agy",
+      "adapterId": "asm.builtin.agy",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "aliases": [
+        "gemini",
+        "gemini-cli",
+        "antigravity"
+      ],
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "native",
+        "registrationMode": "json-file",
+        "locationKind": "agy-config",
+        "location": "agy-mcp.json",
+        "rootKey": "mcpServers",
+        "entryName": "agentstack-router",
+        "transports": [
+          "stdio"
+        ]
+      },
+      "artifacts": [
+        {
+          "kind": "Rule",
+          "support": "unsupported",
+          "fidelity": "blocked",
+          "losses": [
+            {
+              "field": "/",
+              "kind": "unsupported",
+              "code": "artifact-kind-unsupported",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "opencode",
+      "adapterId": "asm.builtin.opencode",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "native",
+        "registrationMode": "json-file",
+        "locationKind": "project-relative",
+        "location": "opencode.json",
+        "rootKey": "mcpServers",
+        "entryName": "agentstack-router",
+        "transports": [
+          "stdio"
+        ]
+      },
+      "artifacts": [
+        {
+          "kind": "Skill",
+          "support": "native",
+          "fidelity": "full",
+          "directory": ".opencode/skills",
+          "format": "agent-skill-directory",
+          "fields": {
+            "content": "native",
+            "metadata.name": "native",
+            "metadata.scope": "mapped"
+          },
+          "relativeDestination": ".opencode/skills/{{name}}"
+        },
+        {
+          "kind": "Agent",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".opencode/agents",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".opencode/agents/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Rule",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".opencode/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".opencode/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".opencode/rules",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".opencode/rules/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".opencode/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".opencode/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".opencode/commands",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".opencode/commands/{{name}}.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp",
+          "format": "json",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp/{{name}}.json",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-registration-not-rendered"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "github-copilot",
+      "adapterId": "asm.builtin.github-copilot",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "aliases": [
+        "copilot"
+      ],
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "unsupported",
+        "registrationMode": "none",
+        "locationKind": "none"
+      },
+      "artifacts": [
+        {
+          "kind": "Rule",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".github/instructions",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".github/instructions/{{name}}.instructions.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".github/instructions",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".github/instructions/{{name}}.instructions.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".github/prompts",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".github/prompts/{{name}}.prompt.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "passthrough",
+          "fidelity": "lossy",
+          "directory": ".github/prompts",
+          "format": "markdown",
+          "fields": {
+            "content": "mapped",
+            "metadata.name": "mapped",
+            "metadata.description": "omitted",
+            "metadata.labels": "omitted"
+          },
+          "relativeDestination": ".github/prompts/{{name}}.prompt.md",
+          "losses": [
+            {
+              "field": "/content",
+              "kind": "transformation",
+              "code": "content-passthrough"
+            },
+            {
+              "field": "/metadata/description",
+              "kind": "omission",
+              "code": "metadata-description-omitted"
+            },
+            {
+              "field": "/metadata/labels",
+              "kind": "omission",
+              "code": "metadata-labels-omitted"
+            }
+          ]
+        },
+        {
+          "kind": "Skill",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/skill",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/skill/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "Agent",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/agent",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/agent/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp-server",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp-server/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "generic",
+      "adapterId": "asm.builtin.generic",
+      "adapterVersion": "1.1.0",
+      "targetVersionRange": "*",
+      "deploymentModes": [
+        "copy",
+        "link"
+      ],
+      "mcp": {
+        "support": "unsupported",
+        "registrationMode": "none",
+        "locationKind": "none"
+      },
+      "artifacts": [
+        {
+          "kind": "Skill",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/skill",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/skill/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "Agent",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/agent",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/agent/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "Rule",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/rule",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/rule/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "ContextResource",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/context",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/context/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "Prompt",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/prompt",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/prompt/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "Command",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/command",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/command/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        },
+        {
+          "kind": "MCPServer",
+          "support": "fallback",
+          "fidelity": "lossy",
+          "directory": ".agentstack/mcp-server",
+          "format": "opaque",
+          "fields": {
+            "content": "native",
+            "metadata": "native"
+          },
+          "relativeDestination": ".agentstack/mcp-server/{{name}}",
+          "losses": [
+            {
+              "field": "/destination",
+              "kind": "fallback",
+              "code": "target-native-projection-unavailable"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "digest": ""
+}

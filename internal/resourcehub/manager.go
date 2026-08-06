@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
+
 	"github.com/agentstack/agentstack/internal/safefile"
 	"github.com/agentstack/agentstack/internal/strictjson"
 )
@@ -17,6 +19,7 @@ import (
 type Manager struct {
 	Root                   string
 	Clock                  func() time.Time
+	Adapters               *adapters.Registry
 	beforeSyncOperation    func(SyncOperation) error
 	beforeRefreshOperation func(RefreshOperation) error
 }
@@ -506,4 +509,22 @@ func (m Manager) RestoreBackup(backupID string, confirmed bool) (Resource, error
 		Tags: resource.Tags, Targets: resource.Targets, Scope: resource.Scope, Metadata: resource.Metadata, Replace: true,
 		trackedSource: resource.Source,
 	})
+}
+
+// ResourceContentPath returns the current authoritative content path for one
+// Resource Hub record. It is a read-only migration aid; callers must not
+// mutate the returned path outside Resource Hub operations.
+func (m Manager) ResourceContentPath(id string) (string, error) {
+	if !validID(id) {
+		return "", fmt.Errorf("resource id is empty or invalid")
+	}
+	registry, err := m.LoadRegistry()
+	if err != nil {
+		return "", err
+	}
+	resource, ok := registry.Resources[id]
+	if !ok {
+		return "", fmt.Errorf("resource %q not found", id)
+	}
+	return m.resourceSource(resource), nil
 }

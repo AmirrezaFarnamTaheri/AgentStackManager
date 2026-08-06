@@ -407,13 +407,15 @@ func loadCollection[T any](path, schema string) (map[string]T, error) {
 	if err != nil {
 		return nil, err
 	}
-	var top map[string]json.RawMessage
-	if err := strictjson.Decode(data, &top); err != nil {
+	var header struct {
+		Schema json.RawMessage `json:"schema"`
+	}
+	if err := json.Unmarshal(data, &header); err != nil {
 		return nil, err
 	}
-	if rawSchema, ok := top["schema"]; ok {
+	if len(header.Schema) != 0 {
 		var storedSchema string
-		if json.Unmarshal(rawSchema, &storedSchema) == nil && strings.HasPrefix(storedSchema, "agentstack.") {
+		if json.Unmarshal(header.Schema, &storedSchema) == nil && strings.HasPrefix(storedSchema, "agentstack.") {
 			if storedSchema != schema {
 				return nil, fmt.Errorf("unexpected persistence schema %q; expected %q", storedSchema, schema)
 			}

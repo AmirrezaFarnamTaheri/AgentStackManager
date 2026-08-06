@@ -1,6 +1,7 @@
 package resourcehub
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
 	"github.com/agentstack/agentstack/internal/integrity"
 	"github.com/agentstack/agentstack/internal/safefile"
 	"github.com/agentstack/agentstack/internal/strictjson"
@@ -32,6 +34,10 @@ func (m Manager) PlanSync(targetID string, resourceIDs []string, options PlanOpt
 	if options.TTL <= 0 {
 		options.TTL = 15 * time.Minute
 	}
+	adapter, capability, err := m.targetCapability(target)
+	if err != nil {
+		return SyncPlan{}, err
+	}
 	ids := uniqueStrings(resourceIDs)
 	if len(ids) == 0 {
 		for id, resource := range registry.Resources {
@@ -46,16 +52,14 @@ func (m Manager) PlanSync(targetID string, resourceIDs []string, options PlanOpt
 		return SyncPlan{}, err
 	}
 	operations := make([]SyncOperation, 0, len(ids)+len(state.Entries))
+	reports := make([]adapters.LossReport, 0, len(ids)+1)
 	selectedDestinations := map[string]struct{}{}
 	for _, id := range ids {
 		resource, exists := registry.Resources[id]
 		if !exists {
 			return SyncPlan{}, fmt.Errorf("unknown resource %q", id)
 		}
-		if !resource.Enabled {
-			continue
-		}
-		if !supportsAgent(resource, target.Agent) {
+		if !resource.Enabled || !supportsAgent(resource, target.Agent) {
 			continue
 		}
 		if !options.AllowRisk {
@@ -67,32 +71,65 @@ func (m Manager) PlanSync(targetID string, resourceIDs []string, options PlanOpt
 				return SyncPlan{}, fmt.Errorf("resource %q is blocked by security audit", id)
 			}
 		}
-		destination, err := targetDestination(target, resource)
+		rendered, lossReport, err := m.renderResource(adapter, target, resource)
 		if err != nil {
 			return SyncPlan{}, err
 		}
+		reports = append(reports, lossReport)
+		destination := rendered.Destination
 		selectedDestinations[destination] = struct{}{}
 		sourcePath := m.resourceSource(resource)
-		op := SyncOperation{ResourceID: id, Kind: resource.Kind, Source: sourcePath, Destination: destination, DesiredDigest: resource.Digest}
 		current, statErr := treeDigest(destination)
 		managed, wasManaged := state.Entries[destination]
-		switch {
-		case errors.Is(statErr, os.ErrNotExist):
-			op.Action, op.Reason = ActionCreate, "destination is absent"
-		case statErr != nil:
-			return SyncPlan{}, statErr
-		case effectiveTargetMode(target) == ModeLink && wasManaged && managed.ResourceID == id && linkDestinationMatches(sourcePath, destination):
-			op.Action, op.CurrentDigest, op.Reason = ActionNoop, current, "managed link still points to the canonical resource"
-		case current == resource.Digest:
-			op.Action, op.CurrentDigest, op.Reason = ActionNoop, current, "destination already matches resource digest"
-		case wasManaged && managed.ResourceID == id && current == managed.Digest:
-			op.Action, op.CurrentDigest, op.Reason = ActionUpdate, current, "managed destination is unchanged and the canonical resource advanced"
-		case wasManaged && managed.ResourceID == id:
-			op.Action, op.CurrentDigest, op.Reason = ActionConflict, current, "managed destination changed outside AgentStack and will not be overwritten"
-		default:
-			op.Action, op.CurrentDigest, op.Reason = ActionConflict, current, "foreign destination differs and will not be overwritten"
+		observed := adapters.ObservedArtifact{
+			ArtifactID: rendered.ArtifactID,
+			Kind:       rendered.Kind,
+			Location:   destination,
+			Digest:     current,
+			BaseDigest: managed.Digest,
+			Exists:     statErr == nil,
+			Owned:      wasManaged && managed.ResourceID == id,
 		}
+		if errors.Is(statErr, os.ErrNotExist) {
+			observed.Digest = "absent"
+		} else if statErr != nil {
+			return SyncPlan{}, statErr
+		} else {
+			observed.Equivalent = current == resource.Digest
+			if effectiveTargetMode(target) == ModeLink && observed.Owned && linkDestinationMatches(sourcePath, destination) {
+				observed.Equivalent = true
+			}
+		}
+		proposals, err := adapter.Plan(context.Background(), adapters.PlanRequest{
+			Environment: targetEnvironment(target), Mode: adapters.PresencePresent,
+			Rendered: rendered, Observed: observed, Capability: capability, LossReport: lossReport,
+		})
+		if err != nil {
+			return SyncPlan{}, err
+		}
+		if len(proposals) != 1 {
+			return SyncPlan{}, fmt.Errorf("adapter %q proposed %d operations for resource %q", adapter.ID(), len(proposals), id)
+		}
+		action, err := syncAction(proposals[0].Action)
+		if err != nil {
+			return SyncPlan{}, err
+		}
+		op := SyncOperation{
+			ResourceID: id, Kind: resource.Kind, Action: action, Source: sourcePath,
+			Destination: destination, DesiredDigest: resource.Digest, Reason: proposals[0].Reason,
+		}
+		if observed.Exists {
+			op.CurrentDigest = observed.Digest
+		}
+		applyAdapterMetadata(&op, proposals[0], lossReport)
 		operations = append(operations, op)
+	}
+	emptyLossReport, err := adapters.SealLossReport(adapters.LossReport{
+		Target: capability.Target, AdapterID: capability.AdapterID,
+		AdapterVersion: capability.AdapterVersion, CapabilityDigest: capability.Digest,
+	})
+	if err != nil {
+		return SyncPlan{}, err
 	}
 	if options.Prune {
 		for destination, managed := range state.Entries {
@@ -106,14 +143,33 @@ func (m Manager) PlanSync(targetID string, resourceIDs []string, options PlanOpt
 			if err != nil {
 				return SyncPlan{}, err
 			}
-			action := ActionRemove
-			reason := "managed resource is no longer selected"
-			if current != managed.Digest {
-				action = ActionConflict
-				reason = "managed destination changed outside AgentStack and will not be removed"
+			rendered := adapters.RenderedArtifact{ArtifactID: "managed/" + managed.ResourceID, Destination: destination, DesiredDigest: "absent"}
+			observed := adapters.ObservedArtifact{ArtifactID: rendered.ArtifactID, Location: destination, Digest: current, BaseDigest: managed.Digest, Exists: true, Owned: true}
+			proposals, err := adapter.Plan(context.Background(), adapters.PlanRequest{
+				Environment: targetEnvironment(target), Mode: adapters.PresenceAbsent,
+				Rendered: rendered, Observed: observed, Capability: capability, LossReport: emptyLossReport,
+			})
+			if err != nil {
+				return SyncPlan{}, err
 			}
-			operations = append(operations, SyncOperation{ResourceID: managed.ResourceID, Action: action, Destination: destination, CurrentDigest: current, Reason: reason})
+			if len(proposals) != 1 {
+				return SyncPlan{}, fmt.Errorf("adapter %q proposed %d prune operations", adapter.ID(), len(proposals))
+			}
+			action, err := syncAction(proposals[0].Action)
+			if err != nil {
+				return SyncPlan{}, err
+			}
+			op := SyncOperation{ResourceID: managed.ResourceID, Action: action, Destination: destination, CurrentDigest: current, Reason: proposals[0].Reason}
+			applyAdapterMetadata(&op, proposals[0], emptyLossReport)
+			operations = append(operations, op)
 		}
+	}
+	lossReport, err := adapters.MergeLossReports(capability.Target, capability.AdapterID, capability.AdapterVersion, capability.Digest, reports...)
+	if err != nil {
+		return SyncPlan{}, err
+	}
+	if options.DenyLoss && lossReport.HasLosses() {
+		return SyncPlan{}, fmt.Errorf("adapter %q would produce %s fidelity with %d reported losses", adapter.ID(), lossReport.Fidelity, len(lossReport.Losses))
 	}
 	sort.Slice(operations, func(i, j int) bool { return operations[i].Destination < operations[j].Destination })
 	registryDigest, err := integrity.DigestJSON(registry)
@@ -121,7 +177,12 @@ func (m Manager) PlanSync(targetID string, resourceIDs []string, options PlanOpt
 		return SyncPlan{}, err
 	}
 	now := m.now()
-	plan := SyncPlan{ID: newID("sync", now), TargetID: targetID, GeneratedAt: now, ExpiresAt: now.Add(options.TTL), RegistryDigest: registryDigest, AllowRisk: options.AllowRisk, Prune: options.Prune, Operations: operations}
+	plan := SyncPlan{
+		ID: newID("sync", now), TargetID: targetID, GeneratedAt: now, ExpiresAt: now.Add(options.TTL),
+		RegistryDigest: registryDigest, AllowRisk: options.AllowRisk, Prune: options.Prune, DenyLoss: options.DenyLoss,
+		AdapterID: capability.AdapterID, AdapterVersion: capability.AdapterVersion, CapabilityDigest: capability.Digest,
+		LossReport: lossReport, Operations: operations,
+	}
 	plan.Digest, err = syncPlanDigest(plan)
 	if err != nil {
 		return SyncPlan{}, err
@@ -170,6 +231,27 @@ func (m Manager) ApplySync(planID, digest string, confirmed bool) (SyncReport, e
 	target, ok := registry.Targets[plan.TargetID]
 	if !ok || !target.Enabled {
 		return SyncReport{}, fmt.Errorf("target %q is unavailable", plan.TargetID)
+	}
+	_, capability, err := m.targetCapability(target)
+	if err != nil {
+		return SyncReport{}, err
+	}
+	if capability.AdapterID != plan.AdapterID || capability.AdapterVersion != plan.AdapterVersion || capability.Digest != plan.CapabilityDigest {
+		return SyncReport{}, fmt.Errorf("target adapter capability changed after plan review")
+	}
+	if err := adapters.VerifyLossReport(plan.LossReport); err != nil {
+		return SyncReport{}, err
+	}
+	if plan.LossReport.Target != capability.Target || plan.LossReport.AdapterID != capability.AdapterID || plan.LossReport.CapabilityDigest != capability.Digest {
+		return SyncReport{}, fmt.Errorf("sync plan loss report identity mismatch")
+	}
+	for _, operation := range plan.Operations {
+		if operation.AdapterID != capability.AdapterID || operation.AdapterVersion != capability.AdapterVersion || operation.CapabilityDigest != capability.Digest {
+			return SyncReport{}, fmt.Errorf("sync operation adapter identity mismatch at %s", operation.Destination)
+		}
+		if err := verifySyncOperationLoss(capability, operation); err != nil {
+			return SyncReport{}, err
+		}
 	}
 	lock, err := m.acquireLock(plan.TargetID)
 	if err != nil {
@@ -245,7 +327,7 @@ func (m Manager) ApplySync(planID, digest string, confirmed bool) (SyncReport, e
 		}
 		return rollbackErr
 	}
-	report := SyncReport{PlanID: plan.ID, TargetID: plan.TargetID, StartedAt: m.now()}
+	report := SyncReport{PlanID: plan.ID, TargetID: plan.TargetID, StartedAt: m.now(), LossReport: plan.LossReport}
 	for operationIndex, operation := range plan.Operations {
 		if operation.Action == ActionNoop {
 			report.Skipped = append(report.Skipped, operation)
@@ -367,77 +449,6 @@ func supportsAgent(resource Resource, agent Agent) bool {
 		}
 	}
 	return false
-}
-
-func targetDestination(target Target, resource Resource) (string, error) {
-	base := target.Root
-	fileName := resource.ID + ".md"
-	switch target.Agent {
-	case AgentCodex:
-		switch resource.Kind {
-		case KindSkill:
-			return filepath.Join(base, ".agents", "skills", resource.ID), nil
-		case KindAgent:
-			return filepath.Join(base, ".codex", "agents", fileName), nil
-		case KindRule, KindContext:
-			return filepath.Join(base, ".agents", "rules", fileName), nil
-		case KindCommand, KindPrompt:
-			return filepath.Join(base, ".codex", "prompts", fileName), nil
-		case KindMCPServer:
-			return filepath.Join(base, ".agentstack", "mcp", resource.ID+".json"), nil
-		}
-	case AgentClaude:
-		switch resource.Kind {
-		case KindSkill:
-			return filepath.Join(base, ".claude", "skills", resource.ID), nil
-		case KindAgent:
-			return filepath.Join(base, ".claude", "agents", fileName), nil
-		case KindRule, KindContext:
-			return filepath.Join(base, ".claude", "rules", fileName), nil
-		case KindCommand, KindPrompt:
-			return filepath.Join(base, ".claude", "commands", fileName), nil
-		case KindMCPServer:
-			return filepath.Join(base, ".agentstack", "mcp", resource.ID+".json"), nil
-		}
-	case AgentCursor:
-		switch resource.Kind {
-		case KindSkill:
-			return filepath.Join(base, ".cursor", "skills", resource.ID), nil
-		case KindAgent:
-			return filepath.Join(base, ".cursor", "agents", fileName), nil
-		case KindRule, KindContext:
-			return filepath.Join(base, ".cursor", "rules", resource.ID+".mdc"), nil
-		case KindCommand, KindPrompt:
-			return filepath.Join(base, ".cursor", "commands", fileName), nil
-		case KindMCPServer:
-			return filepath.Join(base, ".agentstack", "mcp", resource.ID+".json"), nil
-		}
-	case AgentOpenCode:
-		switch resource.Kind {
-		case KindSkill:
-			return filepath.Join(base, ".opencode", "skills", resource.ID), nil
-		case KindAgent:
-			return filepath.Join(base, ".opencode", "agents", fileName), nil
-		case KindRule, KindContext:
-			return filepath.Join(base, ".opencode", "rules", fileName), nil
-		case KindCommand, KindPrompt:
-			return filepath.Join(base, ".opencode", "commands", fileName), nil
-		case KindMCPServer:
-			return filepath.Join(base, ".agentstack", "mcp", resource.ID+".json"), nil
-		}
-	case AgentCopilot:
-		switch resource.Kind {
-		case KindRule, KindContext:
-			return filepath.Join(base, ".github", "instructions", resource.ID+".instructions.md"), nil
-		case KindPrompt, KindCommand:
-			return filepath.Join(base, ".github", "prompts", resource.ID+".prompt.md"), nil
-		case KindSkill, KindAgent, KindMCPServer:
-			return filepath.Join(base, ".agentstack", string(resource.Kind), resource.ID), nil
-		}
-	case AgentGeneric:
-		return filepath.Join(base, ".agentstack", string(resource.Kind), resource.ID), nil
-	}
-	return "", fmt.Errorf("resource kind %q is unsupported for target %q", resource.Kind, target.Agent)
 }
 
 func (m Manager) loadPlan(id string) (SyncPlan, error) {

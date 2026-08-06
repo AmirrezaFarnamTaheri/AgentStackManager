@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-31T22:22:11.666453Z",
+  "generatedAt": "2026-08-05T21:17:00+03:30",
   "title": "Design System: AgentStack Manager",
   "extensions": {
     "colorMeta": {
@@ -62,6 +62,14 @@
           "#dd979d",
           "#efc9cc",
           "#faecee"
+        ]
+      },
+      "action-ink-dark": {
+        "role": "neutral",
+        "displayName": "Dark Action Ink",
+        "canonical": "#10201c",
+        "tonalRamp": [
+          "#10201c"
         ]
       }
     },
@@ -129,14 +137,34 @@
         "name": "narrow-mobile",
         "value": "520px"
       }
-    ]
+    ],
+    "shapeMeta": {
+      "control": "8px",
+      "compact": "9px",
+      "medium": "10px",
+      "brand": "11px",
+      "panel": "14px",
+      "pill": "999px"
+    },
+    "typeScaleMeta": {
+      "caption": "12px",
+      "brand": "13px",
+      "body": "16px",
+      "title": "17px",
+      "progress": "18px",
+      "metric": "20px",
+      "headline": "24px",
+      "page": "26px",
+      "heroMin": "25px",
+      "heroMax": "40px"
+    }
   },
   "components": [
     {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The single high-emphasis action for the current task region.",
+      "description": "The single high-emphasis next action for the current lifecycle area.",
       "html": "<button class=\"ds-btn-primary\">Build safe plan</button>",
       "css": ".ds-btn-primary{min-height:44px;padding:10px 14px;border:1px solid transparent;border-radius:8px;background:var(--accent,#0f766e);color:#fff;font:650 13px/1 Aptos,Segoe UI,sans-serif;cursor:pointer;transition:background 180ms cubic-bezier(.16,1,.3,1),transform 180ms cubic-bezier(.16,1,.3,1)}.ds-btn-primary:hover{background:var(--accent-strong,#0a5f59);transform:translateY(-1px)}.ds-btn-primary:active{transform:translateY(1px) scale(.99)}.ds-btn-primary:focus-visible{outline:3px solid var(--focus,#0f766e);outline-offset:3px}"
     },
@@ -146,66 +174,66 @@
       "refersTo": "button-secondary",
       "description": "A bounded alternative that does not compete with the primary action.",
       "html": "<button class=\"ds-btn-secondary\">Run MCP doctor</button>",
-      "css": ".ds-btn-secondary{min-height:44px;padding:10px 14px;border:1px solid var(--line,#cbd3d0);border-radius:8px;background:var(--surface-strong,#fff);color:var(--text,#17201f);font:650 13px/1 Aptos,Segoe UI,sans-serif;cursor:pointer;transition:border-color 180ms cubic-bezier(.16,1,.3,1),background 180ms cubic-bezier(.16,1,.3,1),transform 180ms cubic-bezier(.16,1,.3,1)}.ds-btn-secondary:hover{border-color:var(--line-strong,#aebbb7);background:var(--surface,#f8faf9);transform:translateY(-1px)}.ds-btn-secondary:focus-visible{outline:3px solid var(--focus,#0f766e);outline-offset:3px}"
+      "css": ".ds-btn-secondary{min-height:44px;padding:10px 14px;border:1px solid var(--line,#cbd3d0);border-radius:8px;background:var(--surface-strong,#fff);color:var(--text,#17201f);font:650 14px/1 Aptos,Segoe UI,sans-serif;cursor:pointer;transition:border-color 180ms cubic-bezier(.16,1,.3,1),background 180ms cubic-bezier(.16,1,.3,1),transform 180ms cubic-bezier(.16,1,.3,1)}.ds-btn-secondary:hover{border-color:var(--line-strong,#aebbb7);background:var(--surface,#f8faf9);transform:translateY(-1px)}.ds-btn-secondary:focus-visible{outline:3px solid var(--focus,#0f766e);outline-offset:3px}"
     },
     {
       "name": "Select Field",
       "kind": "input",
       "refersTo": "field",
-      "description": "The standard labeled decision control for plan input.",
-      "html": "<label class=\"ds-field\">Profile<select><option>Core - Minimal local runtime</option></select></label>",
-      "css": ".ds-field{display:grid;gap:7px;color:var(--text,#17201f);font:680 12px/1.4 Aptos,Segoe UI,sans-serif}.ds-field select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line,#cbd3d0);border-radius:8px;background:var(--surface,#f8faf9);color:var(--text,#17201f);font:600 13px/1.3 Aptos,Segoe UI,sans-serif}.ds-field select:focus-visible{outline:none;border-color:var(--accent,#0f766e);box-shadow:0 0 0 3px var(--accent-soft,#d9eeeb)}"
+      "description": "The standard labeled decision control inside Changes.",
+      "html": "<label class=\"ds-field\">Profile<select><option>Core \u2014 Minimal local setup</option></select></label>",
+      "css": ".ds-field{display:grid;gap:7px;color:var(--text,#17201f);font:680 12px/1.4 Aptos,Segoe UI,sans-serif}.ds-field select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line,#cbd3d0);border-radius:8px;background:var(--surface,#f8faf9);color:var(--text,#17201f);font:600 14px/1.3 Aptos,Segoe UI,sans-serif}.ds-field select:focus-visible{outline:none;border-color:var(--accent,#0f766e);box-shadow:0 0 0 3px var(--accent-soft,#d9eeeb)}"
     },
     {
       "name": "Navigation Item",
       "kind": "nav",
       "refersTo": "navigation-item",
-      "description": "Text-led rail navigation with a precise active-state marker.",
-      "html": "<button class=\"ds-nav-item ds-active\">Overview</button>",
+      "description": "Text-led lifecycle navigation with a precise active-state marker.",
+      "html": "<button class=\"ds-nav-item ds-active\">Home</button>",
       "css": ".ds-nav-item{min-height:42px;padding:8px 11px;border:1px solid transparent;border-radius:8px;background:transparent;color:#9ba8a5;font:500 15px/1.2 Aptos,Segoe UI,sans-serif;text-align:left}.ds-nav-item:hover{background:rgba(255,255,255,.06);color:#fff}.ds-nav-item.ds-active{border-color:rgba(120,184,174,.28);background:#263431;color:#fff;box-shadow:inset 3px 0 0 #78b8ae}.ds-nav-item:focus-visible{outline:3px solid #76c7bb;outline-offset:3px}"
     },
     {
-      "name": "Operation Ribbon",
+      "name": "Installation Tracker",
       "kind": "custom",
-      "refersTo": "operation-ribbon",
-      "description": "The durable status surface for running, complete, and failed operations.",
-      "html": "<div class=\"ds-operation\"><span class=\"ds-state\">OK</span><span><strong>Inventory current</strong><small>Catalog and machine state are ready.</small></span><span class=\"ds-seal\">VERIFIED</span></div>",
-      "css": ".ds-operation{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;min-height:62px;padding:12px 14px;border:1px solid var(--line,#cbd3d0);border-radius:12px;background:var(--surface-strong,#fff);color:var(--text,#17201f);font-family:Aptos,Segoe UI,sans-serif}.ds-operation strong,.ds-operation small{display:block}.ds-operation small{margin-top:3px;color:var(--text-soft,#596562);font-size:12px}.ds-state{display:grid;place-items:center;width:36px;height:36px;border-radius:8px;background:var(--accent-soft,#d9eeeb);color:var(--accent,#0f766e);font:700 10px/1 Cascadia Code,monospace}.ds-seal{padding:5px 8px;border:1px solid var(--line,#cbd3d0);border-radius:999px;font:400 9px/1 Cascadia Code,monospace;letter-spacing:.08em}"
+      "refersTo": "installation-tracker",
+      "description": "The durable server-reported progress and recovery surface for installation work.",
+      "html": "<section class=\"ds-operation\"><span><strong>Installing tools</strong><small>3 of 6 completed</small></span><progress max=\"100\" value=\"50\">50%</progress><span class=\"ds-state\">50%</span></section>",
+      "css": ".ds-operation{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px;border-radius:14px;background:var(--surface-strong,#fff);color:var(--text,#17201f);box-shadow:0 12px 30px rgba(33,56,49,.09);font-family:Aptos,Segoe UI,sans-serif}.ds-operation strong,.ds-operation small{display:block}.ds-operation small{margin-top:3px;color:var(--text-soft,#596562);font-size:12px}.ds-operation progress{grid-column:1/-1;width:100%;height:10px}.ds-state{font:800 18px/1 Aptos,Segoe UI,sans-serif;color:var(--accent,#0f766e)}"
     },
     {
-      "name": "Metric Ledger",
+      "name": "Summary Ledger",
       "kind": "custom",
-      "refersTo": "metric-ledger",
-      "description": "Machine-state values presented as one divided record rather than separate cards.",
-      "html": "<div class=\"ds-metric\"><span>Selected</span><strong>6</strong><small>profile components</small></div>",
-      "css": ".ds-metric{padding:16px 18px;border-right:1px solid var(--line,#cbd3d0);color:var(--text,#17201f);font-family:Aptos,Segoe UI,sans-serif}.ds-metric span,.ds-metric strong,.ds-metric small{display:block}.ds-metric span{color:var(--text-soft,#596562);font-size:10px;font-weight:700}.ds-metric strong{margin-top:8px;font:700 26px/1 Cascadia Code,monospace}.ds-metric small{margin-top:7px;color:var(--text-soft,#596562);font-size:11px}"
+      "refersTo": "summary-ledger",
+      "description": "Readiness and inventory values presented as one divided record rather than separate cards.",
+      "html": "<div class=\"ds-metric\"><span>Needs attention</span><strong>2</strong><small>tools</small></div>",
+      "css": ".ds-metric{padding:16px 18px;border-right:1px solid var(--line,#cbd3d0);color:var(--text,#17201f);font-family:Aptos,Segoe UI,sans-serif}.ds-metric span,.ds-metric strong,.ds-metric small{display:block}.ds-metric span{color:var(--text-soft,#596562);font-size:12px;font-weight:700}.ds-metric strong{margin-top:8px;font:700 26px/1 Cascadia Code,monospace}.ds-metric small{margin-top:7px;color:var(--text-soft,#596562);font-size:12px}"
     },
     {
       "name": "Registry Row",
       "kind": "custom",
       "refersTo": "registry-row",
-      "description": "A selectable capability record with description and provenance metadata.",
-      "html": "<label class=\"ds-registry-row\"><input type=\"checkbox\"><span><strong>Playwright MCP</strong><small>Isolated browser automation and UI verification.</small></span><span class=\"ds-seal\">PREFERRED</span></label>",
-      "css": ".ds-registry-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:start;padding:14px 10px;border-bottom:1px solid var(--line,#cbd3d0);background:transparent;color:var(--text,#17201f);font-family:Aptos,Segoe UI,sans-serif;cursor:pointer;transition:background 160ms cubic-bezier(.16,1,.3,1),transform 160ms cubic-bezier(.16,1,.3,1)}.ds-registry-row:hover{background:color-mix(in srgb,var(--surface-strong,#fff) 58%,transparent);transform:translateX(4px)}.ds-registry-row strong,.ds-registry-row small{display:block}.ds-registry-row strong{font-size:13px}.ds-registry-row small{margin-top:4px;color:var(--text-soft,#596562);font-size:11px;line-height:1.5}.ds-seal{padding:5px 8px;border:1px solid var(--line,#cbd3d0);border-radius:999px;font:400 9px/1 Cascadia Code,monospace;letter-spacing:.08em}"
+      "description": "A tool, environment, progress item, or transaction record with clear state and supporting detail.",
+      "html": "<div class=\"ds-registry-row\"><span><strong>Playwright MCP</strong><small>Browser automation server</small></span><span class=\"ds-state-label\">Available</span></div>",
+      "css": ".ds-registry-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:start;padding:14px 10px;border-bottom:1px solid var(--line,#cbd3d0);background:transparent;color:var(--text,#17201f);font-family:Aptos,Segoe UI,sans-serif;cursor:pointer;transition:background 160ms cubic-bezier(.16,1,.3,1),transform 160ms cubic-bezier(.16,1,.3,1)}.ds-registry-row:hover{background:var(--surface-strong,#fff);transform:translateX(4px)}.ds-registry-row strong,.ds-registry-row small{display:block}.ds-registry-row strong{font-size:14px}.ds-registry-row small{margin-top:4px;color:var(--text-soft,#596562);font-size:12px;line-height:1.5}.ds-seal{padding:5px 8px;border:1px solid var(--line,#cbd3d0);border-radius:999px;font:700 12px/1 Cascadia Code,monospace;letter-spacing:.08em}"
     },
     {
-      "name": "Record Seal",
+      "name": "State Badge",
       "kind": "chip",
-      "refersTo": "record-seal",
-      "description": "A compact ownership or provenance label, never a decorative tag.",
-      "html": "<span class=\"ds-record-seal\">PLAN INPUT</span>",
-      "css": ".ds-record-seal{display:inline-flex;align-items:center;min-height:24px;padding:5px 8px;border:1px solid var(--line,#cbd3d0);border-radius:999px;background:transparent;color:var(--text-soft,#596562);font:400 9px/1 Cascadia Code,monospace;letter-spacing:.08em}"
+      "refersTo": "state-badge",
+      "description": "A compact textual state label; never decorative and never color-only.",
+      "html": "<span class=\"ds-record-seal\">Needs attention</span>",
+      "css": ".ds-record-seal{display:inline-flex;align-items:center;min-height:24px;padding:5px 8px;border:1px solid var(--line,#cbd3d0);border-radius:999px;background:transparent;color:var(--text-soft,#596562);font:700 12px/1 Cascadia Code,monospace;letter-spacing:0}"
     }
   ],
   "narrative": {
-    "northStar": "Conservation Ledger",
-    "overview": "AgentStack Manager is an operational provenance workbench. The interface separates observed machine state, plan inputs, reviewed changes, and authorized mutation so users can tell what is known, proposed, and permitted at a glance. Cold paper surfaces and graphite structure keep attention on records rather than decoration. Muted teal appears only where the user can act, where the current section is selected, or where verified state needs emphasis.\n\nThe system is compact and familiar because users arrive to complete a technical task. It avoids marketing-page composition, decorative motion, and repeated card shells. Registry rows, fine dividers, status seals, and one persistent workspace rail provide the product character.",
+    "northStar": "Lifecycle Ledger",
+    "overview": "AgentStack Manager is a calm operational lifecycle workspace. Home summarizes readiness, Environments explains what exists across AI apps, IDEs, command-line tools, MCP servers, workspaces, and managed connections, Changes keeps selection, exact review, and the sole client apply action together, and Activity owns installation progress, recovery, history, maintenance, and disclosed diagnostics. Neutral surfaces and restrained teal keep attention on state and the next action rather than exposing internal architecture as navigation.\n\nThe system is compact because operators arrive to complete technical work. Flat ledgers, fine dividers, one persistent rail, one installation tracker, and path-free recovery copy provide the product character.",
     "keyCharacteristics": [
-      "Preservation-first hierarchy with observed, planned, and authorized states kept visually distinct.",
-      "Restrained cold-neutral palette with one scarce action accent.",
-      "Workhorse sans typography for every task surface, with mono reserved for data and provenance.",
-      "Flat registry structure by default, with elevation used only for the main work surface and transient feedback.",
-      "Responsive behavior that changes topology instead of shrinking desktop type."
+      "Lifecycle hierarchy keeps detected state, selected intent, pending changes, active installation, and recorded outcomes distinct.",
+      "Exactly four primary destinations: Home, Environments, Changes, and Activity.",
+      "One continuous selection-to-approval flow and one server-authoritative apply action.",
+      "Flat environment, tool, progress, and transaction rows instead of repeated dashboard cards.",
+      "Responsive behavior changes topology before type or touch targets shrink."
     ],
     "rules": [
       {
@@ -245,20 +273,20 @@
       }
     ],
     "dos": [
-      "Do keep observed state, plan input, reviewed output, and authorization visually distinct.",
-      "Do reserve teal for action, selection, focus, and verified state.",
-      "Do use registry lines and negative space before adding another container.",
-      "Do keep every primary control at least 44px high and preserve visible focus.",
-      "Do use the mono stack for evidence such as values, versions, seals, and command output.",
-      "Do collapse layout topology at 1120px, 800px, and 520px before reducing density."
+      "Do present one dominant next action in each workspace area.",
+      "Do keep environment visibility observational and route connection mutations through reviewed sync plans.",
+      "Do keep every primary control at least 44px high and explicit text at least 12px.",
+      "Do show server-reported progress and retained partial results rather than simulated time.",
+      "Do keep technical details sanitized and disclosed only when requested.",
+      "Do preserve visible focus and text labels at every breakpoint."
     ],
     "donts": [
-      "Don't introduce a marketing hero, decorative dashboard cards, or promotional proof into the manager.",
-      "Don't add a second accent color, purple glow, decorative glass, or color without state meaning.",
-      "Don't animate layout-driving properties such as width, height, margin, or padding.",
-      "Don't hide navigation behind unlabeled icons or reduce touch targets to make mobile fit.",
-      "Don't use pills for ordinary buttons, panels, or form controls.",
-      "Don't use repeated eyebrows, section numbers, or technical microcopy as decoration."
+      "Don't add another primary destination for a backend subsystem.",
+      "Don't split selection, exact review, and approval into separate screens or modals.",
+      "Don't expose filesystem paths, executable commands, arguments, or raw subprocess output in browser messages.",
+      "Don't duplicate the same error in a notice, tracker, toast, and activity row.",
+      "Don't hide navigation behind icons or shrink touch targets to make mobile fit.",
+      "Don't use color, pills, or technical terminology as decoration."
     ]
   }
 }
