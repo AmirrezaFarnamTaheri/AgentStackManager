@@ -283,33 +283,33 @@ jobs:
 
       - name: Attest release archive provenance
         if: steps.release.outputs.skip_release != 'true'
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: 'dist/*.zip'
 
       - name: Attest raw executable provenance
         if: steps.release.outputs.skip_release != 'true'
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: 'dist/*.exe'
 
       - name: Attest x64 binary SBOM
         if: steps.release.outputs.skip_release != 'true'
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: 'dist/agentstack-windows-amd64.exe'
           sbom-path: 'dist/agentstack-binary-amd64.cdx.json'
 
       - name: Attest ARM64 binary SBOM
         if: steps.release.outputs.skip_release != 'true'
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: 'dist/agentstack-windows-arm64.exe'
           sbom-path: 'dist/agentstack-binary-arm64.cdx.json'
 
       - name: Attest catalog SBOM provenance
         if: steps.release.outputs.skip_release != 'true'
-        uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: 'dist/agentstack-catalog.cdx.json'
 
