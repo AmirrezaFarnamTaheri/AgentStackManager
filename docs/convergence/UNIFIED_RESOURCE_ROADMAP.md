@@ -142,7 +142,9 @@ Tests: valid marker, tampered marker, missing marker, forged non-ASM marker, exa
 
 ## Phase C — Identity, comparison, and controlled consolidation
 
-### C1. Deterministic identity pipeline
+### C1. Deterministic identity pipeline — complete
+
+Delivered in `internal/similarity/normalize.go`, `internal/similarity/normalize_test.go`, `internal/similarity/index.go`, and `internal/similarity/index_test.go`.
 
 1. Physical identity grouping.
 2. Exact payload/tree digest grouping.
