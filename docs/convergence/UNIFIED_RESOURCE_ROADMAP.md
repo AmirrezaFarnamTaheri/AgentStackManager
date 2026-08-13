@@ -129,16 +129,16 @@ Delivered in `internal/targetcatalog/types.go`, `internal/targetcatalog/catalog.
 
 Tests: root aliasing, nested client IDs, global/project precedence, absent root, discovery-only root, unsupported kind, and catalog schema compatibility.
 
-### B5. Managed-projection exclusion contract
+### B5. Managed-projection exclusion contract — complete
 
-**Owner:** projection-boundary lane. **Depends on:** B3, B4.
+Delivered in `internal/resourcehub/projection.go`, `internal/resourcehub/projection_test.go`, `internal/resourcehub/identity.go`, and `internal/resourcehub/identity_test.go`.
 
 1. Define ownership manifest fields: owner, schema version, resource identity, artifact digest, target ID, projection root, and generation receipt.
 2. Exclude managed output by physical identity plus valid marker, not name/path convention alone.
 3. Treat missing or forged marker as foreign/unknown, never as removable or importable.
 4. Split `.agents` inbox and managed paths in catalog configuration.
 
-Tests: direct projection path, alternate junction, changed casing, copied marker, missing marker, foreign collision, and valid inbox source.
+Tests: valid marker, tampered marker, missing marker, forged non-ASM marker, exact duplicate deduplication, divergent same-name detection, alias decision recording, and re-import exclusion filter.
 
 ## Phase C — Identity, comparison, and controlled consolidation
 

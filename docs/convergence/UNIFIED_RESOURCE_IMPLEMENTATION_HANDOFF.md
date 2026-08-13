@@ -15,8 +15,9 @@
 - Task B2 (source-bundle admission in `internal/resourcehub/sourcebundle.go` and `internal/resourcehub/sourcebundle_test.go`) is complete and verified.
 - Task B3 (physical-identity observation scanner in `internal/observation/types.go`, `internal/observation/identity.go`, `internal/observation/scanner.go`, and `internal/observation/scanner_test.go`) is complete and verified.
 - Task B4 (nested-client target catalog in `internal/targetcatalog/types.go`, `internal/targetcatalog/catalog.go`, `internal/targetcatalog/default.json`, and `internal/targetcatalog/catalog_test.go`) is complete and verified.
-- The next implementation item is Phase B Task B5: Managed-projection exclusion contract.
-- Do not begin adapter, executor, retry, or client mutation work until Task B5 managed-projection exclusion and exact duplicate decision contracts are complete.
+- Task B5 (managed-projection exclusion contract & exact duplicate/alias decisions in `internal/resourcehub/projection.go`, `internal/resourcehub/projection_test.go`, `internal/resourcehub/identity.go`, and `internal/resourcehub/identity_test.go`) is complete and verified.
+- The next implementation item is Phase C Task C1: Deterministic identity pipeline.
+- Do not begin adapter, executor, retry, or client mutation work until Phase C identity pipeline and comparison rules are complete.
 
 ## Active incidents
 
