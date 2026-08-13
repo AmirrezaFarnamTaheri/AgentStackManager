@@ -232,6 +232,8 @@ Delivered in `internal/mcp/intent.go`, `internal/mcp/intent_test.go`, `internal/
 
 ## Phase F — Operator experience and migration
 
+Delivered in `internal/operator/queues.go`, `internal/operator/wave.go`, and `internal/operator/operator_test.go`.
+
 1. Add Library/Targets, Changes, and Activity views over one receipt/state model.
 2. Group large corpus decisions into exact duplicates, aliases, conflicts, unique preservation, incompatibility, quarantine, and retirement queues.
 3. Display library state, target state, and health independently; hide hashes/lineage/path details behind technical detail.
@@ -239,6 +241,8 @@ Delivered in `internal/mcp/intent.go`, `internal/mcp/intent_test.go`, `internal/
 5. Require shadow projection, backup, syntax validation, visibility verification, smoke check, observation window, and rollback drill for each client wave.
 
 ## Phase G — Second-order convergence
+
+Delivered in `internal/secondorder/plane.go` and `internal/secondorder/plane_test.go`.
 
 After OpenCode plus one MCP profile pass all prior gates, admit only compositional planes that preserve existing authority:
 
