@@ -96,6 +96,8 @@ fa23a0b7d6b47d6581726fc40b85b49313654f72f2ea1dec4f225e34cd4d58f4  ./docs/converg
 e249dd8ee7753217651f25168ecea1e40264bf91aa7aad9a322c8fdafb11435b  ./docs/convergence/TEST_TRACEABILITY.csv
 beae07dc0ca845cd3c033ebb28c792c6ec2cea776b4ed25d447a313329bf83e7  ./docs/convergence/TRUST_AND_STATE.md
 305935a8c43f477660c08af92185b406d38193d96398d4737a3d0490e9b1c336  ./docs/convergence/UNIFIED_RESOURCE_AUTHORITY.md
+6d993317da7902c7f2b5260738a75d1b04fb0088842a14bf7005f198a57aa68e  ./docs/convergence/UNIFIED_RESOURCE_IMPLEMENTATION_HANDOFF.md
+35f136a96f5414363a7ff57619724e5e301429285f17ec5793381250c72e23d3  ./docs/convergence/UNIFIED_RESOURCE_ROADMAP.md
 8ed18679b8c924d74a00345ecb14f72aa2d1d70d0cb87df22310d372ee3c6ed9  ./docs/convergence/VALIDATION.md
 745e7b16cdf2ee6b909730181cd9a874add586766aa80a2e83b1c37083e8e8fd  ./docs/keystone/tasks/2026-07-31-close-40-audit-findings.md
 4a93e89396c5e540572ad06ad3f1e27dc5da6db9385cafc78be17e8d54fec84f  ./docs/plans/2026-08-13-unified-agent-resource-control-plane.architecture.json
