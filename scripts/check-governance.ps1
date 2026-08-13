@@ -29,6 +29,7 @@ try {
     foreach($script in $requiredShellScripts) {
         $path=Join-Path $root $script
         if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required CI script is missing: $script" }
+		if ($script -eq 'scripts/check-source-archive-build.sh' -and (Get-Item -LiteralPath $path).Length -eq 0) { throw "Required CI script is empty: $script" }
         # A relative path works with both Git for Windows Bash and WSL Bash;
         # an absolute Windows path is not meaningful inside WSL.
         & bash -n $script
