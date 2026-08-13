@@ -24,7 +24,9 @@
 - Task D3 (deployment executor, locking, preflight revalidation, and backup/restore in `internal/executor/deployment.go`, `internal/executor/backup.go`, and `internal/executor/deployment_test.go`) is complete and verified.
 - Task D4 (MCPlink mutation executor in `internal/adapters/mcplink/executor.go` and `internal/adapters/mcplink/executor_test.go`) is complete and verified.
 - Task D5 (disparity audit, drift detection & reconciliation CLI in `cmd/agentstack/main.go`, `internal/cli/control_plane.go`, and `internal/cli/control_plane_test.go`) is complete and verified.
-- The next implementation phase is Phase E: MCP and universal Change Set.
+- Task E1 (canonical secret-free MCP intent model in `internal/mcp/intent.go` and `internal/mcp/intent_test.go`) is complete and verified.
+- Task E2 & E3 (universal ChangeSet composition engine and honest partial-success reporting in `internal/changeset/changeset.go` and `internal/changeset/changeset_test.go`) is complete and verified.
+- The next implementation phase is Phase F: Operator experience and migration.
 
 ## Active incidents
 

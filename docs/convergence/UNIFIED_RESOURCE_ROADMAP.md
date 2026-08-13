@@ -222,6 +222,8 @@ Delivered in `cmd/agentstack/main.go`, `internal/cli/control_plane.go`, and `int
 
 ## Phase E — MCP and universal Change Set
 
+Delivered in `internal/mcp/intent.go`, `internal/mcp/intent_test.go`, `internal/changeset/changeset.go`, and `internal/changeset/changeset_test.go`.
+
 1. Introduce canonical secret-free MCP intent: identity, transport, environment-variable names, capability, compatibility, profile, assignment, observed registration, and health.
 2. Build target-native MCP child plans through `mcplink`; never persist secret values.
 3. Compose filesystem and MCP child plans into one sealed Change Set with exact operations, before/after descriptors, fidelity, ownership, retry policy, and recovery detail.
