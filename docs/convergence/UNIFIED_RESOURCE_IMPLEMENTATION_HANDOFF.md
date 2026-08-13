@@ -9,8 +9,14 @@
 - Source releases now exclude `reference repos/` by releasepack policy, not only by Git ignore rules.
 - A Git-less archive smoke check is implemented and tested.
 - The authority contract and eight-snapshot donor ledger are committed.
-- The next implementation item is A2: deterministic donor manifests and then path-complete donor disposition.
-- Do not begin scanner, adapter, executor, retry, or client mutation work until A2/A3 and the corresponding contract reviews are complete.
+- Task A2 (deterministic donor manifest generator `internal/donormanifest`, `cmd/donormanifest`, unit tests, and 8 snapshot manifests/receipts under `docs/convergence/manifests/`) is complete and verified.
+- Task A3 (file-level donor disposition campaign with 100% path-complete dispositions for all 10,977 entries across 8 snapshots and closure verification test `TestManifestsClosureAndDispositions`) is complete and verified.
+- Task B1 (artifact-linked lifecycle records in `internal/resourcehub/lifecycle.go`, `internal/resourcehub/types.go`, `internal/resourcehub/manager.go`, and `internal/resourcehub/lifecycle_test.go`) is complete and verified.
+- Task B2 (source-bundle admission in `internal/resourcehub/sourcebundle.go` and `internal/resourcehub/sourcebundle_test.go`) is complete and verified.
+- Task B3 (physical-identity observation scanner in `internal/observation/types.go`, `internal/observation/identity.go`, `internal/observation/scanner.go`, and `internal/observation/scanner_test.go`) is complete and verified.
+- Task B4 (nested-client target catalog in `internal/targetcatalog/types.go`, `internal/targetcatalog/catalog.go`, `internal/targetcatalog/default.json`, and `internal/targetcatalog/catalog_test.go`) is complete and verified.
+- The next implementation item is Phase B Task B5: Managed-projection exclusion contract.
+- Do not begin adapter, executor, retry, or client mutation work until Task B5 managed-projection exclusion and exact duplicate decision contracts are complete.
 
 ## Active incidents
 

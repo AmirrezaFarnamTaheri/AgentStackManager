@@ -12,7 +12,7 @@ It does not authorize mutation of local client roots until the relevant reviewed
 |---|---|---|
 | G0, release boundary | Complete | `47a1432`; source releases exclude `reference repos/` and pass Git-less archive verification |
 | G1, authority seed | Complete | `5997e9e`; authority contract and eight-snapshot donor ledger committed |
-| G1.1, exhaustive donor evidence | Pending | File-level manifests/dispositions have not yet been generated |
+| G1.1, exhaustive donor evidence | Complete | Deterministic donor manifest generator (`internal/donormanifest`, `cmd/donormanifest`), unit tests, and 8 snapshot manifests/receipts generated in `docs/convergence/manifests/` |
 | G2, safe observation | Not started | No new scanner, source-bundle, physical-identity graph, or target catalog yet |
 | G3, identity/consolidation | Not started | No new canonicalization engine yet |
 | G4, OpenCode projection/executor | Not started | No target filesystem writes authorized |
@@ -54,9 +54,9 @@ Delivered in `5997e9e`.
 
 Acceptance: no donor is treated as a runtime dependency or direct canonical source.
 
-### A2. Deterministic donor manifest generator
+### A2. Deterministic donor manifest generator — complete
 
-**Owner:** evidence lane. **Depends on:** A0, A1. **May run in parallel with:** none until output schema freezes.
+Delivered in `cmd/donormanifest` and `internal/donormanifest`.
 
 1. Create a strict versioned donor-manifest schema with snapshot ID, root path, file path, object type, byte count, SHA-256, symlink/reparse evidence, and disposition.
 2. Implement an offline generator that accepts only an explicit reference-repo root and writes deterministic, sorted output outside the donor tree.
@@ -67,9 +67,9 @@ Acceptance: no donor is treated as a runtime dependency or direct canonical sour
 
 Acceptance: every file in every snapshot has one stable manifest record or an explicit read error; generated manifests are evidence artifacts, never release inputs or runtime sources.
 
-### A3. File-level donor disposition campaign
+### A3. File-level donor disposition campaign — complete
 
-**Owner:** architecture/evidence lane. **Depends on:** A2.
+Delivered in `cmd/donormanifest`, `DONOR_ADOPTION_LEDGER.json`, and `docs/convergence/manifests/`.
 
 1. Partition each manifest by module boundary, language, generated/vendor classification, and capability family.
 2. Assign every file one disposition: `adopt`, `adapt`, `fixture`, `inspire`, `defer`, `reject`, `duplicate-of`, or `not-applicable`.
@@ -81,9 +81,9 @@ Acceptance: donor review is path-complete and machine-checkable; “reviewed” 
 
 ## Phase B — Canonical model and observation safety
 
-### B1. Artifact-linked lifecycle records
+### B1. Artifact-linked lifecycle records — complete
 
-**Owner:** model lane. **Depends on:** A1. **Exclusive files:** `internal/artifactgraph/model.go`, `internal/resourcehub/types.go`, `internal/resourcehub/manager.go`.
+Delivered in `internal/resourcehub/lifecycle.go`, `internal/resourcehub/types.go`, `internal/resourcehub/manager.go`, and `internal/resourcehub/lifecycle_test.go`.
 
 1. Inventory existing `artifactgraph.Artifact` and Resource Hub records.
 2. Add observation, candidate revision, alias, lifecycle, source, preservation, and retirement records that reference artifact identity/digest.
@@ -93,9 +93,9 @@ Acceptance: donor review is path-complete and machine-checkable; “reviewed” 
 
 Tests: illegal transitions; legacy decoding; candidate revision after source edit; alias collision; retirement reversal; deterministic sealing.
 
-### B2. Source-bundle admission
+### B2. Source-bundle admission — complete
 
-**Owner:** bundle lane. **Depends on:** B1. **Files:** new `internal/resourcehub/sourcebundle*`, CAS integration, CLI docs.
+Delivered in `internal/resourcehub/sourcebundle.go` and `internal/resourcehub/sourcebundle_test.go`.
 
 1. Support explicit directory and ZIP registration only.
 2. Enforce archive member, uncompressed byte, compression-ratio, path, duplicate, symlink, nested archive, and total-size budgets.
@@ -105,9 +105,9 @@ Tests: illegal transitions; legacy decoding; candidate revision after source edi
 
 Tests: traversal, absolute path, backslash/drive path, ZIP bomb budget, duplicate member, digest mismatch, external symlink, cancellation, and receipt replay.
 
-### B3. Physical-identity observation scanner
+### B3. Physical-identity observation scanner — complete
 
-**Owner:** scanner lane. **Depends on:** B1. **Files:** new `internal/observation/*`.
+Delivered in `internal/observation/types.go`, `internal/observation/identity.go`, `internal/observation/scanner.go`, and `internal/observation/scanner_test.go`.
 
 1. Require explicit scan root, scope, kind policy, depth, file, byte, and diagnostic budgets.
 2. Resolve Windows reparse chains with a visited physical-identity set and hop limit.
@@ -117,9 +117,9 @@ Tests: traversal, absolute path, backslash/drive path, ZIP bomb budget, duplicat
 
 Tests: direct root, `.agent` → `.agents`, case alias, cycle, broken junction, junction retarget after scan, project/global duplicate, cancellation, 12k-entry synthetic tree, and deterministic results.
 
-### B4. Nested-client target catalog
+### B4. Nested-client target catalog — complete
 
-**Owner:** target-catalog lane. **Depends on:** B3 interface freeze. **Exclusive files:** `internal/ui/target_discovery.go`, `internal/adapters/builtin/builtin.go`.
+Delivered in `internal/targetcatalog/types.go`, `internal/targetcatalog/catalog.go`, `internal/targetcatalog/default.json`, and `internal/targetcatalog/catalog_test.go`.
 
 1. Model logical clients separately from physical roots and subpaths.
 2. Add global/project roots, aliases, discovery-only paths, supported resource kinds, recursion policy, ownership markers, and evidence confidence.
