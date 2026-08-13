@@ -2,6 +2,7 @@ package resourcehub
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
@@ -84,18 +85,18 @@ func (idx *IdentityIndex) IndexPayload(canonicalID, name, location, payloadDiges
 			MatchKind:     kind,
 		}
 		idx.byDigest[payloadDigest] = match
-		if !containsString(idx.byName[normName], payloadDigest) {
+		if !slices.Contains(idx.byName[normName], payloadDigest) {
 			idx.byName[normName] = append(idx.byName[normName], payloadDigest)
 		}
 		return kind
 	}
 
 	// Payload digest exists -> check if location or name is new
-	if !containsString(match.Locations, location) {
+	if !slices.Contains(match.Locations, location) {
 		match.Locations = append(match.Locations, location)
 		sort.Strings(match.Locations)
 	}
-	if !containsString(match.Names, name) {
+	if !slices.Contains(match.Names, name) {
 		match.Names = append(match.Names, name)
 		sort.Strings(match.Names)
 	}
@@ -174,13 +175,4 @@ func (idx *IdentityIndex) DivergentSameNameResources() map[string][]string {
 		}
 	}
 	return result
-}
-
-func containsString(slice []string, val string) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
 }

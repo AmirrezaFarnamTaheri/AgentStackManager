@@ -1,6 +1,7 @@
 package similarity
 
 import (
+	"slices"
 	"sort"
 	"sync"
 )
@@ -51,11 +52,11 @@ func (idx *Index) AddDocument(resourceID, location, rawContent string, exactMatc
 	}
 
 	// Group exists -> add resource and location if new
-	if !containsString(group.ResourceIDs, resourceID) {
+	if !slices.Contains(group.ResourceIDs, resourceID) {
 		group.ResourceIDs = append(group.ResourceIDs, resourceID)
 		sort.Strings(group.ResourceIDs)
 	}
-	if !containsString(group.Locations, location) {
+	if !slices.Contains(group.Locations, location) {
 		group.Locations = append(group.Locations, location)
 		sort.Strings(group.Locations)
 	}
@@ -84,13 +85,4 @@ func (idx *Index) Groups() []SimilarityGroup {
 		return result[i].NormalizedDigest < result[j].NormalizedDigest
 	})
 	return result
-}
-
-func containsString(slice []string, val string) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
 }
