@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "agentdns",
+  "sourceRoot": "D:/GitHub/AgentStackManager/reference repos/AgentDNS-main/deployment",
+  "manifestDigest": "b7fc4fa08bc8d7340cee1d55b86dfa423569f632847edc8092d634ce1baf740e",
+  "physicalIdentity": "D:\\GitHub\\AgentStackManager\\reference repos\\AgentDNS-main\\deployment",
+  "inventoryTime": "2026-08-13T08:35:33Z",
+  "emptySnapshot": true,
+  "fileCount": 0,
+  "totalSizeBytes": 0
+}

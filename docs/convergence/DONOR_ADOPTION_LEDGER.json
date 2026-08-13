@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "status": "seeded",
+  "authority": "Resource Hub",
+  "sourceRoot": "reference repos",
+  "policy": {
+    "runtimeDependency": false,
+    "directSourceImport": false,
+    "wholeRepositoryCopy": false,
+    "requiredDispositions": ["adopt", "adapt", "fixture", "inspire", "defer", "reject", "duplicate-of", "not-applicable"]
+  },
+  "snapshots": [
+    {
+      "id": "cc-switch-desktop",
+      "path": "cc-switch-main/cc-switch-main",
+      "files": 1174,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src-tauri/src/mcp", "disposition": "adapt", "destination": "internal/mcplink and target adapters", "reason": "target-native MCP serialization and validation"},
+        {"path": "src-tauri/src/services", "disposition": "adapt", "destination": "Resource Hub application service", "reason": "resource preview and validation behaviors"},
+        {"path": "src-tauri/src/database", "disposition": "inspire", "destination": "internal/deployment", "reason": "backup and migration invariants"},
+        {"path": "src-tauri/src/proxy", "disposition": "reject", "reason": "provider routing and credentials are out of scope"},
+        {"path": "src-tauri/src/session_manager", "disposition": "reject", "reason": "session/runtime management is out of scope"},
+        {"path": "src-tauri/src", "disposition": "adapt", "destination": "internal/adapters", "reason": "client format and path fixtures"},
+        {"path": "src-tauri", "disposition": "adapt", "destination": "internal/adapters", "reason": "Tauri integration and config structures"},
+        {"path": "src", "disposition": "inspire", "destination": "internal/ui", "reason": "desktop UI layout and components"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"},
+        {"path": "tests", "disposition": "fixture", "destination": "internal/adapters/conformance", "reason": "native client config integration tests"},
+        {"path": "flatpak", "disposition": "reject", "reason": "OS packaging build manifests are out of scope"},
+        {"path": "assets", "disposition": "not-applicable", "reason": "static UI assets"},
+        {"path": "scripts", "disposition": "not-applicable", "reason": "build and release scripts"}
+      ]
+    },
+    {
+      "id": "cc-switch-cli",
+      "path": "cc-switch-cli-main/cc-switch-cli-main",
+      "files": 521,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src-tauri/src/cli", "disposition": "adapt", "destination": "ASM CLI/TUI", "reason": "headless diagnostics, review and command ergonomics"},
+        {"path": "src-tauri/src/daemon", "disposition": "inspire", "destination": "internal/deployment", "reason": "isolated test homes, migration and recovery patterns"},
+        {"path": "src-tauri/src/database", "disposition": "inspire", "destination": "internal/deployment", "reason": "isolated test homes, migration and recovery patterns"},
+        {"path": "src-tauri/src/proxy", "disposition": "reject", "reason": "provider, proxy and runtime scope excluded"},
+        {"path": "src-tauri/src/provider", "disposition": "reject", "reason": "provider, proxy and runtime scope excluded"},
+        {"path": "src-tauri/src/session_manager", "disposition": "reject", "reason": "provider, proxy and runtime scope excluded"},
+        {"path": "src-tauri/src", "disposition": "adapt", "destination": "internal/adapters", "reason": "CLI configuration adapters"},
+        {"path": "src-tauri", "disposition": "adapt", "destination": "internal/adapters", "reason": "Tauri CLI integration"},
+        {"path": "src", "disposition": "inspire", "destination": "internal/cli", "reason": "CLI component designs"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"},
+        {"path": "tests", "disposition": "fixture", "destination": "internal/adapters/conformance", "reason": "CLI test cases"},
+        {"path": "scripts", "disposition": "not-applicable", "reason": "build scripts"}
+      ]
+    },
+    {
+      "id": "skills-manager",
+      "path": "skills-manager-main/skills-manager-main",
+      "files": 300,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src-tauri/src/core/merge", "disposition": "adapt", "destination": "identity/consolidation and deployment recovery", "reason": "snapshot, conflict, decision and tree validation evidence"},
+        {"path": "src-tauri/src/core/content_hash", "disposition": "adapt", "destination": "observation/deployment", "reason": "identity and hashing primitives"},
+        {"path": "src-tauri/src/core/path_guard", "disposition": "adapt", "destination": "observation/deployment", "reason": "path safety and traversal prevention"},
+        {"path": "src-tauri/src/core/repo_lock", "disposition": "adapt", "destination": "observation/deployment", "reason": "locking primitives"},
+        {"path": "src-tauri/src/core/file_watcher", "disposition": "adapt", "destination": "observation/deployment", "reason": "file monitoring"},
+        {"path": "src-tauri/src/core/audit_log", "disposition": "adapt", "destination": "observation/deployment", "reason": "audit logging"},
+        {"path": "src-tauri/src/core/auto_backup", "disposition": "adapt", "destination": "observation/deployment", "reason": "backup primitives"},
+        {"path": "src-tauri/src/core/central_repo", "disposition": "reject", "reason": "parallel canonical store and sync authority"},
+        {"path": "src-tauri/src/core/sync_engine", "disposition": "reject", "reason": "parallel canonical store and sync authority"},
+        {"path": "src-tauri/src/core/git_fetcher", "disposition": "reject", "reason": "parallel canonical store and sync authority"},
+        {"path": "src-tauri/src/core/github_api", "disposition": "reject", "reason": "parallel canonical store and sync authority"},
+        {"path": "src-tauri/src/core", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "core manager algorithms"},
+        {"path": "src-tauri/src/commands", "disposition": "adapt", "destination": "internal/cli", "reason": "command implementations"},
+        {"path": "src-tauri/src", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "Rust backend code"},
+        {"path": "src-tauri", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "Tauri project"},
+        {"path": "src", "disposition": "inspire", "destination": "internal/ui", "reason": "frontend UI"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"},
+        {"path": "scripts", "disposition": "not-applicable", "reason": "build scripts"}
+      ]
+    },
+    {
+      "id": "skills-manage",
+      "path": "skills-manage-main/skills-manage-main",
+      "files": 245,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src-tauri/src/commands/agents.rs", "disposition": "adapt", "destination": "target catalog and selection sets", "reason": "broad discovery and collection UX"},
+        {"path": "src-tauri/src/commands/discover.rs", "disposition": "adapt", "destination": "target catalog and selection sets", "reason": "broad discovery and collection UX"},
+        {"path": "src-tauri/src/commands/scanner.rs", "disposition": "adapt", "destination": "target catalog and selection sets", "reason": "broad discovery and collection UX"},
+        {"path": "src-tauri/src/commands/collections.rs", "disposition": "adapt", "destination": "target catalog and selection sets", "reason": "broad discovery and collection UX"},
+        {"path": "src-tauri/src/commands/linker.rs", "disposition": "reject", "reason": "direct deployment bypasses reviewed executor"},
+        {"path": "src-tauri/src/commands", "disposition": "adapt", "destination": "target catalog", "reason": "command handlers"},
+        {"path": "src-tauri/src", "disposition": "adapt", "destination": "target catalog", "reason": "Tauri backend"},
+        {"path": "src-tauri", "disposition": "adapt", "destination": "target catalog", "reason": "Tauri config"},
+        {"path": "src/components/central", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "search, virtualization, previews and target presentation"},
+        {"path": "src/components/platform", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "search, virtualization, previews and target presentation"},
+        {"path": "src/components/skill", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "search, virtualization, previews and target presentation"},
+        {"path": "src/components/marketplace", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "search, virtualization, previews and target presentation"},
+        {"path": "src/components", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "UI components"},
+        {"path": "src", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "React frontend"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"}
+      ]
+    },
+    {
+      "id": "skill-zoo",
+      "path": "skill-zoo-main/skill-zoo-main",
+      "files": 257,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src-tauri/src/persistence/archive.rs", "disposition": "adapt", "destination": "source bundles and observations", "reason": "origin-aware archive and update handling"},
+        {"path": "src-tauri/src/persistence/external_imports.rs", "disposition": "adapt", "destination": "source bundles and observations", "reason": "origin-aware archive and update handling"},
+        {"path": "src-tauri/src/persistence/metadata.rs", "disposition": "adapt", "destination": "source bundles and observations", "reason": "origin-aware archive and update handling"},
+        {"path": "src-tauri/src/persistence/update_history.rs", "disposition": "adapt", "destination": "source bundles and observations", "reason": "origin-aware archive and update handling"},
+        {"path": "src-tauri/src/persistence", "disposition": "adapt", "destination": "source bundles and observations", "reason": "persistence handling"},
+        {"path": "fixtures/local-protocol", "disposition": "fixture", "destination": "adapter conformance corpus", "reason": "desktop/CLI local protocol behavior"},
+        {"path": "fixtures", "disposition": "fixture", "destination": "adapter conformance corpus", "reason": "test fixtures"},
+        {"path": "src/components/skills/ConsistencyPanel", "disposition": "inspire", "destination": "decision queues", "reason": "maintenance and audit visibility"},
+        {"path": "src/components/skills/SkillAuditCard", "disposition": "inspire", "destination": "decision queues", "reason": "maintenance and audit visibility"},
+        {"path": "src/components/skills/SkillFileTree", "disposition": "inspire", "destination": "decision queues", "reason": "maintenance and audit visibility"},
+        {"path": "src/components/skills", "disposition": "inspire", "destination": "decision queues", "reason": "skill UI components"},
+        {"path": "src/components", "disposition": "inspire", "destination": "decision queues", "reason": "UI components"},
+        {"path": "src-tauri/src", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "backend services"},
+        {"path": "src-tauri", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "Tauri workspace"},
+        {"path": "src", "disposition": "inspire", "destination": "decision queues", "reason": "React frontend"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"}
+      ]
+    },
+    {
+      "id": "agent-of-empires",
+      "path": "agent-of-empires-main/agent-of-empires-main",
+      "files": 1555,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "src/session/settings_schema.rs", "disposition": "inspire", "destination": "target contract plane", "reason": "single-source schema generation and validation"},
+        {"path": "aoe-settings-derive", "disposition": "inspire", "destination": "target contract plane", "reason": "single-source schema generation and validation"},
+        {"path": "src/plugin", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative manifests, migrations and durable evidence"},
+        {"path": "src/migrations", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative manifests, migrations and durable evidence"},
+        {"path": "src/events", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative manifests, migrations and durable evidence"},
+        {"path": "src/hooks", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative manifests, migrations and durable evidence"},
+        {"path": "src/session/project_mcp.rs", "disposition": "fixture", "destination": "MCP/project precedence corpus", "reason": "typed merge and scope cases"},
+        {"path": "src/session/mcp_overrides.rs", "disposition": "fixture", "destination": "MCP/project precedence corpus", "reason": "typed merge and scope cases"},
+        {"path": "src/session/mcp_state.rs", "disposition": "fixture", "destination": "MCP/project precedence corpus", "reason": "typed merge and scope cases"},
+        {"path": "src/session/skills_model.rs", "disposition": "fixture", "destination": "MCP/project precedence corpus", "reason": "typed merge and scope cases"},
+        {"path": "src/session", "disposition": "adapt", "destination": "internal/session", "reason": "session settings and model abstractions"},
+        {"path": "src/acp", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src/tmux", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src/containers", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src/process", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src/server", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src/telemetry", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"},
+        {"path": "src", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "Rust donor backend"},
+        {"path": "crates", "disposition": "adapt", "destination": "internal/resourcehub", "reason": "Rust workspace crates"},
+        {"path": "acp-worker", "disposition": "reject", "reason": "ACP worker runtime execution is out of scope"},
+        {"path": "aoe-plugin-api", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative plugin API contracts"},
+        {"path": "plugins", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative plugin manifests"},
+        {"path": "docker", "disposition": "reject", "reason": "container runtime orchestration is out of scope"},
+        {"path": "web", "disposition": "inspire", "destination": "internal/ui", "reason": "web frontend components"},
+        {"path": "website", "disposition": "not-applicable", "reason": "project website"},
+        {"path": "marketing", "disposition": "not-applicable", "reason": "marketing assets"},
+        {"path": "bundled_sounds", "disposition": "not-applicable", "reason": "sound assets"},
+        {"path": "themes", "disposition": "not-applicable", "reason": "UI themes"},
+        {"path": "contrib", "disposition": "not-applicable", "reason": "community contribution files"},
+        {"path": "xtask", "disposition": "not-applicable", "reason": "cargo build automation tasks"},
+        {"path": "assets", "disposition": "not-applicable", "reason": "static UI assets"},
+        {"path": "docs", "disposition": "inspire", "destination": "docs/convergence", "reason": "reference documentation"},
+        {"path": ".cargo", "disposition": "not-applicable", "reason": "Cargo configuration"}
+      ]
+    },
+    {
+      "id": "agent-skill-library",
+      "path": "skill_library",
+      "files": 6925,
+      "status": "path-complete-dispositions",
+      "modules": [
+        {"path": "schemas", "disposition": "adapt", "destination": "Resource Hub governance contracts", "reason": "portable contracts, ownership and compatibility"},
+        {"path": "policies", "disposition": "adapt", "destination": "Resource Hub governance contracts", "reason": "portable contracts, ownership and compatibility"},
+        {"path": "ownership", "disposition": "adapt", "destination": "Resource Hub governance contracts", "reason": "portable contracts, ownership and compatibility"},
+        {"path": "compatibility", "disposition": "adapt", "destination": "Resource Hub governance contracts", "reason": "portable contracts, ownership and compatibility"},
+        {"path": "families", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "capabilities", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "profiles", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "compositions", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "routing", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "evals", "disposition": "adapt", "destination": "evaluation harness and offline transition checks", "reason": "quality and evidence mechanisms"},
+        {"path": "tools", "disposition": "adapt", "destination": "evaluation harness and offline transition checks", "reason": "quality and evidence mechanisms"},
+        {"path": "docs", "disposition": "adapt", "destination": "evaluation harness and offline transition checks", "reason": "quality and evidence mechanisms"},
+        {"path": "canonical", "disposition": "fixture", "destination": "source bundle/conformance corpus", "reason": "governed skills and generated-output exclusion"},
+        {"path": "dist", "disposition": "fixture", "destination": "source bundle/conformance corpus", "reason": "governed skills and generated-output exclusion"},
+        {"path": "skills", "disposition": "fixture", "destination": "source bundle/conformance corpus", "reason": "governed skill implementations"}
+      ]
+    },
+    {
+      "id": "agentdns",
+      "path": "AgentDNS-main/deployment",
+      "files": 0,
+      "status": "unverified-no-payload",
+      "modules": [
+        {"path": ".", "disposition": "not-applicable", "reason": "snapshot has no reviewable payload"}
+      ]
+    }
+  ],
+  "nextRequiredEvidence": [
+    "file-level disposition coverage complete",
+    "peer comparison records for overlapping primitives",
+    "fixture checksum and target conformance linkage"
+  ]
+}

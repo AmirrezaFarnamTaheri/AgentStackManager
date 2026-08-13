@@ -36,5 +36,6 @@
   "chrome-devtools-mcp": "Apache-2.0",
   "github-cli": "MIT",
   "context7": "MIT",
-  "gcloud": "Apache-2.0"
+  "gcloud": "Apache-2.0",
+  "sqlite": "Public-Domain"
 }

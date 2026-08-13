@@ -167,3 +167,24 @@ func TestValidateAllowsPreferredComponentsWithoutCapability(t *testing.T) {
 		t.Fatalf("capability-free preferred components should not collide: %v", err)
 	}
 }
+
+func TestDefaultCatalogUsesCurrentVerifiedWinGetPins(t *testing.T) {
+	catalog, err := LoadDefault()
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]model.InstallSpec{
+		"yq":    {Kind: model.InstallWinget, WingetID: "MikeFarah.yq", Source: "winget", Version: "4.53.2", Publisher: "Mike Farah"},
+		"trivy": {Kind: model.InstallWinget, WingetID: "AquaSecurity.Trivy", Source: "winget", Version: "0.70.0", Publisher: "Aqua Security"},
+		"scc":   {Kind: model.InstallWinget, WingetID: "BenBoyter.scc", Source: "winget", Version: "3.7.0", Publisher: "Ben Boyter"},
+	}
+	for id, expected := range want {
+		component, ok := catalog.ComponentByID(id)
+		if !ok {
+			t.Fatalf("component %s missing", id)
+		}
+		if component.Install.WingetID != expected.WingetID || component.Install.Source != expected.Source || component.Install.Version != expected.Version || component.Install.Publisher != expected.Publisher {
+			t.Fatalf("component %s install pin = %#v, want %#v", id, component.Install, expected)
+		}
+	}
+}

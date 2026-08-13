@@ -136,7 +136,7 @@ func NewDefault() (*Service, error) {
 		Catalog:     c,
 		Scanner:     inventory.NewScanner(),
 		Store:       state.NewStore(paths.DataRoot),
-		Installer:   runner.Engine{Commands: commands, Skills: skillInstaller, Catalog: c},
+		Installer:   runner.Engine{Commands: commands, Skills: skillInstaller, Catalog: c, MaxParallel: 4},
 		Commands:    commands,
 		Paths:       paths,
 		LookPath:    defaultLocator{},
@@ -250,6 +250,16 @@ func (s *Service) Plan(ctx context.Context, request planner.Request) (model.Plan
 }
 
 func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confirmed bool) (ApplyReport, error) {
+	return s.ApplyPlannedWithProgress(ctx, planID, digest, confirmed, nil)
+}
+
+func (s *Service) ApplyPlannedWithProgress(ctx context.Context, planID, digest string, confirmed bool, onProgress func(ApplyProgress)) (ApplyReport, error) {
+	var tracker *applyProgressTracker
+	emit := func(progress ApplyProgress) {
+		if onProgress != nil {
+			onProgress(progress)
+		}
+	}
 	execution, err := (reviewedplan.Executor{
 		Catalog:                  s.Catalog,
 		Store:                    s.Store,
@@ -259,9 +269,29 @@ func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confi
 		LogEvent: func(event state.Event) {
 			_ = s.logEvent(event)
 		},
+		OnPlanReady: func(plan model.Plan) error {
+			tracker = newApplyProgressTracker(plan)
+			emit(tracker.snapshot("preparing", ""))
+			return nil
+		},
+		OnActionStart: func(action model.PlanAction) error {
+			if tracker != nil {
+				emit(tracker.start(action))
+			}
+			return nil
+		},
+		OnTransaction: func(transaction model.Transaction) error {
+			if tracker != nil {
+				emit(tracker.updateTransaction(transaction))
+			}
+			return nil
+		},
 	}).Execute(ctx, reviewedplan.Request{PlanID: planID, Digest: digest, Confirmed: confirmed})
 	report := ApplyReport{Plan: execution.Saved.Plan, Transaction: execution.Transaction}
 	if err != nil {
+		if tracker != nil {
+			emit(tracker.complete())
+		}
 		if execution.Transaction.Status == model.TransactionFailed {
 			_ = s.logEvent(state.Event{Level: "error", Type: "apply.failed", CorrelationID: planID, Fields: map[string]any{"transactionId": execution.Transaction.ID, "status": execution.Transaction.Status}})
 		}
@@ -270,18 +300,34 @@ func (s *Service) ApplyPlanned(ctx context.Context, planID, digest string, confi
 	plan := execution.Saved.Plan
 	transaction := execution.Transaction
 	if planHasRouterActions(s.Catalog, plan) {
+		if tracker != nil {
+			emit(tracker.startRouter())
+		}
 		routerReport, routerErr := s.configureRouter(ctx, plan, MCPInitOptions{Request: execution.Saved.Request, RegisterClients: true, Warm: true})
 		report.Router = &routerReport
+		if tracker != nil {
+			emit(tracker.finishRouter(routerErr))
+		}
 		if routerErr != nil {
 			transaction.Status = model.TransactionPartial
 			transaction.FinishedAt = time.Now().UTC()
 			report.Transaction = transaction
 			if saveErr := s.Store.SaveTransaction(transaction); saveErr != nil {
+				if tracker != nil {
+					emit(tracker.complete())
+				}
 				return report, fmt.Errorf("router configuration failed after installation (%v), and partial transaction persistence failed: %w", routerErr, saveErr)
 			}
 			_ = s.logEvent(state.Event{Level: "error", Type: "apply.partial", CorrelationID: plan.ID, Message: routerErr.Error(), Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
+			if tracker != nil {
+				emit(tracker.complete())
+			}
 			return report, routerErr
 		}
+	}
+	if tracker != nil {
+		emit(tracker.verifying())
+		emit(tracker.complete())
 	}
 	_ = s.logEvent(state.Event{Level: "info", Type: "apply.completed", CorrelationID: plan.ID, Fields: map[string]any{"transactionId": transaction.ID, "status": transaction.Status}})
 	return report, nil

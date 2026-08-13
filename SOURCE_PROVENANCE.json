@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "unreleased-remediation-workspace",
-  "baseRevision": "2356a0290239f3a7551a6db9dd7bb76f563fa96d",
+  "status": "unreleased-lifecycle-workspace-publication-candidate",
+  "baseRevision": "d91fbe2bce522cd7a4e4d8a8ede04f5b9606a8b6",
   "candidateRevision": null,
   "releaseTag": null,
-  "repository": null,
+  "repository": "https://github.com/AmirrezaFarnamTaheri/AgentStackManager.git",
   "workflowRef": null,
   "runId": null,
-  "note": "This source bundle is not immutable release evidence. A protected release overwrites this file with the signed-tag commit and CI provenance."
+  "note": "Cumulative ASM Fabric phases 1-6 plus publication hardening, due-diligence remediation, and the debloated Home/Environments/Changes/Activity lifecycle workspace. The browser now exposes read-only environment and managed-connection inventory, one continuous selection/review/apply path, server-reported installation progress, retained partial results, path-free failure envelopes, fresh-plan recovery, and sanitized transaction history while Resource Hub and mcplink retain mutation authority. Pure-Go SQLite remains dependency-gated; protected Go 1.26.5 builds, native signing, attestations, hardware release execution, and publication remain pending."
 }

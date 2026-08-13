@@ -50,6 +50,7 @@ var excludedRootDirs = map[string]bool{
 	".serena":             true,
 	".smart-coding-cache": true,
 	"graphify-out":        true,
+	"reference repos":     true,
 }
 
 var deniedSourceFiles = map[string]bool{
@@ -199,7 +200,7 @@ func collectSourceFiles(root string) ([]string, error) {
 		relSlash := filepath.ToSlash(rel)
 		parts := strings.Split(relSlash, "/")
 		if info.IsDir() {
-			if (len(parts) == 1 && excludedRootDirs[parts[0]]) || info.Name() == "node_modules" {
+			if (len(parts) == 1 && isExcludedSourceRoot(parts[0])) || strings.EqualFold(info.Name(), "node_modules") {
 				return filepath.SkipDir
 			}
 			return nil
@@ -224,6 +225,15 @@ func collectSourceFiles(root string) ([]string, error) {
 	}
 	sort.Strings(files)
 	return files, nil
+}
+
+func isExcludedSourceRoot(name string) bool {
+	for excluded := range excludedRootDirs {
+		if strings.EqualFold(name, excluded) {
+			return true
+		}
+	}
+	return false
 }
 
 func digestSourceFiles(root string, files []string) ([]sourceEntry, error) {

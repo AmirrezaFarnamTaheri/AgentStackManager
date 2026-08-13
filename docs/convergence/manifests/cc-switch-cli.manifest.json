@@ -1,0 +1,5109 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "cc-switch-cli",
+  "sourceRoot": "D:/GitHub/AgentStackManager/reference repos/cc-switch-cli-main/cc-switch-cli-main",
+  "physicalIdentity": "D:\\GitHub\\AgentStackManager\\reference repos\\cc-switch-cli-main\\cc-switch-cli-main",
+  "inventoryTime": "2026-08-13T08:35:30Z",
+  "emptySnapshot": false,
+  "fileCount": 521,
+  "totalSizeBytes": 34203222,
+  "entries": [
+    {
+      "path": ".gitattributes",
+      "objectType": "file",
+      "sizeBytes": 723,
+      "sha256": "92d55ffe82e21d450712c52624f4d71423e62fb4aefb383f30e5e12e99e6895f",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".github",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/android-experimental.yml",
+      "objectType": "file",
+      "sizeBytes": 3011,
+      "sha256": "5286d0aea7627e0ec7c45e8be3e9aa307221092067f32ced8beb0c9c12b63168",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/benchmark.yml",
+      "objectType": "file",
+      "sizeBytes": 2246,
+      "sha256": "d2513c001d28cd16b251f36b80fa1e7caaffba08ae9f76217ce9c9ad2a3ad8ab",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "objectType": "file",
+      "sizeBytes": 12841,
+      "sha256": "f1058e9ea395352b0958ed0e70b2837c96be0e7ea184c032f3704e23b7d3ed61",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/rust-ci.yml",
+      "objectType": "file",
+      "sizeBytes": 5235,
+      "sha256": "b3d33004ea31d9d0bb97bb42fd8112b1913974741b8323321456064b3e54049a",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".gitignore",
+      "objectType": "file",
+      "sizeBytes": 514,
+      "sha256": "21b6348df1d314972d8c1ac6c6249030eff9b298ce735c3baa26339231096958",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "AGENTS.md",
+      "objectType": "file",
+      "sizeBytes": 11349,
+      "sha256": "767b6458e3d1119d31f969bac4963048aedf8c26965bbf3c5549f5ca6bf575d0",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "objectType": "file",
+      "sizeBytes": 117727,
+      "sha256": "4169f1c3a1caf7f742109da45511fee6038af91d4ba4aa9b74cadb4625989f42",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CLAUDE.md",
+      "objectType": "file",
+      "sizeBytes": 11329,
+      "sha256": "780f82c5b3db4156277038b060a8ea1a1fb112a282ed3dc4a8179a078187803f",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "LICENSE",
+      "objectType": "file",
+      "sizeBytes": 1120,
+      "sha256": "c7c6a1892c7a73f0de0645ad40c287d65f0deca13371501a58b38fe7cc13ed69",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README.md",
+      "objectType": "file",
+      "sizeBytes": 33451,
+      "sha256": "a0ac33387dd2960664989de3e93706584c7eff3d96ffd11ed51b9f0bb4c17fea",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README_ZH.md",
+      "objectType": "file",
+      "sizeBytes": 31276,
+      "sha256": "39861094a209ba37e96b8fe7b4f384a332b6400a56d9a2e218aab006a80895cf",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "assets",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "assets/partners",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/banners",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/banners/aicodemirror.png",
+      "objectType": "file",
+      "sizeBytes": 838116,
+      "sha256": "023c4f0d79680e10177f3f00797e72dd731ddefe724693af6c5b02d547b87651",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/DDSHub.png",
+      "objectType": "file",
+      "sizeBytes": 742165,
+      "sha256": "07a6724aa03f8196e9f0a14681d373b288f06029526883a124bb062c327c8365",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/aicodemirror.png",
+      "objectType": "file",
+      "sizeBytes": 375903,
+      "sha256": "bd717fdca44cf6505719d24cb2b256bee93f2bcad0f30d91b445601edaa2d199",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/claudeapi.png",
+      "objectType": "file",
+      "sizeBytes": 31904,
+      "sha256": "14a80507a57af336bfe2e84fc35e252b6380b43cc5cc7b7bdb73344b1ab04162",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/cubence.png",
+      "objectType": "file",
+      "sizeBytes": 101814,
+      "sha256": "f1250a4b7138cb1ef3659032c0ae380ca0de5b06ea6ae5a97ebce22d2b1a0d41",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/fennoai.png",
+      "objectType": "file",
+      "sizeBytes": 139866,
+      "sha256": "b864dcc20e215fb86e6c37f26e80145b26bddc622b0033ce6dbeaf49a20ff1c0",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/openmodel.jpg",
+      "objectType": "file",
+      "sizeBytes": 90965,
+      "sha256": "a721d1fd75ef50b5c1f4dc7b57894d81f9d1f941ad4cdb19041e90bd9ba53ecf",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/packycode.png",
+      "objectType": "file",
+      "sizeBytes": 8329,
+      "sha256": "a50c3586b2ae80bf63925ef0ad347d4386d8e5386c088dd3e11e30727b007fd4",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/qiniuyun.png",
+      "objectType": "file",
+      "sizeBytes": 42739,
+      "sha256": "d18301956642dbe5b71caf9bb9904d49ad4a956b5c5567cc0c8d21ce48017f0d",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/runapi.png",
+      "objectType": "file",
+      "sizeBytes": 13101,
+      "sha256": "f52a6bc88b3057d00cb28a6392cc6a008424b9eee2cf9234d359e871723f538d",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/sds-en.png",
+      "objectType": "file",
+      "sizeBytes": 182920,
+      "sha256": "4b85ced0a319119f26f581edb4838e8928f4fbbc0406b6a260146092f1378e52",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/partners/logos/sds-zh.png",
+      "objectType": "file",
+      "sizeBytes": 6649,
+      "sha256": "17a23b568ce2125e5e160ec55561f6a60d2271d23e8b0cfb99c38c5ca3deba3c",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/add-ch.png",
+      "objectType": "file",
+      "sizeBytes": 162702,
+      "sha256": "8e51d97b6d25404b97df0604545890b0c1b3054dfcafd88287062b0982b34196",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/add-en.png",
+      "objectType": "file",
+      "sizeBytes": 159251,
+      "sha256": "8b22b338279f8f8e40f55b302c8e402b6e9784486bbdf99233d5bc9e963cf3e1",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/hero.png",
+      "objectType": "file",
+      "sizeBytes": 1522497,
+      "sha256": "d52081d8a9a24822b76c93005f7d8abfe0a9341877d685901c2bde55251e2fc5",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/home-en.png",
+      "objectType": "file",
+      "sizeBytes": 181372,
+      "sha256": "c7ed11f7a71903a85f5d805b50490332d5958ff45b10adc44bb1e55aff58d422",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/home-zh.png",
+      "objectType": "file",
+      "sizeBytes": 197764,
+      "sha256": "5d90d0566324a3d5d6a871db607f84e6f496e45a68cb837bc174176979caeae4",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/main-ch.gif",
+      "objectType": "file",
+      "sizeBytes": 5344066,
+      "sha256": "d661edd795f679f5acadc833af8537acc4f90b073b3d72e1580707dab7f6525c",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/main-ch.png",
+      "objectType": "file",
+      "sizeBytes": 100142,
+      "sha256": "6df82d0d329299fbea7fce747bc2e883a5a07dbe9a833e67c320b72c5be9c7a0",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/main-en.gif",
+      "objectType": "file",
+      "sizeBytes": 5224286,
+      "sha256": "171005ebf9aaf14ee118b2af4d974a4cad6dd223e4a67ce13f29b3d90fd1c8e9",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/main-en.png",
+      "objectType": "file",
+      "sizeBytes": 103650,
+      "sha256": "c8255ccbc4937c86542d55f28f5a8dc8c61d05a22c0011ca7b3f5e639388a002",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/settings-en.png",
+      "objectType": "file",
+      "sizeBytes": 170224,
+      "sha256": "baeb3f5ea40caf0e5619dc81fc554a36209f42aac24d5f5c7ffded2651776c95",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/settings-zh.png",
+      "objectType": "file",
+      "sizeBytes": 171707,
+      "sha256": "7ce7dae0796e73f41025b19d956040d540a3ff72f85dd5b54c7bf81f5ff722ce",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/switch-en.png",
+      "objectType": "file",
+      "sizeBytes": 270780,
+      "sha256": "804132fe195ccdf8e283afb4b2d0b81d6f58a0dcf2fff39339076dbf01e7ca11",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "assets/screenshots/switch-zh.png",
+      "objectType": "file",
+      "sizeBytes": 286954,
+      "sha256": "db8d4aa088799ca67bc127a9ddee235d7a194603c6a763f1e078f56f5969f56a",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "docs",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "objectType": "file",
+      "sizeBytes": 117727,
+      "sha256": "4169f1c3a1caf7f742109da45511fee6038af91d4ba4aa9b74cadb4625989f42",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/releases",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/releases/v5.10.0.md",
+      "objectType": "file",
+      "sizeBytes": 3096,
+      "sha256": "3658ccca45af7edadfe73fbe68bc01b4f57a3308de5f2b81fecf4c0fe33cae89",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/releases/v5.10.1.md",
+      "objectType": "file",
+      "sizeBytes": 2533,
+      "sha256": "78d5fa23a51e3bf378c25e9bbeb102a4d93ff0c03981cca46f50fdafb9acc367",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/tui-blocking-performance-risks.md",
+      "objectType": "file",
+      "sizeBytes": 2815,
+      "sha256": "0fffba8c22df62f0103afd5e5b9fb97370fe5de89f9b7e8a6b2558e5ea71fc80",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/tui-usability-roadmap.md",
+      "objectType": "file",
+      "sizeBytes": 5795,
+      "sha256": "d0312748009d30825271a85eb6eef203ffa31c823fc27d2e64f0e4140d9d70f1",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "flake.lock",
+      "objectType": "file",
+      "sizeBytes": 567,
+      "sha256": "e473fbd5c12b739a9918a72fccf58b0279a8b8c163b1c81d52cc077a499ae173",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "flake.nix",
+      "objectType": "file",
+      "sizeBytes": 1738,
+      "sha256": "f3922c662c8cc0c7e639d8bafaf64392c56e8ac22f42596d7c5b925fd0e95b73",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "install.sh",
+      "objectType": "file",
+      "sizeBytes": 9449,
+      "sha256": "5036498ce7580d3c2aeb3353374a93f5266d2eeae55772ebf78425e0c51a5266",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "scripts",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "build scripts"
+    },
+    {
+      "path": "scripts/benchmark_cc_switch.py",
+      "objectType": "file",
+      "sizeBytes": 86503,
+      "sha256": "c603184962db862cb31ce49c9daa508c28d0654ea4777a1ac785b5a63bc5004b",
+      "disposition": "not-applicable",
+      "reason": "build scripts"
+    },
+    {
+      "path": "scripts/check_benchmark_thresholds.py",
+      "objectType": "file",
+      "sizeBytes": 8744,
+      "sha256": "92a852ae03472660e511a5b83c5bd9d743bd465c56a6c7a81dfd0c98a39d033f",
+      "disposition": "not-applicable",
+      "reason": "build scripts"
+    },
+    {
+      "path": "scripts/generate_latest_json.py",
+      "objectType": "file",
+      "sizeBytes": 3523,
+      "sha256": "6d46efda608e824263a4a1e64db57a76aa6d93443b26b9c926769b444c1d8118",
+      "disposition": "not-applicable",
+      "reason": "build scripts"
+    },
+    {
+      "path": "scripts/test_benchmark_cc_switch.py",
+      "objectType": "file",
+      "sizeBytes": 3360,
+      "sha256": "5f0e8d26652bf742f7203654246b0be01a250d3dcdd245c439aba14f95019b1e",
+      "disposition": "not-applicable",
+      "reason": "build scripts"
+    },
+    {
+      "path": "src-tauri",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/.gitignore",
+      "objectType": "file",
+      "sizeBytes": 86,
+      "sha256": "646a917f23a3d76736252fac394b218e99c3f2d7f5c4dad9e334563452574cde",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "objectType": "file",
+      "sizeBytes": 121335,
+      "sha256": "54d7ba37fc669963e9128dcbe3dc3519bc2976c8d854176708927c032e6b1707",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "objectType": "file",
+      "sizeBytes": 2901,
+      "sha256": "9b8e83d6bd938fa4f933749c292e69865bfed00f9fbfe350a1708fe1714ed50e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/Info.plist",
+      "objectType": "file",
+      "sizeBytes": 513,
+      "sha256": "e9efc94f1d1c4aeb518ea5d1c28f23ca311f6731ff2195462e7d6c8a55f8ac4b",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/128x128.png",
+      "objectType": "file",
+      "sizeBytes": 15560,
+      "sha256": "8e24e5968cac75da1698ae5c2cf2d5f542625bc9d2060b9a052f0348f9cf8795",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/128x128@2x.png",
+      "objectType": "file",
+      "sizeBytes": 44631,
+      "sha256": "efbe73b4642d35ed7987cebb223e4f2b1d03408226c48d9edc37dbb5b1c69be4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/32x32.png",
+      "objectType": "file",
+      "sizeBytes": 2258,
+      "sha256": "8c167919ba52ed97aaa5b612819821a0c6dba2c7cd2c03a09df0a2086451d2aa",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/64x64.png",
+      "objectType": "file",
+      "sizeBytes": 6051,
+      "sha256": "38fa98c25316ebf8507cf803e6314f52cd951a9bc94a69a624c2bea1bbe6e102",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square107x107Logo.png",
+      "objectType": "file",
+      "sizeBytes": 12106,
+      "sha256": "b2990a61ad63e3ff094b51cdf06d9442f10db3c919fa89e6e1c4dc96724ec3de",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square142x142Logo.png",
+      "objectType": "file",
+      "sizeBytes": 17861,
+      "sha256": "944e533d152f89e060717865801feba78ebaccc2702324ace07b87c6acb83f5f",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square150x150Logo.png",
+      "objectType": "file",
+      "sizeBytes": 19398,
+      "sha256": "f1702cd4adeb2d3be4dc9a6ad4c74e2ca15f63ade1b7190da3c547a61d326034",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square284x284Logo.png",
+      "objectType": "file",
+      "sizeBytes": 53022,
+      "sha256": "6f629742e00c26d047bcfdec908fb349db33a00c8eea61209b867465ccddeca0",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square30x30Logo.png",
+      "objectType": "file",
+      "sizeBytes": 2045,
+      "sha256": "2b203f55315c7f0e6a9bb12ac6a97982dae277912d662f9fa17a062a170ae35b",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square310x310Logo.png",
+      "objectType": "file",
+      "sizeBytes": 61579,
+      "sha256": "8528772fb6fcbf329cea99f89fdf66d3373d0fbe55beff98b17f3a40a764d2ea",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square44x44Logo.png",
+      "objectType": "file",
+      "sizeBytes": 3618,
+      "sha256": "05684dd45623b59a2f0a77100e038eb985e324ad10af49a2082edd13f72c0b0d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square71x71Logo.png",
+      "objectType": "file",
+      "sizeBytes": 6931,
+      "sha256": "71ffc1ab956adf8f8c74b861a87bfb086c42848837587f1dff2bcf70cba2bb86",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/Square89x89Logo.png",
+      "objectType": "file",
+      "sizeBytes": 9382,
+      "sha256": "c784e7fc0d7c124e4ad629665404c1b6150ed60500ee6735b60f40a54e0c9060",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/StoreLogo.png",
+      "objectType": "file",
+      "sizeBytes": 4313,
+      "sha256": "fb40269c3282a762bc6242db563fa3359177e4820724f56a49ea3abf37ad3521",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 4168,
+      "sha256": "78c8b01e0a2d63f3e2560171dec77d6a5f2aaea88eed8e6ddad76a0de72ce893",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 21753,
+      "sha256": "d52664c416cac563442c6d2f7eedce8f35e345f866dc38eecfa5d99c7bfc921a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 4168,
+      "sha256": "78c8b01e0a2d63f3e2560171dec77d6a5f2aaea88eed8e6ddad76a0de72ce893",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 4019,
+      "sha256": "ecbd6fb5edb79d975df635b58ec813895a077a579007c337431a71168e6f74ca",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 12338,
+      "sha256": "7d157a7488626d747541e40035a2194ac9375c929b4cf10dc54af239478f533a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 4019,
+      "sha256": "ecbd6fb5edb79d975df635b58ec813895a077a579007c337431a71168e6f74ca",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 10383,
+      "sha256": "dfb1ba9bbc0cef7b428cdb7ca3d72315d1f3c94d24f00b8348ba8b721b436ebf",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 33830,
+      "sha256": "1fe478bd90901ad415cc4d8fb35161bcfb611854d5b6f5b27562c4d928dd86b2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 10383,
+      "sha256": "dfb1ba9bbc0cef7b428cdb7ca3d72315d1f3c94d24f00b8348ba8b721b436ebf",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 18324,
+      "sha256": "1059bd1bc3cb9e20c8e500bacf11c1a81437a311681bd4584a21f7f17ecc22b1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 66286,
+      "sha256": "aaedca1e6ccaf03ff7c068ed2230491c358f0c6498637b6e97e5d8b4de8f528f",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 18324,
+      "sha256": "1059bd1bc3cb9e20c8e500bacf11c1a81437a311681bd4584a21f7f17ecc22b1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 28060,
+      "sha256": "258b2eef1c8a447ede5db783876c172d9d640a771512b5305af17b061c261e1e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 111487,
+      "sha256": "d19349e7d3e17540d573fa458544145449106799d0d71de52294d60f629f4656",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 28060,
+      "sha256": "258b2eef1c8a447ede5db783876c172d9d640a771512b5305af17b061c261e1e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/icon.icns",
+      "objectType": "file",
+      "sizeBytes": 1044878,
+      "sha256": "ee043ad844f039d4c65cdf16445d4ed65bc85b36597687d57405420cb2fbece8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/icon.ico",
+      "objectType": "file",
+      "sizeBytes": 60238,
+      "sha256": "e84a1a1d8982ba3576fd3cc31b1d86cec506319a1eca8f6af50a0ce590b22a00",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/icon.png",
+      "objectType": "file",
+      "sizeBytes": 155497,
+      "sha256": "04225b1b9c54569ec1ec850ad9f1c9f33ca4f286dab001a3392c0460deb342e5",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@1x.png",
+      "objectType": "file",
+      "sizeBytes": 982,
+      "sha256": "7b223affc18ced1a993e8b0f7575701861724f69343c031d41e1505e33f39af2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 2668,
+      "sha256": "984b985dd9922f7f8062a8d512a16cd7a0888aac5d1ddf0eb81a409ad0eb05d9",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@2x.png",
+      "objectType": "file",
+      "sizeBytes": 2668,
+      "sha256": "984b985dd9922f7f8062a8d512a16cd7a0888aac5d1ddf0eb81a409ad0eb05d9",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@3x.png",
+      "objectType": "file",
+      "sizeBytes": 4696,
+      "sha256": "0a1a7daaaac5af6daeaf7e787d4b690d01682ea4866dd6614eacaf94ba8c6946",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@1x.png",
+      "objectType": "file",
+      "sizeBytes": 1669,
+      "sha256": "db7f1b5105f5823042c7f79ee3eae1ecfc6cfb32b500f86164c1341971be3660",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 4523,
+      "sha256": "c45ce787282b24b24c18c8f8fab2e20183576015818adb6e41fe2ba08ac7d88d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@2x.png",
+      "objectType": "file",
+      "sizeBytes": 4523,
+      "sha256": "c45ce787282b24b24c18c8f8fab2e20183576015818adb6e41fe2ba08ac7d88d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@3x.png",
+      "objectType": "file",
+      "sizeBytes": 7672,
+      "sha256": "6043fb83d73233956bdfba5056afd9aede7e4e870611710b8419be8275ddd558",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@1x.png",
+      "objectType": "file",
+      "sizeBytes": 2668,
+      "sha256": "984b985dd9922f7f8062a8d512a16cd7a0888aac5d1ddf0eb81a409ad0eb05d9",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 6874,
+      "sha256": "e6afe2cd4e3b2bd7d9a628be5c8df0a10cc7390890252185181f7ff8061e6fa8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@2x.png",
+      "objectType": "file",
+      "sizeBytes": 6874,
+      "sha256": "e6afe2cd4e3b2bd7d9a628be5c8df0a10cc7390890252185181f7ff8061e6fa8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@3x.png",
+      "objectType": "file",
+      "sizeBytes": 11543,
+      "sha256": "f525f817b89d50f101bc4bea359cd719d2fcb52d1ce9f3e92ba4b1b0acb72ad4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-512@2x.png",
+      "objectType": "file",
+      "sizeBytes": 535674,
+      "sha256": "00ea6986f254c75b8a447fab0aa2f897da90cca68c31d2943db61069efea8073",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-60x60@2x.png",
+      "objectType": "file",
+      "sizeBytes": 11543,
+      "sha256": "f525f817b89d50f101bc4bea359cd719d2fcb52d1ce9f3e92ba4b1b0acb72ad4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-60x60@3x.png",
+      "objectType": "file",
+      "sizeBytes": 20246,
+      "sha256": "3062ec8023c468e0acffa76a42e35b9c288aada3318fd64eb982bf1c42510fa8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-76x76@1x.png",
+      "objectType": "file",
+      "sizeBytes": 6411,
+      "sha256": "289c3f2261d45429c40de05dc6506a14b3d5ae1da31b40588f77d98b66d71476",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-76x76@2x.png",
+      "objectType": "file",
+      "sizeBytes": 15963,
+      "sha256": "a7369bccda59dd33d66be9bf05ef409b5eadb6dab5ac88d3aeb86545de7a6a57",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-83.5x83.5@2x.png",
+      "objectType": "file",
+      "sizeBytes": 18191,
+      "sha256": "01eadc7523af3beece5473add6b914983a6bb01c44584547c434d2ea0f65eb20",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/tray",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/tray/macos",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/tray/macos/statusTemplate.png",
+      "objectType": "file",
+      "sizeBytes": 577533,
+      "sha256": "65c365e7c32929807deec2d7469eed2d5c06f21ce86854a4848057d2df588ab8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/icons/tray/macos/statusTemplate@2x.png",
+      "objectType": "file",
+      "sizeBytes": 585664,
+      "sha256": "737004c91a766a67e57a62f695a28e2390a6fbd48efcb1d3eda1fe5bf289c3f4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/rust-toolchain.toml",
+      "objectType": "file",
+      "sizeBytes": 86,
+      "sha256": "07897ac31bda5b67235f4a9abc5e4a07876e7422bbda0720cbf370b9c53220a8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/app_config.rs",
+      "objectType": "file",
+      "sizeBytes": 35590,
+      "sha256": "e0c4fbe81c5fdde31e4e015ca86a3c52cdd67d395f6a70a44f78127e7b9ba29b",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/claude_mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 10799,
+      "sha256": "dc79671d99074dcbe82289f78975a5fb9a4be0e037640ae353562b25b6e96184",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/claude_model_config.rs",
+      "objectType": "file",
+      "sizeBytes": 6312,
+      "sha256": "f04964016ff009dfde5d80f5b83d2dcb2359ad97c6d58df76c90b7c991bb9c83",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/claude_plugin.rs",
+      "objectType": "file",
+      "sizeBytes": 4672,
+      "sha256": "941174b6cedd0f184723c559171aa41a0bacc3b2694560cba7e24f9ee6f38bf1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/cli",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/claude_temp_launch.rs",
+      "objectType": "file",
+      "sizeBytes": 23772,
+      "sha256": "dd998fe175f9353f1fc52e678da0fe82e88c5067e5476a301ae266043b2b6dd9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/codex_temp_launch.rs",
+      "objectType": "file",
+      "sizeBytes": 23379,
+      "sha256": "ff6e5a36aa58c02aa2da4493c9ff9ab3f7906bd2c0c01e2d05c0275482b4734b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/app_targets.rs",
+      "objectType": "file",
+      "sizeBytes": 3025,
+      "sha256": "220c06187e7c4be53fb8dc1172e149785b2f379802893a6cd729689ab2c525f3",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/auth.rs",
+      "objectType": "file",
+      "sizeBytes": 9742,
+      "sha256": "303dd621f370a8f5bbe851557864ea93595ab0759cdf023f573768ea2b1f85a7",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/completions.rs",
+      "objectType": "file",
+      "sizeBytes": 24885,
+      "sha256": "57f7834079fad39ad8eb8fd4c978e10758b94a73255d11569fda0695abbe0ff2",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/config.rs",
+      "objectType": "file",
+      "sizeBytes": 16697,
+      "sha256": "2966008d9320740cb152afd8808253f49ce3c16820a77427cbafdc3e23016564",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/config_common.rs",
+      "objectType": "file",
+      "sizeBytes": 22353,
+      "sha256": "4276d0b89123778e5b3af0e42b6c06928f6397ff60faf47d92cf25daa26f5d63",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/config_openclaw.rs",
+      "objectType": "file",
+      "sizeBytes": 48417,
+      "sha256": "9ff8049f3782ed32d6690b1f18f1972f5b2598681e369f39295f72db20177804",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/config_s3.rs",
+      "objectType": "file",
+      "sizeBytes": 8498,
+      "sha256": "dbaa647330c58bfdce6a153b28806cfdaf6eaee9c81d126779f1f9b0aa3ea0c9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/config_webdav.rs",
+      "objectType": "file",
+      "sizeBytes": 10166,
+      "sha256": "899f84c57754e370a05c01364181b2176d4ea5492dba887e430052e6bb595ac0",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/daemon.rs",
+      "objectType": "file",
+      "sizeBytes": 5395,
+      "sha256": "b61f2d95133f8072af43b16bf5a91f8d60cb6cac35e1658ce28c0d59eee50650",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/deeplink.rs",
+      "objectType": "file",
+      "sizeBytes": 4809,
+      "sha256": "01458d4c657bdd99a465a53a0769ce1d425eb7a5dc457391f239c32690481237",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/env.rs",
+      "objectType": "file",
+      "sizeBytes": 12936,
+      "sha256": "4d01da554d6a2c77da61053426e12c5907d56f13fc397c9cd879837aa5fb8279",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/failover.rs",
+      "objectType": "file",
+      "sizeBytes": 17407,
+      "sha256": "1ca5e255fcff3b69a1e9538ef51025da83540dec7e622b01e014cad2b149f6f4",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/hermes.rs",
+      "objectType": "file",
+      "sizeBytes": 11700,
+      "sha256": "25e2e56b0d739a067c3542ef72b5f0acafb4b68445831f575e4a1b0d15c489f1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/internal.rs",
+      "objectType": "file",
+      "sizeBytes": 701,
+      "sha256": "9280ff2b1ef72736b3502025ac1f9bc39dde30ba3c8f253d74893f84839b7610",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 12857,
+      "sha256": "c0ea19bc9db3ae7c50e5282c1f59b912b7777294b5bbad8057b6846629fa56e9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 506,
+      "sha256": "ace7b0dd53ad1461def43ae111b5ed1b88259d506e09f010e5a6cf41cfba712c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/prompts.rs",
+      "objectType": "file",
+      "sizeBytes": 17677,
+      "sha256": "47e37ae8a2a3c0583028b2608096a4749eae82699de1a7bdba8315c982847d2f",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/provider.rs",
+      "objectType": "file",
+      "sizeBytes": 90729,
+      "sha256": "e10ae2cf5ec85dc8e70a10e9041def8b635a6d757364fe341961a91d657c732b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/provider_input.rs",
+      "objectType": "file",
+      "sizeBytes": 157330,
+      "sha256": "0ead05950c0463438e4a469582c124feeb5d0584b6511549331b45a332b9c87f",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/provider_inspect.rs",
+      "objectType": "file",
+      "sizeBytes": 49823,
+      "sha256": "c6e421c428bb3f904d2a90844b76582494ef00e6e54abbb1b46c4241263bc757",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/provider_usage_query.rs",
+      "objectType": "file",
+      "sizeBytes": 43621,
+      "sha256": "e62a2d25cf4a3eb9d4548359a609b65ca7976c21abba65d12fb146ae6b5e6a91",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/proxy.rs",
+      "objectType": "file",
+      "sizeBytes": 27879,
+      "sha256": "90b1774b514689cec25f3dba9e3e71d8b77b40b438e7bcf8681a669cf76e4d62",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/sessions.rs",
+      "objectType": "file",
+      "sizeBytes": 35832,
+      "sha256": "db41ac9dbae8573f6df8577ad9244ff661fd23864db59cd8e2dbd3106326b9fe",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 24960,
+      "sha256": "d063cadef8dd7adaf38c6da7209539b33c53c8e12ee2cd6118ebf39267ecc91b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/skills.rs",
+      "objectType": "file",
+      "sizeBytes": 21457,
+      "sha256": "3b55c2a413da8b2c16441e1a6e5282f99d728657369ed7a012f580b3977e3abb",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/start.rs",
+      "objectType": "file",
+      "sizeBytes": 23357,
+      "sha256": "144511bcfd78deadbf05d1bd538d1fc03a4a3bfba0d5b66766134449db338083",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/update",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/update.rs",
+      "objectType": "file",
+      "sizeBytes": 46359,
+      "sha256": "e081b5155ceca1a748b8d0c8b55573f4a75ddc2efe1a96809ed88c372f2c10b6",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/commands/update/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 27896,
+      "sha256": "a4f438d863f1a6c595eab17be5834dafbf18a1adf84f97c19791853e7f75c1c5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/editor.rs",
+      "objectType": "file",
+      "sizeBytes": 27569,
+      "sha256": "086057dc05279d8fd255ab4abfb89f694c12e4873dae24aa5036c2b38aa2340b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/failover_policy.rs",
+      "objectType": "file",
+      "sizeBytes": 2820,
+      "sha256": "f47cf0c8cece7a59303703a50c3dad648da9b59868e28d3ae1b003e296ad1fc4",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/i18n.rs",
+      "objectType": "file",
+      "sizeBytes": 361310,
+      "sha256": "fb988ebaa42a1ec362670a75d8d78bc1314c9daea3f0bf7ba25e096c0e72779b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/interactive",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/interactive/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 2322,
+      "sha256": "d16e32d316ae3a0130d0b6806b7ea9a0f41979a8c631a5af3de1de83ac383faf",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 66536,
+      "sha256": "c06a57f62590e1d8bf10dd7520ae9dbd8a17a20c3397cfce164c58c78225aea1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/openclaw_form_normalization.rs",
+      "objectType": "file",
+      "sizeBytes": 10812,
+      "sha256": "91d4c9151455ec341f6d4dbc192e6f095d383efc736b93dfeefb6581ea9b6bd5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/provider_quota.rs",
+      "objectType": "file",
+      "sizeBytes": 12212,
+      "sha256": "b547dc54949645f47e39907f9e98967e2e35c133ce25aa3c4506028c93a7a098",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/proxy_settings.rs",
+      "objectType": "file",
+      "sizeBytes": 1761,
+      "sha256": "b4c8ffb95ba6ef568d4e16830f83501e13684702acad2d7717dd90dbb963cd39",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/terminal.rs",
+      "objectType": "file",
+      "sizeBytes": 1828,
+      "sha256": "3464100f63ed76524d39b93234a68a737b394573df129705eac2e75860003e83",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app.rs",
+      "objectType": "file",
+      "sizeBytes": 2714,
+      "sha256": "7793b75c663e8accccb6e0dc2746383569116471e79d2abb0052d3aad041f4e1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/app_state.rs",
+      "objectType": "file",
+      "sizeBytes": 21159,
+      "sha256": "9a2744dc89d740d7a7f3a60315cf33d0886c378a1957ab91e4ab04dcaa2f01b1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/content_config.rs",
+      "objectType": "file",
+      "sizeBytes": 61716,
+      "sha256": "dfc3a63a9d97e9f16a6f999b42f169e5f56f7fbe5bd70a55328dc57482350a59",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/content_entities.rs",
+      "objectType": "file",
+      "sizeBytes": 50250,
+      "sha256": "2181c181fba2344243f57ce20bcd56bc5599256df2821ff878e38b14e93a48e9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/content_pricing.rs",
+      "objectType": "file",
+      "sizeBytes": 3579,
+      "sha256": "1231698111584655631f9a6105ba23276120d4dd1f19c0c10ec84201a5de81b0",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/content_skills.rs",
+      "objectType": "file",
+      "sizeBytes": 11843,
+      "sha256": "568a22ffc471723a102ca09a13232017009519b2a0082a511107d92ef9d782a9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/content_usage.rs",
+      "objectType": "file",
+      "sizeBytes": 16321,
+      "sha256": "c941667e86b0b968a641751dd0f8efe8d2f68243fb4e5ccd749c3f303d0bb27d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/editor_handlers.rs",
+      "objectType": "file",
+      "sizeBytes": 2691,
+      "sha256": "45b6448d74ef3797dd9e1fab5f9b39a7f266547aabaf9dcc0ab518573205af49",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/editor_state.rs",
+      "objectType": "file",
+      "sizeBytes": 27246,
+      "sha256": "dff5a8a2ad0e77c637bdf8eef2ef28d67f52231dea904a8f62bb665fed9de911",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 9917,
+      "sha256": "f01b8ea9d282fd71378c1c921f4ee2c500e79ac4da30b7772272d11c6a3e49e1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 11811,
+      "sha256": "c1db4d649223afd826cfe255ab58679a5c7d38d6c142ec969028d043abc8f692",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 7550,
+      "sha256": "f0ef3ae057498714205fb2e764d28b81757eb76f24ac17cfb235a2ee9cdf48b9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/provider.rs",
+      "objectType": "file",
+      "sizeBytes": 80387,
+      "sha256": "0ac7ea5a13f2dfff5300d411f5a73be2ebc2106fd08e1fbdadfc5e122aa78e27",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/s3.rs",
+      "objectType": "file",
+      "sizeBytes": 4644,
+      "sha256": "b9e81d5b8c92c84cf31a7645a3cbf817f3ee8549d31bbba9e2c916b653e10b11",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/tab.rs",
+      "objectType": "file",
+      "sizeBytes": 8523,
+      "sha256": "1430dd199d1b094d54557ec22b34e9fc17d2c0f6576e282730ff88b8f880739c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/form_handlers/webdav.rs",
+      "objectType": "file",
+      "sizeBytes": 4594,
+      "sha256": "4d8fca1cae025bca9ff57930bb44d442ddcf255401789849589592859f3105c8",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 58797,
+      "sha256": "386f8aeafa5fe2fc8b206fffdcd174009baa76df5d071d76c3d6110f8538e9c8",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/menu.rs",
+      "objectType": "file",
+      "sizeBytes": 52762,
+      "sha256": "8ab19a72bdb2b0a8ed2f8cc8968d795c62c0ea77751fccfe81d76ec75c9713b4",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers/dialogs.rs",
+      "objectType": "file",
+      "sizeBytes": 28277,
+      "sha256": "fbd919ea9f5d8d1d0b5b6a473b84bb30867759412fbde963a0a2828be982b2a1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers/mcp_key_value.rs",
+      "objectType": "file",
+      "sizeBytes": 8456,
+      "sha256": "bc5e01b44fb6a6ef06f80a9ffb0d30cfd4438ea1ff380686df60665780cc412e",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 760,
+      "sha256": "d5ef7d62057909de5c71211605ee9e46a7ca2ba0f4b9127530c41234af669a5b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers/pickers.rs",
+      "objectType": "file",
+      "sizeBytes": 62656,
+      "sha256": "87e9f9eed39bd0f7ebc4f581019552b105a4297fcb08b1d285306c1bd5697741",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/overlay_handlers/views.rs",
+      "objectType": "file",
+      "sizeBytes": 11039,
+      "sha256": "f1471c486274a5ad0abe43a02185e351ab65857f6de968ab10d59829a6e14ba9",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/page_window.rs",
+      "objectType": "file",
+      "sizeBytes": 3510,
+      "sha256": "cd70cb72d5e672184fc2120ee3d29ca571b338c5e3b6d754fd294baf0876672e",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/paged_list.rs",
+      "objectType": "file",
+      "sizeBytes": 38708,
+      "sha256": "aee9474003f058951abc8225df99ff631a1adb0e2fa246be0a11a7e758a1e47c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 706606,
+      "sha256": "c78d38cb3ae3860ccee122c215ad83939573b33298ad5d706031d8e5d7d25cad",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/app/types.rs",
+      "objectType": "file",
+      "sizeBytes": 226259,
+      "sha256": "5f6392ea5600172d2e262bb050195a1e6124ffdb9510ceabee79c17c02c372a6",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/clipboard.rs",
+      "objectType": "file",
+      "sizeBytes": 5118,
+      "sha256": "d9a6ed5c05acb2a6f0f782013e39cc09ebef5e000e4a2cd70479944ae4aca6b7",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/data.rs",
+      "objectType": "file",
+      "sizeBytes": 250519,
+      "sha256": "751a1cc19786df030424a2fd4114bbb1458aaf857365c94176a23b0e19b04cac",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form.rs",
+      "objectType": "file",
+      "sizeBytes": 20725,
+      "sha256": "21f332adf08e26ae82e7c59e02cc335486dc91506ed8a8ffc8a29d466932b889",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/codex_config.rs",
+      "objectType": "file",
+      "sizeBytes": 3723,
+      "sha256": "ef197505f8b4ee72fcc8bfcfb100923f7841b801eab85ac35b4271e6ca24b522",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 23894,
+      "sha256": "1817c40cd8428b416ae1594b81219bdb7eabadaa25f8e32e23525c8fcaac7138",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 5697,
+      "sha256": "75c3c10dfd48f4f196b8d70b363cf5ec289459f4a3fa430f3b6d18f0775a3188",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/provider_json.rs",
+      "objectType": "file",
+      "sizeBytes": 47728,
+      "sha256": "09347c129e49b391c41525cf550acc1d24b049bfecbc0961f58edbc7d4446c32",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/provider_request_overrides.rs",
+      "objectType": "file",
+      "sizeBytes": 9841,
+      "sha256": "b4d1c78a37cc6b087f097b324a39c84456953af2d4f7e5678a558e904eed724c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/provider_state.rs",
+      "objectType": "file",
+      "sizeBytes": 102639,
+      "sha256": "c35b6e52fa8b6f23a71e7eb8a32557d6215f9124d952873b024f14dfff77d5e5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/provider_state_loading.rs",
+      "objectType": "file",
+      "sizeBytes": 19852,
+      "sha256": "52c91ef7e42962c793d1b289821d8b7496a72f304a43e872087f3650012a3ea7",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/provider_templates.rs",
+      "objectType": "file",
+      "sizeBytes": 29277,
+      "sha256": "8f3b11f98dc7606675ca8aac3ee337b7b1e529c0d39a4ac6e2ccc081b2cd5e7c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/s3.rs",
+      "objectType": "file",
+      "sizeBytes": 11226,
+      "sha256": "062b5362456d097d0204ee0754a481d19b93c3a91c4fca6b878e952653e0c70a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 219758,
+      "sha256": "aad700baef552008a9a77f61e6fde6145e304932e708e419e06c3bccfd509fdb",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/form/webdav.rs",
+      "objectType": "file",
+      "sizeBytes": 7129,
+      "sha256": "9ecbb755bcfb116f6f81e46b160cb925c687555126225ea0ecbe79d281610120",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/help.rs",
+      "objectType": "file",
+      "sizeBytes": 71166,
+      "sha256": "81a83627711c626a0db4751a9b766365cd11b63030149deabcc62b240aecc579",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/icons.rs",
+      "objectType": "file",
+      "sizeBytes": 8798,
+      "sha256": "c9fb0d2fa5453c28db5c771a1535ea19a9b49c5f31ae3519e98c17a9d579743d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/input.rs",
+      "objectType": "file",
+      "sizeBytes": 18219,
+      "sha256": "216344745d115a7789e93ad606e2f9c549ca8aef5a4471869495ebdf0951a1fe",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/keymap.rs",
+      "objectType": "file",
+      "sizeBytes": 26054,
+      "sha256": "2df42b66aee52305b689592ebb0c6019f25bc17cb0ba34b1360c03bcd635d575",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 143111,
+      "sha256": "94445cc154f57ae6f2ded027da6b3eb8befb4facb212d66ff5efafd042b7778b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/route.rs",
+      "objectType": "file",
+      "sizeBytes": 6102,
+      "sha256": "775f339145d767c482892e97f6da3486e11cdc3efb12e4dc69254e83802833ad",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/claude_temp_launch.rs",
+      "objectType": "file",
+      "sizeBytes": 16038,
+      "sha256": "fa234d530084518c618623576e669f00ece1e5588279a67e762fed6855b56653",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/codex_temp_launch.rs",
+      "objectType": "file",
+      "sizeBytes": 11434,
+      "sha256": "36e1e217f9f1c9dfd934e9008896b069d014b818b9fe7f4f5369c81c3b654fdb",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/config.rs",
+      "objectType": "file",
+      "sizeBytes": 19072,
+      "sha256": "882c362f8d2d1604df3ede263754d8d156109bdc1ff959625dc6f2169722499d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/editor.rs",
+      "objectType": "file",
+      "sizeBytes": 113307,
+      "sha256": "869337a7a4e50693799df67569322b5af3383602f4dcdb79b27f3edaab3b8cf1",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 6521,
+      "sha256": "53a1b6447732a75f2fce6085b1d76c414b7f4d59475a249b7826b98fc17f6122",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 3130,
+      "sha256": "698758ed34b3346594cbd485bba44748c6211dd59365c8054f9e68e503204e02",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 80552,
+      "sha256": "f806bfdf334a8ab4ec5263e3184a16cd41eeef41fceb47b875f231250059d73a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/pricing.rs",
+      "objectType": "file",
+      "sizeBytes": 959,
+      "sha256": "b20513697106d6ae33b8ceb6063c6b463e452831e9d24752e86a7dda41229371",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/prompts.rs",
+      "objectType": "file",
+      "sizeBytes": 4489,
+      "sha256": "24d6254283a9647b4e101b5d6d10081689865a2dcac06c4da2d4a46b62095700",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/providers.rs",
+      "objectType": "file",
+      "sizeBytes": 96273,
+      "sha256": "9135e5da954ca7b9a7de4df261f3b221ce688a1e2845d805154dcdf7138aef1a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 25341,
+      "sha256": "d485a53f0a14c36bec96b035f9645a0421c6be47496d4ba3133d3cd04266271a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/skills.rs",
+      "objectType": "file",
+      "sizeBytes": 9645,
+      "sha256": "0d92fc72e52dc013d94ce86def5d3d95333032ce722166483d4a5104ac0497d5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_actions/updates.rs",
+      "objectType": "file",
+      "sizeBytes": 1670,
+      "sha256": "fb988f14279e25e82fce3dde9ba8a495a22449ee22c127381923e00c948d7864",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_skills.rs",
+      "objectType": "file",
+      "sizeBytes": 3309,
+      "sha256": "e920cd705690bf44dbde5b8b81899f28ebce7ae128c2493909e0ff85fabfe2dd",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/handlers.rs",
+      "objectType": "file",
+      "sizeBytes": 143978,
+      "sha256": "0beb3ff7d86ea78741bb8de8ddf575abdb3462a6f6539dca9c22afb278b369d3",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 1733,
+      "sha256": "7b9ffc6ba96d2df9abfccde7199e32c325e31c08225f0f6697dd22e99ca5c9f2",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/session_cost",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/session_cost/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 8982,
+      "sha256": "ae21f33ba19c8e2034f1994d5f4785a201ec68a969d329b9bfb0e2aea39d7e77",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/session_cost/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 7069,
+      "sha256": "c1f5826efa4b7131a6f985aaea9bb363d54bad44cfaa10a5f1fe71df10bba83c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/types.rs",
+      "objectType": "file",
+      "sizeBytes": 32449,
+      "sha256": "5f8e9d90bf1092472eeaff4e8c45d906b0d0834de659bdb9e514c64443e03b68",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/runtime_systems/workers.rs",
+      "objectType": "file",
+      "sizeBytes": 200762,
+      "sha256": "082bc9f3c94dd81ed1514c9608dfb7009ff46839015b7f2d6ca68c6298d017d4",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/terminal.rs",
+      "objectType": "file",
+      "sizeBytes": 16159,
+      "sha256": "586854c6a61b31fd80c1a888194956efc7deab44f04148fa27e24853c166caae",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 182277,
+      "sha256": "696ae4618a73c53ad2c8bee3bd88b5cf71e66b7ed8da8d6555b7651df6f00b8a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/text_edit.rs",
+      "objectType": "file",
+      "sizeBytes": 15146,
+      "sha256": "d377c1d37b11d1cd626c653980669b8198e9567bb14ee387cf53d2157250654f",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/theme.rs",
+      "objectType": "file",
+      "sizeBytes": 26125,
+      "sha256": "f5a7ad70f1fc2edf89402bc0b5beedfb5dac419f611a409e5873114bc8f15adb",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui.rs",
+      "objectType": "file",
+      "sizeBytes": 9026,
+      "sha256": "5f8bd6a60dc64ca334d32cead583a6020d2b8d2704208b8886c5a53ff3fe8123",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/chrome.rs",
+      "objectType": "file",
+      "sizeBytes": 22748,
+      "sha256": "5062e042e8657375eb9f6dda5892baef1a00555854ee521ec2c1c5055019927c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/config.rs",
+      "objectType": "file",
+      "sizeBytes": 134502,
+      "sha256": "da6f67b088f45437a3a21a5de73556388be6922557427ed343c9d6eb21c722da",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/editor.rs",
+      "objectType": "file",
+      "sizeBytes": 2922,
+      "sha256": "b71d8575f592e25ba32199619d8960bfdd4f864e1ed80a6c69d7af3e53a17187",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 17682,
+      "sha256": "3d5ecfbd2505dc4a99bf5ece48cf60e85573f6765146f5a772a7b4d1afeada95",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 267,
+      "sha256": "c120160e6a50b9249eaf89d89ea487a4b1ecb279d09b21f7fee84906ed346309",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 9078,
+      "sha256": "66f4c61ef0109d3a7f29c244980ec26d71829ffde8041fa55835a53913f862e8",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/provider.rs",
+      "objectType": "file",
+      "sizeBytes": 76825,
+      "sha256": "695679d0f5f66b8a6a4f28a5e285e7f1675dadb2181b22a8f64ccec3adc3128d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/s3.rs",
+      "objectType": "file",
+      "sizeBytes": 6381,
+      "sha256": "c672a2dd46d7f0b9005599ebd23ca01b3effc97da91dc2da6010042fe34b7701",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/shared.rs",
+      "objectType": "file",
+      "sizeBytes": 17880,
+      "sha256": "c58313b702b6419324e6f0295b65ec671b06146be04a29fb2c60fbfd056d2b96",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/forms/webdav.rs",
+      "objectType": "file",
+      "sizeBytes": 5582,
+      "sha256": "0629b511cc692478c40792eefc62b4b594b6559ea782ff318828acf6d724e818",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/header_tests.rs",
+      "objectType": "file",
+      "sizeBytes": 15792,
+      "sha256": "686facc74ec87a9d0a9fba93d87e6070e116c5309a10d5cb06a6ccba21e6cd07",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/home_chart.rs",
+      "objectType": "file",
+      "sizeBytes": 74228,
+      "sha256": "7cc4d481c8f8666da290db55f2507fbeb6e6796e31243b284cc3515745265fbe",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/main_page.rs",
+      "objectType": "file",
+      "sizeBytes": 22842,
+      "sha256": "607ca2136a46e7066776fa47f1a1086398213bf426fce294b2beeea2c40a043c",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 3903,
+      "sha256": "fe9db4f78c94e7d7dfdeabb9658677b401a91745fcaf5cb2d4589d7ae5b07e01",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/action_dialog.rs",
+      "objectType": "file",
+      "sizeBytes": 2638,
+      "sha256": "0bea9087069671f95baaf73ac752beadf4481a7371ef43d09615826153a76ab3",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/basic.rs",
+      "objectType": "file",
+      "sizeBytes": 10050,
+      "sha256": "7336d0bdc6c523c244f19e3e5623fa72189fe650bf5ba33151826812bdfcd57b",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/frame.rs",
+      "objectType": "file",
+      "sizeBytes": 4565,
+      "sha256": "1e0c6945d41c03aadb83a345b073cd099fd4021a6a23fd8ddcda8b60df0051d8",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/layout.rs",
+      "objectType": "file",
+      "sizeBytes": 15541,
+      "sha256": "1cfe4f5a8bf48d0951c86cd29a627cd00b513da371244e43958e81e76de78100",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/mcp_key_value.rs",
+      "objectType": "file",
+      "sizeBytes": 4698,
+      "sha256": "270d7c3a21e779aa456d32eed3ef2a77cc1bc11a6377d8f29c8094b84204d905",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 187,
+      "sha256": "65bda61db39581f3500ed5fd3572e094075d7ae3de25e9b320c767c2950d57ab",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/pickers.rs",
+      "objectType": "file",
+      "sizeBytes": 84166,
+      "sha256": "08409e3316f4b8f63f6ab050f06467350e813bc0bd556ea920f569b26c10e628",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/render.rs",
+      "objectType": "file",
+      "sizeBytes": 10356,
+      "sha256": "48f75f9223f19dacdc66c731edc2379fbcd70eb12efe78062838cf9684ab7e0e",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/overlay/status.rs",
+      "objectType": "file",
+      "sizeBytes": 8871,
+      "sha256": "9dc3cc60ef95d19c82638363d85e4e7e2eff62cb5960799c43aab858b9395e57",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/pricing.rs",
+      "objectType": "file",
+      "sizeBytes": 9618,
+      "sha256": "067c587a4a4a783732fadb87483d99eea3e57e2446c36cde55b5b6c8ac01790d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/prompts.rs",
+      "objectType": "file",
+      "sizeBytes": 2561,
+      "sha256": "4a7fea7ff409619a74ae8c1173a06878c84f0dc1b50f738d6d2bf9220df49448",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/providers.rs",
+      "objectType": "file",
+      "sizeBytes": 25033,
+      "sha256": "a47ae082486929d599c94d9935cff6ab257d6848b5c77e5d3dc230ae94723827",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/proxy_wave.rs",
+      "objectType": "file",
+      "sizeBytes": 3787,
+      "sha256": "4106af306a8456548017423d3b32781fa179a46ec26645c5d3e78a4d3c0670d5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/sessions.rs",
+      "objectType": "file",
+      "sizeBytes": 37947,
+      "sha256": "949f375912848fa9654af6a2c36584892627c1dda7555c5df9a4c684b87af739",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/shared.rs",
+      "objectType": "file",
+      "sizeBytes": 55412,
+      "sha256": "8d813f268f6886ecd90e6d34044bb11efb9f8425ceb6a314a543d8c51c90c08a",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/detail.rs",
+      "objectType": "file",
+      "sizeBytes": 4242,
+      "sha256": "9f53a5540de422d28d898e60408b33a75e219382b3b90707794df9a8150d34ce",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/discover.rs",
+      "objectType": "file",
+      "sizeBytes": 5477,
+      "sha256": "13a27ede315554dc612d9a43cb18f99855cb9d34cff2893a3eb7059e9196317d",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 1290,
+      "sha256": "cf249d7983193cbf115d8234656b09d28ef8f70a78cac98fb9f16146e8f78c29",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/installed.rs",
+      "objectType": "file",
+      "sizeBytes": 3851,
+      "sha256": "234b17f3a0643aa4104fe523b0cb35e8d1b35089f5574d7a60873029f01476c5",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 1450,
+      "sha256": "067c070f28db01e6c36672c61cc08c842a62fb7e974fa0118a56b8506538377f",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/skills/repos.rs",
+      "objectType": "file",
+      "sizeBytes": 3248,
+      "sha256": "959f9eb2186c113fe518e2939deb902a642445a407aa6496a40a7a806e7e89f4",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 512158,
+      "sha256": "3d0bb0e73f7e465a088e508671055fc63b362963372ac63891441a8b8c353175",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/tui/ui/usage.rs",
+      "objectType": "file",
+      "sizeBytes": 54513,
+      "sha256": "62caf1593a7be3e620c6d74212293d88e4a91b263282277ca0f82352f78499cd",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/ui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/ui/colors.rs",
+      "objectType": "file",
+      "sizeBytes": 4738,
+      "sha256": "844aa8ec2f043bb17496cdec3b3b4b9d0b8003e4f214a7a5b0e1c7a1c32f909e",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/ui/formatters.rs",
+      "objectType": "file",
+      "sizeBytes": 259,
+      "sha256": "e888dd3fd95cb0d20e2690bc1c2e00220421f2b2c8c61a135ebb8bf8ee2c2266",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/ui/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 112,
+      "sha256": "cbce65559f9b2e16b49ad672d71939e6400babca146cc613d6a4ac6721cecfe8",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/cli/ui/table.rs",
+      "objectType": "file",
+      "sizeBytes": 160,
+      "sha256": "e362848744257e09b96a268478390da8ff4d262c0bdd37333631019056b411fb",
+      "disposition": "adapt",
+      "destination": "ASM CLI/TUI",
+      "reason": "headless diagnostics, review and command ergonomics"
+    },
+    {
+      "path": "src-tauri/src/codex_config.rs",
+      "objectType": "file",
+      "sizeBytes": 110852,
+      "sha256": "2b429babf4c4f0e0591b6dc993d3308e1e7c71222894c0d018966140f52b12c2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/codex_history_migration.rs",
+      "objectType": "file",
+      "sizeBytes": 138595,
+      "sha256": "c2a7736aaafe504933723afbc28b5a2920d0f52e46bb659823c530200735d268",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/codex_state_db.rs",
+      "objectType": "file",
+      "sizeBytes": 5040,
+      "sha256": "74d26d1813622994e93aae9db886735f808848f713a27abb609dc36e3fc8ab7c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/commands",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/commands/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 19,
+      "sha256": "db0a41f4a815a6e91d427c04dd05299cd0a5695c3ff9aaa3ce171e6732756236",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/commands/workspace.rs",
+      "objectType": "file",
+      "sizeBytes": 14238,
+      "sha256": "1909d4fa502b78dd5a10bae45f0a6a58b50155c3b104ade81f8eb71d4d829095",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/config.rs",
+      "objectType": "file",
+      "sizeBytes": 45248,
+      "sha256": "75c3590bdbf18ccc003ab4053d3987a2058013be1aa81e309543b7f9cf8ae7b3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/daemon",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/ipc",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/ipc/client.rs",
+      "objectType": "file",
+      "sizeBytes": 6953,
+      "sha256": "35a94e51eb87584abda05ccfdfcb97d66fd60e0acabbc89140b9bf726c6ef455",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/ipc/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 50,
+      "sha256": "820941dbdf80c05becf75b95e60ecbffd855bf5248bfcdc9034476af18f01ed7",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/ipc/protocol.rs",
+      "objectType": "file",
+      "sizeBytes": 9136,
+      "sha256": "5683d3bb11a97d0fd2cf2e88f89efd4dd038710b82f3c4e01f9ccb66a13a7547",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/ipc/server.rs",
+      "objectType": "file",
+      "sizeBytes": 9412,
+      "sha256": "95b38d711dbb0af110238146d8590f55cc75492f3c0824e97cc072a3ba9bf417",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/logging.rs",
+      "objectType": "file",
+      "sizeBytes": 6574,
+      "sha256": "760d0f06f83e8c7966e67e3ea2eaa9cbc6d034b54bbd4b61063db7fa013bb2fc",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/migration.rs",
+      "objectType": "file",
+      "sizeBytes": 49286,
+      "sha256": "24d2d04317167c19a16d2b95edd63b1544bccbeeaf7b3afe81e65ee6bb6695ed",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 5726,
+      "sha256": "06d7ef6f24b3783563b8d3d1148d756ac0f7afda1d847690127e44e159190b3f",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/paths.rs",
+      "objectType": "file",
+      "sizeBytes": 7119,
+      "sha256": "82bf7e215fbcea6979d0558926612ad0759a027df74dae2c79a910fb60f6b065",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/pidfile.rs",
+      "objectType": "file",
+      "sizeBytes": 6886,
+      "sha256": "e703a498a98eb8c4ee54d4e5566269e48f3107bf6bf6510e82b3fc03c7a23728",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/restart.rs",
+      "objectType": "file",
+      "sizeBytes": 8102,
+      "sha256": "ed271a8da12065f1c8ab86d2d457d3df13c23f58b766e259986c922938c3f22f",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/daemon/supervisor.rs",
+      "objectType": "file",
+      "sizeBytes": 68996,
+      "sha256": "ef389d65ce327828b80377c913671e319d2f2ef98d453afdeaaf290dabdbaee5",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/backup.rs",
+      "objectType": "file",
+      "sizeBytes": 68662,
+      "sha256": "15fad738b83bbf6f825f7119b1987b7a7d1b822600755b0057e2bdc82237eea2",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/failover.rs",
+      "objectType": "file",
+      "sizeBytes": 8636,
+      "sha256": "a7c0edef6218b8cdb57d4db256fbebe9215577ba5e6c53b7d2f5ae9436a3b039",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 4821,
+      "sha256": "92683ed83d02e7405da78a2d2e6e94b5780607ac421e35c44381d7a5be20a48f",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 729,
+      "sha256": "6696968b77d4f0a6a0549912407ebb0b68f48f8e081215d995dfdae6e129d5fd",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/model_pricing.rs",
+      "objectType": "file",
+      "sizeBytes": 7878,
+      "sha256": "07abe23bc12df37cc3a5f85d9983ab37c3595294b34ef90466ed01dbf2553084",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/prompts.rs",
+      "objectType": "file",
+      "sizeBytes": 2999,
+      "sha256": "2ec3bc53f91127ce2159fa05496f98d159e57845f4891e9b1432367e15ff3e34",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/providers.rs",
+      "objectType": "file",
+      "sizeBytes": 20780,
+      "sha256": "3ec2e4e71fd9b54482c2d438089fc59e38a31ddbf09319dff51a6747a2877866",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/providers_seed.rs",
+      "objectType": "file",
+      "sizeBytes": 1575,
+      "sha256": "7aab3cdfafc189e9e6e9bc2a6f6fec79d681ef47be0f0384cf2eddefbafb899e",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/proxy.rs",
+      "objectType": "file",
+      "sizeBytes": 46747,
+      "sha256": "1730cf480f34d114a6973aad94375311912ece80b83765165ac54027e1b80ec8",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 13318,
+      "sha256": "3aec1a625891a6ffb2c64c5d14304904a9e1f42e52ce43004c9e44040abfe5c9",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/skills.rs",
+      "objectType": "file",
+      "sizeBytes": 12288,
+      "sha256": "7fed12aa055c7bb66829744ca4f94d4f0184bcb8d29e412ceaf1e71a9d95d959",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/stream_check.rs",
+      "objectType": "file",
+      "sizeBytes": 2074,
+      "sha256": "a651f055ec0efd2ac70a30558c1c0fdba990344ff78018b4a2527fa57f9ed526",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/universal_providers.rs",
+      "objectType": "file",
+      "sizeBytes": 2537,
+      "sha256": "218c889886e237c39a8042d66a141363f6ae624f786abac83667c9acc4847934",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/dao/usage_rollup.rs",
+      "objectType": "file",
+      "sizeBytes": 20527,
+      "sha256": "37ce15d6a597fd9e1acc87fcc393640c7160a77ab51cc0605295ffdb20efa4bc",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/migration.rs",
+      "objectType": "file",
+      "sizeBytes": 9754,
+      "sha256": "54866f8571870502b28eb3497fe15c2b73d2ac4fe9bbd928eef967652cb317c2",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 38397,
+      "sha256": "13b28e144921e64813c9cc7ababb905cdf1d908d9155192021af076f4285eabd",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/schema.rs",
+      "objectType": "file",
+      "sizeBytes": 118885,
+      "sha256": "3690fa1766c05a54c91445363b981dc5b999cc4a0494cf2f423dd83b97c60e8e",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/database/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 126247,
+      "sha256": "675cd19effecb07342ce249952376657260d5cfd06bc1e43f7060730fbebd47c",
+      "disposition": "inspire",
+      "destination": "internal/deployment",
+      "reason": "isolated test homes, migration and recovery patterns"
+    },
+    {
+      "path": "src-tauri/src/deeplink",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 6640,
+      "sha256": "6251701b27be30d2cfdd766fe831dfa80a426df860448af80b61880ab3d60ec7",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 3442,
+      "sha256": "75c14700c690efcd51ac769fd5be3ac978d3c8be55ec2cf843c0328e15e098e6",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/parser.rs",
+      "objectType": "file",
+      "sizeBytes": 11155,
+      "sha256": "9d140e1b27ec115dc24af441852563eb9986194992f95e96fd73780472573c7c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 2965,
+      "sha256": "383a4127ac4ef27e090adc54658987048738aa22e74e7436a92e0707f7b562af",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/provider.rs",
+      "objectType": "file",
+      "sizeBytes": 27397,
+      "sha256": "5b2838e801aa4dab718de8e895a74e2d4265ae133d282d795a4aa6a887ff787a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/skill.rs",
+      "objectType": "file",
+      "sizeBytes": 1500,
+      "sha256": "85ce1127e9f5dc71e6df78213f7b3292f013a62942788e25bec999d0c2c9c722",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/deeplink/utils.rs",
+      "objectType": "file",
+      "sizeBytes": 2795,
+      "sha256": "1d8a9a31625f790971daf6adacf3c00617ebcbd5e05e36d06d85b58e6a88d776",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/error.rs",
+      "objectType": "file",
+      "sizeBytes": 3053,
+      "sha256": "c5abf57c6967587fd3b6ec640ad4e94f7b6be6b8b8d314156cd2b814b25ff0fe",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/gemini_config.rs",
+      "objectType": "file",
+      "sizeBytes": 23653,
+      "sha256": "55913145dc109042f29915758026588e3a2680fcf2b2b40b977144b9625662b8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/gemini_mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 7270,
+      "sha256": "b696a430f7a7cdb770538bd5ffdb38089f21e72bb9920883ca257d191a911326",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/hermes_config.rs",
+      "objectType": "file",
+      "sizeBytes": 42861,
+      "sha256": "8d4312fe0aa112016f6b8e19c5c9b181e39d40f69ab5fd886c2bbb96b859bd0d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/import_export.rs",
+      "objectType": "file",
+      "sizeBytes": 957,
+      "sha256": "3652b3b3bfe25c9a87fc38aa77af3bb9ca835f355e9c14c66db7a5946d21b217",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/init_status.rs",
+      "objectType": "file",
+      "sizeBytes": 1022,
+      "sha256": "51efee83b3941f8b862a4cd2f43efd26d78974b89a1df315fde91d2614262ae2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "objectType": "file",
+      "sizeBytes": 2969,
+      "sha256": "7a6716d962a129d95be194dfcaa2ca6c0de6f6eba7ffe16f503b962d8dcd1e48",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "objectType": "file",
+      "sizeBytes": 13045,
+      "sha256": "bbe5adbabd71d85f4069febe8b34e469f5ed7fd9c1cdc671063fc90e75dcb9d0",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 70471,
+      "sha256": "886d3ee03827fafced33390ac48df3bb471ca35acf7f722e9a3983cb0abdbe2c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/model_capabilities.rs",
+      "objectType": "file",
+      "sizeBytes": 9152,
+      "sha256": "7cd830bb4c392f98264a0430d5b83f796e0f59c1a5a6bbe5aa7e09ce7bdcf8dd",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/openclaw_config.rs",
+      "objectType": "file",
+      "sizeBytes": 61397,
+      "sha256": "a9919dd88e653b81f69894ed40f0e59b9f25a237bf3c516df874c4eeab14f1d9",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/opencode_config.rs",
+      "objectType": "file",
+      "sizeBytes": 12345,
+      "sha256": "98d1f5472d7b39b195d57abe5a384c43532731b3035605c54a17d0b4a0c7b842",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 529,
+      "sha256": "f8b068b67def30594f1a4ed9fa4e553de531178980c548129187b4a63519d1e3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/prompt_files.rs",
+      "objectType": "file",
+      "sizeBytes": 2182,
+      "sha256": "56216379d3f255d028a6684bf5dd033405516963dc866eae1952a3736a1a30a3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/provider.rs",
+      "objectType": "file",
+      "sizeBytes": 49576,
+      "sha256": "f04c06be99f911adfd23728f84587e29d69a994071a9eb59121d83f4c0f85665",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/provider_defaults.rs",
+      "objectType": "file",
+      "sizeBytes": 4866,
+      "sha256": "79ec14c25a3796826703b6ddd7a8f8d6126b85fad1645381045bd3e77c2e4628",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/provider_preset_models.rs",
+      "objectType": "file",
+      "sizeBytes": 8195,
+      "sha256": "4812018d5e57005beb98d9ae272e8c3b4cc223621d6b86aeeefee16517904bc0",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/provider_preset_sponsors.rs",
+      "objectType": "file",
+      "sizeBytes": 11470,
+      "sha256": "dd2c79f0fc52ee557f5382a967601db029a867f43657439afe079e6d646e7b7c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/proxy",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/body_filter.rs",
+      "objectType": "file",
+      "sizeBytes": 4631,
+      "sha256": "46140d24dd1f8305281c4be097b2246d99479fa730cbc8350668bc6be70cbc70",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/cache_injector.rs",
+      "objectType": "file",
+      "sizeBytes": 7797,
+      "sha256": "82d17d77545778879d23d4c99bacc9de6f368433181ebae2479e0fce8da3843f",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/circuit_breaker.rs",
+      "objectType": "file",
+      "sizeBytes": 12262,
+      "sha256": "82f87d3c8e9b185243e49427ca6bca2fd079e4fa3bcd0f6b706da83021e930b5",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/copilot_optimizer.rs",
+      "objectType": "file",
+      "sizeBytes": 59323,
+      "sha256": "e4e4005a72c3a86696d7773d23a80cad27fcd414abe05ceb388667fb5bffa978",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/error.rs",
+      "objectType": "file",
+      "sizeBytes": 15247,
+      "sha256": "536fc14ff0931b7984edeec36055e18e2994215bba2449e0368e8a4862b64a79",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder.rs",
+      "objectType": "file",
+      "sizeBytes": 62804,
+      "sha256": "1e3fd2aa7a2b953c7183a5da4ae139472622e79ddb81c2c70814e91076b5910a",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/request_builder.rs",
+      "objectType": "file",
+      "sizeBytes": 43330,
+      "sha256": "bfcd95ec3c3d813d58febe655b7e776956427f7068b6a6fb8dba41d48cec5d01",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/tests",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/tests/error_paths.rs",
+      "objectType": "file",
+      "sizeBytes": 22830,
+      "sha256": "17c24ff563cbd7497b1eed7e41c475ec96b3c18712091ffb9f6ebade493ad678",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/tests/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 13918,
+      "sha256": "24e3fad2f568ca2d2a71912a2687258d9b463806ada2537727f17b2e01fb486d",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/tests/provider_failover.rs",
+      "objectType": "file",
+      "sizeBytes": 63199,
+      "sha256": "a50d9e2c6c10d63a4cf9431a7e649ce59e5a528a2d427dadffeef4c46f4ced20",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/forwarder/tests/request_building.rs",
+      "objectType": "file",
+      "sizeBytes": 79105,
+      "sha256": "48bc163e29fe3ea819bb97606da391002aa68e5cf8451f5f85d19034a30efcc9",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/gemini_url.rs",
+      "objectType": "file",
+      "sizeBytes": 26382,
+      "sha256": "d92adf389a2abac34b6c83220cadea445d3147c6ebcd5c8b2b786df91431dacf",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/handler_context.rs",
+      "objectType": "file",
+      "sizeBytes": 11922,
+      "sha256": "9aec4516f186b1917a1e1148de69806ab8ec533cdbdfa13a1fb13d4db1fac8f9",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/handlers.rs",
+      "objectType": "file",
+      "sizeBytes": 66282,
+      "sha256": "56103cd87572087f054aa64ceb6a08e49d6369c39ebf7108bd431226848e29c7",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/http_client.rs",
+      "objectType": "file",
+      "sizeBytes": 15814,
+      "sha256": "52edfa865b035fe86c268f8ddc194edf4948af3f7219d4ee98b8c3d56b4ecd10",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/json_canonical.rs",
+      "objectType": "file",
+      "sizeBytes": 4754,
+      "sha256": "9008a57da1676424cfcb10cf54ec70a6f7be1c920844d142dbb1e129f79bb318",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/metrics.rs",
+      "objectType": "file",
+      "sizeBytes": 1270,
+      "sha256": "faffa216dc93e4bbad00edf06dd573002326fc6ab73cdf750f12c2d49eef67fe",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 678,
+      "sha256": "65ee5ebf92173feeadfd2f731b79d091e7fc5cdb87d8d43fb0feefe7816a5389",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/model_mapper.rs",
+      "objectType": "file",
+      "sizeBytes": 8821,
+      "sha256": "1eb2307ad87c124365f92ad899e29843a6b3770f45853dd4fcbe742f197c0878",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/provider_router",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/provider_router.rs",
+      "objectType": "file",
+      "sizeBytes": 7791,
+      "sha256": "817f2b37e7219fb17813d8bcc5bcc6280371555e90cb4d274268b3c6342d7430",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/provider_router/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 12652,
+      "sha256": "b8c16ba91ea526d3fd807a180ca02c612e12a21828bc1927a778ab137b579c51",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/provider_router/upstream_endpoint.rs",
+      "objectType": "file",
+      "sizeBytes": 3451,
+      "sha256": "343ff4600419d2a699c5b2fe3635fac48aa6a0d568423d43ce4f8958d9f2cec1",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/adapter.rs",
+      "objectType": "file",
+      "sizeBytes": 870,
+      "sha256": "c7d79a53c56c21e0cc29153fe69590f238e074180471f8f4819463cc7ed89741",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/auth.rs",
+      "objectType": "file",
+      "sizeBytes": 3499,
+      "sha256": "3e201f5e0bcaf2fcadd69ae5b9c4b269ff91c6cb9db370b7866a4a9e32356c7d",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/claude.rs",
+      "objectType": "file",
+      "sizeBytes": 48565,
+      "sha256": "523ecb4bf12d2195732678923d38e54ca56990355fc333a37accc066448ba4e0",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/codex.rs",
+      "objectType": "file",
+      "sizeBytes": 36473,
+      "sha256": "794e5ded3eda3a88913f151ef72e2449226c82b36905cf9651db51d6d5bef228",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/codex_chat_common.rs",
+      "objectType": "file",
+      "sizeBytes": 7193,
+      "sha256": "41412157670fedab83a01461a9fc43acfb9a89fbfd1f9ef786929fa3343da0c8",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/codex_chat_history.rs",
+      "objectType": "file",
+      "sizeBytes": 27254,
+      "sha256": "55012f283557e0dc46d18daa6ffecbb9ba1255b9902718d1c5e66ba510a4a280",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/codex_oauth_auth.rs",
+      "objectType": "file",
+      "sizeBytes": 31214,
+      "sha256": "0b4e819826ad3539e220e5c78960a3066fa99382682208c77bd7bccfec982ea4",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/codex_responses_sse.rs",
+      "objectType": "file",
+      "sizeBytes": 13985,
+      "sha256": "2e4f27b66b51c60244e7a95270bae1ef884433d04bab5684f98fc505302d1057",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/copilot_auth.rs",
+      "objectType": "file",
+      "sizeBytes": 73977,
+      "sha256": "20da941467cf0da65718bea8f872d00f784361fbd6da354230c65074f95a7830",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/copilot_model_map.rs",
+      "objectType": "file",
+      "sizeBytes": 12388,
+      "sha256": "12a2deb98a78574da342372115ff18b4f26fab67ed104bb843827b0561ffd262",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 9311,
+      "sha256": "f7877f4301e005d7f6aee8aac34286922b6f213e4625311ac2bdd85b040cc2ad",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/gemini_schema.rs",
+      "objectType": "file",
+      "sizeBytes": 12002,
+      "sha256": "41f1919b5019381df90fe7d008ef9e3c38be4b45bb20a14cda053a5b47d1cacf",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/gemini_shadow.rs",
+      "objectType": "file",
+      "sizeBytes": 13157,
+      "sha256": "c06ed13057e64e8f8de1df22d06c73293e7a968264bc3452de2f26eef627bd51",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 9574,
+      "sha256": "d52d97ad1e7d4da89a714850af0cd1c35eae0e1dab12e681829f24ee487a6a92",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/streaming.rs",
+      "objectType": "file",
+      "sizeBytes": 75014,
+      "sha256": "c2251bde124c2314b5bac73bdcd3387143d1fcab6d7a363aed739740f7f6a8a1",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/streaming_codex_anthropic.rs",
+      "objectType": "file",
+      "sizeBytes": 51074,
+      "sha256": "4b2b913fe6deb83e3e5472bc83942a5b25c8c420c48880369dc93959d3d403eb",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/streaming_codex_chat.rs",
+      "objectType": "file",
+      "sizeBytes": 59149,
+      "sha256": "405b4b947e61fa9b5ccc82984579b07ad13ac5982dffdcefa1f0455fe33e458a",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/streaming_gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 53056,
+      "sha256": "5f96135b89c13b3b649bd882223d0ba6844d0b33c3ba2e0faff118eb8a75506c",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/streaming_responses.rs",
+      "objectType": "file",
+      "sizeBytes": 60371,
+      "sha256": "4c9a53e53aa317cfd832dafa8b20cfef9638be020bd35389c44bef6e1ee02563",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/transform.rs",
+      "objectType": "file",
+      "sizeBytes": 52794,
+      "sha256": "d6c353400e8974d665d577ffd4722c36e580698400a990a5c3237d17fdf0d71d",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/transform_codex_anthropic.rs",
+      "objectType": "file",
+      "sizeBytes": 121919,
+      "sha256": "fb6bb3ff54ac2d144ebe3b268bea531149fae6c52461a49d17815c871d1f529c",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/transform_codex_chat.rs",
+      "objectType": "file",
+      "sizeBytes": 129393,
+      "sha256": "fa592bafdc54a68d56529e0cd4603ff868493c73e363c3509c5fd75ccec6dbba",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/transform_gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 82276,
+      "sha256": "e08327cb3cc51a08229b028e3d035d969178d4ba52788cd8898253bfd4ca9a40",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/providers/transform_responses.rs",
+      "objectType": "file",
+      "sizeBytes": 42988,
+      "sha256": "ff2324cb2aa82021f2c4a79a30fcf33c24bf3d0491de83f6636c68e5150892b8",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response.rs",
+      "objectType": "file",
+      "sizeBytes": 30172,
+      "sha256": "9ddf9b3f20b773f5e3382cf9c6a567e2a1b09528ef02ce940356c7e08345b583",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response/error_summary.rs",
+      "objectType": "file",
+      "sizeBytes": 1614,
+      "sha256": "3577d2e9be7389b2e9c96c13666af0c46d0db9b1708b336980c5697090199ddc",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 17966,
+      "sha256": "935508ad2719058c6318636b737a98929afc9592ed4282a44b1531d16e579a51",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response_handler",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response_handler.rs",
+      "objectType": "file",
+      "sizeBytes": 12787,
+      "sha256": "899f257cfea940bed0a5af08980a9f5d4415578a1b995c4a8cdba2577414deb2",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/response_handler/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 13305,
+      "sha256": "eb7643dbb678edf8ffd6c6cb165a88da194d47b01004e9ddebc6d0a8beb1ff6a",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/server.rs",
+      "objectType": "file",
+      "sizeBytes": 31177,
+      "sha256": "b18fe78aaf8f1b138fbaec056448a6f445f8953e7fe62990fd32289dcf111196",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/session.rs",
+      "objectType": "file",
+      "sizeBytes": 5789,
+      "sha256": "ba9666c583dabcfaf6b1727ed78d46718c6d86ee10412794f005f6ab9ca6440b",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/sse.rs",
+      "objectType": "file",
+      "sizeBytes": 3717,
+      "sha256": "788f29bc13c352082e66660539f738458af7d9176052377cb438c4f82cdb9fbd",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/switch_lock.rs",
+      "objectType": "file",
+      "sizeBytes": 1047,
+      "sha256": "20d45cb4f3537648fed5e3eb30932aefbaf96dc3cc3a7df1bd9aebf079a42633",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/thinking_budget_rectifier.rs",
+      "objectType": "file",
+      "sizeBytes": 4966,
+      "sha256": "a8454c6faa51f946fdf522e6cc003af043ade54614ebd1cf72b310b852509484",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/thinking_optimizer.rs",
+      "objectType": "file",
+      "sizeBytes": 4460,
+      "sha256": "f74937037f4811a2be5a4225fabfaf2ed20b6e53e96bc3f6e90629e59032e37f",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/thinking_rectifier.rs",
+      "objectType": "file",
+      "sizeBytes": 6872,
+      "sha256": "13af20b4b3bb49ed3ba413e3b993be94123d30b687a1324756daf11c769be472",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/tool_media.rs",
+      "objectType": "file",
+      "sizeBytes": 31685,
+      "sha256": "496ce69210d50a689baff3b88daeb45cd015bd35b8a4e24e97a324c4a0389706",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/types.rs",
+      "objectType": "file",
+      "sizeBytes": 17438,
+      "sha256": "bad5daa1d8673bbec9a340b54feb56f1ff5e19fae3271edd556be175ee184041",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/usage",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/usage/calculator.rs",
+      "objectType": "file",
+      "sizeBytes": 12038,
+      "sha256": "1484e499591a949122e48f1171c418488028199ad7363cb7ebcdab147d42c859",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/usage/logger.rs",
+      "objectType": "file",
+      "sizeBytes": 9471,
+      "sha256": "667487085669e1a5686e3c94679f9a736fd1cd6dfa4a6639a29ae8054f5c0c79",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/usage/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 216,
+      "sha256": "94c28bf5e9136ee8222848029ed57dd0525efa3b38fcfc739b13168716c734a9",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/proxy/usage/parser.rs",
+      "objectType": "file",
+      "sizeBytes": 46096,
+      "sha256": "833306576d4f2b33b58284571f5dddc514dcf809d3c414659d04f74b775cea04",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/resources",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/resources/codex_native_responses_template.json",
+      "objectType": "file",
+      "sizeBytes": 1099,
+      "sha256": "b32f75609319745c339f1acd6e63c44b3abf9801256cea57abdb9b2c60c4d586",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/resources/gpt5_5_template.json",
+      "objectType": "file",
+      "sizeBytes": 46986,
+      "sha256": "711db8a980e873152498cd601e31166348c685e37c305d0855dbb2e9f6867a52",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/auth.rs",
+      "objectType": "file",
+      "sizeBytes": 8005,
+      "sha256": "63700edb804da1fec3d290b74eb170cc9b441e60fbef715cf0746b0a6bbb2e8c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/balance.rs",
+      "objectType": "file",
+      "sizeBytes": 13974,
+      "sha256": "38c142353ec1dad8843aedc74d35052926f374c20725f0ae4ae057770ac67e7f",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/codex_history.rs",
+      "objectType": "file",
+      "sizeBytes": 5388,
+      "sha256": "77d47ca82a4090a7543baef2968927b16e4e4b679f6d9a71c940f4f8f420c7ab",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/codex_oauth.rs",
+      "objectType": "file",
+      "sizeBytes": 7774,
+      "sha256": "328ce8ad65520866032201e37dce9392fd70a46d9595e21c35c1e45c102e49ac",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/codex_oauth_models.rs",
+      "objectType": "file",
+      "sizeBytes": 5777,
+      "sha256": "f253327168eb233b00cf957b994a60b70db1b02c22680261002d9495417281de",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/coding_plan.rs",
+      "objectType": "file",
+      "sizeBytes": 21395,
+      "sha256": "43f46d0614a55d7b70bdc0cc5d575b2386183d537138856138a1ae7b7374f5df",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/config.rs",
+      "objectType": "file",
+      "sizeBytes": 16421,
+      "sha256": "3fd82d6d27b7f934375c3fa5a441d7666ad8627136f65140be47870a2536a2f8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/copilot_auth.rs",
+      "objectType": "file",
+      "sizeBytes": 6345,
+      "sha256": "768602e5167feffb6319a2b16519fb43c543cf83fa9b510f5a583ce1ae733084",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/env_checker.rs",
+      "objectType": "file",
+      "sizeBytes": 6001,
+      "sha256": "1aac526d2c5b4f4eeb2e5a4765edf124407844a177e5d9674cc377c55e65ef8b",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/env_manager.rs",
+      "objectType": "file",
+      "sizeBytes": 10588,
+      "sha256": "35fca6f69f490bf6e3f55cfd1eee0405d2b33bb37f6c97832671025fe60a7204",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/local_env_check.rs",
+      "objectType": "file",
+      "sizeBytes": 47752,
+      "sha256": "e8b12f378f8bf66e61bd02781710e002170db0052253ab5132a1a297528128db",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/mcp.rs",
+      "objectType": "file",
+      "sizeBytes": 13240,
+      "sha256": "8fe613cf095d1bcb4bb1aaf762417e967f5c031ecd15c5bd193070461838ff3f",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 1816,
+      "sha256": "ee8585770a2fdea76583cede877b31ebc18a4556f4c8b6c1efc627dc24983d89",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/model_fetch.rs",
+      "objectType": "file",
+      "sizeBytes": 258,
+      "sha256": "1644514d067a912fe14fcce2399022ef3541fbc55ec7af336f914c87fe9aeaac",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/prompt.rs",
+      "objectType": "file",
+      "sizeBytes": 23486,
+      "sha256": "716d1be9f2f7873f69fc93b5589f4a7ca7febdda3a91bb5adceef32197692d14",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/claude.rs",
+      "objectType": "file",
+      "sizeBytes": 8771,
+      "sha256": "1dbda276b9fbe32679be45035744cee4529a080409ea853fe463a02552e143bc",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/codex.rs",
+      "objectType": "file",
+      "sizeBytes": 24203,
+      "sha256": "8ee5233f60e42d2b34709d4943f513cfaf561dd18355bc4944ff67c19a550f83",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/codex_openai_auth_tests.rs",
+      "objectType": "file",
+      "sizeBytes": 17711,
+      "sha256": "cc60d0e9fede041fd947bc21e19904f92146caf86c0fc50047346d305bd65a56",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/common.rs",
+      "objectType": "file",
+      "sizeBytes": 6914,
+      "sha256": "db2cdccee2c35006466ce16755b3bfc80fff360ee006550e912499758f60c7ec",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/common_config.rs",
+      "objectType": "file",
+      "sizeBytes": 36497,
+      "sha256": "ec4ed26fda50ef6078bd8c85ec4d5a3d65b9777662d5a0f2d88d2d91e6b11f96",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/endpoints.rs",
+      "objectType": "file",
+      "sizeBytes": 4295,
+      "sha256": "a84579c596948abc6eec8afab9817f712b8145b3e3465cf296ffafee5aff1388",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 11717,
+      "sha256": "1712340a0672f9880243866cf048f88d186f331c77ce03351d221b64dc50ef51",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/gemini_auth.rs",
+      "objectType": "file",
+      "sizeBytes": 5688,
+      "sha256": "6699a437d5201490ed3062d482281b6224bf92134371b41ffcf0eee19f7ec983",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/live.rs",
+      "objectType": "file",
+      "sizeBytes": 15481,
+      "sha256": "763bfc2e537296fc51b083868a5b7352cbb720e769b4cc912694d21f89066bb6",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/live_merge.rs",
+      "objectType": "file",
+      "sizeBytes": 25490,
+      "sha256": "729354e08a9ff34684f1d5a11e3d8a09ccd2b24848e39bde25862f313b6fbd4c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 135861,
+      "sha256": "bb8245e2fc4f16c517cb8c92fd9daf510ded8fcfd38ffae5428a096de73f1905",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/models.rs",
+      "objectType": "file",
+      "sizeBytes": 7861,
+      "sha256": "7d42b8e94bec865983362b708183901f9fd2c1a1c07e179d90b1ab4261e91c72",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 238124,
+      "sha256": "cdbc919561d30e3f18d2aaafc2818951e565e56babc6f250133c4050ab4cf66e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/provider/usage.rs",
+      "objectType": "file",
+      "sizeBytes": 31300,
+      "sha256": "c4da63b4d0dcdccbb8b8a5d3e3caa21ac7a2cf3366974c4b254d3966a47c624f",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/proxy",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/proxy.rs",
+      "objectType": "file",
+      "sizeBytes": 355004,
+      "sha256": "24037946fcc0bcf42cfbe1d9e39c167e52a5aa8749d64a769da958f74e2b128a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/proxy/codex_toml.rs",
+      "objectType": "file",
+      "sizeBytes": 5238,
+      "sha256": "c8851856cd4d88ee65357291a787373361859813b9e6377d9b3f4bdc76798aa3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/s3.rs",
+      "objectType": "file",
+      "sizeBytes": 19458,
+      "sha256": "22f2a35b729f89943d3d9d8df3edf728961a7db60fa1873e310eac412be4a0da",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/s3_sync.rs",
+      "objectType": "file",
+      "sizeBytes": 12162,
+      "sha256": "d17ac5742b7b38b07187b9192eacc1ab5b20f3eda0457618bc2768ebd307f142",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost/benchmark_tests.rs",
+      "objectType": "file",
+      "sizeBytes": 6532,
+      "sha256": "2ee9b09bf359b60abb9e323283b2db493602a5205dba683f0258c78c01128fa4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost/hermes.rs",
+      "objectType": "file",
+      "sizeBytes": 18874,
+      "sha256": "d488b5880745cbab1f76ae6c840a58c15c6f585dcf82ed1aac8328da0be16073",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 5227,
+      "sha256": "3409fd42ed37f935f286035cff298986321ceeb221aee25395da5b1d9ffa01df",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost/projection.rs",
+      "objectType": "file",
+      "sizeBytes": 9429,
+      "sha256": "834b559dbe3740523f2f2391f8bac7c6dc3b5e1ee6f16499afd920a2e8ce0a1d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_cost/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 25503,
+      "sha256": "e033f1f8eaebf66d993d9bf4ac1727288b9decaab625739acc6604e658b11fd7",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_usage.rs",
+      "objectType": "file",
+      "sizeBytes": 68915,
+      "sha256": "888e547f4b1c8ac6732fb7beffe057aa343c4f966befe42ebceb016ad7420721",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_usage_codex.rs",
+      "objectType": "file",
+      "sizeBytes": 168288,
+      "sha256": "2070afb7436c7d15b1c2a3f2fe22e4294c193881332c12c7153e83364b0f81f2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_usage_driver.rs",
+      "objectType": "file",
+      "sizeBytes": 58122,
+      "sha256": "5cd737e0136d2842018c61936a40acc7166943fb6af82bb9a887a0dc2a9d4e05",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_usage_gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 26930,
+      "sha256": "07afe89c9a7452dc858d4b0c41e90c6d96e7b40d20fe39a2af5f1c6dd0c2d60c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/session_usage_opencode.rs",
+      "objectType": "file",
+      "sizeBytes": 39658,
+      "sha256": "c52edbaf9b8dcd202767d027eb9f69254d63c2cd64041704a885871b4af852fc",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/skill",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/skill.rs",
+      "objectType": "file",
+      "sizeBytes": 94814,
+      "sha256": "dcd407fdf7472ef3fb4d845d8627b92678f76612ae89a4d05cea60a870bf6c42",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/skill/discovery.rs",
+      "objectType": "file",
+      "sizeBytes": 26327,
+      "sha256": "bf2cc0820ebb6f8c7762f8547f60e333d6316b0792ad1740538f5bb5aa94c0f7",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/speedtest.rs",
+      "objectType": "file",
+      "sizeBytes": 5846,
+      "sha256": "89a8c6b8cd125041ba6f63e837af550e41f946afa1d8085af5d2b7b20857c420",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/sql_helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 8913,
+      "sha256": "76142de93fe0ecf3afe59719b77413c1ec19c9a2e15ae1539c079d874d84c20c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/state_coordination.rs",
+      "objectType": "file",
+      "sizeBytes": 2545,
+      "sha256": "7dd1d82f393d30305936d98621793876e85116510e52ba854a8907deeb0ae655",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 432,
+      "sha256": "133c682b4f4831a469331672d928d85974ca6a31365bdd391a67f316d8b5060c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check/provider_extract.rs",
+      "objectType": "file",
+      "sizeBytes": 8919,
+      "sha256": "fcfee678f3b7eb5fbd7ba2c16e63be4caf0a1e1ae00c23122ffaa20d0e68aa4a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check/service.rs",
+      "objectType": "file",
+      "sizeBytes": 6408,
+      "sha256": "a911e9e45051b6a983fd3cf689fe04c8a7197a40985c4488d6520a5450fe3000",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check/tests.rs",
+      "objectType": "file",
+      "sizeBytes": 10084,
+      "sha256": "a201419df58556ab19b68d3d8d8bc77c9097ed4459d962baa52a0e5ac71276ab",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/stream_check/types.rs",
+      "objectType": "file",
+      "sizeBytes": 1805,
+      "sha256": "117f8ad8ed2452f2e57bc94bdd5e42ce20e0922682dbcc266a0027a8aa72e42e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/subscription.rs",
+      "objectType": "file",
+      "sizeBytes": 43984,
+      "sha256": "d739d0473eb92632a9c1d101cfa952a80f981eb70ed3d9fa49f0c025fd95f6a8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/sync_protocol.rs",
+      "objectType": "file",
+      "sizeBytes": 16583,
+      "sha256": "a632fd7abc54fa013c9120da0fd1896643f0faeed46731b164d005c174a31cab",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/usage_stats.rs",
+      "objectType": "file",
+      "sizeBytes": 129270,
+      "sha256": "5214897165ace174f86a7511196fddde80a6961c68a726ef485f47739bc41190",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/visible_apps.rs",
+      "objectType": "file",
+      "sizeBytes": 15340,
+      "sha256": "7abff4f2290618c2321ac41c04980a64d9d2a3815ffd254bb2737b231153a07d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/webdav.rs",
+      "objectType": "file",
+      "sizeBytes": 22866,
+      "sha256": "64605fc275a8904ad3e7243d406a2a0619ee13804799270f18e46676ecb81838",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/webdav_sync",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/webdav_sync/archive.rs",
+      "objectType": "file",
+      "sizeBytes": 15952,
+      "sha256": "fc42f2f4e3ff44fb62f8bdbd03ba652fade5333af189f8e0e3651f639163b937",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/services/webdav_sync/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 38478,
+      "sha256": "7e7c4d78bd1d07c489f54838e58071dff7eb5417aacc9704ff09bca0c8b5741a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/session_manager",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/cache.rs",
+      "objectType": "file",
+      "sizeBytes": 45403,
+      "sha256": "34e44c7b518fd89398893e89b45e83a0090de2dc3f971821c5c1dc080054feb7",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 26608,
+      "sha256": "ec269b520de0a9c19cdef7002afd84c839ca15d72968417a890599a71051762c",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/paged_manifest.rs",
+      "objectType": "file",
+      "sizeBytes": 147098,
+      "sha256": "690ba23862f75f7e76ef09b28eb53fb834a469fe3a01e884e747bdef0838faad",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/project_scope.rs",
+      "objectType": "file",
+      "sizeBytes": 19311,
+      "sha256": "9085e27163dd1711440f166a2adb24276ad2ceb8a863f028015b2b01a58b7760",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/claude.rs",
+      "objectType": "file",
+      "sizeBytes": 23161,
+      "sha256": "cf719548a35cd2dd3e6bdccfc6892233228d1c44271129b00c276c760f7e122e",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/codex.rs",
+      "objectType": "file",
+      "sizeBytes": 50855,
+      "sha256": "357fb33c3d52583502ba66f85b50a1c0378fb9cf4de8ece1593499339b7403e2",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/gemini.rs",
+      "objectType": "file",
+      "sizeBytes": 22782,
+      "sha256": "4b152c1beda60ee85fe0d780f81e25af01327590ed717280a085f61ad9f67038",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/hermes.rs",
+      "objectType": "file",
+      "sizeBytes": 42138,
+      "sha256": "1803616319864a98ee8d7ad80b594e258b4ce526f91205f885b56dffeff42aa0",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 121,
+      "sha256": "3f7d6498629baad327331a98f1df977244fa5087e2cdf072695953b5b7c686ed",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/openclaw.rs",
+      "objectType": "file",
+      "sizeBytes": 35429,
+      "sha256": "0066f738d4baaa551b1457af495e780b31cd3f4afd421c84f31f9c66ffd5675c",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/opencode.rs",
+      "objectType": "file",
+      "sizeBytes": 85760,
+      "sha256": "148ceb24dc79b12929dca26555036a23b0dbd90f6da482e7435289cfa26864d2",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/providers/utils.rs",
+      "objectType": "file",
+      "sizeBytes": 28116,
+      "sha256": "6317252833785fc483c253d919d6f7d5a9055daa25b02c62bc77c8aa3f7da9ce",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/query_manifest.rs",
+      "objectType": "file",
+      "sizeBytes": 20843,
+      "sha256": "f1b193791f0dcf0f8bd8e9add43f08b8b2b886d65b8c60fa9b10b02236fcda58",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/recent_snapshot.rs",
+      "objectType": "file",
+      "sizeBytes": 21004,
+      "sha256": "41845563f125a4d21275b0545a5ec0ccd902dfcd7bc5357a46176fd63e74b0b9",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/scan_cache_store.rs",
+      "objectType": "file",
+      "sizeBytes": 51775,
+      "sha256": "973d72861114a0d2fe0fffefa84c7bae8f4a105e7e1ed5f023b36544584e78ee",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/terminal",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/terminal/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 11097,
+      "sha256": "0c07590c41305218b6bfe04a558977376e9cb307f0a5b98005f032658f93d158",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/session_manager/transcript.rs",
+      "objectType": "file",
+      "sizeBytes": 155871,
+      "sha256": "6278caf20031e8acddfbdda0b0e141fa6fe184511b9a33ee508809d9dcc9f9f5",
+      "disposition": "reject",
+      "reason": "provider, proxy and runtime scope excluded"
+    },
+    {
+      "path": "src-tauri/src/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 53384,
+      "sha256": "7eece0a328e51f55b17fc1ccd1103fd8ee585c6f90951276745f5bf883a8fbcc",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/store.rs",
+      "objectType": "file",
+      "sizeBytes": 47400,
+      "sha256": "6d9a56a91a91c5db1caa2cd95402788d1b50669639ce16dd8c659c09c040e527",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/sync_policy.rs",
+      "objectType": "file",
+      "sizeBytes": 1751,
+      "sha256": "b86fc481ce248fd31191d6d2fa75d45b4ac6c680367e915064a4e7582b92de29",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/test_support.rs",
+      "objectType": "file",
+      "sizeBytes": 7190,
+      "sha256": "2d471e13cec70ecdef431e780defe31cad4652f85c31f6abf816c3584cf18a86",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/usage_events.rs",
+      "objectType": "file",
+      "sizeBytes": 275,
+      "sha256": "950d7a3a057ccdc3f52adae992aee277a2108b6b89a2f036c2e0824c907d83f4",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/src/usage_script.rs",
+      "objectType": "file",
+      "sizeBytes": 26237,
+      "sha256": "f4f9e4801f8ebb2bf74bbc5ef4acd5f27e68d71e9dd8dd6049a2c2b9ec49562a",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "CLI configuration adapters"
+    },
+    {
+      "path": "src-tauri/tests",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/app_config_load.rs",
+      "objectType": "file",
+      "sizeBytes": 8485,
+      "sha256": "5ee63d60be25ed12417af55697bd26fc40c3bdd140330e945568298c12a28c12",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/app_type_parse.rs",
+      "objectType": "file",
+      "sizeBytes": 1411,
+      "sha256": "8b8eb713f7adc3434cd50dc3666b992266a4a9463760afec1832b2873f408433",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/claude_plugin_integration_sync.rs",
+      "objectType": "file",
+      "sizeBytes": 3940,
+      "sha256": "54154689c8d78923d9b74cd6af7a5faf5d3e393bf079fcf8e1204f8089841639",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/completions_command.rs",
+      "objectType": "file",
+      "sizeBytes": 5420,
+      "sha256": "296b21460e0b723ae4b0816dfa23ff014d9c820bc1b203692bc675caeaa7942d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/credential_display_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 8252,
+      "sha256": "50318bcaf50c1db66caddedd55a2560e5a519b6e6ab8cc677b3490701e8e69a3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/deeplink_import.rs",
+      "objectType": "file",
+      "sizeBytes": 24090,
+      "sha256": "3a979b3728cfd079e3125f598b3295b8487b29029ede9898143fe07921958f89",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/import_export_sync.rs",
+      "objectType": "file",
+      "sizeBytes": 47970,
+      "sha256": "91462b70a9e269ce96ffac4f2d40a45a7434fddabcbfd58ecf1a23eb820bc1a3",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/install_script.rs",
+      "objectType": "file",
+      "sizeBytes": 8088,
+      "sha256": "08983ecb91834d11c340ae02cc4e2eb53c2480930124759d5ef7a11324a62237",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/mcp_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 27629,
+      "sha256": "cf425b9f0cefa5c08fc249e16555715d16256deb23c7c40053e7c28638c8cf1d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/openclaw_config.rs",
+      "objectType": "file",
+      "sizeBytes": 36022,
+      "sha256": "b9a2598da093baab82d185ed3aed41dfae08649314146830926d439f07cc6ae1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/opencode_provider.rs",
+      "objectType": "file",
+      "sizeBytes": 21478,
+      "sha256": "67a142326739c9dbf7886e93f8d094c8320fe911ae7e6f9318e8199498005708",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/prompt_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 9930,
+      "sha256": "29055144acf56118332f23241645736aacd64d36eaee3b53af9bd50c22e90f6d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/provider_add_noninteractive.rs",
+      "objectType": "file",
+      "sizeBytes": 26857,
+      "sha256": "f84376fcf76c37b9f58dbf464f2a9c3adb63bfd2a86e22a18a2a060bc6e6e48e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/provider_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 70070,
+      "sha256": "f8d029cd702662a811867f2bb2ee2f7df83499c063191302bb9ff31bde7acba1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/provider_model_roundtrip.rs",
+      "objectType": "file",
+      "sizeBytes": 3303,
+      "sha256": "67d00fd41c8cc9ade7b17c331779c74f0dd97991267c53e7d478dd49980be5eb",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/provider_service.rs",
+      "objectType": "file",
+      "sizeBytes": 168547,
+      "sha256": "7a658dac15c7cb3037781ade2b40679b3e9935f3f579932e6421352ba0a13923",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/provider_switch_settings_sync.rs",
+      "objectType": "file",
+      "sizeBytes": 2257,
+      "sha256": "327577afc6aebac961ba6d089b2ed4f1d8ec22f1a7841793418e863c5770cf3e",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_forwarder_alignment.rs",
+      "objectType": "file",
+      "sizeBytes": 38880,
+      "sha256": "d8ab4b18794be5b1b411f04c46f82809a34a23ace77fcdca0a3109c3b73b74cb",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_model_mapping.rs",
+      "objectType": "file",
+      "sizeBytes": 13273,
+      "sha256": "b704adcc94f383ce391f8dfdb908ecd0d87ff0724c27b771a46aeda50633d125",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat.rs",
+      "objectType": "file",
+      "sizeBytes": 280,
+      "sha256": "5efa164611ae6c9702cc111cc64e4be72335640ca8556892290d7c2b5f63f286",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat/error_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 14330,
+      "sha256": "63e3ee7795fab483446b7a8585755f2b210858d1d737502e791c235fa9c24e7c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat/helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 11406,
+      "sha256": "b550a1060615c36d2f89c527d5f1e3afd7158e1c022c03895cf148a69d920f0c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat/logging_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 7533,
+      "sha256": "07539b888c93582b7b02f9557a4487716e45dcb021832be63959d4934388a048",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_openai_chat/transform_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 16491,
+      "sha256": "29a9900d4796e7c9a523286b31f9768eabb1eec05881b4b97a799eab4381f587",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_response_parity.rs",
+      "objectType": "file",
+      "sizeBytes": 8625,
+      "sha256": "8a7d97708dae682aa4a2096140d912a9baf8da51b6cb756d1284e71c362980c1",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming.rs",
+      "objectType": "file",
+      "sizeBytes": 268,
+      "sha256": "20897235442bd5c77362bae350f71f4dd69c494511093929b74556beb63c1b17",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming/error_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 50265,
+      "sha256": "a769a4463452401b83e96fa74b7a0b0be4a39909d3ccc0c1208683bd8e0bc2be",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming/helpers.rs",
+      "objectType": "file",
+      "sizeBytes": 4073,
+      "sha256": "7f928c6166f59435bb5d7dba91a3a6e50ed0cb3690708089b8bcf68f5477d1fe",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming/logging_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 10115,
+      "sha256": "d5e231f3e70843175d2693d28541dc462fc28ad3711200b2225e9dca26eb42d5",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_claude_streaming/success_cases.rs",
+      "objectType": "file",
+      "sizeBytes": 25890,
+      "sha256": "ce248a3eb9bf1422191bb358e06a1d96fd92dfc5b264f3022b059dae895022b5",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_daemon.rs",
+      "objectType": "file",
+      "sizeBytes": 37250,
+      "sha256": "0053f1e6eb40261e08565d81fe313dde5d30b6e79bca55fddec299b1de52b787",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_database.rs",
+      "objectType": "file",
+      "sizeBytes": 9944,
+      "sha256": "c27a61acfae404cd7defbe4234f4ca6dce605305baff491f12eea6e819f420ff",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_multi_app_passthrough.rs",
+      "objectType": "file",
+      "sizeBytes": 29184,
+      "sha256": "93f949a09768eb5a9f8cbf33c9166b595c6ac61f5670084a1926beba78dfe832",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_service.rs",
+      "objectType": "file",
+      "sizeBytes": 51190,
+      "sha256": "68a76e2ad237a9f11dd08c290b7be23fa817be10211d36c935f1436621001ad6",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_takeover.rs",
+      "objectType": "file",
+      "sizeBytes": 38180,
+      "sha256": "e661b2f99c564b95dfd5ac3795f0f13a97cc79c762d54027630f99efb3a3ccc8",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/proxy_upstream_error_summary.rs",
+      "objectType": "file",
+      "sizeBytes": 3808,
+      "sha256": "aa198b5378e2dc397f5385166c71b86bfed563a41d08c75707dc549b4486e596",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/s3_settings.rs",
+      "objectType": "file",
+      "sizeBytes": 4887,
+      "sha256": "cc2f811ea41734f0b3bd8efd20bd865c9fbedbd123dedaaf4f5163f03e847abd",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/settings_claude_onboarding_skip.rs",
+      "objectType": "file",
+      "sizeBytes": 1994,
+      "sha256": "fd3a27834303d83d37725d7aff3f0599372b4f33e6ea0703b2333073f44fc90c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/settings_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 3264,
+      "sha256": "0529b86d785706e6bef29a6a10ba3de3462a9fb2bfd4d66ea947c3722fa4e5d2",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/settings_current_provider.rs",
+      "objectType": "file",
+      "sizeBytes": 11739,
+      "sha256": "28e25336a1646eecc8149e1c40c0eebce901859d5915ccdf4fcd966e90ee45c6",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/settings_visible_apps.rs",
+      "objectType": "file",
+      "sizeBytes": 17206,
+      "sha256": "fad981ce93ef835b44c500eda124520ce2884012a677859606211ed395b89bd7",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/skills_service.rs",
+      "objectType": "file",
+      "sizeBytes": 11103,
+      "sha256": "39b45eec2a76bbd1bd659f60fe59dafcbbf3a910097124eb44b5090a75a4ef6c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/stream_check_claude_openai_responses.rs",
+      "objectType": "file",
+      "sizeBytes": 3500,
+      "sha256": "149aee3d10ff883fd016e75a4ceb31b6ab4b57624b85287a30bbf0a4a3fa038d",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/support.rs",
+      "objectType": "file",
+      "sizeBytes": 8586,
+      "sha256": "c2e62dea7d828d4bfa0e81489beed845132894f4e7174833004a1d57360c51ee",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/support_home_isolation.rs",
+      "objectType": "file",
+      "sizeBytes": 540,
+      "sha256": "a97374e930efd7f984f94266012b58bff1a4d0be4c5e2599b2958380ad62bbdc",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/webdav_settings.rs",
+      "objectType": "file",
+      "sizeBytes": 7202,
+      "sha256": "8d32fee0a599f63a3f82bbced143f83637308b05ff98d06310cecff7f30f344c",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/webdav_sync_service.rs",
+      "objectType": "file",
+      "sizeBytes": 22320,
+      "sha256": "4d7837ff24d88f5f6d4ab1fc328c74b2c60eb7c258024ed7bd5a543341dd8a91",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/tests/workspace_commands.rs",
+      "objectType": "file",
+      "sizeBytes": 18626,
+      "sha256": "0f22f49f836c7736d6308725a291e25908756ae67c552080cdf624e88102ee12",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/updater",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/updater/minisign.pub",
+      "objectType": "file",
+      "sizeBytes": 109,
+      "sha256": "db51260ceffc40673fe9332f9f1802d55b45d167f02f9dd4b0641ebc5b70d098",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/wix",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    },
+    {
+      "path": "src-tauri/wix/per-user-main.wxs",
+      "objectType": "file",
+      "sizeBytes": 17032,
+      "sha256": "b594136541bcdc7b09d544c6b20a5a53fc78f18d7a922b60b578c26ab0521275",
+      "disposition": "adapt",
+      "destination": "internal/adapters",
+      "reason": "Tauri CLI integration"
+    }
+  ]
+}

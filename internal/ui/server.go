@@ -3,6 +3,7 @@ package ui
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"embed"
 	"encoding/hex"
 	"encoding/json"
@@ -18,6 +19,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -25,8 +27,10 @@ import (
 	"github.com/agentstack/agentstack/internal/app"
 	"github.com/agentstack/agentstack/internal/model"
 	"github.com/agentstack/agentstack/internal/planner"
+	"github.com/agentstack/agentstack/internal/resourcehub"
 	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/selfinstall"
+	"github.com/agentstack/agentstack/internal/workspace"
 )
 
 //go:embed web/*
@@ -41,8 +45,35 @@ type Backend interface {
 	MCPDoctor(context.Context) (app.DoctorReport, error)
 }
 
+type progressApplyBackend interface {
+	ApplyPlannedWithProgress(context.Context, string, string, bool, func(app.ApplyProgress)) (app.ApplyReport, error)
+}
+
 type fabricStatusBackend interface {
 	FabricStatus(time.Time) (app.FabricStatus, error)
+}
+
+type environmentDataBackend interface {
+	ListResources() ([]resourcehub.Resource, error)
+	ListResourceTargets() ([]resourcehub.Target, error)
+	ListWorkspaces() ([]workspace.Item, error)
+}
+
+type resourceTargetMutationBackend interface {
+	RegisterResourceTarget(resourcehub.Target) error
+}
+
+type resourceInspectionBackend interface {
+	InspectResourceSync() (resourcehub.SyncInspection, error)
+}
+
+type resourceBatchSyncBackend interface {
+	PlanResourceBatchSync([]string, []string, int) (resourcehub.BatchSyncPlan, error)
+	ApplyResourceBatchSync(context.Context, string, string, bool) (resourcehub.BatchSyncReport, error)
+}
+
+type transactionHistoryBackend interface {
+	ListTransactions(int) ([]model.Transaction, error)
 }
 
 type routineBackend interface {
@@ -57,13 +88,19 @@ type HandlerOptions struct {
 	SessionID   string
 	Version     string
 	Revision    string
+	HomeDir     string
 	InstallSelf func() (any, error)
 	Shutdown    func()
 }
 
+type WindowLauncher func(context.Context, string) error
+
 type RunOptions struct {
 	ListenAddress string
 	OpenBrowser   bool
+	Launcher      WindowLauncher
+	PrintURL      bool
+	Output        io.Writer
 	Logger        *log.Logger
 	Random        io.Reader
 }
@@ -87,6 +124,11 @@ func (l *requestLimiter) allow(now time.Time) bool {
 }
 
 func NewHandler(options HandlerOptions) http.Handler {
+	if strings.TrimSpace(options.HomeDir) == "" {
+		if home, err := os.UserHomeDir(); err == nil {
+			options.HomeDir = home
+		}
+	}
 	if options.InstallSelf == nil {
 		options.InstallSelf = func() (any, error) { return selfinstall.InstallSelf() }
 	}
@@ -119,6 +161,7 @@ func NewHandler(options HandlerOptions) http.Handler {
 		page := strings.ReplaceAll(string(data), "__AGENTSTACK_TOKEN__", htmlAttribute(options.Token))
 		page = strings.ReplaceAll(page, "__AGENTSTACK_VERSION__", htmlAttribute(options.Version))
 		page = strings.ReplaceAll(page, "__AGENTSTACK_BASE__", htmlAttribute(base))
+		page = strings.ReplaceAll(page, "__AGENTSTACK_ASSET_VERSION__", htmlAttribute(assetVersion(options.Version, options.Revision)))
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = io.WriteString(w, page)
 	})
@@ -149,16 +192,16 @@ func NewHandler(options HandlerOptions) http.Handler {
 			next(w, r)
 		})
 	}
-	startMutation := func(w http.ResponseWriter, kind string, work func(context.Context) (any, error)) {
+	startMutation := func(w http.ResponseWriter, kind string, work func(context.Context, ProgressReporter) (any, error)) {
 		select {
 		case mutationGate <- struct{}{}:
 		default:
 			writeError(w, http.StatusLocked, fmt.Errorf("another AgentStack UI operation is running"))
 			return
 		}
-		receipt, err := operations.start(options.Context, kind, apiBase+"operations/", func(ctx context.Context) (any, error) {
+		receipt, err := operations.start(options.Context, kind, apiBase+"operations/", func(ctx context.Context, report ProgressReporter) (any, error) {
 			defer func() { <-mutationGate }()
-			return work(ctx)
+			return work(ctx, report)
 		})
 		if err != nil {
 			<-mutationGate
@@ -211,6 +254,306 @@ func NewHandler(options HandlerOptions) http.Handler {
 		}
 		writeJSON(w, http.StatusOK, result)
 	}))
+	mux.HandleFunc(apiBase+"sharing-sync", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		backend, ok := options.Backend.(resourceInspectionBackend)
+		if !ok {
+			writeJSON(w, http.StatusOK, resourcehub.SyncInspection{GeneratedAt: time.Now().UTC()})
+			return
+		}
+		inspection, err := backend.InspectResourceSync()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, inspection)
+	}))
+
+	mux.HandleFunc(apiBase+"sharing-sync/plan", mutation(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		backend, ok := options.Backend.(resourceBatchSyncBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("batch synchronization is unavailable in this build"))
+			return
+		}
+		var request struct {
+			TargetIDs   []string `json:"targetIds"`
+			ResourceIDs []string `json:"resourceIds"`
+			MaxParallel int      `json:"maxParallel"`
+		}
+		if !decodeJSON(w, r, &request) {
+			return
+		}
+		if len(request.TargetIDs) == 0 || len(request.ResourceIDs) == 0 {
+			writeError(w, http.StatusBadRequest, fmt.Errorf("select at least one target and one resource"))
+			return
+		}
+		plan, err := backend.PlanResourceBatchSync(request.TargetIDs, request.ResourceIDs, request.MaxParallel)
+		if err != nil {
+			writeError(w, http.StatusBadRequest, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, plan)
+	}))
+
+	mux.HandleFunc(apiBase+"sharing-sync/apply", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		backend, ok := options.Backend.(resourceBatchSyncBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("batch synchronization is unavailable in this build"))
+			return
+		}
+		var request struct {
+			PlanID  string `json:"planId"`
+			Digest  string `json:"digest"`
+			Confirm bool   `json:"confirm"`
+		}
+		if !decodeJSON(w, r, &request) {
+			return
+		}
+		if !request.Confirm {
+			writeError(w, http.StatusBadRequest, resourcehub.ErrConfirmationRequired)
+			return
+		}
+		startMutation(w, "sharing-sync", func(ctx context.Context, _ ProgressReporter) (any, error) {
+			return backend.ApplyResourceBatchSync(ctx, request.PlanID, request.Digest, true)
+		})
+	}))
+
+	mux.HandleFunc(apiBase+"environment-targets", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		backend, ok := options.Backend.(environmentDataBackend)
+		if !ok {
+			writeJSON(w, http.StatusOK, map[string]any{"candidates": discoverTargetCandidates(options.HomeDir, nil)})
+			return
+		}
+		targets, err := backend.ListResourceTargets()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"candidates": discoverTargetCandidates(options.HomeDir, targets)})
+	}))
+	mux.HandleFunc(apiBase+"environment-targets/connect", mutation(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		var request struct {
+			Agent   string `json:"agent"`
+			Enabled bool   `json:"enabled"`
+		}
+		if !decodeJSON(w, r, &request) {
+			return
+		}
+		agent := resourcehub.Agent(strings.TrimSpace(request.Agent))
+		candidate, ok := targetCandidateForAgent(options.HomeDir, agent, nil)
+		if !ok {
+			writeError(w, http.StatusBadRequest, fmt.Errorf("unsupported environment target %q", request.Agent))
+			return
+		}
+		reader, ok := options.Backend.(environmentDataBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("environment connections are unavailable in this build"))
+			return
+		}
+		writer, ok := options.Backend.(resourceTargetMutationBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("environment connections are read-only in this build"))
+			return
+		}
+		targets, err := reader.ListResourceTargets()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		target := resourcehub.Target{ID: candidate.ID, Agent: agent, Root: candidate.Root, Mode: resourcehub.ModeCopy, Enabled: request.Enabled}
+		for _, existing := range targets {
+			if existing.Agent == agent {
+				target = existing
+				target.Enabled = request.Enabled
+				break
+			}
+		}
+		if err := writer.RegisterResourceTarget(target); err != nil {
+			writeError(w, http.StatusBadRequest, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, target)
+	}))
+
+	mux.HandleFunc(apiBase+"environment-targets/batch", mutation(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			methodNotAllowed(w)
+			return
+		}
+		var request struct {
+			Targets []struct {
+				ID      string `json:"id"`
+				Agent   string `json:"agent"`
+				Root    string `json:"root"`
+				Scope   string `json:"scope"`
+				Label   string `json:"label"`
+				Profile string `json:"profile"`
+				Enabled bool   `json:"enabled"`
+			} `json:"targets"`
+		}
+		if !decodeJSON(w, r, &request) {
+			return
+		}
+		if len(request.Targets) == 0 || len(request.Targets) > 64 {
+			writeError(w, http.StatusBadRequest, fmt.Errorf("select between 1 and 64 environment targets"))
+			return
+		}
+		reader, ok := options.Backend.(environmentDataBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("environment connections are unavailable in this build"))
+			return
+		}
+		writer, ok := options.Backend.(resourceTargetMutationBackend)
+		if !ok {
+			writeError(w, http.StatusNotImplemented, fmt.Errorf("environment connections are read-only in this build"))
+			return
+		}
+		existing, err := reader.ListResourceTargets()
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		existingByID := make(map[string]resourcehub.Target, len(existing))
+		for _, target := range existing {
+			existingByID[target.ID] = target
+		}
+		prepared := make([]resourcehub.Target, 0, len(request.Targets))
+		seen := map[string]struct{}{}
+		for index, item := range request.Targets {
+			agent := resourcehub.Agent(strings.TrimSpace(item.Agent))
+			known, supported := knownEnvironmentForAgent(agent)
+			if !supported {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("target %d uses unknown environment %q", index+1, item.Agent))
+				return
+			}
+			if !known.Writable {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("%s is catalogued for discovery but its writable adapter is not verified", known.Name))
+				return
+			}
+			id := strings.TrimSpace(item.ID)
+			if id == "" {
+				id = string(agent) + "-user"
+			}
+			if _, duplicate := seen[id]; duplicate {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("duplicate target id %q", id))
+				return
+			}
+			seen[id] = struct{}{}
+			target, found := existingByID[id]
+			if found && target.Agent != agent {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("target id %q already belongs to %s", id, target.Agent))
+				return
+			}
+			root := strings.TrimSpace(item.Root)
+			scope := strings.TrimSpace(item.Scope)
+			if scope == "" {
+				scope = "global"
+			}
+			if root == "" {
+				if found && strings.TrimSpace(target.Root) != "" {
+					root = target.Root
+				} else if scope == "global" {
+					root = options.HomeDir
+				}
+			}
+			absolute, absErr := filepath.Abs(root)
+			if absErr != nil || strings.TrimSpace(root) == "" {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("target %q requires a valid root", id))
+				return
+			}
+			if scope == "project" {
+				info, statErr := os.Stat(absolute)
+				if statErr != nil || !info.IsDir() {
+					writeError(w, http.StatusBadRequest, fmt.Errorf("project target %q root must be an existing directory", id))
+					return
+				}
+			}
+			prepared = append(prepared, resourcehub.Target{
+				ID: id, Agent: agent, Root: absolute, Mode: resourcehub.ModeCopy, Enabled: item.Enabled,
+				Scope: scope, Label: strings.TrimSpace(item.Label), Profile: strings.TrimSpace(item.Profile),
+			})
+		}
+		for _, target := range prepared {
+			if err := writer.RegisterResourceTarget(target); err != nil {
+				writeError(w, http.StatusBadRequest, err)
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"targets": prepared, "updated": len(prepared)})
+	}))
+
+	mux.HandleFunc(apiBase+"environments", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		inventory, err := options.Backend.Inventory(r.Context())
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, err)
+			return
+		}
+		var resources []resourcehub.Resource
+		var targets []resourcehub.Target
+		var workspaces []workspace.Item
+		if backend, ok := options.Backend.(environmentDataBackend); ok {
+			resources, err = backend.ListResources()
+			if err == nil {
+				targets, err = backend.ListResourceTargets()
+			}
+			if err == nil {
+				workspaces, err = backend.ListWorkspaces()
+			}
+			if err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, buildEnvironmentOverview(runtime.GOOS, options.Backend.CatalogSnapshot(), inventory, resources, targets, workspaces))
+	}))
+	mux.HandleFunc(apiBase+"transactions", authorized(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			methodNotAllowed(w)
+			return
+		}
+		limit := 20
+		if value := strings.TrimSpace(r.URL.Query().Get("limit")); value != "" {
+			parsed, parseErr := strconv.Atoi(value)
+			if parseErr != nil || parsed < 1 || parsed > 100 {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("transaction limit must be between 1 and 100"))
+				return
+			}
+			limit = parsed
+		}
+		transactions := []model.Transaction{}
+		if backend, ok := options.Backend.(transactionHistoryBackend); ok {
+			var err error
+			transactions, err = backend.ListTransactions(limit)
+			if err != nil {
+				writeError(w, http.StatusInternalServerError, err)
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, publicTransactions(transactions))
+	}))
 	mux.HandleFunc(apiBase+"plan", mutation(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			methodNotAllowed(w)
@@ -244,12 +587,18 @@ func NewHandler(options HandlerOptions) http.Handler {
 			writeError(w, http.StatusBadRequest, app.ErrConfirmationRequired)
 			return
 		}
-		startMutation(w, "apply", func(ctx context.Context) (any, error) {
-			result, err := options.Backend.ApplyPlanned(ctx, request.PlanID, request.Digest, true)
-			if err != nil {
-				return map[string]any{"report": result}, err
+		startMutation(w, "apply", func(ctx context.Context, report ProgressReporter) (any, error) {
+			var result app.ApplyReport
+			var err error
+			if backend, ok := options.Backend.(progressApplyBackend); ok {
+				result, err = backend.ApplyPlannedWithProgress(ctx, request.PlanID, request.Digest, true, func(progress app.ApplyProgress) {
+					report(operationProgressFromApply(progress))
+				})
+			} else {
+				result, err = options.Backend.ApplyPlanned(ctx, request.PlanID, request.Digest, true)
 			}
-			return result, nil
+			publicResult := applyOperationResult{Report: publicApplyReport(result), Outcome: buildApplyOutcome(result, err)}
+			return publicResult, err
 		})
 	}))
 	mux.HandleFunc(apiBase+"mcp/init", authorized(func(w http.ResponseWriter, r *http.Request) {
@@ -261,7 +610,7 @@ func NewHandler(options HandlerOptions) http.Handler {
 		if !decodeJSON(w, r, &request) {
 			return
 		}
-		startMutation(w, "mcp-init", func(ctx context.Context) (any, error) {
+		startMutation(w, "mcp-init", func(ctx context.Context, _ ProgressReporter) (any, error) {
 			result, err := options.Backend.MCPInit(ctx, request)
 			if err != nil {
 				return map[string]any{"report": result}, err
@@ -414,7 +763,7 @@ func NewHandler(options HandlerOptions) http.Handler {
 			writeError(w, http.StatusBadRequest, app.ErrConfirmationRequired)
 			return
 		}
-		startMutation(w, "install-self", func(context.Context) (any, error) {
+		startMutation(w, "install-self", func(context.Context, ProgressReporter) (any, error) {
 			return options.InstallSelf()
 		})
 	}))
@@ -500,14 +849,24 @@ func Run(ctx context.Context, handlerOptions HandlerOptions, options RunOptions)
 	if strings.HasPrefix(browserURL, "http://[::]") {
 		browserURL = strings.Replace(browserURL, "http://[::]", "http://127.0.0.1", 1)
 	}
-	fmt.Fprintln(os.Stdout, "AgentStack Manager:", browserURL)
-	if options.OpenBrowser {
+	if options.PrintURL {
+		output := options.Output
+		if output == nil {
+			output = os.Stdout
+		}
+		fmt.Fprintln(output, "AgentStack Manager:", browserURL)
+	}
+	errCh := make(chan error, 1)
+	go func() { errCh <- server.Serve(listener) }()
+	launcherCh := make(chan error, 1)
+	launcherActive := options.Launcher != nil
+	if launcherActive {
+		go func() { launcherCh <- options.Launcher(ctx, browserURL) }()
+	} else if options.OpenBrowser {
 		if err := openBrowser(browserURL); err != nil && options.Logger != nil {
 			options.Logger.Printf("open browser: %v", err)
 		}
 	}
-	errCh := make(chan error, 1)
-	go func() { errCh <- server.Serve(listener) }()
 	select {
 	case <-ctx.Done():
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -518,6 +877,14 @@ func Run(ctx context.Context, handlerOptions HandlerOptions, options RunOptions)
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		return server.Shutdown(shutdownCtx)
+	case err := <-launcherCh:
+		if !launcherActive {
+			return nil
+		}
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		_ = server.Shutdown(shutdownCtx)
+		return err
 	case err := <-errCh:
 		if errors.Is(err, http.ErrServerClosed) {
 			return nil
@@ -579,11 +946,16 @@ func securityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("X-Frame-Options", "DENY")
 		w.Header().Set("Referrer-Policy", "no-referrer")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
-		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("Cache-Control", "no-store, max-age=0, must-revalidate")
 		w.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
 		w.Header().Set("Cross-Origin-Resource-Policy", "same-origin")
 		next.ServeHTTP(w, r)
 	})
+}
+
+func assetVersion(version, revision string) string {
+	sum := sha256.Sum256([]byte(strings.TrimSpace(version) + "\x00" + strings.TrimSpace(revision)))
+	return hex.EncodeToString(sum[:8])
 }
 
 func randomToken(reader io.Reader, byteCount int) (string, error) {

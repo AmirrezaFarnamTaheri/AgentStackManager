@@ -98,3 +98,34 @@ Routine definitions reject secret-bearing positional arguments and assignments. 
 | resource target state | managed state version | 1 |
 
 Legacy raw JSON maps load through compatibility readers. The next mutation writes an envelope. Unknown future versions are rejected.
+
+### Canonical graph and CAS shadow stage
+
+`Resource Hub v1 -> canonical snapshot -> CAS shadow objects -> digest-bound receipt -> verify|restore-to-new-path`
+
+The canonical snapshot and migration receipt are evidence, not mutation authority. CAS objects are immutable and add-only in this phase. Stage runs under the shared fabric lease; verification is read-only. Restore requires explicit confirmation and can only create a new path. Blob files, tree roots, directories, and files are created exclusively. A failed tree restore retains an incomplete marker and partial output so ASM cannot erase content that may have appeared concurrently. A changed Resource Hub graph makes current-state verification stale, but the receipt can still identify its immutable historical CAS objects.
+
+
+### SQLite shadow metadata state
+
+`sealed ASM v1 receipt -> transactional SQLite snapshot rows -> non-authoritative resourcehub-v1 head -> inspect|verify|backup`
+
+SQLite owns only its private shadow index. It cannot grant target or Resource Hub mutation authority. Stage runs under the same cross-process Fabric lease as CAS and Resource Hub mutations. Inspect and verify open the database read-only, require the ASM application ID and supported schema, run quick/foreign-key checks, and reconstruct the exact sealed receipt. The database contains no payload bytes or secret values. A missing database is rebuilt from Resource Hub and CAS; an unrelated existing SQLite database is rejected instead of adopted.
+
+### Adapter capability and fidelity state
+
+`canonical intent -> sealed capability snapshot -> deterministic projection -> sealed loss report -> reviewed core plan -> capability revalidation -> core apply`
+
+Adapters are non-authoritative codecs. They receive observations from Resource Hub or `mcplink`; they do not discover by unrestricted filesystem traversal, write files, execute target CLIs, retain secrets, or authorize mutations. Plans bind adapter version, capability digest, loss-report digest, and operation-level losses. Apply rejects capability drift, identity mismatch, malformed digests, altered fidelity evidence, foreign state, and stale before-state. `--deny-loss` is a Resource Hub planning gate and never grants extra authority.
+
+### Adapter conformance evidence state
+
+`strict embedded corpus -> sealed corpus digest -> differential built-in execution -> per-case evidence digest -> sealed report`
+
+The conformance runner receives only synthetic environment paths and canonical fixtures. It cannot inspect or mutate target state, execute target commands, authorize plans, or load external adapters. A pass establishes compatibility with the checked-in oracle; it does not grant deployment authority. Corpus or report tampering, capability drift, path ambiguity, hidden losses, and invalid no-op postconditions fail closed.
+
+### External adapter conformance state
+
+`absolute path + pinned executable digest -> private staged copy -> handshake -> raw capability -> reviewed capability intersection -> reference/candidate corpus -> sealed differential report -> teardown`
+
+The external host receives only an explicitly supplied executable and synthetic environment. Every adapter method uses a fresh bounded process. The executable descriptor, argument vector, raw/ceiling/effective capability digests, restrictions, reference/candidate evidence, and mismatches are sealed. A passing report does not register or activate the executable. Resource Hub and `mcplink` remain the only target mutation authorities. This process boundary reduces inherited environment and limits duration/output, but it is not a complete network, filesystem, syscall, CPU, memory, or Windows descendant sandbox.

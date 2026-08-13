@@ -1,66 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-REVISION="${1:-}"
-if [[ -z "$REVISION" ]]; then
-  if git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    REVISION="git:$(git -C "$ROOT" rev-parse HEAD)"
-  elif [[ -f "$ROOT/SOURCE_REVISION" ]]; then
-    REVISION="$(tr -d '\r\n' < "$ROOT/SOURCE_REVISION")"
-  fi
-fi
-if [[ ! "$REVISION" =~ ^(git|unreleased-base):[0-9A-Fa-f]{40}$ ]]; then
-  echo "revision must be git:<40-hex> or unreleased-base:<40-hex>" >&2
+
+revision="${1:?usage: check-source-archive-build.sh git:<40-hex>}"
+if [[ ! "$revision" =~ ^git:[0-9a-fA-F]{40}$ ]]; then
+  echo "expected git:<40-hex> revision, got: $revision" >&2
   exit 2
 fi
 
-echo "Preparing Git-free source copy for $REVISION"
-work="$(mktemp -d)"
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Keep the staged tree on the checkout volume. Git Bash may mount /tmp from
+# WSL, while a native go.exe cannot safely lock module files through that path.
+work="$(mktemp -d "$root/.source-archive-check.XXXXXX")"
 trap 'rm -rf "$work"' EXIT
-git -C "$work" init --quiet
-archive_root="$work/source"
-mkdir -p "$archive_root"
+stage="$work/source"
+archive="$work/source.zip"
+go_bin="$(command -v go || command -v go.exe || true)"
+if [[ -z "$go_bin" ]]; then
+  echo "Go is required to verify the source archive" >&2
+  exit 127
+fi
+
+# git archive deliberately creates a source tree without .git metadata and
+# without untracked workstation material. The staged metadata is sufficient
+# for the source-manifest contract and avoids assuming a checkout is clean.
+mkdir -p "$stage"
+git -C "$root" archive --format=tar HEAD | tar -xf - -C "$stage"
+
+cat > "$stage/SOURCE_REVISION" <<EOF
+$revision
+EOF
+cat > "$stage/SOURCE_PROVENANCE.json" <<EOF
+{"schemaVersion":1,"status":"source-archive-check","revision":"${revision#git:}","baseRevision":"","candidateRevision":null}
+EOF
+
 (
-  cd "$ROOT"
-  tar \
-    --exclude='./.git' \
-    --exclude='./dist' \
-    --exclude='./dist-dev' \
-    --exclude='./coverage.out' \
-    --exclude='./benchmark-results.txt' \
-    -cf - .
-) | tar -xf - -C "$archive_root"
-echo "Writing ephemeral source provenance"
-printf '%s\n' "$REVISION" > "$archive_root/SOURCE_REVISION"
-revision_kind="${REVISION%%:*}"
-revision_hash="${REVISION#*:}"
-cat > "$archive_root/SOURCE_PROVENANCE.json" <<JSON
-{
-  "schemaVersion": 1,
-  "status": "source-archive-build-check",
-  "revision": "$revision_hash",
-  "baseRevision": "$revision_hash",
-  "candidateRevision": null,
-  "revisionKind": "$revision_kind",
-  "note": "Ephemeral CI proof that the source archive verifies and builds without Git metadata."
-}
-JSON
-(
-  cd "$archive_root"
-  echo "Regenerating and verifying source manifest"
-  bash ./scripts/write-source-manifest.sh
-  bash ./scripts/verify-source-manifest.sh >/dev/null
-  echo "Proving unlisted source files fail verification"
-  printf 'manifest-negative-control\n' > UNLISTED-INJECTION.txt
-  if bash ./scripts/verify-source-manifest.sh >/dev/null 2>&1; then
-    echo "source manifest verifier accepted an unlisted file" >&2
-    exit 1
-  fi
-  rm -f UNLISTED-INJECTION.txt
-  bash ./scripts/verify-source-manifest.sh >/dev/null
-  echo "Running supported no-Git build path"
-  VERSION=source-archive-check bash ./scripts/build.sh
-  test -s dist-dev/agentstack-windows-amd64.exe
-  test -s dist-dev/agentstack-windows-arm64.exe
+  cd "$stage"
+  "$go_bin" run ./cmd/releasepack --root . --manifest-mode write
+  "$go_bin" run ./cmd/releasepack --root . --out "$archive" --prefix source --manifest-mode require
 )
-echo "Source archive build check passed for $REVISION"

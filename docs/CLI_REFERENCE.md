@@ -147,11 +147,18 @@ All commands emit JSON. Inspection and planning are non-destructive. Mutations r
 
 ```text
 agentstack hub list
+agentstack hub graph
+agentstack hub adapters [--project-root PATH] [--target-root PATH] [--target TARGET]...
+agentstack hub adapter-conformance [--project-root PATH] [--target-root PATH] [--target TARGET]...
+agentstack hub adapter-external-conformance --executable ABS_PATH --sha256 sha256:<hex> --target TARGET [--arg EXACT_ARG]... [--timeout 5s] [--memory-bytes N] [--cpu-percent N] [--max-processes N]
+agentstack hub cas-stage [--root PATH]
+agentstack hub cas-verify --receipt FILE [--root PATH]
+agentstack hub cas-restore --receipt FILE --resource ID --destination PATH --yes [--root PATH]
 agentstack hub import --id ID --kind skill|agent|rule|command|prompt|mcp-server|context --path PATH [--name NAME] [--description TEXT] [--scope SCOPE] [--tag TAG]... [--target AGENT]... [--replace]
 agentstack hub audit --id ID
 agentstack hub targets
-agentstack hub target-add --id ID --agent codex|claude|cursor|opencode|github-copilot|generic --root PATH [--mode auto|copy|link] [--enabled=true|false]
-agentstack hub plan-sync --target ID [--resource ID]... [--prune] [--allow-risk]
+agentstack hub target-add --id ID --agent codex|claude|cursor|opencode|github-copilot|agy|generic --root PATH [--mode auto|copy|link] [--enabled=true|false]
+agentstack hub plan-sync --target ID [--resource ID]... [--prune] [--allow-risk] [--deny-loss]
 agentstack hub apply-sync --plan-id ID --digest SHA --yes
 agentstack hub plan-refresh [--resource ID]...
 agentstack hub apply-refresh --plan-id ID --digest SHA --yes
@@ -161,6 +168,22 @@ agentstack hub remove --id ID --yes
 ```
 
 `hub import` accepts a local regular file or directory. URL-shaped sources are not fetched. Import does not activate a resource. Activation occurs only through reviewed sync.
+
+`hub graph` emits a read-only `fabric.asm.dev/v1alpha1` canonical snapshot of the current Resource Hub registry. Each artifact has a stable canonical ID, content and envelope digests, conservative execution class, target bindings, source and field provenance, and preserved Resource Hub extension data. The version-1 Resource Hub registry remains the mutation authority; this command does not migrate or rewrite it.
+
+`hub adapters` emits read-only `fabric.asm.dev/adapter/v1alpha1` capability snapshots for Codex, Claude, Cursor, AGY/Gemini, OpenCode, GitHub Copilot, and the generic fallback target. Snapshots include artifact-kind and field support, deployment modes, MCP registration mode/location, aliases, version range, and a verifiable digest. Target aliases such as `gemini` resolve to canonical adapter IDs. The command performs no target discovery or mutation.
+
+`hub adapter-conformance` runs the embedded `fabric.asm.dev/adapter-conformance/v1alpha1` oracle against the reviewed built-in adapters and emits a sealed `fabric.asm.dev/adapter-conformance-report/v1alpha1`. It differentially checks capability structure, aliases, MCP registration, every declared artifact projection, candidate-preserving import, visible losses, all plan transitions, and postcondition verification. Target filters accept aliases and deduplicate to the canonical target. The command performs no live target discovery or mutation and exits non-zero after printing the report when any case fails.
+
+`hub adapter-external-conformance` admits one local executable only when its absolute regular-file path and exact SHA-256 digest match, copies those bytes into a private session directory, and invokes one fresh child process per protocol request. It negotiates `fabric.asm.dev/external-adapter/v1alpha1`, intersects raw claims with the reviewed built-in target ceiling, runs the Phase 5 corpus against reference and candidate adapters, and emits a sealed `fabric.asm.dev/external-adapter-conformance-report/v1alpha1`. The command uses synthetic project, target, home, and AGY paths; it never registers the executable or exposes real target state. The process host bounds deadlines, request/response/stderr/executable sizes, arguments, and diagnostics. Optional process ceilings use Windows Job Objects or delegated Linux cgroup v2 scopes; a requested hard limit fails closed when the platform or host does not expose an enforceable controller. These controls do not provide network or filesystem isolation and are not a complete container or WASI sandbox. See [External Adapter Protocol](convergence/EXTERNAL_ADAPTER_PROTOCOL.md).
+
+Resource sync plans now include the reviewed capability digest, an aggregate fidelity report, and operation-level loss records. `--deny-loss` refuses to issue a plan when any transformation, fallback, omission, or unsupported representation is reported. Apply re-resolves the capability snapshot and rejects drift or altered operation-level fidelity evidence before mutation. Short-lived sync or MCP plans created by an older build must be regenerated because they do not contain the required capability evidence.
+
+`hub cas-stage` creates a verified shadow copy of current Resource Hub payloads in ASM's immutable content-addressed store and emits a digest-bound migration receipt. The command deduplicates blobs, records a deterministic tree object for each resource, materializes every object into an isolated temporary directory, and requires the reconstructed content to match the existing Resource Hub digest before the receipt is issued. The Resource Hub registry, target state, reviewed plans, backups, and ownership records remain unchanged.
+
+`hub cas-verify` validates the receipt, confirms that its source graph still matches the current Resource Hub graph, verifies every CAS tree and blob digest, and repeats the legacy-digest round trip. `hub cas-restore` materializes one receipt-bound resource only to a new destination, refuses replacement at both destination and entry level, and requires `--yes`. Tree restores use an incomplete marker until every entry and mode verifies. A failed or mismatched restore is retained for inspection instead of being deleted, because concurrently introduced content must never be removed implicitly. The default CAS root is `<data-root>/fabric/cas`; `--root` supports an explicit isolated store.
+
+`hub db-stage` creates or advances the non-authoritative SQLite shadow head from a freshly verified CAS receipt. `hub db-inspect` performs read-only SQLite integrity, schema, migration-ledger, receipt, artifact-row, and resource-row checks. `hub db-verify` additionally proves that the stored receipt still matches current Resource Hub and CAS state. `hub db-backup` requires `--yes`, uses SQLite online backup, verifies the temporary copy, and atomically refuses destination replacement. The default database is `<data-root>/fabric/metadata.db`. Database commands fail closed when the build has no native SQLite backend; existing ASM commands remain available.
 
 ### Project context
 
@@ -234,4 +257,5 @@ agentstack mcp clients plan [--root PATH] [--mode link|unlink] [--client codex|c
 agentstack mcp clients apply [--root PATH] --plan-id ID --digest SHA --yes
 ```
 
-Client plans preserve foreign entries and fail on a foreign same-name `agentstack-router` entry.
+Client plans preserve foreign entries and fail on a foreign same-name `agentstack-router` entry. They also bind `fabric.asm.dev/adapter/v1alpha1` capability snapshots and fidelity reports for every selected client. Apply rejects invalid snapshots, capability drift, or altered loss evidence before calling the existing client-config or Codex registration authority.
+

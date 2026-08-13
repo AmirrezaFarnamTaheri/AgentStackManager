@@ -45,6 +45,7 @@ func TestRunSetupNoLaunchUsesVerifiedConsole(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	installedPath := ""
 	code := run(context.Background(), []string{"--no-launch"}, launchConfig{DefaultMode: "setup"}, launchDependencies{
+		EnsureElevated:     func([]string, bool) (bool, error) { return false, nil },
 		Executable:         func() (string, error) { return "setup.exe", nil },
 		FindConsoleSibling: func(string, string) (string, error) { return "console.exe", nil },
 		VerifyReleasePair:  func(string, string, string, string) error { return nil },
@@ -68,6 +69,7 @@ func TestRunSetupInitializationFailureNotifies(t *testing.T) {
 	var stderr bytes.Buffer
 	notification := ""
 	code := run(context.Background(), []string{"--no-launch"}, launchConfig{DefaultMode: "setup"}, launchDependencies{
+		EnsureElevated:     func([]string, bool) (bool, error) { return false, nil },
 		Executable:         func() (string, error) { return "setup.exe", nil },
 		FindConsoleSibling: func(string, string) (string, error) { return "console.exe", nil },
 		VerifyReleasePair:  func(string, string, string, string) error { return nil },
@@ -83,11 +85,62 @@ func TestRunSetupInitializationFailureNotifies(t *testing.T) {
 func TestRunSetupVerificationFailureStops(t *testing.T) {
 	notification := ""
 	code := run(context.Background(), nil, launchConfig{DefaultMode: "setup"}, launchDependencies{
+		EnsureElevated:     func([]string, bool) (bool, error) { return false, nil },
 		Executable:         func() (string, error) { return "setup.exe", nil },
 		FindConsoleSibling: func(string, string) (string, error) { return "", errors.New("console missing") },
 		NotifyError:        func(_, message string) { notification = message },
 	})
 	if code != 1 || !strings.Contains(notification, "console missing") {
 		t.Fatalf("run() code = %d, notification = %q", code, notification)
+	}
+}
+
+func TestRunDefaultUILaunchRelaunchesElevatedBeforeServiceInitialization(t *testing.T) {
+	serviceCalled := false
+	elevationArgs := []string(nil)
+	code := run(context.Background(), nil, launchConfig{DefaultMode: "ui"}, launchDependencies{
+		EnsureElevated: func(args []string, markerPresent bool) (bool, error) {
+			elevationArgs = append([]string(nil), args...)
+			if markerPresent {
+				t.Fatal("initial launch unexpectedly contained elevation marker")
+			}
+			return true, nil
+		},
+		NewService: func() (*app.Service, error) {
+			serviceCalled = true
+			return &app.Service{}, nil
+		},
+	})
+	if code != 0 || serviceCalled || len(elevationArgs) != 0 {
+		t.Fatalf("code=%d serviceCalled=%v elevationArgs=%v", code, serviceCalled, elevationArgs)
+	}
+}
+
+func TestRunElevatedMarkerPreventsRelaunchLoopAndIsRemoved(t *testing.T) {
+	calls := 0
+	code := run(context.Background(), []string{elevationMarker, "version"}, launchConfig{Version: "1.2.3", Revision: "rev", DefaultMode: "ui"}, launchDependencies{
+		EnsureElevated: func(args []string, markerPresent bool) (bool, error) {
+			calls++
+			if !markerPresent {
+				t.Fatal("marker was not reported")
+			}
+			return false, nil
+		},
+		NewService: func() (*app.Service, error) { return &app.Service{}, nil },
+		Stdout:     &bytes.Buffer{},
+	})
+	if code != 0 || calls != 1 {
+		t.Fatalf("code=%d calls=%d", code, calls)
+	}
+}
+
+func TestRunElevationFailureIsReported(t *testing.T) {
+	var stderr bytes.Buffer
+	code := run(context.Background(), nil, launchConfig{DefaultMode: "ui"}, launchDependencies{
+		EnsureElevated: func([]string, bool) (bool, error) { return false, errors.New("UAC request declined") },
+		Stderr:         &stderr,
+	})
+	if code != 1 || !strings.Contains(stderr.String(), "UAC request declined") {
+		t.Fatalf("code=%d stderr=%q", code, stderr.String())
 	}
 }

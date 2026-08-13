@@ -35,6 +35,8 @@ func writeJSONLine(writer io.Writer, value any, limit int) error {
 }
 
 func readResultLine(reader *bufio.Reader, expected int, limit int) (json.RawMessage, error) {
+	const maxMismatchedResponses = 128
+	mismatched := 0
 	for {
 		line, err := readLimitedLine(reader, limit)
 		if err != nil {
@@ -46,6 +48,10 @@ func readResultLine(reader *bufio.Reader, expected int, limit int) (json.RawMess
 		}
 		var id int
 		if len(response.ID) == 0 || json.Unmarshal(response.ID, &id) != nil || id != expected {
+			mismatched++
+			if mismatched > maxMismatchedResponses {
+				return nil, fmt.Errorf("child returned %d mismatched responses without matching id %d", mismatched, expected)
+			}
 			continue
 		}
 		if response.Error != nil {

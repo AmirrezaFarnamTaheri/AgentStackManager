@@ -9,18 +9,24 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
+	"github.com/agentstack/agentstack/internal/adapters/external"
 	"github.com/agentstack/agentstack/internal/mcplink"
+	"github.com/agentstack/agentstack/internal/migrations/asmv1"
+	"github.com/agentstack/agentstack/internal/processctl"
 	"github.com/agentstack/agentstack/internal/resourcehub"
 	"github.com/agentstack/agentstack/internal/routines"
+	"github.com/agentstack/agentstack/internal/safefile"
 	"github.com/agentstack/agentstack/internal/strictjson"
 	"github.com/agentstack/agentstack/internal/workspace"
 )
 
 const maxStrictJSONInputBytes = 1 << 20
+const maxMigrationReceiptBytes = 32 << 20
 
 func (c *CLI) runHub(args []string) int {
 	if len(args) == 0 {
-		return c.failUsage(fmt.Errorf("hub requires list, import, audit, targets, target-add, backups, restore, plan-sync, apply-sync, plan-refresh, apply-refresh, or remove"))
+		return c.failUsage(fmt.Errorf("hub requires list, graph, adapters, adapter-conformance, adapter-external-conformance, cas-stage, cas-verify, cas-restore, db-stage, db-inspect, db-verify, db-backup, import, audit, targets, target-add, backups, restore, plan-sync, apply-sync, plan-refresh, apply-refresh, or remove"))
 	}
 	switch args[0] {
 	case "list":
@@ -32,6 +38,210 @@ func (c *CLI) runHub(args []string) int {
 			return c.fail(err)
 		}
 		return c.printJSON(map[string]any{"resources": items})
+	case "graph":
+		if len(args) != 1 {
+			return c.failUsage(fmt.Errorf("hub graph does not accept arguments"))
+		}
+		snapshot, err := c.Service.CanonicalResourceGraph()
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(snapshot)
+	case "adapters":
+		fs := flag.NewFlagSet("hub adapters", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		projectRoot := fs.String("project-root", ".", "project root used to resolve project-local client paths")
+		targetRoot := fs.String("target-root", "", "target root used for resource projections; defaults to project root")
+		var targets stringValues
+		fs.Var(&targets, "target", "adapter target; repeat or comma-separate")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub adapters arguments"))
+		}
+		capabilities, err := c.Service.AdapterCapabilities(*projectRoot, *targetRoot, targets.Values())
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(map[string]any{"contract": adapters.ContractVersion, "adapters": capabilities})
+	case "adapter-conformance":
+		fs := flag.NewFlagSet("hub adapter-conformance", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		projectRoot := fs.String("project-root", ".", "project root used to resolve project-local client paths")
+		targetRoot := fs.String("target-root", "", "target root used for resource projections; defaults to project root")
+		var targets stringValues
+		fs.Var(&targets, "target", "adapter target or alias; repeat or comma-separate")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub adapter-conformance arguments"))
+		}
+		report, err := c.Service.AdapterConformance(*projectRoot, *targetRoot, targets.Values())
+		if err != nil {
+			return c.fail(err)
+		}
+		if code := c.printJSON(report); code != 0 {
+			return code
+		}
+		if !report.Passed() {
+			return 1
+		}
+		return 0
+	case "adapter-external-conformance":
+		fs := flag.NewFlagSet("hub adapter-external-conformance", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		executable := fs.String("executable", "", "absolute path to a standalone external adapter executable")
+		executableDigest := fs.String("sha256", "", "pinned executable digest in sha256:<hex> form")
+		target := fs.String("target", "", "reviewed target adapter or alias to emulate")
+		timeout := fs.Duration("timeout", external.DefaultLimits().Timeout, "per-request deadline; maximum 30s")
+		memoryBytes := fs.Uint64("memory-bytes", 0, "optional hard process-tree memory ceiling; Linux cgroup v2 or Windows Job Object")
+		cpuPercent := fs.Uint("cpu-percent", 0, "optional hard CPU ceiling from 1 through 100")
+		maxProcesses := fs.Uint("max-processes", 0, "optional hard active-process ceiling")
+		var fixedArguments []string
+		fs.Func("arg", "fixed executable argument; repeat to preserve exact argument boundaries", func(value string) error {
+			fixedArguments = append(fixedArguments, value)
+			return nil
+		})
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 || *executable == "" || *executableDigest == "" || *target == "" {
+			return c.failUsage(fmt.Errorf("hub adapter-external-conformance requires --executable PATH --sha256 SHA256 --target TARGET"))
+		}
+		processLimits := processctl.Limits{MemoryBytes: *memoryBytes, CPUPercent: uint32(*cpuPercent), ActiveProcesses: uint32(*maxProcesses)}
+		report, err := c.Service.ExternalAdapterConformance(*executable, *executableDigest, *target, fixedArguments, *timeout, processLimits)
+		if err != nil {
+			return c.fail(err)
+		}
+		if code := c.printJSON(report); code != 0 {
+			return code
+		}
+		if !report.Passed {
+			return 1
+		}
+		return 0
+	case "cas-stage":
+		fs := flag.NewFlagSet("hub cas-stage", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		root := fs.String("root", "", "CAS root; defaults to the AgentStack data root")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub cas-stage arguments"))
+		}
+		receipt, err := c.Service.StageResourceHubCAS(*root)
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(receipt)
+	case "cas-verify":
+		fs := flag.NewFlagSet("hub cas-verify", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		root := fs.String("root", "", "CAS root; defaults to the AgentStack data root")
+		receiptPath := fs.String("receipt", "", "ASM v1 migration receipt JSON")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 || *receiptPath == "" {
+			return c.failUsage(fmt.Errorf("hub cas-verify requires --receipt FILE"))
+		}
+		var receipt asmv1.Receipt
+		if err := readMigrationReceipt(*receiptPath, &receipt); err != nil {
+			return c.fail(err)
+		}
+		if err := c.Service.VerifyResourceHubCAS(*root, receipt); err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(map[string]any{"verified": true, "receiptDigest": receipt.Digest, "sourceGraphDigest": receipt.SourceGraphDigest, "stagedGraphDigest": receipt.StagedGraph.Digest})
+	case "cas-restore":
+		fs := flag.NewFlagSet("hub cas-restore", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		root := fs.String("root", "", "CAS root; defaults to the AgentStack data root")
+		receiptPath := fs.String("receipt", "", "ASM v1 migration receipt JSON")
+		resourceID := fs.String("resource", "", "Resource Hub ID to restore")
+		destination := fs.String("destination", "", "new restore destination")
+		yes := fs.Bool("yes", false, "confirm materialization to the new destination")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 || *receiptPath == "" || *resourceID == "" || *destination == "" || !*yes {
+			return c.failUsage(fmt.Errorf("hub cas-restore requires --receipt FILE --resource ID --destination PATH --yes"))
+		}
+		var receipt asmv1.Receipt
+		if err := readMigrationReceipt(*receiptPath, &receipt); err != nil {
+			return c.fail(err)
+		}
+		if err := c.Service.RestoreResourceHubCAS(*root, receipt, *resourceID, *destination, true); err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(map[string]any{"restored": *resourceID, "destination": *destination, "receiptDigest": receipt.Digest})
+	case "db-stage":
+		fs := flag.NewFlagSet("hub db-stage", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		databasePath := fs.String("db", "", "SQLite metadata path; defaults to the AgentStack data root")
+		casRoot := fs.String("cas-root", "", "CAS root; defaults to the AgentStack data root")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub db-stage arguments"))
+		}
+		summary, err := c.Service.StageResourceHubSQLite(*databasePath, *casRoot)
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(summary)
+	case "db-inspect":
+		fs := flag.NewFlagSet("hub db-inspect", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		databasePath := fs.String("db", "", "SQLite metadata path; defaults to the AgentStack data root")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub db-inspect arguments"))
+		}
+		summary, err := c.Service.InspectResourceHubSQLite(*databasePath)
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(summary)
+	case "db-verify":
+		fs := flag.NewFlagSet("hub db-verify", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		databasePath := fs.String("db", "", "SQLite metadata path; defaults to the AgentStack data root")
+		casRoot := fs.String("cas-root", "", "CAS root; defaults to the AgentStack data root")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 {
+			return c.failUsage(fmt.Errorf("unexpected hub db-verify arguments"))
+		}
+		summary, err := c.Service.VerifyResourceHubSQLite(*databasePath, *casRoot)
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(map[string]any{"verified": true, "metadata": summary})
+	case "db-backup":
+		fs := flag.NewFlagSet("hub db-backup", flag.ContinueOnError)
+		fs.SetOutput(c.errWriter())
+		databasePath := fs.String("db", "", "SQLite metadata path; defaults to the AgentStack data root")
+		destination := fs.String("destination", "", "new SQLite backup destination")
+		yes := fs.Bool("yes", false, "confirm verified no-overwrite backup publication")
+		if err := fs.Parse(args[1:]); err != nil {
+			return 2
+		}
+		if fs.NArg() != 0 || *destination == "" || !*yes {
+			return c.failUsage(fmt.Errorf("hub db-backup requires --destination PATH --yes"))
+		}
+		summary, err := c.Service.BackupResourceHubSQLite(*databasePath, *destination, true)
+		if err != nil {
+			return c.fail(err)
+		}
+		return c.printJSON(summary)
 	case "targets":
 		if len(args) != 1 {
 			return c.failUsage(fmt.Errorf("hub targets does not accept arguments"))
@@ -113,7 +323,7 @@ func (c *CLI) runHub(args []string) int {
 		fs := flag.NewFlagSet("hub target-add", flag.ContinueOnError)
 		fs.SetOutput(c.errWriter())
 		id := fs.String("id", "", "target ID")
-		agent := fs.String("agent", "", "codex|claude|cursor|opencode|github-copilot|generic")
+		agent := fs.String("agent", "", "codex|claude|cursor|opencode|github-copilot|agy|generic")
 		root := fs.String("root", "", "target root")
 		mode := fs.String("mode", string(resourcehub.ModeAuto), "auto|copy|link")
 		enabled := fs.Bool("enabled", true, "enable target")
@@ -134,6 +344,7 @@ func (c *CLI) runHub(args []string) int {
 		target := fs.String("target", "", "registered target ID")
 		prune := fs.Bool("prune", false, "remove stale AgentStack-managed resources")
 		allowRisk := fs.Bool("allow-risk", false, "allow resources blocked by static audit")
+		denyLoss := fs.Bool("deny-loss", false, "fail when the adapter reports any transformation or fallback loss")
 		var resources stringValues
 		fs.Var(&resources, "resource", "resource ID; repeat or comma-separate")
 		if err := fs.Parse(args[1:]); err != nil {
@@ -142,7 +353,7 @@ func (c *CLI) runHub(args []string) int {
 		if fs.NArg() != 0 || *target == "" {
 			return c.failUsage(fmt.Errorf("hub plan-sync requires --target ID"))
 		}
-		plan, err := c.Service.PlanResourceSync(*target, resources.Values(), resourcehub.PlanOptions{TTL: 15 * time.Minute, AllowRisk: *allowRisk, Prune: *prune})
+		plan, err := c.Service.PlanResourceSync(*target, resources.Values(), resourcehub.PlanOptions{TTL: 15 * time.Minute, AllowRisk: *allowRisk, Prune: *prune, DenyLoss: *denyLoss})
 		if err != nil {
 			return c.fail(err)
 		}
@@ -700,6 +911,17 @@ func (c *CLI) runMCPLink(ctx context.Context, args []string) int {
 	default:
 		return c.failUsage(fmt.Errorf("unknown mcp clients command %q", args[0]))
 	}
+}
+
+func readMigrationReceipt(path string, destination *asmv1.Receipt) error {
+	data, err := safefile.ReadBoundedRegular(path, maxMigrationReceiptBytes)
+	if err != nil {
+		return err
+	}
+	if err := strictjson.Decode(data, destination); err != nil {
+		return err
+	}
+	return asmv1.VerifyReceipt(*destination)
 }
 
 func readStrictJSON(path string, destination any) error {

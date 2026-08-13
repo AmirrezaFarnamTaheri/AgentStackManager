@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
+	"github.com/agentstack/agentstack/internal/artifactgraph"
 	"github.com/agentstack/agentstack/internal/integrity"
 	"github.com/agentstack/agentstack/internal/mcp"
 	"github.com/agentstack/agentstack/internal/runner"
@@ -29,6 +31,9 @@ const (
 )
 
 type fileClientChange struct {
+	entryExists    bool
+	owned          bool
+	equivalent     bool
 	content        []byte
 	action         Action
 	reason         string
@@ -60,6 +65,7 @@ type Manager struct {
 	Root        string
 	Options     Options
 	Clock       func() time.Time
+	Adapters    *adapters.Registry
 	beforeApply func(Operation) error
 }
 
@@ -98,23 +104,36 @@ func (m Manager) Plan(mode Mode, clients []ClientKind, ttl time.Duration) (Plan,
 	if len(clients) == 0 {
 		clients = []ClientKind{ClientCodex, ClientClaude, ClientCursor, ClientAgy, ClientOpenCode}
 	}
-	var operations []Operation
+	operations := make([]Operation, 0, len(clients))
+	capabilities := make([]adapters.CapabilitySet, 0, len(clients))
+	lossReports := make([]adapters.LossReport, 0, len(clients))
 	for _, client := range clients {
+		adapter, capability, lossReport, err := m.clientAdapter(client)
+		if err != nil {
+			return Plan{}, err
+		}
 		var operation Operation
-		var err error
 		if client == ClientCodex {
-			operation, err = m.planCodex(mode)
+			operation, err = m.planCodex(mode, adapter, capability, lossReport)
 		} else {
-			operation, err = m.planFileClient(mode, client)
+			operation, err = m.planFileClient(mode, client, adapter, capability, lossReport)
 		}
 		if err != nil {
 			return Plan{}, err
 		}
 		operations = append(operations, operation)
+		capabilities = append(capabilities, capability)
+		lossReports = append(lossReports, lossReport)
 	}
 	sort.Slice(operations, func(i, j int) bool { return operations[i].Client < operations[j].Client })
+	sortCapabilitySnapshots(capabilities)
+	sortLossReports(lossReports)
 	now := m.now()
-	plan := Plan{ID: "mcp-link-" + now.Format("20060102T150405.000000000Z"), Mode: mode, GeneratedAt: now, ExpiresAt: now.Add(ttl), Executable: m.Options.Executable, RouterConfig: m.Options.RouterConfig, Operations: operations}
+	plan := Plan{
+		ID: "mcp-link-" + now.Format("20060102T150405.000000000Z"), Mode: mode,
+		GeneratedAt: now, ExpiresAt: now.Add(ttl), Executable: m.Options.Executable, RouterConfig: m.Options.RouterConfig,
+		AdapterContract: adapters.ContractVersion, CapabilitySnapshots: capabilities, LossReports: lossReports, Operations: operations,
+	}
 	digest, err := planDigest(plan)
 	if err != nil {
 		return Plan{}, err
@@ -159,6 +178,9 @@ func (m Manager) Apply(ctx context.Context, planID, digest string, confirmed boo
 	}
 	if plan.Executable != m.Options.Executable || plan.RouterConfig != m.Options.RouterConfig {
 		return Report{}, fmt.Errorf("MCP link target changed after review")
+	}
+	if err := m.verifyAdapterPlan(plan); err != nil {
+		return Report{}, err
 	}
 
 	type fileBefore struct {
@@ -227,7 +249,7 @@ func (m Manager) Apply(ctx context.Context, planID, digest string, confirmed boo
 		return report, errors.Join(operationErr, rollbackAll())
 	}
 
-	report := Report{PlanID: plan.ID, StartedAt: m.now()}
+	report := Report{PlanID: plan.ID, StartedAt: m.now(), LossReports: append([]adapters.LossReport(nil), plan.LossReports...)}
 	for _, operation := range plan.Operations {
 		if operation.Action == ActionNoop {
 			report.Skipped = append(report.Skipped, operation)
@@ -318,10 +340,10 @@ func (m Manager) restoreCodex(previous registration, existed bool) error {
 	return nil
 }
 
-func (m Manager) planFileClient(mode Mode, client ClientKind) (Operation, error) {
-	path, err := m.clientPath(client)
-	if err != nil {
-		return Operation{}, err
+func (m Manager) planFileClient(mode Mode, client ClientKind, targetAdapter adapters.Adapter, capability adapters.CapabilitySet, lossReport adapters.LossReport) (Operation, error) {
+	path := capability.MCP.Location
+	if path == "" || capability.MCP.RegistrationMode != adapters.MCPRegistrationJSONFile {
+		return Operation{}, fmt.Errorf("adapter %q does not expose a JSON MCP configuration path", targetAdapter.ID())
 	}
 	operation := Operation{Client: client, Path: path}
 	data, readErr := readBoundedFile(path, maxMCPClientConfigBytes)
@@ -336,10 +358,39 @@ func (m Manager) planFileClient(mode Mode, client ClientKind) (Operation, error)
 	if err != nil {
 		return Operation{}, err
 	}
+	desiredDigest := digestBytes(change.content)
+	presence := adapters.PresencePresent
+	if mode == ModeUnlink {
+		presence = adapters.PresenceAbsent
+	}
+	rendered := adapters.RenderedArtifact{
+		ArtifactID: "local/MCPServer/agentstack-router", Kind: artifactgraph.KindMCPServer,
+		Destination: path, RelativeDestination: filepath.ToSlash(path), DesiredDigest: desiredDigest, Support: adapters.SupportNative,
+	}
+	observed := adapters.ObservedArtifact{
+		ArtifactID: rendered.ArtifactID, Kind: rendered.Kind, Location: path,
+		Digest: before, Exists: change.entryExists, Owned: change.owned,
+		Equivalent: mode == ModeLink && change.equivalent,
+	}
+	proposals, err := targetAdapter.Plan(context.Background(), adapters.PlanRequest{
+		Environment: m.adapterEnvironment(), Mode: presence, Rendered: rendered,
+		Observed: observed, Capability: capability, LossReport: lossReport,
+	})
+	if err != nil {
+		return Operation{}, err
+	}
+	if len(proposals) != 1 {
+		return Operation{}, fmt.Errorf("adapter %q proposed %d MCP operations", targetAdapter.ID(), len(proposals))
+	}
+	action, err := mcpAction(proposals[0].Action)
+	if err != nil {
+		return Operation{}, err
+	}
 	operation.BeforeDigest = before
-	operation.Action = change.action
-	operation.Reason = change.reason
-	operation.AfterDigest = digestBytes(change.content)
+	operation.Action = action
+	operation.Reason = proposals[0].Reason
+	operation.AfterDigest = desiredDigest
+	applyMCPAdapterMetadata(&operation, proposals[0], lossReport)
 	return operation, nil
 }
 
@@ -356,7 +407,11 @@ func (m Manager) buildFileClientChange(mode Mode, client ClientKind, data []byte
 	}
 	existing, entryExists := servers["agentstack-router"]
 	expected := registrationMap(m.Options.Executable, m.Options.RouterConfig)
-	change := fileClientChange{}
+	change := fileClientChange{
+		entryExists: entryExists,
+		owned:       entryExists && ownedRegistration(existing),
+		equivalent:  entryExists && equivalentRegistration(existing, expected),
+	}
 	if entryExists {
 		if previousMap := mapValue(existing); previousMap != nil {
 			change.previous, change.previousExists = parseRegistration(previousMap)
@@ -443,49 +498,57 @@ func (m Manager) nextBackupPath(client ClientKind) string {
 	}
 }
 
-func (m Manager) planCodex(mode Mode) (Operation, error) {
-	operation := Operation{Client: ClientCodex, Path: "codex:mcp:agentstack-router"}
+func (m Manager) planCodex(mode Mode, targetAdapter adapters.Adapter, capability adapters.CapabilitySet, lossReport adapters.LossReport) (Operation, error) {
+	if capability.MCP.RegistrationMode != adapters.MCPRegistrationCommand || capability.MCP.Location == "" {
+		return Operation{}, fmt.Errorf("adapter %q does not expose command-managed MCP registration", targetAdapter.ID())
+	}
+	operation := Operation{Client: ClientCodex, Path: capability.MCP.Location}
 	current, exists, err := m.inspectCodex()
 	if err != nil {
 		return Operation{}, err
 	}
-	operation.BeforeDigest, err = registrationDigest(current, exists)
+	beforeDigest, err := registrationDigest(current, exists)
 	if err != nil {
 		return Operation{}, err
 	}
 	expected := registration{Command: m.Options.Executable, Args: []string{"mcp-router", "--config", m.Options.RouterConfig}}
-	if mode == ModeLink {
-		switch {
-		case !exists:
-			operation.Action = ActionCreate
-			operation.Reason = "Codex router entry is absent"
-		case registrationsEquivalent(current, expected):
-			operation.Action = ActionNoop
-			operation.Reason = "Codex router entry is equivalent"
-		case registrationOwned(current):
-			operation.Action = ActionUpdate
-			operation.Reason = "stale AgentStack-owned Codex entry"
-		default:
-			operation.Action = ActionConflict
-			operation.Reason = "foreign Codex entry named agentstack-router is preserved"
-		}
-	} else {
-		switch {
-		case !exists:
-			operation.Action = ActionNoop
-			operation.Reason = "Codex router entry is absent"
-		case registrationOwned(current):
-			operation.Action = ActionRemove
-			operation.Reason = "remove AgentStack-owned Codex entry"
-		default:
-			operation.Action = ActionConflict
-			operation.Reason = "foreign Codex entry named agentstack-router is preserved"
-		}
-	}
-	operation.AfterDigest, err = registrationDigest(expected, mode == ModeLink)
+	afterDigest, err := registrationDigest(expected, mode == ModeLink)
 	if err != nil {
 		return Operation{}, err
 	}
+	presence := adapters.PresencePresent
+	if mode == ModeUnlink {
+		presence = adapters.PresenceAbsent
+	}
+	rendered := adapters.RenderedArtifact{
+		ArtifactID: "local/MCPServer/agentstack-router", Kind: artifactgraph.KindMCPServer,
+		Destination: capability.MCP.Location, RelativeDestination: capability.MCP.Location,
+		DesiredDigest: afterDigest, Support: adapters.SupportNative,
+	}
+	observed := adapters.ObservedArtifact{
+		ArtifactID: rendered.ArtifactID, Kind: rendered.Kind, Location: capability.MCP.Location,
+		Digest: beforeDigest, Exists: exists, Owned: exists && registrationOwned(current),
+		Equivalent: mode == ModeLink && exists && registrationsEquivalent(current, expected),
+	}
+	proposals, err := targetAdapter.Plan(context.Background(), adapters.PlanRequest{
+		Environment: m.adapterEnvironment(), Mode: presence, Rendered: rendered,
+		Observed: observed, Capability: capability, LossReport: lossReport,
+	})
+	if err != nil {
+		return Operation{}, err
+	}
+	if len(proposals) != 1 {
+		return Operation{}, fmt.Errorf("adapter %q proposed %d Codex MCP operations", targetAdapter.ID(), len(proposals))
+	}
+	action, err := mcpAction(proposals[0].Action)
+	if err != nil {
+		return Operation{}, err
+	}
+	operation.BeforeDigest = beforeDigest
+	operation.AfterDigest = afterDigest
+	operation.Action = action
+	operation.Reason = proposals[0].Reason
+	applyMCPAdapterMetadata(&operation, proposals[0], lossReport)
 	return operation, nil
 }
 
@@ -528,36 +591,14 @@ func (m Manager) inspectCodex() (registration, bool, error) {
 }
 
 func (m Manager) clientPath(client ClientKind) (string, error) {
-	root := m.Options.ProjectRoot
-	if root == "" {
-		root = "."
-	}
-	root, err := filepath.Abs(root)
+	_, capability, _, err := m.clientAdapter(client)
 	if err != nil {
 		return "", err
 	}
-	switch client {
-	case ClientClaude:
-		return filepath.Join(root, ".mcp.json"), nil
-	case ClientCursor:
-		return filepath.Join(root, ".cursor", "mcp.json"), nil
-	case ClientOpenCode:
-		return filepath.Join(root, "opencode.json"), nil
-	case ClientAgy:
-		if m.Options.AgyConfig != "" {
-			return filepath.Abs(m.Options.AgyConfig)
-		}
-		home := m.Options.Home
-		if home == "" {
-			home, err = os.UserHomeDir()
-			if err != nil {
-				return "", fmt.Errorf("resolve user home for AGY MCP config: %w", err)
-			}
-		}
-		return filepath.Join(home, ".gemini", "config", "mcp_config.json"), nil
-	default:
+	if capability.MCP.RegistrationMode != adapters.MCPRegistrationJSONFile || capability.MCP.Location == "" {
 		return "", fmt.Errorf("unsupported file MCP client %q", client)
 	}
+	return capability.MCP.Location, nil
 }
 
 func planDigest(plan Plan) (string, error) {

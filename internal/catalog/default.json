@@ -176,7 +176,7 @@
         "kind": "winget",
         "wingetId": "MikeFarah.yq",
         "source": "winget",
-        "version": "4.47.1",
+        "version": "4.53.2",
         "publisher": "Mike Farah"
       },
       "platforms": [
@@ -263,7 +263,7 @@
         "kind": "winget",
         "wingetId": "AquaSecurity.Trivy",
         "source": "winget",
-        "version": "0.65.0",
+        "version": "0.70.0",
         "publisher": "Aqua Security"
       },
       "platforms": [
@@ -778,10 +778,10 @@
       ],
       "install": {
         "kind": "winget",
-        "wingetId": "boyter.scc",
+        "wingetId": "BenBoyter.scc",
         "source": "winget",
-        "version": "3.5.0",
-        "publisher": "boyter"
+        "version": "3.7.0",
+        "publisher": "Ben Boyter"
       },
       "platforms": [
         "windows"

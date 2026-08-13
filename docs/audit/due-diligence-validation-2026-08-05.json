@@ -1,0 +1,37 @@
+{
+  "apiVersion": "audit.asm.dev/due-diligence-validation/v1alpha1",
+  "date": "2026-08-05",
+  "sourceBaseline": "publication-final-ui-clarity-2026.08.05",
+  "summary": {
+    "uniqueItems": 30,
+    "implemented": 12,
+    "alreadySatisfiedOrPreserved": 7,
+    "releaseGated": 3,
+    "dependencyGated": 1,
+    "deferredDesign": 4,
+    "rejectedOrSeparateProject": 3
+  },
+  "authorityInvariants": [
+    "Resource Hub and mcplink remain the only target mutation authorities",
+    "Review remains the sole client-side authorization surface",
+    "the UI remains loopback-bound and bearer-token protected",
+    "external adapter activation remains blocked"
+  ],
+  "implementedControls": [
+    "readable typography and plain-language operational copy",
+    "visible categorized navigation and inline pending-change preview",
+    "focus-preserving catalog filtering and managed settings focus",
+    "explicit light and dark semantic tokens",
+    "44px mobile controls and atomic live announcements",
+    "50-entry browser activity cap",
+    "Linux cgroup v2 process-tree ceilings",
+    "shared external-adapter managed-process controller",
+    "expanded Playwright and axe runtime assertions"
+  ],
+  "unresolvedGates": [
+    "protected Go 1.26.5 build and signing evidence",
+    "reviewed pure-Go SQLite dependency migration",
+    "macOS hard resource containment or WASI sandbox",
+    "physical Windows and macOS runtime matrix"
+  ]
+}

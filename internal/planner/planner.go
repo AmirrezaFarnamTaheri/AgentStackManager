@@ -69,11 +69,8 @@ func Build(c model.Catalog, inventory model.Inventory, request Request) (model.P
 		if component.Capability != capability {
 			return model.Plan{}, fmt.Errorf("component %q does not provide capability %q", componentID, capability)
 		}
-		if excluded[componentID] {
-			return model.Plan{}, fmt.Errorf("provider override for %q references excluded component %q", capability, componentID)
-		}
 		activeProviders[capability] = componentID
-		selected[componentID] = true
+		selectProviderWithDependencies(c, componentID, selected, excluded)
 	}
 	if err := expandDependencies(c, selected, excluded); err != nil {
 		return model.Plan{}, err
@@ -233,6 +230,24 @@ func reconcileActiveProviders(c model.Catalog, selected map[string]bool, active 
 		}
 	}
 	return nil
+}
+
+func selectProviderWithDependencies(c model.Catalog, componentID string, selected, excluded map[string]bool) {
+	queue := []string{componentID}
+	for len(queue) > 0 {
+		id := queue[0]
+		queue = queue[1:]
+		if selected[id] && !excluded[id] {
+			continue
+		}
+		delete(excluded, id)
+		selected[id] = true
+		component, ok := c.ComponentByID(id)
+		if !ok {
+			continue
+		}
+		queue = append(queue, component.DependsOn...)
+	}
 }
 
 func expandDependencies(c model.Catalog, selected, excluded map[string]bool) error {

@@ -3,13 +3,20 @@ package cli
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/agentstack/agentstack/internal/adapters"
+	"github.com/agentstack/agentstack/internal/adapters/builtin"
+	"github.com/agentstack/agentstack/internal/adapters/conformance"
+	"github.com/agentstack/agentstack/internal/adapters/external"
 	"github.com/agentstack/agentstack/internal/app"
+	"github.com/agentstack/agentstack/internal/artifactgraph"
 	"github.com/agentstack/agentstack/internal/runner"
 )
 
@@ -87,6 +94,17 @@ func TestResourceHubContextAndMCPClientCLI(t *testing.T) {
 		t.Fatal(err)
 	}
 	runFabricCLI(t, command, output, "hub", "import", "--id", "safe-skill", "--kind", "skill", "--path", resourceSource)
+	graphJSON := runFabricCLI(t, command, output, "hub", "graph")
+	var graph artifactgraph.Snapshot
+	if err := json.Unmarshal(graphJSON, &graph); err != nil {
+		t.Fatal(err)
+	}
+	if err := artifactgraph.VerifySnapshot(graph); err != nil {
+		t.Fatal(err)
+	}
+	if len(graph.Artifacts) != 1 || graph.Artifacts[0].ID != "local/Skill/safe-skill" {
+		t.Fatalf("graph=%s", graphJSON)
+	}
 	target := filepath.Join(t.TempDir(), "codex")
 	runFabricCLI(t, command, output, "hub", "target-add", "--id", "codex-local", "--agent", "codex", "--root", target, "--mode", "copy")
 	planJSON := runFabricCLI(t, command, output, "hub", "plan-sync", "--target", "codex-local")
@@ -137,5 +155,102 @@ func TestReadStrictJSONRejectsNonRegularInput(t *testing.T) {
 	err := readStrictJSON(t.TempDir(), &value)
 	if err == nil || !strings.Contains(err.Error(), "regular file") {
 		t.Fatalf("error=%v", err)
+	}
+}
+
+func TestHubAdaptersCLIResolvesAliasesAndEmitsVerifiedCapabilities(t *testing.T) {
+	command, output := testFabricCLI(t)
+	project := t.TempDir()
+	payload := runFabricCLI(t, command, output, "hub", "adapters", "--project-root", project, "--target-root", project, "--target", "agy", "--target", "gemini")
+	var response struct {
+		Contract string                   `json:"contract"`
+		Adapters []adapters.CapabilitySet `json:"adapters"`
+	}
+	if err := json.Unmarshal(payload, &response); err != nil {
+		t.Fatal(err)
+	}
+	if response.Contract != adapters.ContractVersion || len(response.Adapters) != 1 || response.Adapters[0].Target != "agy" {
+		t.Fatalf("unexpected adapters response: %s", payload)
+	}
+	if err := adapters.VerifyCapabilitySet(response.Adapters[0]); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestHubAdapterConformanceCLIEmitsVerifiedReport(t *testing.T) {
+	command, output := testFabricCLI(t)
+	project := t.TempDir()
+	payload := runFabricCLI(t, command, output, "hub", "adapter-conformance", "--project-root", project, "--target-root", project, "--target", "agy", "--target", "gemini")
+	var report conformance.Report
+	if err := json.Unmarshal(payload, &report); err != nil {
+		t.Fatal(err)
+	}
+	if err := conformance.VerifyReport(report); err != nil {
+		t.Fatal(err)
+	}
+	if !report.Passed() || len(report.Targets) != 1 || report.Targets[0].Target != "agy" {
+		t.Fatalf("unexpected conformance report: %s", payload)
+	}
+}
+
+func TestExternalAdapterCLIHelperProcess(t *testing.T) {
+	marker := -1
+	for i, value := range os.Args {
+		if value == "asm-cli-external-helper" {
+			marker = i
+			break
+		}
+	}
+	if marker < 0 {
+		t.Skip("helper process")
+	}
+	target := builtin.TargetCodex
+	if marker+1 < len(os.Args) {
+		target = os.Args[marker+1]
+	}
+	adapter, err := builtin.MustRegistry().Get(target)
+	if err != nil {
+		os.Exit(2)
+	}
+	if err := external.ServeOne(context.Background(), adapter, os.Stdin, os.Stdout); err != nil {
+		os.Exit(2)
+	}
+	os.Exit(0)
+}
+
+func TestHubExternalAdapterConformanceCLIEmitsVerifiedReport(t *testing.T) {
+	if raceBuild {
+		t.Skip("full subprocess conformance is covered by normal execution; CLI parsing remains covered by the non-race integration test")
+	}
+	command, output := testFabricCLI(t)
+	executable, err := os.Executable()
+	if err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(executable)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sum := sha256.Sum256(data)
+	digest := "sha256:" + hex.EncodeToString(sum[:])
+	payload := runFabricCLI(t, command, output,
+		"hub", "adapter-external-conformance",
+		"--executable", executable,
+		"--sha256", digest,
+		"--target", "codex",
+		"--arg=-test.run=^TestExternalAdapterCLIHelperProcess$",
+		"--arg=--",
+		"--arg=asm-cli-external-helper",
+		"--arg=codex",
+	)
+	var report external.ConformanceReport
+	if err := json.Unmarshal(payload, &report); err != nil {
+		t.Fatal(err)
+	}
+	if err := external.VerifyConformanceReport(report); err != nil {
+		t.Fatal(err)
+	}
+	if !report.Passed || report.Summary.Matched != report.Summary.Cases || report.Descriptor.Target != "codex" {
+		t.Fatalf("unexpected external conformance report: %s", payload)
 	}
 }
