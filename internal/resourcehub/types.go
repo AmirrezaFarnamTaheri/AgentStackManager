@@ -352,3 +352,78 @@ type BatchSyncReport struct {
 	Cancelled  int                     `json:"cancelled"`
 	Results    []BatchSyncTargetResult `json:"results"`
 }
+
+const LifecycleAPIVersion = "resourcehub.asm.dev/v1alpha1"
+
+type LifecycleState string
+
+const (
+	StateObserved    LifecycleState = "observed"
+	StateParsed      LifecycleState = "parsed"
+	StateClassified  LifecycleState = "classified"
+	StateCandidate   LifecycleState = "candidate"
+	StateCanonical   LifecycleState = "canonical"
+	StateProjected   LifecycleState = "projected"
+	StateVerified    LifecycleState = "verified"
+	StateIgnored     LifecycleState = "ignored"
+	StateQuarantined LifecycleState = "quarantined"
+	StateAlias       LifecycleState = "alias"
+	StateRetired     LifecycleState = "retired"
+)
+
+type LifecycleTransition struct {
+	ID             string         `json:"id"`
+	From           LifecycleState `json:"from"`
+	To             LifecycleState `json:"to"`
+	Actor          string         `json:"actor"`
+	Reason         string         `json:"reason"`
+	EvidenceDigest string         `json:"evidenceDigest"`
+	Timestamp      time.Time      `json:"timestamp"`
+}
+
+type CandidateRevision struct {
+	RevisionID   string    `json:"revisionId"`
+	SourceDigest string    `json:"sourceDigest"`
+	CreatedAt    time.Time `json:"createdAt"`
+	Reason       string    `json:"reason"`
+	Actor        string    `json:"actor,omitempty"`
+}
+
+type PreservationInfo struct {
+	IsPreserved        bool      `json:"isPreserved"`
+	PreservationReason string    `json:"preservationReason,omitempty"`
+	PreservedBy        string    `json:"preservedBy,omitempty"`
+	PreservedAt        time.Time `json:"preservedAt,omitempty"`
+}
+
+type RetirementReversal struct {
+	ReversedBy string    `json:"reversedBy"`
+	Reason     string    `json:"reason"`
+	ReversedAt time.Time `json:"reversedAt"`
+}
+
+type RetirementInfo struct {
+	RetiredBy string              `json:"retiredBy"`
+	Reason    string              `json:"reason"`
+	RetiredAt time.Time           `json:"retiredAt"`
+	Reversal  *RetirementReversal `json:"reversal,omitempty"`
+}
+
+type LifecycleRecord struct {
+	APIVersion         string                `json:"apiVersion"`
+	ID                 string                `json:"id"`
+	ArtifactID         string                `json:"artifactId"`
+	ArtifactDigest     string                `json:"artifactDigest"`
+	ResourceID         string                `json:"resourceId,omitempty"`
+	State              LifecycleState        `json:"state"`
+	SourceURI          string                `json:"sourceUri"`
+	SourceDigest       string                `json:"sourceDigest"`
+	Aliases            []string              `json:"aliases,omitempty"`
+	CandidateRevisions []CandidateRevision   `json:"candidateRevisions,omitempty"`
+	Preservation       PreservationInfo      `json:"preservation"`
+	Retirement         *RetirementInfo       `json:"retirement,omitempty"`
+	Transitions        []LifecycleTransition `json:"transitions"`
+	CreatedAt          time.Time             `json:"createdAt"`
+	UpdatedAt          time.Time             `json:"updatedAt"`
+	Digest             string                `json:"digest"`
+}

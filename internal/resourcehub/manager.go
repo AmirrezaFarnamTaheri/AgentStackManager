@@ -43,7 +43,7 @@ func (m Manager) now() time.Time {
 }
 
 func (m Manager) ensure() error {
-	for _, rel := range []string{"resources", "plans", "sync-state", "backups", "locks"} {
+	for _, rel := range []string{"resources", "plans", "sync-state", "backups", "locks", "lifecycle"} {
 		if err := os.MkdirAll(filepath.Join(m.Root, rel), 0o700); err != nil {
 			return err
 		}
@@ -527,4 +527,63 @@ func (m Manager) ResourceContentPath(id string) (string, error) {
 		return "", fmt.Errorf("resource %q not found", id)
 	}
 	return m.resourceSource(resource), nil
+}
+
+func (m Manager) lifecyclePath(id string) string {
+	return filepath.Join(m.Root, "lifecycle", id+".json")
+}
+
+func (m Manager) SaveLifecycleRecord(rec LifecycleRecord) error {
+	if err := m.ensure(); err != nil {
+		return err
+	}
+	if !validID(rec.ID) {
+		return fmt.Errorf("lifecycle record ID %q is invalid", rec.ID)
+	}
+	sealed, err := SealLifecycleRecord(rec)
+	if err != nil {
+		return fmt.Errorf("seal lifecycle record: %w", err)
+	}
+	return writeJSON(m.lifecyclePath(sealed.ID), sealed)
+}
+
+func (m Manager) LoadLifecycleRecord(id string) (LifecycleRecord, error) {
+	if err := m.ensure(); err != nil {
+		return LifecycleRecord{}, err
+	}
+	if !validID(id) {
+		return LifecycleRecord{}, fmt.Errorf("lifecycle record ID %q is invalid", id)
+	}
+	data, err := safefile.ReadBoundedRegular(m.lifecyclePath(id), maxResourceMetadataBytes)
+	if err != nil {
+		return LifecycleRecord{}, fmt.Errorf("load lifecycle record %q: %w", id, err)
+	}
+	return UnmarshalLifecycleRecordJSON(data)
+}
+
+func (m Manager) ListLifecycleRecords() ([]LifecycleRecord, error) {
+	if err := m.ensure(); err != nil {
+		return nil, err
+	}
+	dir := filepath.Join(m.Root, "lifecycle")
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("read lifecycle directory: %w", err)
+	}
+	var records []LifecycleRecord
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		id := strings.TrimSuffix(entry.Name(), ".json")
+		rec, err := m.LoadLifecycleRecord(id)
+		if err != nil {
+			return nil, err
+		}
+		records = append(records, rec)
+	}
+	sort.Slice(records, func(i, j int) bool {
+		return records[i].ID < records[j].ID
+	})
+	return records, nil
 }
