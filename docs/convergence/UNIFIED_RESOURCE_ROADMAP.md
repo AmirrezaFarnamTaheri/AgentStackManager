@@ -154,7 +154,9 @@ Delivered in `internal/similarity/normalize.go`, `internal/similarity/normalize_
 
 Blocking rule: code blocks, commands, URLs, negations, hook declarations, target metadata, required tools, and non-identical assets are never collapsed by normalizing text.
 
-### C2. Advisory semantic evidence
+### C2. Advisory semantic evidence — complete
+
+Delivered in `internal/similarity/evidence.go` and `internal/similarity/evidence_test.go`.
 
 1. Add versioned relationship categories: equivalent, subset, superset, complementary, alternative, conflicting, unrelated.
 2. Store scorer/version, feature evidence, confidence, counterexamples, and labeled-corpus result.
@@ -163,7 +165,9 @@ Blocking rule: code blocks, commands, URLs, negations, hook declarations, target
 
 Acceptance: semantic evidence cannot mutate canonical identity, delete a source, or authorize an absorption.
 
-### C3. Reviewed consolidation decisions
+### C3. Reviewed consolidation decisions — complete
+
+Delivered in `internal/similarity/decision.go` and `internal/similarity/decision_test.go`.
 
 1. Canonical-winner ordering: operator choice, governed-source preference, completeness, schema validity, stable tie breaker.
 2. Require preserved-material, rejected-material, lineage, target impact, regression case, and reversal path for absorption.

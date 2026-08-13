@@ -17,8 +17,10 @@
 - Task B4 (nested-client target catalog in `internal/targetcatalog/types.go`, `internal/targetcatalog/catalog.go`, `internal/targetcatalog/default.json`, and `internal/targetcatalog/catalog_test.go`) is complete and verified.
 - Task B5 (managed-projection exclusion contract & exact duplicate/alias decisions in `internal/resourcehub/projection.go`, `internal/resourcehub/projection_test.go`, `internal/resourcehub/identity.go`, and `internal/resourcehub/identity_test.go`) is complete and verified.
 - Task C1 (deterministic identity pipeline & normalized body indexing in `internal/similarity/normalize.go`, `internal/similarity/normalize_test.go`, `internal/similarity/index.go`, and `internal/similarity/index_test.go`) is complete and verified.
-- The next implementation item is Phase C Task C2: Advisory semantic evidence.
-- Do not begin adapter, executor, retry, or client mutation work until Phase C identity pipeline and comparison rules are complete.
+- Task C2 (advisory semantic evidence & versioned relationships in `internal/similarity/evidence.go` and `internal/similarity/evidence_test.go`) is complete and verified.
+- Task C3 (reviewed consolidation decisions & canonical winner ordering in `internal/similarity/decision.go` and `internal/similarity/decision_test.go`) is complete and verified.
+- The next implementation item is Phase D Task D1: Adapter conformance contract.
+- Do not begin client mutation work until Phase D adapter conformance and execution safety contracts are complete.
 
 ## Active incidents
 
