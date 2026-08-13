@@ -4,7 +4,7 @@
 
 **Goal:** Unify ASM, the governed skill library, and locally installed agent resource trees into one preservation-first control plane for skills, agents, prompts, rules, commands, workflows, and MCP definitions.
 
-**Architecture:** Resource Hub remains the canonical decision authority and CAS remains immutable storage. Read-only importers turn the skill library and local client roots into observations and candidates; pure adapters render reviewed resources into client-specific projections. `.agents` becomes a managed compatibility facade and optional authoring inbox, never a second canonical database.
+**Architecture:** Resource Hub remains the canonical decision authority, `artifactgraph.Artifact` remains the sole canonical versioned envelope, and CAS remains immutable storage. Read-only importers turn the skill library and explicit local source paths into observations and candidate revisions; pure adapters render reviewed resources into operation sets. A deployment executor alone applies filesystem operations, while `mcplink` alone applies MCP-registration operations. `.agents` exposes disjoint authoring-inbox and managed-projection path sets, never a second canonical database.
 
 **Tech Stack:** Go, embedded HTML/CSS/JavaScript, strict JSON, SQLite shadow index where available, Windows junction/reparse-point APIs, ASM Resource Hub, CAS, reviewed plans, adapter conformance corpus.
 
@@ -20,7 +20,7 @@ ASM owns only shareable agent resources:
 - rules and portable instruction files;
 - commands;
 - workflows and compositions;
-- portable hook definitions;
+- inert portable hook definitions (stored and projected with compatibility/loss reporting, never executed by ASM during ingestion or projection);
 - MCP server definitions and client registrations;
 - generated client projections.
 
@@ -38,24 +38,31 @@ ASM explicitly does not own credentials, provider switching, token routing, subs
 | Adapters | Pure discovery normalization, import, rendering, loss reporting, planning, verification |
 | Deployment executor | Sole target-filesystem mutation path |
 | `mcplink` | MCP registration mutation authority, coordinated by a composed Change Set |
-| `.agents` | Managed compatibility projection plus explicit authoring inbox |
+| `.agents` inbox paths | Explicit authoring input observed read-only; edits create candidate revisions |
+| `.agents` managed paths | Compatibility projections carrying ASM ownership markers; never import sources |
 | Client roots | Native client state, explicit overlays, and disposable managed projections |
 
 Dependency direction:
 
 ```text
-skill library + local roots + donor fixtures
-                    |
-                 observe
-                    v
-        Resource Hub canonical intent
-          |          |           |
-         CAS       index     Change Set
-                                |
-                   pure target adapters
-                                |
-              reviewed projections + MCP links
+skill library + local source paths       reference repos
+                    |                          |
+                 observe              donor adoption ledger
+                    v                          |
+        Resource Hub canonical intent <--- catalog + fixtures
+          |          |              |
+         CAS       index       pure adapters
+                                    |
+                            planned operations
+                                    v
+                             sealed Change Set
+                              |             |
+                    deployment executor   mcplink
+                              |             |
+                     managed projections  MCP registrations
 ```
+
+Every filesystem operation is bound to base observed state, desired state, ownership marker, and target identity. The executor acquires a per-target lock, revalidates immediately before mutation, journals each operation, backs up the full filesystem object type and relevant metadata, uses atomic replacement where the target supports it, verifies postconditions, and emits an independently recoverable receipt. `mcplink` owns MCP registration fields and follows the same Change Set lock ordering; the general executor never writes them.
 
 ## 3. Product model
 
@@ -83,7 +90,7 @@ observed -> parsed -> classified -> candidate -> canonical -> projected -> verif
                          +-> alias
 ```
 
-Observed and candidate resources use a lightweight envelope. Only promoted canonical skills require the governed skill-library contract.
+`artifactgraph.Artifact` is the only canonical versioned envelope. Observations, candidate revisions, aliases, lifecycle transitions, and reviewed decisions are records that reference an artifact identity and digest. `resourcehub.Resource` remains a compatibility/read model during migration and must not evolve into a second authority. Only promoted canonical skills require the governed skill-library contract.
 
 Required envelope fields:
 
@@ -100,7 +107,7 @@ Required envelope fields:
 
 ## 5. Donor adoption map
 
-All donor snapshots are read-only evidence under `reference repos/`. They are excluded from builds and releases and never become runtime dependencies.
+All donor snapshots are read-only evidence under `reference repos/`. They are excluded from builds and releases, never become runtime dependencies, and feed only the donor ledger, target catalog, conformance fixtures, and design decisions. Donor files enter normal observation only when deliberately registered as a source bundle.
 
 | Donor | Adopt | Reject |
 |---|---|---|
@@ -122,6 +129,27 @@ Every adopted mechanism receives a donor-decision record containing donor snapsh
 4. Hermes, Copilot, OpenClaw, Kiro, Roo/Kilo, Continue, Goose, Qwen, and Kimi.
 5. Nara, OpenHuman, and unknown clients through the generic filesystem adapter until verified native contracts exist.
 
+### Requested local-root coverage
+
+The catalog is a statement of support; observation is a statement of current evidence. Folder existence never proves that a client is installed.
+
+| Root family | Current evidence | Initial treatment |
+|---|---|---|
+| `.agents` | present | Split explicit inbox paths from ownership-marked managed projections; exclude the latter by physical identity |
+| `.agent` | present reparse point | Resolve physical identity, detect cycles/aliases, observe read-only until its contract is classified |
+| `.gemini` | present | Catalog Gemini and nested Antigravity resource paths independently |
+| `.antigravity` | absent as standalone root | Catalog candidate only; do not report installed |
+| `.codex` | present | Verified native adapter after OpenCode pilot |
+| `.claude` | present | Verified native adapter in wave 3 |
+| `.opencode` | present; un-dotted `opencode` absent | OpenCode pilot root; retain alias candidates without inventing an installation |
+| `.hermes` | present | Observe now; project only after native contract evidence |
+| `.nara` | absent | Generic/read-only catalog candidate until evidenced |
+| `.openhuman` | present | Generic/read-only until native contract evidence |
+| `.windsurf` | present | Verified native adapter in wave 3 |
+| `.cursor` | present | Verified native adapter after OpenCode pilot |
+
+Each catalog entry must enumerate global/project paths, file/subpath patterns, supported resource kinds, recursive/discovery-only/read-only/projectable status, confidence, and physical identity. Completion requires every requested root to be mapped or explicitly unresolved.
+
 ## 7. Consolidation policy
 
 - Exact duplicates: one canonical payload, all prior names retained as aliases.
@@ -130,6 +158,14 @@ Every adopted mechanism receives a donor-decision record containing donor snapsh
 - Parameterization: allowed only when variation is data, such as venue or provider metadata.
 - Absorption: must record preserved unique material, rejected material, lineage, regression cases, and reversal path.
 - Projection output is never eligible as a new import source.
+- Canonical winner order is explicit operator choice, governed-source preference, completeness, schema validity, then a stable deterministic tie-breaker; the automatic recommendation never becomes a decision without review.
+- Never auto-merge materially different commands, URLs, code blocks, negations, executable assets, hooks, required tools, or conflicting target metadata.
+- Alias uniqueness is scoped by resource kind and namespace, with Windows case-insensitive collision checks.
+- Asset consolidation compares relative path, bytes, executable status, and references from the primary document; path collisions with different bytes require review.
+- Parameterize only data-only variation. Behavioral steps remain separate. Families distinguish template, specialization, alternative, and composition.
+- Editing an observed source after promotion creates a new candidate revision; it never mutates canonical content.
+- Semantic scorer/version changes invalidate recommendations, never canonical decisions.
+- Retirement requires an observation window and retained rollback receipts; unresolved material remains quarantined.
 
 ## 8. MCP policy
 
@@ -155,12 +191,12 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 2. Run `go test ./internal/releasepack -run ReferenceRepos -count=1` and verify failure.
 3. Add explicit packaging/build exclusions without deleting the snapshots.
 4. Document the authority table and non-goals from this plan.
-5. Seed the donor ledger with the seven local snapshots and exact retained/rejected scopes.
+5. Inventory every direct child of `reference repos/` (including future additions) and classify it Adopt, Fixture-only, Reject, or Unverified with exact retained/rejected scopes; no hard-coded donor count.
 6. Run `go test ./internal/releasepack ./internal/supplychain -count=1`.
 7. Run `pwsh -File scripts/check-governance.ps1`.
 8. Review `git diff --check` and commit the task.
 
-### Task 2: Add lightweight observed/candidate resource envelopes
+### Task 2: Extend the canonical artifact model with lifecycle and decision records
 
 **Files:**
 - Modify: `internal/resourcehub/types.go`
@@ -172,11 +208,11 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 
 **Steps:**
 
-1. Write table-driven tests for valid and invalid lifecycle transitions.
-2. Add failing tests for aliases, source observations, physical identity, schema findings, and preservation decisions.
+1. Write table-driven tests for valid and invalid lifecycle transitions referencing `artifactgraph.Artifact` identities.
+2. Add failing tests for alias, observation, candidate-revision, schema-finding, and preservation-decision records.
 3. Run the focused tests and verify failure.
-4. Implement the smallest versioned envelope compatible with existing `Resource` records.
-5. Preserve backward decoding of registry version 1; do not silently promote imported resources.
+4. Extend `artifactgraph.Artifact` only where canonical fields are missing; keep lifecycle/decision data in referencing records and prevent a third envelope.
+5. Treat `resourcehub.Resource` as a compatibility/read model, preserve registry version 1 decoding, and do not silently promote imported resources.
 6. Add deterministic sealing and validation.
 7. Run `go test ./internal/resourcehub ./internal/artifactgraph -count=1`.
 8. Commit the task.
@@ -237,7 +273,7 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 
 1. Extract target facts from the donor ledger rather than importing donor code.
 2. Write failing tests for canonical target IDs, aliases, global paths, project paths, discovery-only paths, recursive scanning, and custom roots.
-3. Add Codex, Claude, OpenCode, Cursor, Windsurf, Gemini, Antigravity, Hermes, Copilot, OpenClaw, Kiro, Roo, Continue, Goose, Qwen, and Kimi.
+3. Add every requested root family from the coverage matrix, including `.agent`, Nara, and OpenHuman, plus Codex, Claude, OpenCode, Cursor, Windsurf, Gemini, Antigravity, Hermes, Copilot, OpenClaw, Kiro, Roo, Continue, Goose, Qwen, and Kimi.
 4. Mark unverified targets as generic/read-only.
 5. Replace duplicated path constants incrementally while preserving behavior.
 6. Run target discovery and adapter conformance tests.
@@ -299,8 +335,8 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 2. Add contract cases for discovery-only roots, project/global asymmetry, recursive formats, aliases, unsupported fields, and client-native metadata.
 3. Require import, render, plan, and verify to remain mutation-free.
 4. Require all transformations to emit fidelity/loss evidence.
-5. Implement OpenCode first, then Codex and Cursor.
-6. Extend to Claude, Gemini/Antigravity, and Windsurf only after the first vertical slice passes.
+5. Implement adapter lane 8a for OpenCode only.
+6. After the OpenCode vertical slice passes, implement 8b Codex and Cursor, then 8c Claude, Gemini/Antigravity, and Windsurf; Task 8 builds and tests adapters only, while Task 13 authorizes workstation migration.
 7. Run built-in and external adapter conformance suites.
 8. Commit each target adapter independently.
 
@@ -319,7 +355,7 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 2. Run observe -> candidate -> promote -> project -> verify in a temporary target.
 3. Prove projection output is excluded from re-import.
 4. Prove stale plans and foreign collisions fail closed.
-5. Prove restore returns the exact pre-apply bytes.
+5. Prove restore reconstructs absence, file, directory, symlink/junction, relevant metadata, and exact bytes as applicable.
 6. Run race-enabled Resource Hub tests.
 7. Document the operator flow.
 8. Commit the task.
@@ -330,6 +366,9 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 - Create: `internal/changeset/types.go`
 - Create: `internal/changeset/coordinator.go`
 - Create: `internal/changeset/coordinator_test.go`
+- Create: `internal/deployment/executor.go`
+- Create: `internal/deployment/executor_test.go`
+- Create: `internal/deployment/journal.go`
 - Modify: `internal/app/service.go`
 - Modify: `internal/app/progress.go`
 - Modify: `internal/ui/operations.go`
@@ -338,17 +377,19 @@ Profiles are capability-oriented: Core, Coding/Indexing, Browser, Research, Data
 
 **Steps:**
 
-1. Write failing tests that compose Resource Hub and `mcplink` child plans without transferring their mutation authority.
+1. Write failing tests that compose Resource Hub filesystem-operation plans and `mcplink` child plans without transferring adapter or MCP mutation authority.
 2. Bind child identities, digests, expiry, registry state, capability evidence, and recovery descriptions into one sealed Change Set.
 3. Reject any stale or altered child before execution.
-4. Execute independent targets with honest partial-success reporting.
-5. Retain operator selections when rebuilding an invalidated plan.
-6. Show exact operations, before/after digests, fidelity, ownership, and recovery details.
-7. Keep one approval surface while preserving per-domain executors.
-8. Run app, UI contract, accessibility, and race tests.
-9. Commit the task.
+4. Bind every filesystem operation to `{base digest/type/existence, desired digest/type, ownership marker, target identity}`; acquire a per-target lock and revalidate immediately before mutation.
+5. Execute through the deployment executor using a journal, type-aware backup, atomic replacement where supported, postcondition verification, idempotent retry/reconcile states, and exact recovery receipts.
+6. Execute independent targets with honest partial-success and per-child recovery/roll-forward reporting; never claim fleet-wide atomicity.
+7. Retain operator selections when rebuilding an invalidated plan and explain the invalidation cause.
+8. Show exact operations, before/after digests, fidelity, ownership, and recovery details.
+9. Keep one approval surface while preserving the filesystem executor and `mcplink` as disjoint domain executors with deterministic lock ordering.
+10. Run deployment, app, UI contract, accessibility, interruption/retry, and race tests.
+11. Commit the task.
 
-### Task 11: Canonicalize MCP definitions and profiles
+### Task 11: Canonicalize MCP definitions and profiles before finalizing Change Sets
 
 **Files:**
 - Modify: `internal/resourcehub/types.go`
@@ -469,11 +510,40 @@ Also require:
 - 12,000-entry inventory benchmark;
 - MCP initialize/tools-list smoke tests;
 - source-package exclusion of donor snapshots.
+- concurrent-edit rejection between approval and apply;
+- operation-journal interruption and idempotent retry/reconcile;
+- type-aware restoration of absent/file/directory/symlink/junction states;
+- `.agents` managed-projection exclusion through direct and aliased physical paths while inbox content remains observable;
+- mixed MCP/filesystem partial-success recovery with disjoint mutation ownership.
+
+Projection is blocked when required target semantics cannot be represented, fidelity loss affects executable commands/hooks/tool requirements, ownership is foreign or ambiguous, or round-trip verification changes protected content. Advisory semantic classification must be evaluated against a versioned labeled corpus with per-class precision/recall and false-merge rate reported; no score threshold may authorize a merge. The 12,000-entry benchmark must record a reproducible machine/profile, peak memory, completion time, cancellation latency, and diagnostic bound, with regression budgets fixed from the accepted OpenCode baseline rather than invented in advance.
+
+## 10A. Delivery slices, dependencies, and parallel lanes
+
+The fifteen granular tasks roll up into nine implementation-sized slices. This preserves file-level test instructions while avoiding duplicate delivery tracks.
+
+| Slice | Priority | Contains | Blocked by | Exit evidence |
+|---|---|---|---|---|
+| E1 Authority and donor boundary | P0 | Task 1 | none | Authority contract and release exclusion pass |
+| E2 Canonical model migration | P0 | Task 2 | E1 | One artifact envelope; version-1 compatibility; lifecycle tests |
+| E3 Unified source discovery | P0 | Tasks 3–5 | E2 | ZIP and explicit-root sources produce deterministic observations under safety budgets |
+| E4 Identity and consolidation | P0 | Tasks 6–7 | E2, E3 | Exact/normalized/advisory-semantic evidence and reviewed decisions share one pipeline |
+| E5 OpenCode vertical slice | P0 | Tasks 8–9, OpenCode only | E3, E4 | Observe through type-aware rollback passes without projection re-import |
+| E6 MCP intent and profiles | P1 | Task 11 | E2, E3 | Canonical intent produces sealed `mcplink` child plans without secrets |
+| E7 Change Set, executor, and queues | P0 | Tasks 10, 12 | E5, E6 | One approval; pure adapters; journaled per-domain execution and recovery |
+| E8 Target migration waves | P1 | Task 13 plus retirement gate from Task 15 | E7 | Each target independently verified, observed, and recoverable before cutover/cleanup |
+| E9 Corpus consolidation campaign | P1 | Task 14 plus bounded retirement from Task 15 | E4, E7 | Decisions run in 20–50 item batches; only receipt-bound projections retire |
+
+Parallel work is permitted only where authority is disjoint: E4 indexing may proceed alongside E5 adapter fixtures after the identity result contract freezes; E6 may proceed alongside the OpenCode adapter after the canonical artifact contract freezes; target-fixture research may proceed without target writes. E1 -> E2 -> E3 -> E4 -> E5 -> E7 is the critical path.
+
+**Definition of Ready for a slice:** authority owner named; inputs/outputs and non-goals explicit; fixtures include normal, failure, and integration-edge cases; target paths are evidence-backed; mutation and recovery owner named; acceptance checks are executable.
+
+**Definition of Done for a slice:** focused tests pass; mutation-free components are verified as such; stale/foreign/concurrent state fails closed; fidelity and ownership evidence is emitted; rollback/reconcile is tested where mutation exists; documentation and donor ledger are current; no later slice is required to make the completed slice safe.
 
 ## 11. Completion criteria
 
 - Resource Hub is the only canonical decision authority.
-- `.agents` is a managed facade and explicit inbox, not a competing store.
+- `.agents` inbox and managed-projection path sets are disjoint; neither is a competing store and projections cannot be re-imported through aliases.
 - Client roots contain native state and disposable projections.
 - Every local resource is canonical, candidate, alias, ignored, retired, or quarantined.
 - Exact duplicates have one canonical payload and working legacy aliases.
@@ -481,6 +551,8 @@ Also require:
 - Every transformation reports fidelity.
 - Every managed write originates from a reviewed Change Set.
 - Each target is independently recoverable.
+- Pure adapters never mutate targets; only the deployment executor writes managed filesystem projections and only `mcplink` writes MCP registrations.
+- Every requested local root is cataloged with evidence/confidence or explicitly unresolved.
 - MCP definitions have canonical identities and minimal verified assignments.
 - Large scans remain bounded, cancellable, and observable.
 - Provider routing, credentials, runtime orchestration, and native client state remain outside ASM.
@@ -498,7 +570,10 @@ Also require:
 | Lightweight candidates, heavyweight canonical skills | require full contract on import | Makes ingestion of thousands of legacy resources feasible |
 | OpenCode first | migrate all clients together | Existing whole-root junction makes it the safest vertical proof |
 | Independent target recovery | fleet-wide atomicity claim | Filesystems and client configurations cannot provide honest global atomicity |
+| `artifactgraph.Artifact` is the sole canonical envelope | add another observed/candidate envelope | Prevents three models from drifting while preserving lightweight lifecycle records |
+| Split `.agents` input and output paths | one bidirectional `.agents` tree | Prevents managed projections from becoming canonical candidates |
+| Explicit deployment executor | adapters or UI write targets | Makes pure rendering, TOCTOU checks, journaling, and recovery enforceable |
 
 ## 13. Implementation handoff
 
-Start with Tasks 1–4 only. Do not begin adapter expansion or workstation mutation until the authority, source-bundle, lifecycle, and junction-aware observation contracts pass their focused tests and the OpenCode shadow target is available.
+Start with slices E1–E3 only. Do not begin adapter expansion or workstation mutation until the authority, canonical artifact, source-bundle, target-catalog, and junction-aware observation contracts pass focused tests and the OpenCode shadow target is available. Then execute the critical path in order; E6 may run in parallel with OpenCode only after the canonical artifact contract is frozen.

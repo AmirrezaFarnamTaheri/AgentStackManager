@@ -4498,7 +4498,7 @@
         <div class="pulse-dot"></div>
         <h1>Unified Agent Resource Control Plane</h1>
       </div>
-      <p class="subtitle">One canonical Resource Hub, pure projections, recoverable target changes</p>
+      <p class="subtitle">One canonical Resource Hub, pure planning, explicit recoverable execution</p>
     </div>
 
     <script id="archify-guided-views-data" type="application/json">[]</script>
@@ -4546,7 +4546,7 @@
     <div class="diagram-container" data-detail-level="map">
       <svg viewBox="0 0 1180 780" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="blueprint" data-quality-profile="standard">
         <title id="archify-diagram-title">Unified Agent Resource Control Plane</title>
-        <desc id="archify-diagram-description">One canonical Resource Hub, pure projections, recoverable target changes</desc>
+        <desc id="archify-diagram-description">One canonical Resource Hub, pure planning, explicit recoverable execution</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -4570,25 +4570,28 @@
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" x="210" y="50" width="885" height="420" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" x="210" y="50" width="910" height="420" rx="12" class="c-region" stroke-width="1"/>
         <text x="218" y="68" class="t-cloud" font-size="9" font-weight="600">ASM authority boundary</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="1" x="895" y="370" width="235" height="255" rx="8" class="c-security-group" stroke-width="1"/>
-        <text x="903" y="388" class="t-security" font-size="9" font-weight="600">Client-owned native state</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="1" x="895" y="435" width="235" height="240" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="903" y="453" class="t-security" font-size="9" font-weight="600">Client-owned native state</text>
 
         <!-- Connection paths (before components for correct z-order) -->
         <path data-edge-from="skill-library" data-edge-to="importers" data-edge-label="versioned source" data-edge-key="0" data-edge-id="library-observe" data-composition-points="165,130;236.25,130;236.25,240;307.5,240" d="M 165 130 L 228.25 130 Q 236.25 130 236.25 138 L 236.25 232 Q 236.25 240 244.25 240 L 307.5 240" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
         <path data-edge-from="local-roots" data-edge-to="importers" data-edge-label="observations" data-edge-key="1" data-edge-id="roots-observe" data-composition-points="165,270;202.5,270;202.5,272;240,272" d="M 165 270 L 201.5 270 Q 202.5 270 202.5 271 L 202.5 271 Q 202.5 272 203.5 272 L 240 272" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="donors" data-edge-to="importers" data-edge-label="fixtures" data-edge-key="2" data-edge-id="donor-evidence" data-composition-points="165,410;236.25,410;236.25,304;307.5,304" d="M 165 410 L 228.25 410 Q 236.25 410 236.25 402 L 236.25 312 Q 236.25 304 244.25 304 L 307.5 304" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="importers" data-edge-to="resource-hub" data-edge-label="candidates" data-edge-key="3" data-edge-id="candidate-import" data-composition-points="375,272;450,272" d="M 375 272 L 450 272" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="resource-hub" data-edge-to="cas" data-edge-label="payload digests" data-edge-key="4" data-edge-id="hub-cas" data-composition-points="525,235;525,140" d="M 525 235 L 525 140" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="resource-hub" data-edge-to="index" data-edge-key="5" data-edge-id="hub-index" data-composition-points="525,309;525,390" d="M 525 309 L 525 390" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="resource-hub" data-edge-to="changes" data-edge-label="sealed child plan" data-edge-key="6" data-edge-id="hub-plan" data-composition-points="600,272;690,272" d="M 600 272 L 690 272" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="changes" data-edge-to="adapters" data-edge-label="approved intent" data-edge-key="7" data-edge-id="approved-render" data-composition-points="835,272;925,272" d="M 835 272 L 925 272" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="adapters" data-edge-to="agents-facade" data-edge-label="facade" data-edge-key="8" data-edge-id="facade-project" data-composition-points="995,304;995,383;855,383;855,462" d="M 995 304 L 995 375 Q 995 383 987 383 L 863 383 Q 855 383 855 391 L 855 462" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="adapters" data-edge-to="primary-targets" data-edge-key="9" data-edge-id="primary-project" data-composition-points="995,304;995,352;1012.5,352;1012.5,400" d="M 995 304 L 995 344 Q 995 352 1003 352 L 1004.5 352 Q 1012.5 352 1012.5 360 L 1012.5 400" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="adapters" data-edge-to="other-targets" data-edge-key="10" data-edge-id="other-project" data-composition-points="1065,272;1135,272;1135,570;1100,570" d="M 1065 272 L 1127 272 Q 1135 272 1135 280 L 1135 562 Q 1135 570 1127 570 L 1100 570" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="changes" data-edge-to="activity" data-edge-key="11" data-edge-id="execution-receipt" data-composition-points="690,272;650,272;650,540;542,540;542.5,575" d="M 690 272 L 658 272 Q 650 272 650 280 L 650 532 Q 650 540 642 540 L 550 540 Q 542 540 542.1142740542628 547.9991837983961 L 542.5 575" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="donors" data-edge-to="donor-ledger" data-edge-label="classify" data-edge-key="2" data-edge-id="donor-evidence" data-composition-points="165,410;200,410;200,422;235,422" d="M 165 410 L 194 410 Q 200 410 200 416 L 200 416 Q 200 422 206 422 L 235 422" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="donor-ledger" data-edge-to="resource-hub" data-edge-label="catalog + fixtures" data-edge-key="3" data-edge-id="ledger-evidence" data-composition-points="380,422;452.5,422;452.5,309;525,309" d="M 380 422 L 444.5 422 Q 452.5 422 452.5 414 L 452.5 317 Q 452.5 309 460.5 309 L 525 309" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="importers" data-edge-to="resource-hub" data-edge-label="candidates" data-edge-key="4" data-edge-id="candidate-import" data-composition-points="375,272;450,272" d="M 375 272 L 450 272" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="resource-hub" data-edge-to="cas" data-edge-label="payload digests" data-edge-key="5" data-edge-id="hub-cas" data-composition-points="525,235;525,140" d="M 525 235 L 525 140" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="resource-hub" data-edge-to="index" data-edge-key="6" data-edge-id="hub-index" data-composition-points="525,309;525,390" d="M 525 309 L 525 390" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="resource-hub" data-edge-to="adapters" data-edge-label="canonical intent" data-edge-key="7" data-edge-id="hub-render" data-composition-points="525,235;605,235;605,142;685,142" d="M 525 235 L 597 235 Q 605 235 605 227 L 605 150 Q 605 142 613 142 L 685 142" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="adapters" data-edge-to="changes" data-edge-key="8" data-edge-id="adapter-plan" data-composition-points="760,174;760,204.5;762.5,204.5;762.5,235" d="M 760 174 L 760 203.25 Q 760 204.5 761.25 204.5 L 761.25 204.5 Q 762.5 204.5 762.5 205.75 L 762.5 235" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="changes" data-edge-to="executor" data-edge-key="9" data-edge-id="approved-execute" data-composition-points="835,272;875,272;875,262;915,262" d="M 835 272 L 870 272 Q 875 272 875 267 L 875 267 Q 875 262 880 262 L 915 262" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="changes" data-edge-to="mcplink" data-edge-key="10" data-edge-id="approved-mcp" data-composition-points="762.5,309;762.5,329.5;767.5,329.5;767.5,350" d="M 762.5 309 L 762.5 327 Q 762.5 329.5 765 329.5 L 765 329.5 Q 767.5 329.5 767.5 332 L 767.5 350" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="executor" data-edge-to="agents-facade" data-edge-key="11" data-edge-id="facade-project" data-composition-points="1002.5,299;900,320;900,507;875,507" d="M 1002.5 299 L 907.8372073001077 318.3943282604657 Q 900 320 900 328 L 900 499 Q 900 507 892 507 L 875 507" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="executor" data-edge-to="primary-targets" data-edge-key="12" data-edge-id="primary-project" data-composition-points="1002.5,299;1002.5,382;1012.5,382;1012.5,465" d="M 1002.5 299 L 1002.5 377 Q 1002.5 382 1007.5 382 L 1007.5 382 Q 1012.5 382 1012.5 387 L 1012.5 465" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="executor" data-edge-to="other-targets" data-edge-key="13" data-edge-id="other-project" data-composition-points="1090,262;1135,262;1135,620;1100,620" d="M 1090 262 L 1127 262 Q 1135 262 1135 270 L 1135 612 Q 1135 620 1127 620 L 1100 620" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="changes" data-edge-to="activity" data-edge-key="14" data-edge-id="execution-receipt" data-composition-points="690,272;650,272;650,540;542,540;542.5,575" d="M 690 272 L 658 272 Q 650 272 650 280 L 650 532 Q 650 540 642 540 L 550 540 Q 542 540 542.1142740542628 547.9991837983961 L 542.5 575" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Components -->
         <g id="node-skill-library" data-node-id="skill-library" data-node-label="Skill Library" tabindex="0" role="button" aria-label="Focus Skill Library, governance seed, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="governance seed" data-node-context="Architecture component">
@@ -4603,28 +4606,40 @@
         <text data-detail="context" x="105" y="144" class="t-muted" font-size="9" text-anchor="middle">governance seed</text>
         </g>
 
-        <g id="node-local-roots" data-node-id="local-roots" data-node-label="Local Roots" tabindex="0" role="button" aria-label="Focus Local Roots, read-only observations, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="read-only observations" data-node-context="Architecture component">
-          <title>Local Roots · read-only observations · Architecture component</title>
+        <g id="node-local-roots" data-node-id="local-roots" data-node-label="Local Source Paths" tabindex="0" role="button" aria-label="Focus Local Source Paths, roots plus .agents inbox, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="roots plus .agents inbox" data-node-context="Architecture component">
+          <title>Local Source Paths · roots plus .agents inbox · Architecture component</title>
           <rect x="45" y="240" width="120" height="60" rx="6" class="c-mask"/>
           <rect x="45" y="240" width="120" height="60" rx="6" class="c-external" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(51 246) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-detail-anchor x="105" y="268" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Local Roots</text>
-        <text data-detail="context" x="105" y="284" class="t-muted" font-size="9" text-anchor="middle">read-only observations</text>
+          <text data-detail-anchor x="105" y="268" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Local Source Paths</text>
+        <text data-detail="context" x="105" y="284" class="t-muted" font-size="9" text-anchor="middle">roots plus .agents inbox</text>
         </g>
 
-        <g id="node-donors" data-node-id="donors" data-node-label="Donor Repos" tabindex="0" role="button" aria-label="Focus Donor Repos, fixtures and contracts, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="fixtures and contracts" data-node-context="Architecture component">
-          <title>Donor Repos · fixtures and contracts · Architecture component</title>
+        <g id="node-donors" data-node-id="donors" data-node-label="Reference Repos" tabindex="0" role="button" aria-label="Focus Reference Repos, read-only design evidence, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="read-only design evidence" data-node-context="Architecture component">
+          <title>Reference Repos · read-only design evidence · Architecture component</title>
           <rect x="45" y="380" width="120" height="60" rx="6" class="c-mask"/>
           <rect x="45" y="380" width="120" height="60" rx="6" class="c-external" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(51 386) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-detail-anchor x="105" y="408" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Donor Repos</text>
-        <text data-detail="context" x="105" y="424" class="t-muted" font-size="9" text-anchor="middle">fixtures and contracts</text>
+          <text data-detail-anchor x="105" y="408" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Reference Repos</text>
+        <text data-detail="context" x="105" y="424" class="t-muted" font-size="9" text-anchor="middle">read-only design evidence</text>
+        </g>
+
+        <g id="node-donor-ledger" data-node-id="donor-ledger" data-node-label="Donor Ledger" tabindex="0" role="button" aria-label="Focus Donor Ledger, catalog and fixtures, Architecture component" aria-pressed="false" data-node-kind="database" data-node-sublabel="catalog and fixtures" data-node-context="Architecture component">
+          <title>Donor Ledger · catalog and fixtures · Architecture component</title>
+          <rect x="235" y="390" width="145" height="64" rx="6" class="c-mask"/>
+          <rect x="235" y="390" width="145" height="64" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(241 396) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-detail-anchor x="307.5" y="420" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Donor Ledger</text>
+        <text data-detail="context" x="307.5" y="436" class="t-muted" font-size="9" text-anchor="middle">catalog and fixtures</text>
         </g>
 
         <g id="node-importers" data-node-id="importers" data-node-label="Importers" tabindex="0" role="button" aria-label="Focus Importers, observe and classify, ASM authority boundary" aria-pressed="false" data-node-kind="backend" data-node-sublabel="observe and classify" data-node-context="ASM authority boundary">
@@ -4674,6 +4689,17 @@
         <text data-detail="context" x="525" y="434" class="t-muted" font-size="9" text-anchor="middle">rebuildable</text>
         </g>
 
+        <g id="node-adapters" data-node-id="adapters" data-node-label="Pure Adapters" tabindex="0" role="button" aria-label="Focus Pure Adapters, render planned operations, ASM authority boundary" aria-pressed="false" data-node-kind="backend" data-node-sublabel="render planned operations" data-node-context="ASM authority boundary">
+          <title>Pure Adapters · render planned operations · ASM authority boundary</title>
+          <rect x="685" y="110" width="150" height="64" rx="6" class="c-mask"/>
+          <rect x="685" y="110" width="150" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(691 116) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-detail-anchor x="760" y="140" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Pure Adapters</text>
+        <text data-detail="context" x="760" y="156" class="t-muted" font-size="9" text-anchor="middle">render planned operations</text>
+        </g>
+
         <g id="node-changes" data-node-id="changes" data-node-label="Change Set" tabindex="0" role="button" aria-label="Focus Change Set, review and approval, ASM authority boundary" aria-pressed="false" data-node-kind="security" data-node-sublabel="review and approval" data-node-context="ASM authority boundary">
           <title>Change Set · review and approval · ASM authority boundary</title>
           <rect x="690" y="235" width="145" height="74" rx="6" class="c-mask"/>
@@ -4686,57 +4712,68 @@
         <text data-detail="context" x="762.5" y="286" class="t-muted" font-size="9" text-anchor="middle">review and approval</text>
         </g>
 
-        <g id="node-adapters" data-node-id="adapters" data-node-label="Pure Adapters" tabindex="0" role="button" aria-label="Focus Pure Adapters, render and verify, ASM authority boundary" aria-pressed="false" data-node-kind="backend" data-node-sublabel="render and verify" data-node-context="ASM authority boundary">
-          <title>Pure Adapters · render and verify · ASM authority boundary</title>
-          <rect x="925" y="240" width="140" height="64" rx="6" class="c-mask"/>
-          <rect x="925" y="240" width="140" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(931 246) scale(0.6875)">
+        <g id="node-executor" data-node-id="executor" data-node-label="Deployment Executor" tabindex="0" role="button" aria-label="Focus Deployment Executor, lock, journal, apply, verify, ASM authority boundary" aria-pressed="false" data-node-kind="backend" data-node-sublabel="lock, journal, apply, verify" data-node-context="ASM authority boundary">
+          <title>Deployment Executor · lock, journal, apply, verify · ASM authority boundary</title>
+          <rect x="915" y="225" width="175" height="74" rx="6" class="c-mask"/>
+          <rect x="915" y="225" width="175" height="74" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(921 231) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-detail-anchor x="995" y="270" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Pure Adapters</text>
-        <text data-detail="context" x="995" y="286" class="t-muted" font-size="9" text-anchor="middle">render and verify</text>
+          <text data-detail-anchor x="1002.5" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Deployment Executor</text>
+        <text data-detail="context" x="1002.5" y="276" class="t-muted" font-size="9" text-anchor="middle">lock, journal, apply, verify</text>
         </g>
 
-        <g id="node-agents-facade" data-node-id="agents-facade" data-node-label=".agents Facade" tabindex="0" role="button" aria-label="Focus .agents Facade, compatibility and inbox, Architecture component" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="compatibility and inbox" data-node-context="Architecture component">
-          <title>.agents Facade · compatibility and inbox · Architecture component</title>
-          <rect x="710" y="430" width="145" height="64" rx="6" class="c-mask"/>
-          <rect x="710" y="430" width="145" height="64" rx="6" class="c-messagebus" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(716 436) scale(0.6875)">
+        <g id="node-mcplink" data-node-id="mcplink" data-node-label="mcplink" tabindex="0" role="button" aria-label="Focus mcplink, MCP registration writer, ASM authority boundary" aria-pressed="false" data-node-kind="backend" data-node-sublabel="MCP registration writer" data-node-context="ASM authority boundary">
+          <title>mcplink · MCP registration writer · ASM authority boundary</title>
+          <rect x="680" y="350" width="175" height="64" rx="6" class="c-mask"/>
+          <rect x="680" y="350" width="175" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(686 356) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-detail-anchor x="767.5" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">mcplink</text>
+        <text data-detail="context" x="767.5" y="396" class="t-muted" font-size="9" text-anchor="middle">MCP registration writer</text>
+        </g>
+
+        <g id="node-agents-facade" data-node-id="agents-facade" data-node-label=".agents Managed Paths" tabindex="0" role="button" aria-label="Focus .agents Managed Paths, ownership-marked projections, Architecture component" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="ownership-marked projections" data-node-context="Architecture component">
+          <title>.agents Managed Paths · ownership-marked projections · Architecture component</title>
+          <rect x="700" y="475" width="175" height="64" rx="6" class="c-mask"/>
+          <rect x="700" y="475" width="175" height="64" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(706 481) scale(0.6875)">
             <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
             <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
             <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
             <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
           </g>
-          <text data-detail-anchor x="782.5" y="460" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">.agents Facade</text>
-        <text data-detail="context" x="782.5" y="476" class="t-muted" font-size="9" text-anchor="middle">compatibility and inbox</text>
+          <text data-detail-anchor x="787.5" y="505" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">.agents Managed Paths</text>
+        <text data-detail="context" x="787.5" y="521" class="t-muted" font-size="9" text-anchor="middle">ownership-marked projections</text>
         </g>
 
         <g id="node-primary-targets" data-node-id="primary-targets" data-node-label="Primary Targets" tabindex="0" role="button" aria-label="Focus Primary Targets, Codex, Claude, Gemini, IDEs, Client-owned native state" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Codex, Claude, Gemini, IDEs" data-node-context="Client-owned native state">
           <title>Primary Targets · Codex, Claude, Gemini, IDEs · Client-owned native state</title>
-          <rect x="925" y="400" width="175" height="70" rx="6" class="c-mask"/>
-          <rect x="925" y="400" width="175" height="70" rx="6" class="c-frontend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(931 406) scale(0.6875)">
+          <rect x="925" y="465" width="175" height="70" rx="6" class="c-mask"/>
+          <rect x="925" y="465" width="175" height="70" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(931 471) scale(0.6875)">
             <rect x="2" y="3" width="12" height="10" rx="2"/>
             <path d="M2 6.5h12"/>
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-detail-anchor x="1012.5" y="433" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Primary Targets</text>
-        <text data-detail="context" x="1012.5" y="449" class="t-muted" font-size="9" text-anchor="middle">Codex, Claude, Gemini, IDEs</text>
+          <text data-detail-anchor x="1012.5" y="498" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Primary Targets</text>
+        <text data-detail="context" x="1012.5" y="514" class="t-muted" font-size="9" text-anchor="middle">Codex, Claude, Gemini, IDEs</text>
         </g>
 
         <g id="node-other-targets" data-node-id="other-targets" data-node-label="Extended Targets" tabindex="0" role="button" aria-label="Focus Extended Targets, native or generic adapter, Client-owned native state" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="native or generic adapter" data-node-context="Client-owned native state">
           <title>Extended Targets · native or generic adapter · Client-owned native state</title>
-          <rect x="925" y="535" width="175" height="70" rx="6" class="c-mask"/>
-          <rect x="925" y="535" width="175" height="70" rx="6" class="c-frontend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(931 541) scale(0.6875)">
+          <rect x="925" y="585" width="175" height="70" rx="6" class="c-mask"/>
+          <rect x="925" y="585" width="175" height="70" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(931 591) scale(0.6875)">
             <rect x="2" y="3" width="12" height="10" rx="2"/>
             <path d="M2 6.5h12"/>
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-detail-anchor x="1012.5" y="568" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Extended Targets</text>
-        <text data-detail="context" x="1012.5" y="584" class="t-muted" font-size="9" text-anchor="middle">native or generic adapter</text>
+          <text data-detail-anchor x="1012.5" y="618" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Extended Targets</text>
+        <text data-detail="context" x="1012.5" y="634" class="t-muted" font-size="9" text-anchor="middle">native or generic adapter</text>
         </g>
 
         <g id="node-activity" data-node-id="activity" data-node-label="Activity" tabindex="0" role="button" aria-label="Focus Activity, receipts and recovery, Architecture component" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="receipts and recovery" data-node-context="Architecture component">
@@ -4759,31 +4796,31 @@
           <rect x="168.7" y="251" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="202.5" y="261" class="t-backend" font-size="8" text-anchor="middle">observations</text>
         </g>
-        <g data-detail="context" data-edge-from="donors" data-edge-to="importers" data-edge-label="fixtures" data-edge-key="2" data-edge-id="donor-evidence">
-          <rect x="212.05" y="337" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="236.25" y="347" class="t-messagebus" font-size="8" text-anchor="middle">fixtures</text>
+        <g data-detail="context" data-edge-from="donors" data-edge-to="donor-ledger" data-edge-label="classify" data-edge-key="2" data-edge-id="donor-evidence">
+          <rect x="175.8" y="396" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="200" y="406" class="t-messagebus" font-size="8" text-anchor="middle">classify</text>
         </g>
-        <g data-detail="context" data-edge-from="importers" data-edge-to="resource-hub" data-edge-label="candidates" data-edge-key="3" data-edge-id="candidate-import">
+        <g data-detail="context" data-edge-from="donor-ledger" data-edge-to="resource-hub" data-edge-label="catalog + fixtures" data-edge-key="3" data-edge-id="ledger-evidence">
+          <rect x="404.3" y="345.5" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
+          <text x="452.5" y="355.5" class="t-messagebus" font-size="8" text-anchor="middle">catalog + fixtures</text>
+        </g>
+        <g data-detail="context" data-edge-from="importers" data-edge-to="resource-hub" data-edge-label="candidates" data-edge-key="4" data-edge-id="candidate-import">
           <rect x="383.5" y="232" width="58" height="14" rx="3" class="c-mask"/>
           <text x="412.5" y="242" class="t-backend" font-size="8" text-anchor="middle">candidates</text>
         </g>
-        <g data-detail="context" data-edge-from="resource-hub" data-edge-to="cas" data-edge-label="payload digests" data-edge-key="4" data-edge-id="hub-cas">
+        <g data-detail="context" data-edge-from="resource-hub" data-edge-to="cas" data-edge-label="payload digests" data-edge-key="5" data-edge-id="hub-cas">
           <rect x="529" y="215" width="82" height="14" rx="3" class="c-mask"/>
           <text x="570" y="225" class="t-muted" font-size="8" text-anchor="middle">payload digests</text>
         </g>
 
-        <g data-detail="context" data-edge-from="resource-hub" data-edge-to="changes" data-edge-label="sealed child plan" data-edge-key="6" data-edge-id="hub-plan">
-          <rect x="599.2" y="232" width="91.6" height="14" rx="3" class="c-mask"/>
-          <text x="645" y="242" class="t-security" font-size="8" text-anchor="middle">sealed child plan</text>
+        <g data-detail="context" data-edge-from="resource-hub" data-edge-to="adapters" data-edge-label="canonical intent" data-edge-key="7" data-edge-id="hub-render">
+          <rect x="561.6" y="168.5" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="605" y="178.5" class="t-backend" font-size="8" text-anchor="middle">canonical intent</text>
         </g>
-        <g data-detail="context" data-edge-from="changes" data-edge-to="adapters" data-edge-label="approved intent" data-edge-key="7" data-edge-id="approved-render">
-          <rect x="839" y="232" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="880" y="242" class="t-security" font-size="8" text-anchor="middle">approved intent</text>
-        </g>
-        <g data-detail="context" data-edge-from="adapters" data-edge-to="agents-facade" data-edge-label="facade" data-edge-key="8" data-edge-id="facade-project">
-          <rect x="905.6" y="363" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="925" y="373" class="t-muted" font-size="8" text-anchor="middle">facade</text>
-        </g>
+
+
+
+
 
 
 
@@ -4795,13 +4832,13 @@
             <rect x="40" y="756" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
             <text x="60" y="764" class="t-muted" font-size="8">External</text>
           </g>
-          <g data-legend-kind="backend">
-            <rect x="144" y="756" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="164" y="764" class="t-muted" font-size="8">Backend</text>
-          </g>
           <g data-legend-kind="database">
-            <rect x="243" y="756" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="263" y="764" class="t-muted" font-size="8">Database</text>
+            <rect x="144" y="756" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="164" y="764" class="t-muted" font-size="8">Database</text>
+          </g>
+          <g data-legend-kind="backend">
+            <rect x="248" y="756" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="268" y="764" class="t-muted" font-size="8">Backend</text>
           </g>
           <g data-legend-kind="security">
             <rect x="347" y="756" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
