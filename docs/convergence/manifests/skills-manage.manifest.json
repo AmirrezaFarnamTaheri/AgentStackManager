@@ -1,0 +1,2533 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "skills-manage",
+  "sourceRoot": "D:/GitHub/AgentStackManager/reference repos/skills-manage-main/skills-manage-main",
+  "physicalIdentity": "D:\\GitHub\\AgentStackManager\\reference repos\\skills-manage-main\\skills-manage-main",
+  "inventoryTime": "2026-08-13T08:35:30Z",
+  "emptySnapshot": false,
+  "fileCount": 245,
+  "totalSizeBytes": 6306164,
+  "entries": [
+    {
+      "path": ".eslintrc.cjs",
+      "objectType": "file",
+      "sizeBytes": 562,
+      "sha256": "d9365114509c90a5554107b4d91f16893271f3bc30669220d5c9784a7ca5a8cb",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".github",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "objectType": "file",
+      "sizeBytes": 6070,
+      "sha256": "51b768240d063d426cd86bffcbba4f2881bc38de693bcc10a4568d71ed36f962",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/release-desktop.yml",
+      "objectType": "file",
+      "sizeBytes": 8623,
+      "sha256": "7bef732947d324c7228afefed88418c2a63c47c1716a27f9b2b1428be8385049",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".gitignore",
+      "objectType": "file",
+      "sizeBytes": 232,
+      "sha256": "98e3952b3af3e8bc17de6bcc0bbee595735305c08af43acd8c243cfd89a62ff0",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "objectType": "file",
+      "sizeBytes": 5017,
+      "sha256": "1f1f25d68c8eb9117470661400f8c635f62421735e6d753962c18f8f07a3307b",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CHANGELOG.zh.md",
+      "objectType": "file",
+      "sizeBytes": 4745,
+      "sha256": "42c1927c5cdf60f32871923b77287f865e287d9ed48789b1f6dd7c8db474985a",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CLAUDE.md",
+      "objectType": "file",
+      "sizeBytes": 7182,
+      "sha256": "a409bc7f7a451a379e04d880832042a769e4196844e5b41fcc2561a53aa3d697",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "objectType": "file",
+      "sizeBytes": 2160,
+      "sha256": "d0506a526acfffbd8b122b4a5a625d2e3dcfde14cb7074c6903e90670ee1ea07",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "LICENSE",
+      "objectType": "file",
+      "sizeBytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "NOTICE",
+      "objectType": "file",
+      "sizeBytes": 40,
+      "sha256": "fe11b4c00bfd59b297b1c79fa75cdbe19bb9171f71df7913ab5a5c497ab8f11c",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README.md",
+      "objectType": "file",
+      "sizeBytes": 8279,
+      "sha256": "f34d20c3a948ccddaf5716a0cca01ab1edc106621edbd11f0535cf75997c1b68",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README_CN.md",
+      "objectType": "file",
+      "sizeBytes": 7572,
+      "sha256": "44d33a7f5603f336e3d1b44b4ff6dabe05423b86378fbc0e26677ccd83d23636",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "SECURITY.md",
+      "objectType": "file",
+      "sizeBytes": 1990,
+      "sha256": "d8f3f464df0b7b884090d4b84a6d256dedecdbaffbaf29d7b59912ffe8ec312a",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "components.json",
+      "objectType": "file",
+      "sizeBytes": 515,
+      "sha256": "156858e2da20785ac0f1853580c7e34d5b8496f519e8839d2176e85947d4f779",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "docs",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/desktop-design.md",
+      "objectType": "file",
+      "sizeBytes": 28725,
+      "sha256": "74ceca0beb887823cd8cc8fafeb540673ed8482e91715a828d27d38eb9a82517",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/research-report.md",
+      "objectType": "file",
+      "sizeBytes": 11210,
+      "sha256": "cde5c0fe2011435f172dd8105c886e2035589939e590e8e68cf3b724751778d4",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "generate_icon.py",
+      "objectType": "file",
+      "sizeBytes": 8343,
+      "sha256": "f2467a3477bf3b1812731e176e25c6667780febc0585bc49295b29d04dc9d919",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "images",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "images/01.png",
+      "objectType": "file",
+      "sizeBytes": 583778,
+      "sha256": "61d0f4ede15dd773e4d83565366863ed0de4aea5ca7352283c6d1076ec3e102a",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/02.png",
+      "objectType": "file",
+      "sizeBytes": 404240,
+      "sha256": "07830b90a183a605d9d9eddde6818473d5c11f2f37c3a452d3e6d7cfd641ce2c",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/03.png",
+      "objectType": "file",
+      "sizeBytes": 573369,
+      "sha256": "83c1614d00ed169ea74a4e3af39be8d794e9087729721e49b4f1d22ef6108dc4",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/04.png",
+      "objectType": "file",
+      "sizeBytes": 453590,
+      "sha256": "d84962f01e9a4107428d1ae7e8c21e697459bb45d1a2a5adcb9042d97c17f8d3",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/05.png",
+      "objectType": "file",
+      "sizeBytes": 417572,
+      "sha256": "c5eb5ec7cf84a2af0c98b872c5590e250aa90382143e8621146995b376c9a978",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/06.png",
+      "objectType": "file",
+      "sizeBytes": 489923,
+      "sha256": "d8f611d1150700052cce0a2067b42e607709e0bcf9d99146eaac5cc402c6ca4e",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "images/app-damaged.png",
+      "objectType": "file",
+      "sizeBytes": 59911,
+      "sha256": "286b1f9c7e2b60b03d0025582a30d637f69473f4858a0530c7f7e19f83cb761c",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "index.html",
+      "objectType": "file",
+      "sizeBytes": 362,
+      "sha256": "ef670ddf36905f7f81fcd3de1691a061a75ac30757f61b371811664f575b0e29",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "package.json",
+      "objectType": "file",
+      "sizeBytes": 2138,
+      "sha256": "004c58070800d37828ab297928abaec864a4019c9d9c9d61b1e043f390b799d3",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "objectType": "file",
+      "sizeBytes": 395732,
+      "sha256": "9d69d6981e77d8d5ceba33df033f34790d293d95c3d18d521ed45a3b8074f40d",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "public",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "public/tauri.svg",
+      "objectType": "file",
+      "sizeBytes": 2599,
+      "sha256": "e5d2738bbaa5543c4684001a558dc53165da9b636144827b28db1dcfacf81aa8",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "public/vite.svg",
+      "objectType": "file",
+      "sizeBytes": 1497,
+      "sha256": "4a748afd443918bb16591c834c401dae33e87861ab5dbad0811c3a3b4a9214fb",
+      "disposition": "not-applicable",
+      "reason": "static assets or OS packaging"
+    },
+    {
+      "path": "release-notes",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "release-notes/0.10.0.md",
+      "objectType": "file",
+      "sizeBytes": 2714,
+      "sha256": "8940288a252456ef5296ae578000be261379091c74acf169d60ea22b7c705d06",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference document"
+    },
+    {
+      "path": "release-notes/0.8.0.md",
+      "objectType": "file",
+      "sizeBytes": 3373,
+      "sha256": "28998bbe3f6b97e5405406e2a4255c11b00a9cfd60083415da307957914a4936",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference document"
+    },
+    {
+      "path": "release-notes/0.9.0.md",
+      "objectType": "file",
+      "sizeBytes": 3487,
+      "sha256": "220378ab5a70feb50006efb87b2b8563c532eae313471c9a7a5b7334cc88687e",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference document"
+    },
+    {
+      "path": "release-notes/0.9.1.md",
+      "objectType": "file",
+      "sizeBytes": 2596,
+      "sha256": "3fad55216da35f072d7b889073cab18df98f2078001a9608642e92b4d617e501",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference document"
+    },
+    {
+      "path": "src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src-tauri",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/.gitignore",
+      "objectType": "file",
+      "sizeBytes": 166,
+      "sha256": "88707cda7ba4226eda3ffa91d8284f1a0d12b827f06fb9bc48425cc0d4af04af",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "objectType": "file",
+      "sizeBytes": 162172,
+      "sha256": "9830980ec19e87ea0091dc045cb9efc17d25998cd1c7cd72d63d32f561d11c39",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "objectType": "file",
+      "sizeBytes": 946,
+      "sha256": "1d1e269de6c50cf0aa2444ec276f4186f74222bd7a85f147069fd350b3f7041f",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/build.rs",
+      "objectType": "file",
+      "sizeBytes": 39,
+      "sha256": "487059eaf8a947b80f20a9aacac038a5047b2ad69d2401b827376c67d6fe847f",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/bundle",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/bundle/linux",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/bundle/linux/com.iamzhihuix.skillsmanage.metainfo.xml",
+      "objectType": "file",
+      "sizeBytes": 895,
+      "sha256": "dc4be78034fc2f0e418b8932ad97b36dd92b9efb0b10b35fc3db9058ac84475d",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/bundle/linux/skills-manage.desktop.hbs",
+      "objectType": "file",
+      "sizeBytes": 226,
+      "sha256": "5f28aa6cf163952d8f28d0c457d2cd30fb3fecc3d68cef2e1b4770aa5d9927bd",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/capabilities",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/capabilities/default.json",
+      "objectType": "file",
+      "sizeBytes": 278,
+      "sha256": "0a561e1183b39f2f8c7ebdc40326018d1c3a0031faf80e22ae3e4318c7a00335",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/128x128.png",
+      "objectType": "file",
+      "sizeBytes": 5311,
+      "sha256": "791fa8bd065cf3cdce32e0035ee45996096684f17760f939531ec05b00a6bb64",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/128x128@2x.png",
+      "objectType": "file",
+      "sizeBytes": 12514,
+      "sha256": "1e4bd1f15614183b2305b03e39693240cccbae704527e071780bf1b855ba0d00",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/32x32.png",
+      "objectType": "file",
+      "sizeBytes": 1306,
+      "sha256": "805a21f7cf72fd8928e1c399d836b6985a8504a709d39bc2d45b6054e590751a",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/64x64.png",
+      "objectType": "file",
+      "sizeBytes": 2606,
+      "sha256": "00c30b6f60a87a856d04ffdf7c381971ccffc4067fc7cc590ef5d32e8e3ba06b",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square107x107Logo.png",
+      "objectType": "file",
+      "sizeBytes": 4347,
+      "sha256": "0e602b4817c0afd87639f3e9247c180bbed46c026d421b01dcda3be9bd8d082f",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square142x142Logo.png",
+      "objectType": "file",
+      "sizeBytes": 5980,
+      "sha256": "283c43f6696118b885c47e41400000fa146a771dd7854e3cfe617c7456883133",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square150x150Logo.png",
+      "objectType": "file",
+      "sizeBytes": 6346,
+      "sha256": "cadca77ac1a7a5601424edcc0dc57b84de67607d5f341956bf16f9bd8d3e98be",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square284x284Logo.png",
+      "objectType": "file",
+      "sizeBytes": 14082,
+      "sha256": "8a8f31d80b9551debef0d98adfc0e88361fbb0c7b1b8644df4307bae3df564a2",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square30x30Logo.png",
+      "objectType": "file",
+      "sizeBytes": 1225,
+      "sha256": "52f48e9e0e9ca7595484d4f247c9d1be5335d41eea4c1ea00ee5dde75d0680ba",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square310x310Logo.png",
+      "objectType": "file",
+      "sizeBytes": 15576,
+      "sha256": "9082e5482949ce9daaed88ac608549bd25dff91ae812f26582851d8d6e0b77d7",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square44x44Logo.png",
+      "objectType": "file",
+      "sizeBytes": 1797,
+      "sha256": "0cd29567b25b6f34598dbc608f668aeb2b298211fa29da05215965e275a209d2",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square71x71Logo.png",
+      "objectType": "file",
+      "sizeBytes": 2919,
+      "sha256": "853d103dd902647acbe8f2a5b6a4ea338927401b6ed749e3c92be36360903e6c",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/Square89x89Logo.png",
+      "objectType": "file",
+      "sizeBytes": 3561,
+      "sha256": "ef8a156d652ab4f195022feef106d4bf3a22cb7583141a8f21eaf9843221c6cb",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/StoreLogo.png",
+      "objectType": "file",
+      "sizeBytes": 2016,
+      "sha256": "3637e8db6bd637fc356e6d50b6daf134673a88906f718acc8904e156f5ba56a7",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-anydpi-v26",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml",
+      "objectType": "file",
+      "sizeBytes": 261,
+      "sha256": "760d4b8a06bf7163dd010c33ad2cac9e4a75fa0177afaba042f83e311eef0c3e",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 1996,
+      "sha256": "5d778b4f151ac67cde98955a3d2e19fd8b652cd17cef7fd7650156c18bf77f86",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 6965,
+      "sha256": "f0f04d844e564d26f8a47bd6d0abdfdf29d5501c5819329a443434b1cbb5fb77",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-hdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 1947,
+      "sha256": "892bdb3cb1ddaddc662484345c4271182cd0302817c83ee832ac67d942c209b2",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 1927,
+      "sha256": "5132ea7d21c7e84d4a7776d57202435db0b5506ba5fab6672ecf94cf85948e89",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 4339,
+      "sha256": "92c20e8fc38f59b3ca474d1ed9769641775cf184ca5415726876806feeb4cf7a",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-mdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 1912,
+      "sha256": "57b44f0ed57b86d3ff55c7590c027f71b14dbb0fe86d44b972785405e1fbdc0d",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 3709,
+      "sha256": "50a5818309ce1fc09c20a1c296f68cc25187e0723cfd315b9f5311da22aab343",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 10029,
+      "sha256": "d3be24b0e074e18ae52d924b914edd8d4ce24fd6e8bc8c92a1b54371e8ff4435",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 3756,
+      "sha256": "a8e07912f039d9618721abd8604b9fa9313e1dfef87ff8e2b1c9c6bb0602dd8e",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 5693,
+      "sha256": "3454a78edc496872f061f2a41bb7c4485d10cbf578e80900103aaa7eb0d5b44f",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 16476,
+      "sha256": "d1e3f654f3c16a1cbca146f8c5f3014a043741a9b5f2255aa0ba20a0c7432fae",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 5642,
+      "sha256": "e7ae50fd7709b7eff956c22df9d041895254074dc58f787114e265f73f412546",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher.png",
+      "objectType": "file",
+      "sizeBytes": 7812,
+      "sha256": "4bc4b23bd07423c3e0595d1b6e14ca0424d8af29268d73c902b17a6338b9b3f8",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "objectType": "file",
+      "sizeBytes": 23869,
+      "sha256": "b6e1ae881840929c8ee93f48bc74d806529e2276f21856d71d5f57760c77b327",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_round.png",
+      "objectType": "file",
+      "sizeBytes": 7969,
+      "sha256": "27d006207783e59304a6448b1465e02e5d60b11d1de4574f41c298ef40a35034",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/values",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/android/values/ic_launcher_background.xml",
+      "objectType": "file",
+      "sizeBytes": 115,
+      "sha256": "0687336f0ccc6f7ee09c7c95110667c63b75931238df779a21af401fb864cd34",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/icon-source.png",
+      "objectType": "file",
+      "sizeBytes": 36277,
+      "sha256": "f0ff5fba1101d417cb12035c9fadc0f5b9a5a87a0a9e1927ae10e5326754c7ed",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/icon.icns",
+      "objectType": "file",
+      "sizeBytes": 132399,
+      "sha256": "92ba10c7c6c302275c3970f3d7d81dc25056c56b6cbc85bdad0286f4b0c08249",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/icon.ico",
+      "objectType": "file",
+      "sizeBytes": 20576,
+      "sha256": "630a9812b664103fb9f9b50f4ced5a247cdc070c4fd9c60774c7c5029e68836c",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/icon.png",
+      "objectType": "file",
+      "sizeBytes": 30874,
+      "sha256": "59da3a7c4151129777cc8897c452d5ba720073ea90e2e52838d16e37d4c44666",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@1x.png",
+      "objectType": "file",
+      "sizeBytes": 775,
+      "sha256": "419fbc0271af963c0acec9e8ac612783d6cd2300a62f6ad52e01bd2f46f241d7",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 1577,
+      "sha256": "0ec58a636f91d12a9c4e8035c89f48278ad8ebef5321048c3d7601f031c8342b",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@2x.png",
+      "objectType": "file",
+      "sizeBytes": 1577,
+      "sha256": "0ec58a636f91d12a9c4e8035c89f48278ad8ebef5321048c3d7601f031c8342b",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-20x20@3x.png",
+      "objectType": "file",
+      "sizeBytes": 2417,
+      "sha256": "618a63b5f0c0dadf03d4bb49c5dddba0f5c1c8d7ea4157812d48ec8263dfad32",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@1x.png",
+      "objectType": "file",
+      "sizeBytes": 1188,
+      "sha256": "c6a8d24654b2e9d703b238b26a23da5ed3f7ce4857d94a18dd3d4716686d7bc9",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 2304,
+      "sha256": "965f78141a88535faf9040ebee8c48f7e4db427adedfe7f1ba4fef2507a5e39e",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@2x.png",
+      "objectType": "file",
+      "sizeBytes": 2304,
+      "sha256": "965f78141a88535faf9040ebee8c48f7e4db427adedfe7f1ba4fef2507a5e39e",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-29x29@3x.png",
+      "objectType": "file",
+      "sizeBytes": 3430,
+      "sha256": "71bfdc8c3db84a69b2cad8d1863a7a4247a6c81a09fd849b789ca420dad32e12",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@1x.png",
+      "objectType": "file",
+      "sizeBytes": 1577,
+      "sha256": "0ec58a636f91d12a9c4e8035c89f48278ad8ebef5321048c3d7601f031c8342b",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@2x-1.png",
+      "objectType": "file",
+      "sizeBytes": 3110,
+      "sha256": "4e3d568bd1f5c27869fad82972c6261b5681e7095dd001e18605b567771ca9c1",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@2x.png",
+      "objectType": "file",
+      "sizeBytes": 3110,
+      "sha256": "4e3d568bd1f5c27869fad82972c6261b5681e7095dd001e18605b567771ca9c1",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-40x40@3x.png",
+      "objectType": "file",
+      "sizeBytes": 4829,
+      "sha256": "32e1fe3cbe8f11267cdfa1ab98a46bca2c17eecd01dbdbb0312be73a7e0cd487",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-512@2x.png",
+      "objectType": "file",
+      "sizeBytes": 32439,
+      "sha256": "ed26d8acdd90109de1388dc09e824b7a2daa2e355f9015065a82ffff7ea1be85",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-60x60@2x.png",
+      "objectType": "file",
+      "sizeBytes": 4829,
+      "sha256": "32e1fe3cbe8f11267cdfa1ab98a46bca2c17eecd01dbdbb0312be73a7e0cd487",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-60x60@3x.png",
+      "objectType": "file",
+      "sizeBytes": 7627,
+      "sha256": "93d6f52882a64b257790e2b1942a39d797aa8b35c66a50189051851311054d40",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-76x76@1x.png",
+      "objectType": "file",
+      "sizeBytes": 3006,
+      "sha256": "15edf77540d4026e8f48c273ff2d2bf898f2623fd35eefb7f9ef8bf861b86867",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-76x76@2x.png",
+      "objectType": "file",
+      "sizeBytes": 6338,
+      "sha256": "eca7646ddc40fe84ea35a5f4951415fc16bcb4dc415f094215a4812089ec7dbf",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/icons/ios/AppIcon-83.5x83.5@2x.png",
+      "objectType": "file",
+      "sizeBytes": 7077,
+      "sha256": "ec03a8efefd02f9a9cb856f6618dd9494326dbf4fcc6a618135b68eb597caead",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src-tauri/src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri backend"
+    },
+    {
+      "path": "src-tauri/src/commands",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/commands/agents.rs",
+      "objectType": "file",
+      "sizeBytes": 24080,
+      "sha256": "a553abba604a44252b1e5e7d964fa7816b7622d2876ec5f95f22ef4ad38fca69",
+      "disposition": "adapt",
+      "destination": "target catalog and selection sets",
+      "reason": "broad discovery and collection UX"
+    },
+    {
+      "path": "src-tauri/src/commands/collections.rs",
+      "objectType": "file",
+      "sizeBytes": 36222,
+      "sha256": "de7ab53ebc3e9126935c3095df1c90162a008936beaad6eda647627541291f80",
+      "disposition": "adapt",
+      "destination": "target catalog and selection sets",
+      "reason": "broad discovery and collection UX"
+    },
+    {
+      "path": "src-tauri/src/commands/discover.rs",
+      "objectType": "file",
+      "sizeBytes": 174929,
+      "sha256": "0601c8cad33da19ee7ab56c1e0deba4ca64cc21aba8cde95d6a5180bfded8b0b",
+      "disposition": "adapt",
+      "destination": "target catalog and selection sets",
+      "reason": "broad discovery and collection UX"
+    },
+    {
+      "path": "src-tauri/src/commands/github_import.rs",
+      "objectType": "file",
+      "sizeBytes": 76820,
+      "sha256": "825da15574872d0347834a09ab75724d9984b62edc3e704125d547998103250c",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/commands/linker.rs",
+      "objectType": "file",
+      "sizeBytes": 54387,
+      "sha256": "9ce74d87d0103ba1c350109c7e6627563b26b235a34ad92da5e55fdd46318503",
+      "disposition": "reject",
+      "reason": "direct deployment bypasses reviewed executor"
+    },
+    {
+      "path": "src-tauri/src/commands/marketplace.rs",
+      "objectType": "file",
+      "sizeBytes": 63998,
+      "sha256": "c51beaa28e91ede360014f39d97169c10b7ee96fcf273d34d8a6c3375e2afd75",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/commands/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 166,
+      "sha256": "2862f9accabde106a641f40b15f4d9b3999aecdda8577b95e58f0ea9eeb2e8f7",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/commands/scanner.rs",
+      "objectType": "file",
+      "sizeBytes": 86408,
+      "sha256": "d4c535687111a60bd6d3d2b5f37f688d33a612a13c5639c8989bcdaca652c952",
+      "disposition": "adapt",
+      "destination": "target catalog and selection sets",
+      "reason": "broad discovery and collection UX"
+    },
+    {
+      "path": "src-tauri/src/commands/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 14552,
+      "sha256": "c827ccb83aa1dafc21a24f374996cc361a64aec5c0bd2b4e006b24917576c183",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/commands/skills.rs",
+      "objectType": "file",
+      "sizeBytes": 100299,
+      "sha256": "c0cf3bfc05f54ea2823db7b561058f5514b0dd4fcab086ec8ac75bea0cfddf51",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "command handlers"
+    },
+    {
+      "path": "src-tauri/src/db.rs",
+      "objectType": "file",
+      "sizeBytes": 105424,
+      "sha256": "d1bfa6fbb2201fb2c921a339468fa032b6a4246126ed512e58e2a86dfbda5aed",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri backend"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "objectType": "file",
+      "sizeBytes": 5032,
+      "sha256": "0d6371cf4bdf19c79647678994604e22c75010694729a8662f8c75124ebb3d12",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri backend"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "objectType": "file",
+      "sizeBytes": 188,
+      "sha256": "c7b4e796fb55db45081fcb3dad4fc28bc31f9c9d0fa5953ff8a2054de7de990c",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri backend"
+    },
+    {
+      "path": "src-tauri/src/path_utils.rs",
+      "objectType": "file",
+      "sizeBytes": 3676,
+      "sha256": "dadf88d6ff70869972ddfaa804d2c454161e6e5ac8dd6e15001b79d595ed1e6c",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri backend"
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "objectType": "file",
+      "sizeBytes": 2339,
+      "sha256": "dd30e2ccbebd32ca6da1d01c99a53566de68a45e48dbc523b9110326d3fdfd8b",
+      "disposition": "adapt",
+      "destination": "target catalog",
+      "reason": "Tauri config"
+    },
+    {
+      "path": "src/App.css",
+      "objectType": "file",
+      "sizeBytes": 1739,
+      "sha256": "eb5874b63446b353c05c5a204fbd3978b88d476d3a99f9df7386dc189282e00c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/App.tsx",
+      "objectType": "file",
+      "sizeBytes": 1839,
+      "sha256": "3f6b053cd1c6e6cfa055266b539990e25ace16c7aa1dfb7b31633c707c7cdd62",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/autoclaw.png",
+      "objectType": "file",
+      "sizeBytes": 5256,
+      "sha256": "89b170bacb9f1c4b8591c7717270c5bbdea9f0dda223ee80a99d637465fb12d1",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/codebuddy.png",
+      "objectType": "file",
+      "sizeBytes": 3813,
+      "sha256": "213ffa40e741ae570c73189932263761027a78fbe96ebe7bbba27a5fda7b6b71",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/codex.png",
+      "objectType": "file",
+      "sizeBytes": 4791,
+      "sha256": "df9f4424c23368f4a08ce21a600343d5392a5c2ddda792624d39c19f541ecf80",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/cursor.png",
+      "objectType": "file",
+      "sizeBytes": 3154,
+      "sha256": "90d4f60de1cf767e6b482c87d3d53f9d5f0684eab03e75a75f2bb2e700fd0c5f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/easyclaw.png",
+      "objectType": "file",
+      "sizeBytes": 6534,
+      "sha256": "993098d3bb47a6f4cfb72d74c90bbc8dd04a9eef8649439a4ba21b9eb321dd88",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/factory-droid.png",
+      "objectType": "file",
+      "sizeBytes": 3939,
+      "sha256": "1a6750b7202e3a22e405cd5254e437815aaa03f50523ddb37b2dc3e30ba386c3",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/hermes.png",
+      "objectType": "file",
+      "sizeBytes": 4100,
+      "sha256": "5fbced606189c9bfc2925a16f8903333041cabbf1f8699fe9fe9b3e24504048f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/kiro.png",
+      "objectType": "file",
+      "sizeBytes": 3702,
+      "sha256": "ebcf64c9cc1787681ed32c67fc7d02996478cbd926523b7448d878d7bb1795bb",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/openclaw.png",
+      "objectType": "file",
+      "sizeBytes": 3761,
+      "sha256": "46d4f9edca74b53a791d9a7c120f7c0a21813efcf07666639742c00392685402",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/qclaw.png",
+      "objectType": "file",
+      "sizeBytes": 4884,
+      "sha256": "c8653f9799d9a4fff93100a6f514e4a51d5fc1651fd2ae6305fbcc1fa5dc07f9",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/qoder.png",
+      "objectType": "file",
+      "sizeBytes": 3045,
+      "sha256": "247ece1434525bb7f07edbb4b19428f175c824a6488ab6b9602aa441016cc574",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/react.svg",
+      "objectType": "file",
+      "sizeBytes": 4126,
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/trae.png",
+      "objectType": "file",
+      "sizeBytes": 3300,
+      "sha256": "9aa8ac57606176ca0765bd7687e120ea6ca722f95c41c00ff61f121ff4034fd3",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/windsurf.png",
+      "objectType": "file",
+      "sizeBytes": 3046,
+      "sha256": "41a38f0a568bd604aae2afb5b40c29cde005d2ec8926d64d783de644468567fe",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/workbuddy.png",
+      "objectType": "file",
+      "sizeBytes": 5455,
+      "sha256": "753959a00390586cd4e375534e8caefd889a90a51847fbee69042b359424a439",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/components",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/central",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/central/CentralBundleDrawer.tsx",
+      "objectType": "file",
+      "sizeBytes": 1824,
+      "sha256": "db68fd9688a5bb372b319fa34bfe4eba7e182e278bbc390df931e635328d4e9f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/central/InstallDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 8709,
+      "sha256": "7eed955ee11f1ed91d1f9b40c712de5b85106441e7b8263e9814c91d2caa259e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/central/PlatformInstallDrawer.tsx",
+      "objectType": "file",
+      "sizeBytes": 10245,
+      "sha256": "defc58d3fec873d699c2122f9bf99f136bcf1c723ff804723f6b5724f52268fa",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/collection",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/collection/CollectionEditor.tsx",
+      "objectType": "file",
+      "sizeBytes": 5403,
+      "sha256": "b10337b22f2cfb571f7a6ea9a420dc7e2cefd32302adea286979aa1179dddef0",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/collection/CollectionInstallDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 6773,
+      "sha256": "3236124c56b9541785a8ed421c7c992347ed41a459a8526125213b6d8369ef7a",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/collection/CollectionPickerDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 8075,
+      "sha256": "1edfa5c17b4f9dcaedb280d528613ff8378ab0e330f645198d0a52c09332b6c9",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/collection/SkillPickerDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 8467,
+      "sha256": "8a817c67fda47071668e371728caf6e128a122d7b6c3dc6fd451c17ca34de17b",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/discover",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/discover/DiscoverConfigDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 8023,
+      "sha256": "cbe5eb83b3c1794ebc74b61533d1d209e5d8415073d53b7e95751afb4531cae0",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout/AppShell.tsx",
+      "objectType": "file",
+      "sizeBytes": 2044,
+      "sha256": "0da47cb29ddbe93ad309943319368c674764d37d5c77fff0e3c3743745ce3a84",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout/GlobalSearchDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 10425,
+      "sha256": "efcd78249d12a5f6533d54bc1bd17f2a982de6a78300e7ccd0d7ee442cc2e292",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout/Sidebar.tsx",
+      "objectType": "file",
+      "sizeBytes": 12783,
+      "sha256": "a3ee3983ebc79eb552fb2264c2373f635011896b2de4409eb65df8f21fd8ae8c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout/TopBar.tsx",
+      "objectType": "file",
+      "sizeBytes": 5374,
+      "sha256": "6c7b7001cf03e174c4694571044cf9403b6277b04b94b127eb6c0be7771191bc",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/marketplace",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/marketplace/GitHubRepoImportWizard.tsx",
+      "objectType": "file",
+      "sizeBytes": 83484,
+      "sha256": "0846e82771d2344f1335eefe67953416c5280cc2e775fb06cdde1020b87af9ce",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/marketplace/MarkdownPreview.tsx",
+      "objectType": "file",
+      "sizeBytes": 1207,
+      "sha256": "c04e9fdce817def05f749aa2ae5654c17975bd14ed4841d5db248f8f92aab438",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/marketplace/MarketplaceSkillDetailDrawer.tsx",
+      "objectType": "file",
+      "sizeBytes": 16194,
+      "sha256": "3e0a2264c34c5033f67ce697c1441ab4c07be0184087874f319e9f2ffa5e2160",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/marketplace/SkillPreviewDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 13479,
+      "sha256": "73165eed4cd417e980eb86decd6930714d32eb845b86afe5f9f12f861a662ece",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/platform",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/platform/PlatformIcon.tsx",
+      "objectType": "file",
+      "sizeBytes": 10480,
+      "sha256": "bbb9395379d96dac6f71013d818bbc25a38e309445e0b19279ada0006d29fb72",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/settings",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AddDirectoryDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 4029,
+      "sha256": "2a5d727ca2f1aa4e85e401bc87e83d933b26058bf30cf9ea8670726c8ee31955",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/PlatformDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 9065,
+      "sha256": "3f5750f9fcd1a717432534b905e039263e8e485c411ac070e3fb7cc3b5f6f3e5",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/skill",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillDetailDrawer.tsx",
+      "objectType": "file",
+      "sizeBytes": 3418,
+      "sha256": "d8852bc3c6ac775d01d5c443f581cc8e77380d5ef86b51192fb9b52998f261e4",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillDetailView.tsx",
+      "objectType": "file",
+      "sizeBytes": 51530,
+      "sha256": "4ca643e755aa85894316757cd15b82b4b78986488c77626337c80ea8487b480e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillFolderCard.tsx",
+      "objectType": "file",
+      "sizeBytes": 3088,
+      "sha256": "10f17dc9444f7767dc66ddd340bbb0f23f6e82884dc90f448b399093e64540e7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillFolderDrawer.tsx",
+      "objectType": "file",
+      "sizeBytes": 11514,
+      "sha256": "30699dec4be01219cdb70695792e47e9f774afa7dce99bf5e9e2b23c2fc473d1",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillFrontmatterCard.tsx",
+      "objectType": "file",
+      "sizeBytes": 6341,
+      "sha256": "e90a6eb323f8a355b8f04bb632a947ca168f6f89963a2d3be9650f92cddfef91",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/SkillListModeToggle.tsx",
+      "objectType": "file",
+      "sizeBytes": 1630,
+      "sha256": "33734cb5db5cd09e54c4a6281d2e0070f78d76584c3ea33eeae75e37d2759621",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/skill/UnifiedSkillCard.tsx",
+      "objectType": "file",
+      "sizeBytes": 23035,
+      "sha256": "1a18cf8f5c636a4532477c551ab73947ce1e8bc64b780edd4ea16ec036a2a636",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "search, virtualization, previews and target presentation"
+    },
+    {
+      "path": "src/components/ui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/button-variants.ts",
+      "objectType": "file",
+      "sizeBytes": 2764,
+      "sha256": "e6b91a90419bba8c599c14a3e7d37ac77b17c756d14a17b821834bf28b104b5c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/button.tsx",
+      "objectType": "file",
+      "sizeBytes": 700,
+      "sha256": "07114afe19fea560c47fab5a345653fe0ba7275db3ec6556a617ec7fd4993569",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/card.tsx",
+      "objectType": "file",
+      "sizeBytes": 2678,
+      "sha256": "23642d58dc5868716f270598df7201b9aa795b4e9357669e287c0d4e30c71521",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "objectType": "file",
+      "sizeBytes": 1258,
+      "sha256": "377f3c31fcf184508a913a46d069b065da17e812688b7a90639f21cad6b83b62",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/command.tsx",
+      "objectType": "file",
+      "sizeBytes": 4991,
+      "sha256": "e85607682ae67fd7d4d95ca2dfde6d3a0fc43b69d3f312687ae06cfb3b3a77e2",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 5024,
+      "sha256": "979a65f9ac6056da6fbfdab7e3d5815aec97cc8b9262ac89d1ddd7c2bb56b25e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/inline-confirm-action.tsx",
+      "objectType": "file",
+      "sizeBytes": 3262,
+      "sha256": "b22c01db41fb5efb94d199cc4a9eead4d5f85e44eb24053419a03a1683575dfa",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/input-group.tsx",
+      "objectType": "file",
+      "sizeBytes": 5264,
+      "sha256": "17e76f6e6093754756dd10182f833abf35f1020dc4a8a7ead8c0f9703576870b",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "objectType": "file",
+      "sizeBytes": 1040,
+      "sha256": "f7d6ecff9a4d631feeaf401c02bb87e26ddb38131c55d15a43b9290747390847",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/radio-group.tsx",
+      "objectType": "file",
+      "sizeBytes": 1729,
+      "sha256": "cfbed5a5b958f23328a0ccd2dd7181d2f6bac1898e9777123aceae06e4e36872",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "objectType": "file",
+      "sizeBytes": 1586,
+      "sha256": "ffbf4da2acd878fcbb93a72d283d2f6ce038c9731fdd2c2d4d5c7ea500f73804",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/textarea.tsx",
+      "objectType": "file",
+      "sizeBytes": 842,
+      "sha256": "58b58d84fc54ba5f4ca46937870c619349fd9eccc4d494250ac7bc73a94e05e9",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/virtualized-list.tsx",
+      "objectType": "file",
+      "sizeBytes": 3042,
+      "sha256": "cc09323a4157940164122fdbd9ead454d008ec0f11a246aeacb8afd8fc4a5561",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/data",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/data/aiProviders.ts",
+      "objectType": "file",
+      "sizeBytes": 2041,
+      "sha256": "d9af6e4d0672effb926a98b2acbb416bda42f368af8ecb877eee80c91f2a6c2c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/data/officialSources.ts",
+      "objectType": "file",
+      "sizeBytes": 24813,
+      "sha256": "e536c2ce443561f3494ffe888c0d910950a3f03a2cbd407ba2b5f1bc259f6d99",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useHotkey.ts",
+      "objectType": "file",
+      "sizeBytes": 1376,
+      "sha256": "d94c8f4b9f4027a8d4a323da8b6ed60efdac7cdfe319f95de268dfb70ebe87a1",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSkillListViewMode.ts",
+      "objectType": "file",
+      "sizeBytes": 549,
+      "sha256": "ab9e9d134a0905a53406acc7eaf9c175db9783ad47d7907582292a1973fd7b19",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/index.ts",
+      "objectType": "file",
+      "sizeBytes": 860,
+      "sha256": "d1fed93767aee0e8692c907992dec46306a78e667afe1dbd324746b5e19b623f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/locales",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/locales/en.json",
+      "objectType": "file",
+      "sizeBytes": 28187,
+      "sha256": "4c1df7c2c0208ced065954aeff4569ca2d3b07fb7d6c04b0b0432f2b30199b41",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/locales/zh.json",
+      "objectType": "file",
+      "sizeBytes": 27810,
+      "sha256": "23a58c81c0f0d0dc27ae9cdc252a297a1b8058213bee556b9355432c52896a57",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/index.css",
+      "objectType": "file",
+      "sizeBytes": 18774,
+      "sha256": "9b1f41384c5b3426253f3fb5c2f7cf15558fedd9306010dc8d64ce7ca099cef7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/agents.ts",
+      "objectType": "file",
+      "sizeBytes": 542,
+      "sha256": "083b38142f8e1dff992e7a6c65c61adb69fde01a0c8d49e9ff8c53d5738d84d6",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/explanationStream.ts",
+      "objectType": "file",
+      "sizeBytes": 2357,
+      "sha256": "87644fa4013e1e0cd070b65eae616a7f271cbe7ab053fede8163eae9a9f12215",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/frontmatter.ts",
+      "objectType": "file",
+      "sizeBytes": 4286,
+      "sha256": "09994567443d686936db7318daf3af4414bbf7b2fb519d8bb2b8a0d5a958c4eb",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/path.ts",
+      "objectType": "file",
+      "sizeBytes": 2489,
+      "sha256": "a9968d946f8aa59f57d16acdaac9fd76bcf23cf4c9d237f92806c74991fe2d0d",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/scrollRestoration.ts",
+      "objectType": "file",
+      "sizeBytes": 1989,
+      "sha256": "864c02b14817f5f11d46652fbd9fc00f54bd6c4b1c2b920c2aeb499563b27abb",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/search.ts",
+      "objectType": "file",
+      "sizeBytes": 729,
+      "sha256": "3a56f6db5c1ddb096ec52a7d8d345d7679b0d2c4c1622bdc8ecbc178a8d9b175",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/skillFolders.ts",
+      "objectType": "file",
+      "sizeBytes": 3926,
+      "sha256": "eb0da8b4904cdd6d0dc724f06a73d5bf33edb85700b9cc2b65edaa45f42b3c9e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/tauri.ts",
+      "objectType": "file",
+      "sizeBytes": 516,
+      "sha256": "fae02943cd942d5af3fa5b9ea3751302da805941a930af0c1ecccda13b601412",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "objectType": "file",
+      "sizeBytes": 166,
+      "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/main.tsx",
+      "objectType": "file",
+      "sizeBytes": 714,
+      "sha256": "e204e8d275f8fd2d5765d3d763311a4184e8619f17402b580054047e7bb370fe",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/CentralSkillsView.tsx",
+      "objectType": "file",
+      "sizeBytes": 39100,
+      "sha256": "39e0983d8d25240525c8bef23cce7c62311d8026e183a1c57860d6f8a8dc171f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/CollectionView.tsx",
+      "objectType": "file",
+      "sizeBytes": 17639,
+      "sha256": "ca3d979a0336c8db702bd5357b878b0b44ad6219713a70a2ddca4b5b4cef01ec",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/CollectionsListView.tsx",
+      "objectType": "file",
+      "sizeBytes": 23759,
+      "sha256": "4a5c10965a7fa01e465e600414b58769981db9470f9cca5c515a0d44f1ff95c3",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/DiscoverView.tsx",
+      "objectType": "file",
+      "sizeBytes": 32145,
+      "sha256": "5754080f224362ad1d9e5c8af8872d68023f1f7c2082b1487eedb51529bef749",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/MarketplaceView.tsx",
+      "objectType": "file",
+      "sizeBytes": 30028,
+      "sha256": "553443f666f120c02ae22e7e032dfb95da4cdfc7599c772b4701847fc282fb42",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/ObsidianVaultView.tsx",
+      "objectType": "file",
+      "sizeBytes": 10429,
+      "sha256": "4fc6b8f35cea0bbcfe71b90d40db2607a0da7ee9cc034a06a875e7646491a7b7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/PlatformView.tsx",
+      "objectType": "file",
+      "sizeBytes": 19386,
+      "sha256": "fe1885ac3bc9771d888edcc1f3979105de0b49f184366a77ecd73276811dba67",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/SettingsView.tsx",
+      "objectType": "file",
+      "sizeBytes": 39414,
+      "sha256": "3313ffa22b6f82999e6dc88d34f7e95012423e3528690265276bfa9846e89ce7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/pages/SkillDetailPage.tsx",
+      "objectType": "file",
+      "sizeBytes": 4787,
+      "sha256": "60cc0ff89afb0c3a4afcdef91eaf1f3c883c76bbb777f425c6e5361dbf958abc",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/centralSkillsStore.ts",
+      "objectType": "file",
+      "sizeBytes": 11584,
+      "sha256": "489fcae4983686f665aa470758ede8257d899fd13ed6c210f54d6268684d53ae",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/collectionStore.ts",
+      "objectType": "file",
+      "sizeBytes": 8641,
+      "sha256": "c142f3c676976a7931bda5acf46ba4c4d5086df857c773ce63b5f4bb3bf678a8",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/discoverStore.ts",
+      "objectType": "file",
+      "sizeBytes": 15434,
+      "sha256": "ad64a39912d7951414d2260d3f434cc2769dd63c597edc583c6149bfc20aab65",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/marketplaceStore.ts",
+      "objectType": "file",
+      "sizeBytes": 18944,
+      "sha256": "2ebc382f6ae3f439e45d123942c019df5e293a5da17c26c78666baa11682723e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/obsidianStore.ts",
+      "objectType": "file",
+      "sizeBytes": 2978,
+      "sha256": "3f608d6c7e5716456924f4e1a357a3e7db29b0916c0afbe7ee20d2bc6dc2ff26",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/platformStore.ts",
+      "objectType": "file",
+      "sizeBytes": 4575,
+      "sha256": "e1245508ff074b9b43f4de54a5b6db2cf0d896cd2a6371d160ce036c716ccea4",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/settingsStore.ts",
+      "objectType": "file",
+      "sizeBytes": 6091,
+      "sha256": "ad138d5a0e201e133c3e0f1c453549101df15d8b3a4b307ee5873a5e98e25c91",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/skillDetailStore.ts",
+      "objectType": "file",
+      "sizeBytes": 12714,
+      "sha256": "2cb72b2ab3eff00b335d4755d580fe253460fb61eb3be7834075ece52cc689c1",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/skillStore.ts",
+      "objectType": "file",
+      "sizeBytes": 4501,
+      "sha256": "f9ae1aec2d00865370587b27bbcf1c61cfce686d889532ec9cf67785fae737d2",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/stores/themeStore.ts",
+      "objectType": "file",
+      "sizeBytes": 4366,
+      "sha256": "763262a4ce01181f9fe235e186e78cead1cf445b94964b3a94c78dc1ca3a963b",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/App.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 3803,
+      "sha256": "a48e54dbbad633afbe408e24ac3c779a6a787bb030f320ae1e10fb065009e28f",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/AppShell.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 8177,
+      "sha256": "f6315f63932e538d7ffff064515fd309751e7745acc325af67266e1ce159bc21",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/Button.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 513,
+      "sha256": "277073030d1102dd7ceadaf4eeb7ee804101231b8555b1a7ad975ace5a4fd3de",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/CentralSkillsView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 36501,
+      "sha256": "cb8fd937a10af4304c98ccc5594050d1abe8f973c7637c05cc6d26824c7c610e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/CollectionEditor.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 7097,
+      "sha256": "b0c0bad1da4cb77fe611b25d64fbae07e1e04a4736195b4de4c4d83db3ac4285",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/CollectionPickerDialog.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 11812,
+      "sha256": "0d0f46a7ba0ab7303ccb701a3605577bdc6cddec0d8880d57b792268800d894e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/CollectionView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 16842,
+      "sha256": "55fe65c792d73c661e9f1e5a15ea6673ae9c9d3a791f40eee5187a5266ed1ea1",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/CollectionsListView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 21101,
+      "sha256": "8a2f7c7eecba68289c413a62b3b2a6c356a50bdd6442cfc3cd8202257653e291",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/DiscoverConfigDialog.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 14505,
+      "sha256": "4f4ae3e758edddfd03fe62ef2c84e17dab1ad5c8807433225a87410139e4009b",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/DiscoverView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 35828,
+      "sha256": "a4aa009edc9c60f06be085015da5aa646f44bbdb79082d13d98be1d3c0a10757",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/InlineConfirmAction.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 1736,
+      "sha256": "6332dff1877f41c88c48d2dadd7410c0694346ed51a9a38c7ba4b5f3491c8065",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/InstallDialog.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 10342,
+      "sha256": "315cbe9aeea64cf0d97dc07a49d6e480129ad14abb8bbe99b42610ef0be63f54",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/MarketplaceOfficialPreview.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 10835,
+      "sha256": "c67a04189375c561147c29c3569a2546cbe4c67f0003985839e91f5f9f62c86d",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/MarketplaceSkillDetailDrawer.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 3032,
+      "sha256": "b4baee416cc50377547e0893195f9df4cdb82247d0b4ba81651ac7c72bf4b8dc",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/MarketplaceView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 15166,
+      "sha256": "52dd2fc6032f0a75f6b9d61673f3d9d6b515fba55f4286461fee5e078f74dd1b",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/ObsidianVaultView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 4850,
+      "sha256": "e17659aca26307b86d5be19c8acbeb8c111d4d946917ace489408630025b3cdc",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/PlatformIcon.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 13098,
+      "sha256": "0ca89b6ff7a4ba32410b427ba6380fc775da59d1f2ce7aa11656e3dfd9c85e46",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/PlatformInstallDrawer.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 3365,
+      "sha256": "dbc5942ea50c0e2c60285bc43ca0613c16bb12b9ce546397710c643714060992",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/PlatformView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 37125,
+      "sha256": "92c718f29d01064fb9e2afaf6b49d0436026f9df88b21f868a2d6b05bc98149a",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/SettingsView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 19711,
+      "sha256": "89dc501579c758c57bbfe22fc99d7718fdeaf6278311ff59c928a53b898b5d68",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/Sidebar.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 25880,
+      "sha256": "ef962311e9260b4f0b50e74029b97b38507dcc808a51d38c1651535202936834",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/SkillDetailDrawer.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 10001,
+      "sha256": "fa9975617496601c0a92927801606e198a3b3ee9ce9044f3b746272044b2b0ac",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/SkillDetailPage.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 7880,
+      "sha256": "079e5540b5c471bd712ac8f9bbfd019b1ed3fd212742f7af8cc11f186aab37ae",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/SkillDetailView.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 46034,
+      "sha256": "b8e664e594c6a461e2256e7458057dc0948bbade0ff9201aee492212c1f64160",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/UnifiedSkillCard.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 5273,
+      "sha256": "42af983588072485f6c9a9ea3b6558e73fde3ea1f8516f7b3a70d32c59a49d48",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/centralSkillsStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 18044,
+      "sha256": "7ad112241b84e587c31d74a7ca008a90ac4e67225bf422bcd513e78d6271f6f4",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/collectionStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 12822,
+      "sha256": "83afbd68c9eee06acb57e4257798c25898e5ab8613ef9323a4301efd09da066c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/discoverStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 22952,
+      "sha256": "8d36420878c2678aa66badabb6666a9d3242b9139b2a4ba413bc3f4044fd3c88",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/fixtures",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/fixtures/obsidianCrossAreaFixture.ts",
+      "objectType": "file",
+      "sizeBytes": 2544,
+      "sha256": "a9006a6e08f25257e63a0759d750289710abc95f999dbeaf887c5aff1101e69a",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/frontmatter.test.ts",
+      "objectType": "file",
+      "sizeBytes": 2166,
+      "sha256": "6a2427028bb7b51c967531df82d5f5b44cd016552f981cd2f8ac56121c1b32a7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/marketplaceStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 15547,
+      "sha256": "7099e58730911ab56e251ba652b91e1fa94b5f6618e812251a4f7de66e632dc6",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/path.test.ts",
+      "objectType": "file",
+      "sizeBytes": 2690,
+      "sha256": "1e9d54180976d87d76faf2165869fbf053cb38bead02f71eaac2e2a686d00a0d",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/platformStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 6877,
+      "sha256": "9b81b7c9df84a9f0bd4fd72503042bb5f1034e4d93d21d6753f14c54243b9a5e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/scrollRestoration.test.ts",
+      "objectType": "file",
+      "sizeBytes": 3388,
+      "sha256": "26ffa7430fd7bbfa29511b97c5ab10ce21f42d6364ef377c138886a65f63bb4c",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/settingsStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 13988,
+      "sha256": "20138395e3ea04abf3e5097873993f8945a441521d672c8ef8d56dd841a7c8b7",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/setup.ts",
+      "objectType": "file",
+      "sizeBytes": 3060,
+      "sha256": "ef50c4ba9fcab72e22dd4f668ee5239ae9a4ad9e21c95fbdbddb4fcde2c739ae",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/skillDetailStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 29895,
+      "sha256": "bd560bac3c8cfa805186c78d11d3cc70b7f5772df3603ef35b6ac60267700f0e",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/skillStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 8049,
+      "sha256": "31cc070f4347997f1a59cd4a6c13e07cc148587b33a7f7d381a33377adb16a22",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/themeStore.test.ts",
+      "objectType": "file",
+      "sizeBytes": 9721,
+      "sha256": "058bb129f02a08124d487a733a88d40682aa9fe8d8989d687e257f688f85c1fa",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/types",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/types/index.ts",
+      "objectType": "file",
+      "sizeBytes": 9464,
+      "sha256": "0122e084ac16d29e31a442013abbc53b9f622fb52dde43c01823fa84c7f720b9",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "objectType": "file",
+      "sizeBytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "disposition": "inspire",
+      "destination": "ASM Library/Changes UX",
+      "reason": "React frontend"
+    },
+    {
+      "path": "tsconfig.json",
+      "objectType": "file",
+      "sizeBytes": 729,
+      "sha256": "d080c84e504b4fedecb100068b77dcabf6fde54dc19ecc1dac16cde4c3a3de2a",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "objectType": "file",
+      "sizeBytes": 236,
+      "sha256": "e53527e04362772ec459ea551a82fde56eff961235677abf4384aa154f1389f7",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "vite.config.ts",
+      "objectType": "file",
+      "sizeBytes": 1117,
+      "sha256": "5b53a4f40f8998f13445e5a91b2fb920f6e8b57a76d8cdcdb7da7677766d2776",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "agent-skill-library",
+  "sourceRoot": "D:/GitHub/AgentStackManager/reference repos/skill_library",
+  "manifestDigest": "677b8076942ca1c9e7ddf807ca80d1e53b0c0de1a21229db3321b05fde1fd457",
+  "physicalIdentity": "D:\\GitHub\\AgentStackManager\\reference repos\\skill_library",
+  "inventoryTime": "2026-08-13T08:35:31Z",
+  "emptySnapshot": false,
+  "fileCount": 6925,
+  "totalSizeBytes": 62610268
+}
