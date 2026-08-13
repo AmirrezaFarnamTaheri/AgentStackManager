@@ -157,6 +157,12 @@ func (c *CLI) Run(ctx context.Context, args []string) int {
 		return c.runSBOM(args[1:])
 	case "releasepack", "release-pack":
 		return c.runReleasepack(args[1:])
+	case "control-plane", "controlplane":
+		return c.runControlPlane(args[1:])
+	case "audit":
+		return c.runAudit(args[1:])
+	case "reconcile":
+		return c.runReconcile(args[1:])
 	default:
 		return c.failUsage(fmt.Errorf("unknown command %q", args[0]))
 	}

@@ -196,21 +196,29 @@ Delivered in `internal/adapters/opencode/adapter.go` and `internal/adapters/open
 
 ### D3. Deployment executor
 
+Delivered in `internal/executor/deployment.go`, `internal/executor/backup.go`, `internal/executor/types.go`, and `internal/executor/deployment_test.go`.
+
 1. Define a file operation with base object descriptor, desired object descriptor, ownership marker, target identity, operation ID, and backup requirement.
 2. Acquire per-target lock; revalidate immediately before every write.
 3. Back up absence/file/directory/symlink-or-junction state plus relevant metadata.
 4. Use atomic replace where supported; verify desired state; seal an independently recoverable receipt.
 5. Keep `mcplink` as a separate MCP mutation executor.
 
-### D4. Automatic retry and interruption recovery
+### D4. MCPlink mutation executor
 
-1. Persist `planned`, `approved`, `lock-wait`, `preflight`, `backed-up`, `applying`, `verifying`, `committed`, `interrupted`, `reconcile`, `rollback`, and `manual-review` journal states.
-2. Retry only transient lock/share/rename/read conditions, with initial attempt plus three persisted backoff retries.
-3. Release locks while waiting; reacquire and fully revalidate before retry.
-4. Require idempotency key or deterministic read-back for MCP retries.
-5. Never retry drift, ownership ambiguity, plan alteration, path escape, permission policy denial, missing backup, or ambiguous non-idempotent remote result.
+Delivered in `internal/adapters/mcplink/executor.go` and `internal/adapters/mcplink/executor_test.go`.
 
-Fault tests: each journal boundary, process interruption, concurrent ASM process, client edit during backoff, junction retarget, disk full, read-only path, partial MCP success, rollback failure.
+1. Define target descriptor, server ID, tool/resource target, mutation payload, precondition digest, and timeout.
+2. Require target lock, revalidation, execution logging, and output parsing.
+3. Fail safely on partial payload failure without mutating local workspace state.
+
+### D5. Disparity audit, drift detection & reconciliation CLI
+
+Delivered in `cmd/agentstack/main.go`, `internal/cli/control_plane.go`, and `internal/cli/control_plane_test.go`.
+
+1. Build CLI command surface for audit, plan, render, apply, status, verify, reconcile.
+2. Support target-specific shadow vs write mode flags.
+3. Emit machine-readable audit report artifacts and human-readable terminal summaries.
 
 ## Phase E — MCP and universal Change Set
 

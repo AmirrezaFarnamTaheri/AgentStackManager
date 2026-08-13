@@ -21,7 +21,10 @@
 - Task C3 (reviewed consolidation decisions & canonical winner ordering in `internal/similarity/decision.go` and `internal/similarity/decision_test.go`) is complete and verified.
 - Task D1 (adapter conformance contract in `internal/adapters/conformance/contract.go` and `internal/adapters/conformance/contract_test.go`) is complete and verified.
 - Task D2 (OpenCode adapter and shadow vertical slice in `internal/adapters/opencode/adapter.go` and `internal/adapters/opencode/adapter_test.go`) is complete and verified.
-- The next implementation item is Phase D Task D3: Deployment executor.
+- Task D3 (deployment executor, locking, preflight revalidation, and backup/restore in `internal/executor/deployment.go`, `internal/executor/backup.go`, and `internal/executor/deployment_test.go`) is complete and verified.
+- Task D4 (MCPlink mutation executor in `internal/adapters/mcplink/executor.go` and `internal/adapters/mcplink/executor_test.go`) is complete and verified.
+- Task D5 (disparity audit, drift detection & reconciliation CLI in `cmd/agentstack/main.go`, `internal/cli/control_plane.go`, and `internal/cli/control_plane_test.go`) is complete and verified.
+- The next implementation phase is Phase E: MCP and universal Change Set.
 
 ## Active incidents
 
