@@ -19,8 +19,9 @@
 - Task C1 (deterministic identity pipeline & normalized body indexing in `internal/similarity/normalize.go`, `internal/similarity/normalize_test.go`, `internal/similarity/index.go`, and `internal/similarity/index_test.go`) is complete and verified.
 - Task C2 (advisory semantic evidence & versioned relationships in `internal/similarity/evidence.go` and `internal/similarity/evidence_test.go`) is complete and verified.
 - Task C3 (reviewed consolidation decisions & canonical winner ordering in `internal/similarity/decision.go` and `internal/similarity/decision_test.go`) is complete and verified.
-- The next implementation item is Phase D Task D1: Adapter conformance contract.
-- Do not begin client mutation work until Phase D adapter conformance and execution safety contracts are complete.
+- Task D1 (adapter conformance contract in `internal/adapters/conformance/contract.go` and `internal/adapters/conformance/contract_test.go`) is complete and verified.
+- Task D2 (OpenCode adapter and shadow vertical slice in `internal/adapters/opencode/adapter.go` and `internal/adapters/opencode/adapter_test.go`) is complete and verified.
+- The next implementation item is Phase D Task D3: Deployment executor.
 
 ## Active incidents
 

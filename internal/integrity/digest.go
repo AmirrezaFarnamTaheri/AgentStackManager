@@ -15,6 +15,11 @@ func DigestJSON(value any) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("marshal digest input: %w", err)
 	}
+	return DigestBytes(data), nil
+}
+
+// DigestBytes returns a deterministic SHA-256 digest of a byte slice with sha256: prefix.
+func DigestBytes(data []byte) string {
 	sum := sha256.Sum256(data)
-	return "sha256:" + hex.EncodeToString(sum[:]), nil
+	return "sha256:" + hex.EncodeToString(sum[:])
 }

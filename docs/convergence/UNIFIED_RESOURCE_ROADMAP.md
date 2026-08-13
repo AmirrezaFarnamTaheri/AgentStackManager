@@ -178,12 +178,16 @@ Delivered in `internal/similarity/decision.go` and `internal/similarity/decision
 
 ### D1. Adapter conformance contract
 
+Delivered in `internal/adapters/conformance/contract.go` and `internal/adapters/conformance/contract_test.go`.
+
 1. Define pure `discover`, `normalize`, `render`, `plan`, and `verify` operations.
 2. Require capability declaration, unsupported-field handling, fidelity/loss record, and deterministic output.
 3. Build donor-derived fixture corpus with native root formats and negative cases.
 4. Assert adapters never mutate filesystem, MCP configuration, registry, or client state.
 
 ### D2. OpenCode adapter and shadow vertical slice
+
+Delivered in `internal/adapters/opencode/adapter.go` and `internal/adapters/opencode/adapter_test.go`.
 
 1. Implement OpenCode only, using isolated fixtures—not `C:\Users\ACER\.opencode`.
 2. Observe → candidate → canonical decision → render → plan → shadow projection → verify.
