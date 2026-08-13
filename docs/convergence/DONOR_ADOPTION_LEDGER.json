@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "status": "seeded",
+  "authority": "Resource Hub",
+  "sourceRoot": "reference repos",
+  "policy": {
+    "runtimeDependency": false,
+    "directSourceImport": false,
+    "wholeRepositoryCopy": false,
+    "requiredDispositions": ["adopt", "adapt", "fixture", "inspire", "defer", "reject", "duplicate-of", "not-applicable"]
+  },
+  "snapshots": [
+    {
+      "id": "cc-switch-desktop",
+      "path": "cc-switch-main/cc-switch-main",
+      "files": 1174,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src-tauri/src/mcp", "disposition": "adapt", "destination": "internal/mcplink and target adapters", "reason": "target-native MCP serialization and validation"},
+        {"path": "src-tauri/src/*_config.rs", "disposition": "adapt", "destination": "internal/adapters", "reason": "client format and path fixtures"},
+        {"path": "src-tauri/src/services/{skill,prompt,mcp}.rs", "disposition": "adapt", "destination": "Resource Hub application service", "reason": "resource preview and validation behaviors"},
+        {"path": "src-tauri/src/database/{backup,migration}.rs", "disposition": "inspire", "destination": "internal/deployment", "reason": "backup and migration invariants"},
+        {"path": "src-tauri/src/proxy", "disposition": "reject", "reason": "provider routing and credentials are out of scope"},
+        {"path": "src-tauri/src/session_manager", "disposition": "reject", "reason": "session/runtime management is out of scope"}
+      ]
+    },
+    {
+      "id": "cc-switch-cli",
+      "path": "cc-switch-cli-main/cc-switch-cli-main",
+      "files": 521,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src-tauri/src/cli/{commands,tui,interactive}", "disposition": "adapt", "destination": "ASM CLI/TUI", "reason": "headless diagnostics, review and command ergonomics"},
+        {"path": "src-tauri/src/{daemon,database}", "disposition": "inspire", "destination": "internal/deployment", "reason": "isolated test homes, migration and recovery patterns"},
+        {"path": "src-tauri/src/{proxy,provider,session_manager}", "disposition": "reject", "reason": "provider, proxy and runtime scope excluded"}
+      ]
+    },
+    {
+      "id": "skills-manager",
+      "path": "skills-manager-main/skills-manager-main",
+      "files": 300,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src-tauri/src/core/merge", "disposition": "adapt", "destination": "identity/consolidation and deployment recovery", "reason": "snapshot, conflict, decision and tree validation evidence"},
+        {"path": "src-tauri/src/core/{content_hash,path_guard,repo_lock,file_watcher,audit_log,auto_backup}", "disposition": "adapt", "destination": "observation/deployment", "reason": "identity, locking, monitoring and audit primitives"},
+        {"path": "src-tauri/src/core/{central_repo,sync_engine,git_*}", "disposition": "reject", "reason": "parallel canonical store and sync authority"}
+      ]
+    },
+    {
+      "id": "skills-manage",
+      "path": "skills-manage-main/skills-manage-main",
+      "files": 245,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src-tauri/src/commands/{agents,discover,scanner,collections}", "disposition": "adapt", "destination": "target catalog and selection sets", "reason": "broad discovery and collection UX"},
+        {"path": "src/components/{central,platform,skill,marketplace}", "disposition": "inspire", "destination": "ASM Library/Changes UX", "reason": "search, virtualization, previews and target presentation"},
+        {"path": "src-tauri/src/commands/linker.rs", "disposition": "reject", "reason": "direct deployment bypasses reviewed executor"}
+      ]
+    },
+    {
+      "id": "skill-zoo",
+      "path": "skill-zoo-main/skill-zoo-main",
+      "files": 257,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src-tauri/src/persistence/{archive,external_imports,metadata,update_history}.rs", "disposition": "adapt", "destination": "source bundles and observations", "reason": "origin-aware archive and update handling"},
+        {"path": "fixtures/local-protocol", "disposition": "fixture", "destination": "adapter conformance corpus", "reason": "desktop/CLI local protocol behavior"},
+        {"path": "src/components/skills/{ConsistencyPanel,SkillAuditCard,SkillFileTree}", "disposition": "inspire", "destination": "decision queues", "reason": "maintenance and audit visibility"},
+        {"path": "SSOT symlink deployment model", "disposition": "reject", "reason": "Resource Hub remains canonical and client ownership is preserved"}
+      ]
+    },
+    {
+      "id": "agent-of-empires",
+      "path": "agent-of-empires-main/agent-of-empires-main",
+      "files": 1555,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "src/session/settings_schema and aoe-settings-derive", "disposition": "inspire", "destination": "target contract plane", "reason": "single-source schema generation and validation"},
+        {"path": "src/{plugin,migrations,events,hooks}", "disposition": "adapt", "destination": "extension, migration and journal design", "reason": "declarative manifests, migrations and durable evidence"},
+        {"path": "src/session/{project_mcp,mcp_overrides,mcp_state,skills_model}", "disposition": "fixture", "destination": "MCP/project precedence corpus", "reason": "typed merge and scope cases"},
+        {"path": "src/{acp,tmux,containers,process,server,telemetry}", "disposition": "reject", "reason": "agent execution, runtime orchestration and remote control are out of scope"}
+      ]
+    },
+    {
+      "id": "agent-skill-library",
+      "path": "skill_library",
+      "files": 6925,
+      "status": "module-map-recorded",
+      "modules": [
+        {"path": "{schemas,policies,ownership,compatibility}", "disposition": "adapt", "destination": "Resource Hub governance contracts", "reason": "portable contracts, ownership and compatibility"},
+        {"path": "{families,capabilities,profiles,compositions,routing}", "disposition": "adapt", "destination": "second-order governance plane", "reason": "taxonomy and recommendation metadata"},
+        {"path": "{evals,tools,docs/*AUDIT*}", "disposition": "adapt", "destination": "evaluation harness and offline transition checks", "reason": "quality and evidence mechanisms"},
+        {"path": "{canonical,dist}", "disposition": "fixture", "destination": "source bundle/conformance corpus", "reason": "governed skills and generated-output exclusion"}
+      ]
+    },
+    {
+      "id": "agentdns",
+      "path": "AgentDNS-main/deployment",
+      "files": 0,
+      "status": "unverified-no-payload",
+      "modules": [
+        {"path": ".", "disposition": "not-applicable", "reason": "snapshot has no reviewable payload"}
+      ]
+    }
+  ],
+  "nextRequiredEvidence": [
+    "deterministic file manifest for every snapshot path",
+    "file-level disposition coverage",
+    "peer comparison records for overlapping primitives",
+    "fixture checksum and target conformance linkage"
+  ]
+}
