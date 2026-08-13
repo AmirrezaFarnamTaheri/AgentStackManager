@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Unified Agent Resource Control Plane",
-    "subtitle": "One canonical Resource Hub, pure planning, explicit recoverable execution",
+    "subtitle": "Nested-source discovery, canonical governance, retry-safe recoverable execution",
     "output": "2026-08-13-unified-agent-resource-control-plane.html",
     "animation": "none",
     "visual_preset": "blueprint",
@@ -22,6 +22,7 @@
     { "id": "adapters", "type": "backend", "label": "Pure Adapters", "sublabel": "render planned operations", "pos": [685, 110], "size": [150, 64] },
     { "id": "changes", "type": "security", "label": "Change Set", "sublabel": "review and approval", "pos": [690, 235], "size": [145, 74] },
     { "id": "executor", "type": "backend", "label": "Deployment Executor", "sublabel": "lock, journal, apply, verify", "pos": [915, 225], "size": [175, 74] },
+    { "id": "journal", "type": "database", "label": "Mutation Journal", "sublabel": "retry and recovery state", "pos": [955, 105], "size": [155, 64] },
     { "id": "mcplink", "type": "backend", "label": "mcplink", "sublabel": "MCP registration writer", "pos": [680, 350], "size": [175, 64] },
     { "id": "agents-facade", "type": "messagebus", "label": ".agents Managed Paths", "sublabel": "ownership-marked projections", "pos": [700, 475], "size": [175, 64] },
     { "id": "primary-targets", "type": "frontend", "label": "Primary Targets", "sublabel": "Codex, Claude, Gemini, IDEs", "pos": [925, 465], "size": [175, 70] },
@@ -29,7 +30,7 @@
     { "id": "activity", "type": "cloud", "label": "Activity", "sublabel": "receipts and recovery", "pos": [470, 575], "size": [145, 64] }
   ],
   "boundaries": [
-    { "kind": "region", "label": "ASM authority boundary", "wraps": ["importers", "resource-hub", "cas", "index", "changes", "adapters", "executor", "mcplink"] },
+    { "kind": "region", "label": "ASM authority boundary", "wraps": ["importers", "resource-hub", "cas", "index", "changes", "adapters", "executor", "journal", "mcplink"] },
     { "kind": "security-group", "label": "Client-owned native state", "wraps": ["primary-targets", "other-targets"] }
   ],
   "connections": [
@@ -43,6 +44,7 @@
     { "id": "hub-render", "from": "resource-hub", "to": "adapters", "label": "canonical intent", "variant": "emphasis", "route": "orthogonal-h", "fromSide": "top", "toSide": "left" },
     { "id": "adapter-plan", "from": "adapters", "to": "changes", "variant": "security", "route": "orthogonal-v", "fromSide": "bottom", "toSide": "top" },
     { "id": "approved-execute", "from": "changes", "to": "executor", "variant": "security", "route": "orthogonal-h" },
+    { "id": "executor-journal", "from": "executor", "to": "journal", "label": "attempt state", "variant": "security", "route": "orthogonal-v", "fromSide": "top", "toSide": "bottom" },
     { "id": "approved-mcp", "from": "changes", "to": "mcplink", "variant": "security", "route": "orthogonal-v", "fromSide": "bottom", "toSide": "top" },
     { "id": "facade-project", "from": "executor", "to": "agents-facade", "route": "orthogonal-v", "fromSide": "bottom", "toSide": "right", "via": [[900, 320], [900, 507]] },
     { "id": "primary-project", "from": "executor", "to": "primary-targets", "variant": "emphasis", "route": "orthogonal-v", "fromSide": "bottom", "toSide": "top" },

@@ -577,3 +577,311 @@ Parallel work is permitted only where authority is disjoint: E4 indexing may pro
 ## 13. Implementation handoff
 
 Start with slices E1–E3 only. Do not begin adapter expansion or workstation mutation until the authority, canonical artifact, source-bundle, target-catalog, and junction-aware observation contracts pass focused tests and the OpenCode shadow target is available. Then execute the critical path in order; E6 may run in parallel with OpenCode only after the canonical artifact contract is frozen.
+
+## 14. Workstation topology: physical roots, logical ecosystems, and nested clients
+
+The workstation cannot be modeled as one client per top-level dotted directory. The scanner must construct a graph with `logical client`, `logical resource root`, `filesystem object`, `physical identity`, `projection owner`, and `source eligibility` as separate concepts.
+
+### 14.1 Confirmed cross-root topology
+
+| Root | Observed structure | Required interpretation |
+|---|---|---|
+| `.agent` | Reparse point targeting `.agents` | Alias of the same physical resource hub; never scan twice |
+| `.agents` | `agents`, `commands`, `external-repos`, `platform-sync`, `plugins`, `prompts`, `rules`, `skills`, `tools`, `workflows` | Shared compatibility ecosystem. Classify each child as inbox, managed projection, donor checkout, or client-owned source; do not assign one policy to the whole root |
+| `.gemini` | `agy-cli`, `antigravity-cli`, `antigravity-ide`, `cli`, `ide`, `extensions`, `skills`, `tools`, `context-mode`, config/history/state | Multi-client container, not a single Gemini target. Each nested client receives its own target ID, root contract, projection namespace, and capability matrix |
+| `.codex` | `agents`, `hooks`, `mcp-configs`, `plugins`, `prompts`, `rules`, `skills`, `skills_old`, packages and extensive runtime state | Only declared shareable subpaths enter ASM. Auth, sessions, databases, logs, caches, browser/computer-use state and backups remain native |
+| `.claude` | agents/commands as reparse points, plus hooks, MCP configs, plugins, rules, skills, plans and runtime/session trees | Resolve junction destinations. Manage portable resources only; preserve plugin/runtime/session ownership |
+| `.cursor` | agents/commands reparse points, rules, skills, `skills-cursor`, hooks/MCP config and IDE state | Distinguish shared projections, Cursor-native rules, and IDE-owned configuration |
+| `.opencode` | skills reparse point, commands, hooks, instructions, MCP configs, plugins, prompts, tools, package/runtime content | Pilot target. Never absorb `node_modules`, auth, memory/runtime data or built output as resources |
+| `.hermes` | nested `.agents`, agents/commands reparse points, rules, scripts, skills and MCP configs | Treat `.agents` compatibility view and Hermes-native paths separately; verify whether scripts are inert resources or executable runtime extensions |
+| `.openhuman` | skill registry and skills beside cache/log/user/keychain/window state | Only registry metadata proven portable and skills are candidates; all user/keychain/runtime state is excluded |
+| `.windsurf` | skills reparse point, `skills_old`, extensions and IDE arguments | Skills are projections; extensions and IDE settings remain native |
+| `.agentsys` | adapters, plugins, templates, CLI/bin/lib/meta plus Claude/Codex/Kiro plugin surfaces | Treat as a donor implementation installed in the user profile. Inventory its target facts and fixtures, but do not make it a competing authority or execute its code inside ASM |
+| `.antigravity_tools` | accounts, tokens, logs and databases | Explicitly excluded native credential/runtime system; it is not the Antigravity resource root |
+| `.cc-switch` | SQLite database and settings | Evidence of an installed manager, not a shareable-resource source. Observe registrations through client-native files, never ingest its database as canonical state |
+
+### 14.2 Additional observed client families
+
+The target catalog must also represent the observed `.copilot`, `.kiro`, `.openclaw`, `.continue`, `.roo`, `.qwen`, `.kimi`, `.kimi-code`, `.amazonq`, `.augment`, `.codeium`, `.factory`, `.junie`, `.kilocode`, `.qoder`, `.trae`, `.zencoder`, `.openhands`, `.pi`, `.serena`, and other AI-tool roots discovered by the bounded top-level inventory. Presence creates an observation with confidence, not an automatic support claim.
+
+For every root, capture:
+
+1. lexical path and all aliases;
+2. Windows volume/file identity and reparse target chain;
+3. logical client and nested-client ID;
+4. global versus project scope;
+5. resource-kind subpaths and filename contracts;
+6. read-only, inbox, projectable, discovery-only, ignored, or prohibited classification;
+7. ownership marker and foreign-state rules;
+8. recursion, depth, file-count and byte budgets;
+9. excluded native-state subpaths;
+10. confidence, evidence source, last verified version, and fixture revision.
+
+### 14.3 Physical-identity graph invariants
+
+- A physical directory is hashed once even when reachable through `.agent`, `.agents`, nested `.agents`, client junctions, or project links.
+- Reparse targets are resolved one hop at a time with a visited identity set, maximum hop count, volume-boundary evidence, and broken-target diagnostics.
+- Managed projections are excluded by ownership manifest plus physical identity, not by path prefix alone.
+- A source path resolving inside a managed projection is rejected even when reached through a different junction or case spelling.
+- A real client-owned source that several targets link to remains one observation with several visibility edges.
+- `skills_old`, backups, generated distributions, dependency trees, caches, and archives are inventory evidence but default to non-source status.
+
+## 15. Exhaustive reference-repository decomposition
+
+Every direct child of `reference repos/` receives a machine-generated file manifest and a human donor decision ledger. The ledger is exhaustive at file-path level: each file is assigned `adopt`, `adapt`, `fixture`, `inspire`, `defer`, `reject`, `duplicate-of`, or `not-applicable`, with the ASM destination and verification case. A module cannot be marked reviewed solely from its README.
+
+### 15.1 `cc-switch-main` — desktop integration and native serializer donor
+
+Decompose the 1,174-file snapshot into these planes:
+
+- **Target-native configuration:** `claude_*`, `codex_config`, `gemini_*`, `hermes_config`, `opencode_config`, `openclaw_config`, `prompt_files`, `mcp/*`. Adopt formats, path rules, import normalization, validation, and round-trip fixtures into target adapters.
+- **Shareable-resource services:** MCP, prompt, skill, profile, import/export, deep-link parsers and sync protocol. Recompose validation and preview behavior behind Resource Hub; do not port its database authority.
+- **Safety primitives:** database backup rotation, sync archive handling, JSON canonicalization, switch locks, configuration validation, post-change synchronization, error mapping, and sequential bulk action behavior. Compare each primitive against ASM equivalents and retain the stronger invariant/test.
+- **UI patterns:** unified MCP/skills panels, MCP wizard and validation, prompt/skill preview, backup list, directory settings, import confirmation and risk preview. Adapt into Changes and decision queues, not separate product areas.
+- **Explicit exclusions:** providers, OAuth/accounts, proxy/router, failover, subscriptions, pricing/usage, session manager, terminal, quota and credential features.
+
+Supersession rule: when desktop and CLI contain peer implementations, desktop is the format/feature reference unless CLI has stricter isolation, command ergonomics, or a newer test. Record the winner per module; never blindly port both.
+
+### 15.2 `cc-switch-cli-main` — headless control-surface and isolation donor
+
+Decompose the 521-file snapshot into:
+
+- Clap command shapes for `mcp`, `prompts`, `skills`, config backup/restore/import/export, environment diagnostics and completions;
+- interactive/TUI routes, forms, help, tables, clipboard, keymaps, runtime skill display and terminal-safe formatting;
+- target selection and application-specific config adapters;
+- sandboxed test-home helpers, startup recovery, database migration/backup, daemon IPC/pidfile/restart patterns;
+- WebDAV/S3 sync archive validation only as evidence for portable bundle handling.
+
+Adopt CLI/TUI review and diagnostics as a thin ASM client. Reuse no independent state engine. Reject providers, proxy, usage, accounts, sessions and daemonized mutation authority. Where code duplicates CC Switch desktop, retain only CLI-specific presentation, isolation, or test coverage.
+
+### 15.3 `skills-manager-main` — merge, deployment, audit and recovery donor
+
+This repository contains the richest directly relevant backend. Review every module under `core/` and `commands/`:
+
+- `merge/{protocol,snapshot,treebuild,validate,decision,pending,resolve,apply}` becomes primary evidence for three-way merge, conflict fingerprints, pending decisions, tree validation and snapshot-backed recovery;
+- `content_hash`, `sync_metadata`, `tool_adapters`, `scanner`, `project_scanner`, `path_guard`, `repo_lock`, `file_watcher`, `audit_log`, `auto_backup`, `migrations`, and `install_cancel` become conformance inputs for identity, locking, observation, cancellation and recovery;
+- `central_repo`, `skill_store`, `skill_metadata`, `installer`, `skill_auto_updater`, `git_fetcher`, and `github_api` inform source registration and update detection, but Resource Hub/CAS retain authority;
+- presets, project/workspace views, source diffs, recovery dialogs and sync-status visualizations inform capability sets, target assignments, Changes and Activity.
+
+Do not adopt its central repo, Git backup, crypto/credentials, or sync engine as parallel authorities. Transplant the strongest algorithms and fixtures into ASM-owned contracts.
+
+### 15.4 `skills-manage-main` — broad discovery, collection and marketplace UX donor
+
+Review backend commands for agents, collections, discovery, GitHub import, linker, marketplace, scanner, settings and skills; review frontend stores/pages for central library, platform views, project discovery, collections, marketplace, Obsidian vaults, global search, virtualized lists, frontmatter and markdown previews.
+
+Adopt:
+
+- broad platform catalog facts and custom-directory flows;
+- collection semantics as named Resource Hub selection sets;
+- virtualized inventory/search and progressively disclosed previews;
+- repository-import preflight and frontmatter diagnostics;
+- platform-specific installation preview concepts.
+
+Reject its direct linker/install authority and database as canonical state. Obsidian support becomes a generic source plugin, not a privileged architecture branch.
+
+### 15.5 `skill-zoo-main` — filesystem truth, local protocol and maintenance donor
+
+Review persistence archive/external-import/metadata/update-history, services for CLI/GitHub/lock/skill/watcher/usage, desktop/CLI local protocol fixtures, agent path settings, consistency panels, maintenance/update manager, audit cards, file-tree/content panes, install/configure dialogs and pending-mutation hook.
+
+Adopt or adapt:
+
+- origin-aware discovery and real-path detection;
+- visibility-scoped duplicate/conflict concepts;
+- local protocol fixtures and desktop/CLI parity tests;
+- archive limits, lock semantics, external-import identity and update history;
+- consistency, maintenance, issue and audit presentation.
+
+Do not adopt filesystem-as-global-authority or symlink-only deployment. Preserve its user-owned-source insight inside ASM observations while keeping Resource Hub canonical decisions and reviewed executor writes.
+
+### 15.6 `agent-of-empires-main` — schema, plugin, migration and durable-operation donor
+
+Most runtime orchestration is outside scope, but several higher-order mechanisms are valuable:
+
+- settings-schema derive/registry/merge/resolve/validate provides a model for single-source target capability declarations and generated UI/API validation;
+- plugin manifest, capability, integrity, lockfile, source, update-check, automation policy and sandbox modules inform a future declarative importer/adapter extension boundary;
+- migrations provide sequential, idempotent schema/data migration discipline;
+- durable event storage, worker registry and recovery patterns inform mutation journal durability without importing agent execution;
+- project MCP, MCP overrides/state/model and skills model provide typed merge/conflict and project/global precedence fixtures;
+- file provenance API and artifact models inform evidence exposure;
+- directory guards, hooks targets and status files inform safe inert-hook projection;
+- coverage-matrix and isolated-home E2E practices inform test planning.
+
+Explicitly exclude ACP execution, tmux, terminals, worktrees, containers, sessions, remote dashboard, push, telemetry, sound and agent lifecycle. Plugin adoption is declarative and capability-restricted only; ASM must not inherit a general runtime plugin host in the first convergence.
+
+### 15.7 `skill_library` — governance, semantics and evaluation donor
+
+Treat all major planes as independent adoption candidates:
+
+- 179 canonical skills and their file manifests, provenance, contracts, OpenAI metadata, assets, helpers and ten declared evaluation suites;
+- 29 families, 537 capabilities, 327 routing edges, 37 profiles and 28 compositions;
+- compatibility runtime matrix, artifact ownership, eight policies, release/toolchain contracts and 42 schemas;
+- audit and build tools for architecture, schema, semantic fit, specificity, content quality, boilerplate, debris, routing, composition, ownership, receipts, performance, security, provenance, documentation, distribution parity and workflow quality;
+- release-envelope, proof/verification receipt, result-contract, handoff-packet and suite-context schemas.
+
+Adopt the ontology and contracts selectively into ASM-native types. Do not require legacy candidates to satisfy the full canonical contract before review. Convert Python tools into one of three outcomes: transplant invariant/tests into Go, retain as offline cross-check during transition, or reject as redundant. Declarative evaluation status must remain explicit until cases actually run; generated `dist` trees never become sources.
+
+### 15.8 `AgentDNS-main` — empty/incomplete snapshot
+
+The observed snapshot contains only empty directory structure and no reviewable files. Classify it `Unverified/No payload`, produce no adopted behavior, and keep a checksum/path receipt so later replacement with a populated snapshot triggers a fresh donor review rather than silently appearing complete.
+
+## 16. Peer supersession and transplantation protocol
+
+For every overlapping primitive across ASM and donors, create a peer comparison record:
+
+| Field | Meaning |
+|---|---|
+| Capability | The behavior being compared, not the donor filename |
+| Candidates | ASM and every donor module implementing it |
+| Invariants | Safety, fidelity, determinism, performance and UX guarantees |
+| Evidence | Tests, fixtures, schemas, failure handling and production constraints |
+| Winner | Existing ASM, donor transplant, recomposed hybrid, or intentional coexistence |
+| Delta | Exact missing behavior to port |
+| Destination | ASM package/type/UI surface |
+| Regression corpus | Normal, failure and integration-edge cases |
+| Retirement | Which duplicate implementation becomes fixture-only or rejected |
+
+Required comparison families include scanning, real-path identity, target catalogs, skill parsing, frontmatter, content hashing, archives, locks, backup/restore, three-way merge, conflict fingerprints, atomic writes, retries, cancellation, migrations, MCP serialization, source import, collections/profiles, audit logs, file watchers, update detection, diff presentation, virtualized inventory, and CLI/UI parity.
+
+No donor module is copied wholesale. Apply this sequence:
+
+```text
+inventory -> extract invariant -> compare peers -> choose winner -> transplant fixture
+-> implement ASM-native primitive -> differential test -> retire duplicate path
+```
+
+## 17. Automatic mutation retry and recovery protocol
+
+Automatic retry belongs inside the deployment executor, below Change Set approval and above filesystem primitives. It must never re-plan, relax a precondition, overwrite foreign drift, or replay an MCP operation through the filesystem executor.
+
+### 17.1 Durable operation state machine
+
+```text
+planned -> approved -> lock-wait -> preflight -> backed-up -> applying -> verifying -> committed
+                         |             |             |           |
+                         |             |             |           +-> verify-retry
+                         |             |             +-> apply-retry
+                         |             +-> blocked-drift
+                         +-> lock-retry
+
+any nonterminal -> interrupted -> reconcile -> resume | roll-forward | rollback | manual-review
+```
+
+Each journal entry includes Change Set/child/operation IDs, target identity, attempt number, timestamps, base/desired/current object descriptors, ownership evidence, backup locator/digest, mutation token, error class, retry decision, next-attempt time, verification result and recovery disposition.
+
+### 17.2 Retry classification
+
+- **Automatically retryable:** sharing violations, antivirus/indexer locks, transient rename/access errors, temporarily unavailable network-mounted target, bounded MCP transport timeout when the remote operation has an idempotency/read-back contract, and verification reads temporarily blocked by the same OS condition.
+- **Retry only after reconciliation:** process interruption after backup or ambiguous write result. Inspect current/base/desired state; declare committed if desired is already present, safely resume only from a proved journal boundary, otherwise restore or require review.
+- **Never automatically retry:** base digest/type/existence mismatch, ownership ambiguity, foreign collision, changed reparse target, path escape, permission-policy denial, schema/fidelity failure, missing backup, non-idempotent MCP ambiguity, or altered Change Set digest.
+
+### 17.3 Retry policy
+
+- Default attempts: initial try plus three retries.
+- Backoff: decorrelated bounded exponential delay with persisted next-attempt time; suggested baseline 100 ms, 500 ms, 2 s, bounded at 5 s for interactive local files. Target contracts may narrow but not broaden retryable classes.
+- Reacquire the per-target lock and rerun full preflight before every attempt.
+- Never hold a process lock while sleeping; journal intent, release, wait, reacquire and revalidate.
+- A successful atomic rename followed by a lost acknowledgement is reconciled by desired digest and ownership marker, not repeated blindly.
+- Cancellation stops before the next mutation boundary and leaves an explicit recoverable journal state.
+- Retry exhaustion emits a blocked receipt with exact recovery options and preserves operator selections for rebuilding.
+- MCP retries require an operation-specific idempotency key or deterministic read-after-write comparison. Otherwise ambiguous timeout becomes manual reconciliation.
+
+### 17.4 Retry tests
+
+Use deterministic fault injection at open, lock, backup, temp-write, fsync, rename, directory-entry update, metadata restore, verify and receipt-seal boundaries. Cover process termination between every adjacent journal state; restart recovery; two ASM processes contending for one target; target edit during backoff; junction retargeting; disk-full; read-only media; partial MCP success; and rollback failure. The invariant is exactly one of: verified desired state with committed receipt, verified original state with rollback receipt, or untouched/blocked state with sufficient evidence for manual recovery.
+
+## 18. Second-order convergence pass
+
+After first-order primitives are proven by OpenCode and one MCP profile, perform a second-order pass over larger planes. A plane is admitted only when at least two proven primitives compose without bypassing Resource Hub or the Change Set.
+
+1. **Target Contract Plane:** single-source declarations generate discovery rules, capability matrices, adapter validation, UI fields and conformance cases, inspired by AoE settings schemas and donor target catalogs.
+2. **Governance Plane:** skill-library families, capabilities, policies, ownership and compatibility become versioned Resource Hub metadata with explicit provenance and migration.
+3. **Composition and Routing Plane:** named capability sets and compositions recommend resources based on evidence; routing never silently activates or mutates targets.
+4. **Evaluation Plane:** static, behavioral, adversarial, failure-injection and receipt-integrity suites execute through a versioned harness; claims distinguish declared, tested and verified.
+5. **Provenance Plane:** every canonical resource and projection exposes source chain, transformations, donor decisions, fidelity loss, ownership and receipts.
+6. **Extension Plane:** declarative source/importer/adapter packages may be registered through signed manifests and constrained capabilities; no general code plugin execution in the initial release.
+7. **Migration Plane:** sequential idempotent migrations cover registry, artifact, target-catalog, ownership-marker and journal schemas, with downgrade/recovery evidence.
+8. **Maintenance Plane:** update detection, consistency audits, stale projection detection, quarantine, retirement windows and recovery retention become scheduled read-only checks that produce proposed Change Sets.
+9. **Operator Plane:** Home, Library/Targets, Changes and Activity share one state model; CLI/TUI/Web are clients of the same application service and receipts.
+10. **Observability Plane:** bounded progress, audit events, retry state, latency, scan budgets and error taxonomy are exposed without collecting credentials or session content.
+
+Second-order convergence explicitly excludes provider routing, agent execution, session/worktree management, subscription/quota management, credentials and general-purpose runtime plugins.
+
+## 19. Revised granular execution backlog
+
+### Epic A — Evidence and authority
+
+- A1 generate workstation-root manifest with physical identities and nested-client graph;
+- A2 generate exhaustive donor file manifests for all eight snapshots;
+- A3 create peer comparison ledger and donor decision schema;
+- A4 freeze canonical envelope, CAS, index, importer, adapter, executor and `mcplink` authority contracts;
+- A5 add release/build guards for donor/reference and workstation artifacts.
+
+### Epic B — Canonical model and safe observation
+
+- B1 artifact-linked observation/candidate/decision records;
+- B2 source bundle registration for directory and ZIP inputs;
+- B3 junction/reparse-aware scanner with budgets and cancellation;
+- B4 nested-client target catalog and confidence model;
+- B5 managed-projection manifests and alias-proof source exclusion;
+- B6 deterministic inventory and differential scan benchmarks.
+
+### Epic C — Identity and convergence intelligence
+
+- C1 physical/content/normalized identity pipeline;
+- C2 namespace-aware aliases and Windows collision rules;
+- C3 asset/reference-aware comparison;
+- C4 semantic relationship evidence and versioned evaluation corpus;
+- C5 canonical-winner recommendations and reviewed decisions;
+- C6 absorption/split/parameterization/composition records with reversal.
+
+### Epic D — Projection and execution
+
+- D1 pure adapter contract and donor-derived fixture corpus;
+- D2 OpenCode render/plan/verify adapter;
+- D3 deployment executor with locks, backups, journals and atomic replacement;
+- D4 automatic retry, interruption reconciliation and idempotent recovery;
+- D5 OpenCode end-to-end shadow, apply, verify, rollback and visibility proof;
+- D6 Codex/Cursor, then Claude/Gemini/Antigravity/Windsurf adapter waves.
+
+### Epic E — MCP convergence
+
+- E1 canonical MCP identity and secret-free intent;
+- E2 target-native serializers and observed-registration comparison;
+- E3 capability sets and minimal assignments;
+- E4 `mcplink` idempotency/read-back and retry classification;
+- E5 mixed resource/MCP Change Set partial-success recovery.
+
+### Epic F — Operator control plane
+
+- F1 universal Change Set composition and one digest-bound approval;
+- F2 exact diff, fidelity, ownership, retry and recovery detail;
+- F3 grouped consolidation and conflict decision queues;
+- F4 Activity journal, receipts, retry progress and recovery actions;
+- F5 CLI/TUI/Web parity contracts and accessibility/large-list testing.
+
+### Epic G — Second-order governance and migration
+
+- G1 target-contract generator;
+- G2 governance/capability/family/profile import from the skill library;
+- G3 composition/routing and evaluation harnesses;
+- G4 provenance and evidence APIs;
+- G5 sequential schema/data migrations;
+- G6 scheduled read-only maintenance proposals;
+- G7 bounded corpus campaigns and independently recoverable client migrations;
+- G8 retirement only after observation windows and receipt retention gates.
+
+## 20. Final acceptance gates
+
+The program is complete only when:
+
+- all observed AI-related dotted roots have a disposition and every nested client is represented separately;
+- all eight reference snapshots have exhaustive file manifests and no unclassified module/file remains;
+- every overlapping primitive has a peer comparison winner and differential regression evidence;
+- one physical source cannot appear as multiple canonical candidates through junctions or aliases;
+- adapters, importers, indexes and UI remain mutation-free;
+- every write is approved, precondition-bound, journaled, retry-classified, verified and independently recoverable;
+- automatic retry cannot overwrite drift or repeat an ambiguous non-idempotent operation;
+- OpenCode plus Codex/Cursor and one mixed MCP/resource scenario pass normal, injected-failure, interruption and rollback suites;
+- skill-library governance layers are imported with declared/tested/verified status distinctions;
+- donor snapshots and generated projections remain outside source ingestion and release artifacts;
+- client-native credentials, sessions, caches, histories, provider routing and runtime state remain untouched.
