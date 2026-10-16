@@ -59,7 +59,7 @@ jobs:
         run: |
           go run ./cmd/agentstack-sbom --version ci --out agentstack-catalog.cdx.json
           go test ./internal/supplychain
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: assurance-evidence
           path: |
@@ -79,7 +79,7 @@ jobs:
         run: go install github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0
       - name: Mutation quality gate
         run: gremlins unleash --output mutation-results.json
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: mutation-results
@@ -97,7 +97,7 @@ jobs:
       - name: Windows-specific mutation quality gate
         shell: pwsh
         run: ./scripts/windows-mutation.ps1 -Output mutation-windows.json
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: mutation-results-windows
