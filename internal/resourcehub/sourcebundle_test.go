@@ -124,8 +124,8 @@ func TestAdmitZIPBundle(t *testing.T) {
 
 	zipFile := filepath.Join(tmpDir, "valid.zip")
 	createTestZIP(t, zipFile, map[string][]byte{
-		"config.json":     []byte(`{"key":"value"}`),
-		"scripts/run.sh":  []byte("#!/bin/bash\necho ok"),
+		"config.json":    []byte(`{"key":"value"}`),
+		"scripts/run.sh": []byte("#!/bin/bash\necho ok"),
 	})
 
 	now := time.Now().UTC()
