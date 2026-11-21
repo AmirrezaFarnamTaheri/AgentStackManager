@@ -14,10 +14,10 @@ import (
 type MatchKind string
 
 const (
-	MatchExactDigest         MatchKind = "ExactDigestMatch"
-	MatchCaseFoldCollision   MatchKind = "CaseInsensitiveAlias"
-	MatchDivergentSameName   MatchKind = "DivergentSameName"
-	MatchProjectionShadow    MatchKind = "ProjectionShadow"
+	MatchExactDigest       MatchKind = "ExactDigestMatch"
+	MatchCaseFoldCollision MatchKind = "CaseInsensitiveAlias"
+	MatchDivergentSameName MatchKind = "DivergentSameName"
+	MatchProjectionShadow  MatchKind = "ProjectionShadow"
 )
 
 type IdentityMatch struct {
@@ -40,10 +40,10 @@ type AliasDecision struct {
 }
 
 type IdentityIndex struct {
-	mu          sync.RWMutex
-	byDigest    map[string]*IdentityMatch
-	byName      map[string][]string // lowercased name -> digests
-	decisions   map[string]AliasDecision // resourceId -> decision
+	mu        sync.RWMutex
+	byDigest  map[string]*IdentityMatch
+	byName    map[string][]string       // lowercased name -> digests
+	decisions map[string]AliasDecision  // resourceId -> decision
 }
 
 func NewIdentityIndex() *IdentityIndex {
