@@ -27,9 +27,9 @@ const (
 )
 
 type OperationPlanStep struct {
-	OpType      string `json:"opType"` // "create", "update", "delete", "noop"
-	TargetPath  string `json:"targetPath"`
-	BaseDigest  string `json:"baseDigest"`
+	OpType        string `json:"opType"` // "create", "update", "delete", "noop"
+	TargetPath    string `json:"targetPath"`
+	BaseDigest    string `json:"baseDigest"`
 	DesiredDigest string `json:"desiredDigest"`
 }
 
