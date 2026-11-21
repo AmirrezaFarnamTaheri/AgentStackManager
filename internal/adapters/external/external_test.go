@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -484,7 +485,12 @@ func TestSandboxEnvironmentRedirectsCoverageIntoPrivateSandbox(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !info.IsDir() || info.Mode().Perm()&0o077 != 0 {
-		t.Fatalf("coverage directory mode=%v", info.Mode())
+	if !info.IsDir() {
+		t.Fatalf("coverage path must be a directory: %v", info.Mode())
+	}
+	// Windows reports synthesized 0777 POSIX permission bits for directories.
+	// Unix may enforce the 0700 mask, while Windows protection is through ACLs.
+	if runtime.GOOS != "windows" && info.Mode().Perm()&0o077 != 0 {
+		t.Fatalf("coverage directory grants group/other permissions: %v", info.Mode())
 	}
 }
