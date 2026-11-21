@@ -12,13 +12,13 @@ import (
 type DecisionQueueType string
 
 const (
-	QueueExactDuplicates  DecisionQueueType = "exact_duplicates"
-	QueueAliases          DecisionQueueType = "aliases"
-	QueueConflicts        DecisionQueueType = "conflicts"
-	QueueUniquePreserved  DecisionQueueType = "unique_preserved"
-	QueueIncompatibility  DecisionQueueType = "incompatibility"
-	QueueQuarantine       DecisionQueueType = "quarantine"
-	QueueRetirement       DecisionQueueType = "retirement"
+	QueueExactDuplicates DecisionQueueType = "exact_duplicates"
+	QueueAliases         DecisionQueueType = "aliases"
+	QueueConflicts       DecisionQueueType = "conflicts"
+	QueueUniquePreserved DecisionQueueType = "unique_preserved"
+	QueueIncompatibility DecisionQueueType = "incompatibility"
+	QueueQuarantine      DecisionQueueType = "quarantine"
+	QueueRetirement      DecisionQueueType = "retirement"
 )
 
 type CorpusQueueItem struct {
@@ -32,11 +32,11 @@ type CorpusQueueItem struct {
 }
 
 type CorpusStateSummary struct {
-	TotalProcessed   int                     `json:"totalProcessed"`
-	QueueCounts      map[DecisionQueueType]int `json:"queueCounts"`
-	QueuedItems      []CorpusQueueItem       `json:"queuedItems"`
-	TargetHealthMap  map[string]string       `json:"targetHealthMap"`
-	LastEvaluatedAt  time.Time               `json:"lastEvaluatedAt"`
+	TotalProcessed  int                       `json:"totalProcessed"`
+	QueueCounts     map[DecisionQueueType]int `json:"queueCounts"`
+	QueuedItems     []CorpusQueueItem         `json:"queuedItems"`
+	TargetHealthMap map[string]string         `json:"targetHealthMap"`
+	LastEvaluatedAt time.Time                 `json:"lastEvaluatedAt"`
 }
 
 // CategorizeCorpusQueues partitions observed resources and similarity decisions into standard operator queues.
