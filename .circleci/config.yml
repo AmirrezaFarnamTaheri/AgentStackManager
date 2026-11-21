@@ -20,7 +20,9 @@ jobs:
             git diff --check
       - run:
           name: Source archive build without Git metadata
-          command: bash scripts/check-source-archive-build.sh "git:${CIRCLE_SHA1}"
+          command: |
+            bash scripts/check-source-archive-build.sh "git:${CIRCLE_SHA1}"
+            bash scripts/check-releasepack-source-archive.sh "git:${CIRCLE_SHA1}"
       - run:
           name: Vulnerability scan
           command: |
