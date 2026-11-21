@@ -26,12 +26,12 @@ type MCPMutation struct {
 }
 
 type MCPResult struct {
-	MutationID   string         `json:"mutationId"`
-	Success      bool           `json:"success"`
+	MutationID    string         `json:"mutationId"`
+	Success       bool           `json:"success"`
 	ResultPayload map[string]any `json:"resultPayload,omitempty"`
-	OutputDigest string         `json:"outputDigest"`
-	ExecutedAt   time.Time      `json:"executedAt"`
-	Error        string         `json:"error,omitempty"`
+	OutputDigest  string         `json:"outputDigest"`
+	ExecutedAt    time.Time      `json:"executedAt"`
+	Error         string         `json:"error,omitempty"`
 }
 
 type MCPInvoker interface {
