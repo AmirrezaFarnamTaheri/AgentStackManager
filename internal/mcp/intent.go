@@ -22,9 +22,9 @@ const (
 type HealthStatus string
 
 const (
-	HealthUnknown   HealthStatus = "unknown"
-	HealthHealthy   HealthStatus = "healthy"
-	HealthDegraded  HealthStatus = "degraded"
+	HealthUnknown     HealthStatus = "unknown"
+	HealthHealthy     HealthStatus = "healthy"
+	HealthDegraded    HealthStatus = "degraded"
 	HealthUnreachable HealthStatus = "unreachable"
 )
 
