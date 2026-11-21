@@ -10,7 +10,7 @@ import (
 type WaveID string
 
 const (
-	Wave1OpenCode   WaveID = "wave-1-opencode"
+	Wave1OpenCode    WaveID = "wave-1-opencode"
 	Wave2CodexCursor WaveID = "wave-2-codex-cursor"
 	Wave3Tier1Agents WaveID = "wave-3-tier1-agents" // Claude, Gemini, Antigravity, Windsurf
 	Wave4Remainder   WaveID = "wave-4-remainder"
@@ -29,10 +29,10 @@ const (
 )
 
 type WaveMigrationPlan struct {
-	WaveID          WaveID          `json:"waveId"`
-	TargetIDs       []string        `json:"targetIds"`
-	RequiredSteps   []MigrationStep `json:"requiredSteps"`
-	CreatedAt       time.Time       `json:"createdAt"`
+	WaveID        WaveID          `json:"waveId"`
+	TargetIDs     []string        `json:"targetIds"`
+	RequiredSteps []MigrationStep `json:"requiredSteps"`
+	CreatedAt     time.Time       `json:"createdAt"`
 }
 
 type WaveStepReport struct {
@@ -43,11 +43,11 @@ type WaveStepReport struct {
 }
 
 type WaveMigrationResult struct {
-	WaveID          WaveID           `json:"waveId"`
-	Success         bool             `json:"success"`
-	StepReports     []WaveStepReport `json:"stepReports"`
-	Receipts        []executor.DeploymentReceipt `json:"receipts,omitempty"`
-	ExecutedAt      time.Time        `json:"executedAt"`
+	WaveID      WaveID                       `json:"waveId"`
+	Success     bool                         `json:"success"`
+	StepReports []WaveStepReport             `json:"stepReports"`
+	Receipts    []executor.DeploymentReceipt `json:"receipts,omitempty"`
+	ExecutedAt  time.Time                    `json:"executedAt"`
 }
 
 // BuildWavePlan creates a migration plan for a specific target wave.
