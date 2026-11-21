@@ -11,9 +11,9 @@ import (
 
 // 1. Target Contract Definition
 type GeneratedTargetContract struct {
-	TargetID    string   `json:"targetId"`
-	SchemaVersion string `json:"schemaVersion"`
-	SupportedRoot string `json:"supportedRoot"`
+	TargetID      string   `json:"targetId"`
+	SchemaVersion string   `json:"schemaVersion"`
+	SupportedRoot string   `json:"supportedRoot"`
 	Capabilities  []string `json:"capabilities"`
 	Digest        string   `json:"digest"`
 }
@@ -35,10 +35,10 @@ func GenerateTargetContract(targetID string, root string, caps []string) (Genera
 
 // 2. Governance Import Definition
 type GovernanceProfileImport struct {
-	ProfileID   string            `json:"profileId"`
-	Rules       map[string]string `json:"rules"`
-	ImportedAt  time.Time         `json:"importedAt"`
-	ImportDigest string           `json:"importDigest"`
+	ProfileID    string            `json:"profileId"`
+	Rules        map[string]string `json:"rules"`
+	ImportedAt   time.Time         `json:"importedAt"`
+	ImportDigest string            `json:"importDigest"`
 }
 
 func ImportGovernanceProfile(profileID string, rules map[string]string) (GovernanceProfileImport, error) {
@@ -76,12 +76,12 @@ func ComputeRoutingRecommendation(resourceID string, targetCaps map[string][]str
 
 // 4. Failure-Injection & Evaluation Harness
 type EvalSuiteResult struct {
-	Passed          bool     `json:"passed"`
-	StaticScore     float64  `json:"staticScore"`
-	BehavioralScore float64  `json:"behavioralScore"`
-	AdversarialPass bool     `json:"adversarialPass"`
-	FaultRecoveryPass bool   `json:"faultRecoveryPass"`
-	Summary         string   `json:"summary"`
+	Passed            bool    `json:"passed"`
+	StaticScore       float64 `json:"staticScore"`
+	BehavioralScore   float64 `json:"behavioralScore"`
+	AdversarialPass   bool    `json:"adversarialPass"`
+	FaultRecoveryPass bool    `json:"faultRecoveryPass"`
+	Summary           string  `json:"summary"`
 }
 
 func RunEvaluationHarness(targetID string) EvalSuiteResult {
@@ -119,10 +119,10 @@ func SealProvenanceRecord(resourceID, sourceDigest string, lineage []string) Pro
 
 // 6. Declarative Extension Manifest
 type ExtensionManifest struct {
-	ExtensionID          string   `json:"extensionId"`
+	ExtensionID             string   `json:"extensionId"`
 	ConstrainedCapabilities []string `json:"constrainedCapabilities"`
-	ExecutablePlugins    bool     `json:"executablePlugins"` // Must always be false!
-	ManifestDigest       string   `json:"manifestDigest"`
+	ExecutablePlugins       bool     `json:"executablePlugins"` // Must always be false!
+	ManifestDigest          string   `json:"manifestDigest"`
 }
 
 func RegisterExtensionManifest(id string, caps []string) (ExtensionManifest, error) {
