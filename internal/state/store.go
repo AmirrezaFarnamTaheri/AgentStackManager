@@ -17,6 +17,7 @@ import (
 	"github.com/agentstack/agentstack/internal/planner"
 	"github.com/agentstack/agentstack/internal/redact"
 	"github.com/agentstack/agentstack/internal/safefile"
+	"github.com/agentstack/agentstack/internal/strictjson"
 )
 
 type ManagedComponent struct {
@@ -137,6 +138,7 @@ func minimizedTransaction(value model.Transaction) model.Transaction {
 	copyValue.Actions = make([]model.TransactionAction, len(value.Actions))
 	for index, action := range value.Actions {
 		copyAction := action
+		copyAction.Command = ""
 		copyAction.Args = nil
 		copyAction.Output = ""
 		copyAction.OutputTruncated = action.OutputTruncated || action.Output != ""
@@ -175,6 +177,45 @@ func (s Store) LoadTransaction(id string) (model.Transaction, error) {
 	var value model.Transaction
 	err := s.readJSON(filepath.Join(s.Root, "transactions", safeName(id)+".json"), &value)
 	return value, err
+}
+
+func (s Store) ListTransactions(limit int) ([]model.Transaction, error) {
+	if err := s.ensure(); err != nil {
+		return nil, err
+	}
+	if limit <= 0 {
+		limit = 20
+	}
+	if limit > 100 {
+		limit = 100
+	}
+	entries, err := os.ReadDir(filepath.Join(s.Root, "transactions"))
+	if err != nil {
+		return nil, err
+	}
+	transactions := make([]model.Transaction, 0, len(entries))
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		path := filepath.Join(s.Root, "transactions", entry.Name())
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil, fmt.Errorf("read transaction %s: %w", entry.Name(), err)
+		}
+		var transaction model.Transaction
+		if err := strictjson.Decode(data, &transaction); err != nil {
+			return nil, fmt.Errorf("decode transaction %s: %w", entry.Name(), err)
+		}
+		transactions = append(transactions, minimizedTransaction(transaction))
+	}
+	sort.Slice(transactions, func(i, j int) bool {
+		return transactions[i].StartedAt.After(transactions[j].StartedAt)
+	})
+	if len(transactions) > limit {
+		transactions = transactions[:limit]
+	}
+	return transactions, nil
 }
 
 func (s Store) BackupFile(source, label string) (string, error) {
@@ -395,7 +436,7 @@ func (s Store) writeJSON(path string, value any) error {
 }
 
 func (s Store) readJSON(path string, destination any) error {
-	data, err := os.ReadFile(path)
+	data, err := safefile.ReadBoundedRegular(path, 16<<20)
 	if err != nil {
 		return err
 	}

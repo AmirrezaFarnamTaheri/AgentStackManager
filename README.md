@@ -17,7 +17,16 @@ AgentStack Manager is a preservation-first Windows control plane for local engin
 - Catalog-managed MCP children use explicit Windows Job Object resource ceilings for job memory, CPU rate, and active process count.
 - Public release automation is fail-closed on a clean signed tag, supported Go toolchain, vulnerability scans, reproducibility checks, SHA-256 manifests, SBOM/license/VEX evidence, artifact attestations, and Windows runtime gates.
 
-The browser manager uses one coherent icon language and a persistent accessible operation-status surface; long-running controls cannot be submitted twice while work is active.
+The desktop manager is a five-area lifecycle workspace: Home summarizes readiness; Environments discovers and connects multiple AI apps, IDEs, CLIs, profiles, and repositories; Sharing & Sync presents canonical resources, installations, drift, duplicates, conflicts, reviewed plans, and receipts; Changes keeps tool selection and exact approval together; and Activity owns live progress, classified recovery, history, maintenance, and diagnostics. Reviewed plans remain single-use and server-authoritative.
+
+
+## Desktop application and parallel orchestration
+
+Run `agentstack ui` to start the unified Windows desktop application. The manager starts its authenticated loopback service internally and opens a dedicated address-bar-free application window; it does not open a normal browser tab or inherit package-manager consoles. `agentstack ui --browser` is an explicit development mode, and `agentstack ui --no-open` prints the local URL without opening a window.
+
+Independent tool installations and target synchronizations use bounded parallelism. Catalog dependencies and writes to the same canonical root remain serialized. Raw npm, WinGet, uv, shell, and installer output stays in bounded backend evidence and is never rendered by the normal UI; public results contain only structured categories, normalized codes, observed evidence, root causes, and recovery instructions.
+
+Sharing & Sync treats one canonical resource and its target-specific installations separately. Exact duplicates are grouped, divergent copies become conflicts, drift requires review, and unmanaged resources are never silently removed or overwritten.
 
 ## Windows installation
 
@@ -64,15 +73,18 @@ Run `agentstack profiles` or `agentstack help` for the authoritative embedded ca
 - [Release process](docs/RELEASE.md)
 - [Launch readiness and pre-mortem](docs/LAUNCH_READINESS.md)
 - [Audit closure ledger](docs/audit/ASM-001-040-closure.md)
+- [Lifecycle workspace](docs/UI_LIFECYCLE_WORKSPACE.md)
 
 ## Unified agent fabric
 
 AgentStack Manager now includes five target-native management planes:
 
-- `agentstack hub` — audited canonical resources, tracked sources, targets, reviewed sync/refresh, backups, and restore;
+- `agentstack hub` — audited canonical resources, tracked sources, versioned target-adapter capabilities, an embedded differential conformance corpus, SHA-256-pinned out-of-process adapter comparison, machine-readable fidelity/loss reports with optional deny-loss planning, reviewed sync/refresh, backups, restore, read-only canonical graph inspection, a verified content-addressed shadow stage, and reversible SQLite shadow metadata. SQLite commands are a native CGO preview requiring SQLite 3.37 or newer; CGO-disabled binaries fail closed for those commands while retaining the rest of ASM. A pure-Go replacement is tracked as a dependency-gated portability migration, not claimed complete;
 - `agentstack context` — project scanning, scoring, confined read/search, read-only Git evidence, and reviewed multi-agent context refresh;
 - `agentstack workspace`, `memory`, and `artifact` — hierarchical projects, scoped local knowledge, strict prompt variables, and content-addressed files;
 - `agentstack mcp clients` — reviewed linking for Codex, Claude, Cursor, AGY/Gemini, and OpenCode;
 - `agentstack routine` — confirmed bounded schedules, typed steps, redacted receipts, and recovery-aware history.
 
-The implementation converges mechanisms from seven peer projects without retaining parallel donor runtimes or authorities. See [Peer Project Convergence](docs/CONVERGENCE.md) and the [operator runbook](docs/convergence/RUNBOOK.md).
+The embedded manager uses readable task language, a five-area lifecycle workspace, evidence-based multi-target connection visibility, canonical Sharing & Sync inventory, an in-context pending-change review, one apply path, server-reported installation progress, safe partial-failure recovery, deterministic light/dark tokens, keyboard-managed settings, stable filtering, atomic live announcements, 44px mobile targets, and bounded activity. See the [lifecycle workspace contract](docs/UI_LIFECYCLE_WORKSPACE.md), the [superseded clarity note](docs/UI_CLARITY_REDESIGN.md), and the [due-diligence validation ledger](docs/audit/DUE_DILIGENCE_VALIDATION_2026-08-05.md).
+
+The implementation converges mechanisms from seven peer projects without granting parallel donor runtimes or adapters mutation authority. See [Peer Project Convergence](docs/CONVERGENCE.md), [Fabric Phase 6](docs/convergence/FABRIC_PHASE6.md), the [external adapter protocol](docs/convergence/EXTERNAL_ADAPTER_PROTOCOL.md), and the [operator runbook](docs/convergence/RUNBOOK.md).

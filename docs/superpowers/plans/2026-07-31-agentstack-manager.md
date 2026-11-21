@@ -6,7 +6,7 @@
 
 **Architecture:** A single Go executable owns discovery, planning, transactions, MCP routing, session preparation, and a local browser-based GUI. The component catalog is embedded JSON and can also be overridden from disk. Windows-specific self-install and PATH behavior is isolated behind platform files; all planning and configuration behavior is cross-platform and unit tested.
 
-**Tech Stack:** Go 1.23 standard library, embedded HTML/CSS/JavaScript, PowerShell build helpers, JSON catalogs, Windows `winget`, npm, uv/uvx, Codex CLI, AGY/Gemini JSON MCP configuration.
+**Tech Stack:** Go 1.23 (language) / Go 1.26.5 release toolchain, embedded HTML/CSS/JavaScript, PowerShell build helpers, JSON catalogs, Windows `winget`, npm, uv/uvx, Codex CLI, AGY/Gemini JSON MCP configuration.
 
 ## Global Constraints
 

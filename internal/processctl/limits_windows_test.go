@@ -13,9 +13,9 @@ import (
 
 var procQueryInformationJobObjectForTest = syscall.NewLazyDLL("kernel32.dll").NewProc("QueryInformationJobObject")
 
-func TestPrepareCommandStartsSuspendedUntilJobAssignment(t *testing.T) {
+func TestPrepareWindowsCommandStartsSuspendedUntilJobAssignment(t *testing.T) {
 	cmd := exec.Command("cmd.exe", "/d", "/s", "/c", "exit 0")
-	prepareCommand(cmd)
+	prepareWindowsCommand(cmd)
 	if cmd.SysProcAttr == nil {
 		t.Fatal("Windows process attributes were not configured")
 	}

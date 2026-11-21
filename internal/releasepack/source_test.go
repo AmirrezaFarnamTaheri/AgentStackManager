@@ -122,6 +122,47 @@ func TestPackVerifiedSourceIncludesOnlyManifestedFiles(t *testing.T) {
 	}
 }
 
+func TestWriteSourceManifestExcludesReferenceRepos(t *testing.T) {
+	root := t.TempDir()
+	writeSourceMetadata(t, root)
+	if err := os.WriteFile(filepath.Join(root, "README.md"), []byte("reviewed"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	// Deliberately vary casing to prove the exclusion remains safe on Windows.
+	references := filepath.Join(root, "Reference RePos", "donor")
+	if err := os.MkdirAll(references, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(references, "secret.txt"), []byte("must not ship"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := WriteSourceManifest(root); err != nil {
+		t.Fatal(err)
+	}
+	manifest, err := os.ReadFile(filepath.Join(root, SourceManifestName))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(manifest), "Reference RePos") {
+		t.Fatalf("source manifest included reference repositories: %s", manifest)
+	}
+
+	out := filepath.Join(t.TempDir(), "source.zip")
+	if _, err := PackVerifiedSource(root, out, "source"); err != nil {
+		t.Fatalf("PackVerifiedSource() error = %v", err)
+	}
+	reader, err := zip.OpenReader(out)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer reader.Close()
+	for _, file := range reader.File {
+		if strings.Contains(strings.ToLower(file.Name), "reference repos") {
+			t.Fatalf("archive included reference repository member %q", file.Name)
+		}
+	}
+}
+
 func TestPackedArchiveIsCheckedAgainstManifestDigests(t *testing.T) {
 	root := t.TempDir()
 	writeSourceMetadata(t, root)

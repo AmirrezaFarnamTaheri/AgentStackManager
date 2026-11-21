@@ -52,7 +52,7 @@ func validateKind(kind Kind) error {
 
 func validateAgent(agent Agent) error {
 	switch agent {
-	case AgentCodex, AgentClaude, AgentCursor, AgentOpenCode, AgentCopilot, AgentGeneric:
+	case AgentCodex, AgentClaude, AgentAGY, AgentCursor, AgentOpenCode, AgentCopilot, AgentGeneric:
 		return nil
 	default:
 		return fmt.Errorf("unsupported agent target %q", agent)
@@ -324,4 +324,11 @@ func removeManagedPath(path string) error {
 		return os.RemoveAll(path)
 	}
 	return os.Remove(path)
+}
+
+// DigestPath calculates the legacy Resource Hub content digest for migration
+// and downgrade verification. It applies the same bounds and symlink rules as
+// Resource Hub import and refresh operations.
+func DigestPath(path string) (string, error) {
+	return treeDigest(path)
 }

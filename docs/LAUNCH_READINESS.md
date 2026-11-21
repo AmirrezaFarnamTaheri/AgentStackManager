@@ -2,7 +2,9 @@
 
 ## Decision
 
-**Conditional go.** The implementation may enter protected release CI. Publication remains blocked until every ship gate below passes on the exact release revision.
+**Source candidate ready for protected release CI.** The cumulative Phase 1-6 implementation and publication hardening pass may enter the signed release workflow. Publication remains blocked until every ship gate below passes on the exact clean signed revision. Local results from any toolchain other than Go 1.26.5 are development evidence only.
+
+The full audit and exact evidence boundaries are recorded in [`audit/PUBLICATION_READINESS_2026-08-05.md`](audit/PUBLICATION_READINESS_2026-08-05.md).
 
 ## Ship gates
 

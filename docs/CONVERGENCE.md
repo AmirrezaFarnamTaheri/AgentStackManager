@@ -23,12 +23,15 @@ The evidence set contains 53 semantic records, 44 primary record tests, and 60 u
 `internal/resourcehub` owns skills, agents, rules, commands, prompts, MCP server definitions, and context resources.
 
 - canonical identity, content digest, tracked source, tags, scope, metadata, and target declarations;
+- a read-only `fabric.asm.dev/v1alpha1` canonical graph projection with stable IDs, envelope digests, execution classes, target bindings, field provenance, and preserved Resource Hub extensions;
 - whole-resource ceilings of 10,000 files and 64 MiB, plus a 16 MiB per-file ceiling;
 - local import only; no remote result can install itself;
 - static admission audit for prompt injection, exfiltration, credentials, destructive behavior, fetch-pipe patterns, hidden HTML, and invisible Unicode;
 - expiring digest-bound sync and refresh plans;
 - target-native copy/link paths for Codex, Claude, Cursor, OpenCode, GitHub Copilot, and explicit generic roots;
 - foreign-file preservation, AgentStack-only pruning, immutable backups, confirmed restore, and transactional rollback.
+
+The canonical projection remains inspection-only, and the version-1 Resource Hub registry plus reviewed sync engine remain the mutation authority. The CAS and SQLite layers operate as rebuildable shadows. The versioned in-process adapter contract, embedded conformance corpus, and SHA-256-pinned out-of-process differential host provide capability, fidelity, and compatibility evidence without gaining write authority. Package resolution, bidirectional merge, external activation, and a true WASI or OS sandbox remain later reviewed phases. See [Fabric Phase 1](convergence/FABRIC_PHASE1.md), [Fabric Phase 6](convergence/FABRIC_PHASE6.md), and the shared [adoption ledger](convergence/FABRIC_ADOPTION.csv).
 
 ### 2. Project intelligence and context
 
@@ -102,3 +105,15 @@ See [CLI Reference](CLI_REFERENCE.md), [Convergence Runbook](convergence/RUNBOOK
 - [Pre-mortem](convergence/PREMORTEM.md)
 - [Archive inspection](convergence/ARCHIVE_INSPECTION.json)
 - [Inventory summary](convergence/INVENTORY_SUMMARY.json)
+
+## Fabric Phase 4 adapter contract
+
+The cross-plane `internal/adapters` contract separates target representation from mutation. Built-in adapters for Codex, Claude, Cursor, AGY/Gemini, OpenCode, GitHub Copilot, and generic fallback targets expose sealed structural capabilities, deterministic projections, closed plan transitions, and machine-readable fidelity/loss reports. Resource Hub and `mcplink` bind reviewed plans to those snapshots, revalidate them before apply, and remain the sole mutation and recovery authorities. See [Fabric Phase 4](convergence/FABRIC_PHASE4.md).
+
+## Fabric Phase 5 adapter conformance
+
+`internal/adapters/conformance` embeds a strict machine-readable oracle for all seven reviewed built-in adapters. The 64-case suite compares exact capability structure, aliases, MCP registration, all 43 declared artifact projections, candidate-preserving import, loss evidence, every plan transition, and postcondition verification. `agentstack hub adapter-conformance` emits a sealed read-only report and never touches target state. See [Fabric Phase 5](convergence/FABRIC_PHASE5.md).
+
+## Fabric Phase 6 constrained external adapter protocol
+
+`internal/adapters/external` admits an explicitly supplied local executable by absolute path and exact SHA-256 digest, copies the verified bytes into a private session directory, and launches one fresh process per strict JSON operation. Protocol and target identity, required operations, deadlines, request/response/stderr/executable limits, response identity, path confinement, core plan semantics, and postconditions fail closed. Raw candidate capabilities are intersected with the reviewed built-in ceiling before the Phase 5 corpus runs against both implementations. `agentstack hub adapter-external-conformance` emits a sealed differential report but never registers or activates the candidate. This is process-constrained compatibility evidence, not a complete kernel/WASI sandbox or production plugin boundary. See [Fabric Phase 6](convergence/FABRIC_PHASE6.md) and the [protocol reference](convergence/EXTERNAL_ADAPTER_PROTOCOL.md).

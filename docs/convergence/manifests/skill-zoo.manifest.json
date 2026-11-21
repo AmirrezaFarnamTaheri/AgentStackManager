@@ -1,0 +1,2660 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "skill-zoo",
+  "sourceRoot": "D:/GitHub/AgentStackManager/reference repos/skill-zoo-main/skill-zoo-main",
+  "physicalIdentity": "D:\\GitHub\\AgentStackManager\\reference repos\\skill-zoo-main\\skill-zoo-main",
+  "inventoryTime": "2026-08-13T08:35:30Z",
+  "emptySnapshot": false,
+  "fileCount": 257,
+  "totalSizeBytes": 4666905,
+  "entries": [
+    {
+      "path": ".editorconfig",
+      "objectType": "file",
+      "sizeBytes": 313,
+      "sha256": "7fa852b0d0e1d7add83db102d25ba4e417905660b9fd21256c473afe78552519",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".gitattributes",
+      "objectType": "file",
+      "sizeBytes": 54,
+      "sha256": "47653d4e2f0fbae3858faaf44dffb38ec86e3d01f2a700a4a399696f65e231c8",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".githooks",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".githooks/pre-commit",
+      "objectType": "file",
+      "sizeBytes": 443,
+      "sha256": "0382a478d09c145ff59589e8ddb706fb0728375a6a54306e7bdadcacb359b341",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".githooks/pre-push",
+      "objectType": "file",
+      "sizeBytes": 603,
+      "sha256": "7dc3d7d49a59553cc871f942b32e6ce70d6895311171319f1ac0abe6f4b30a53",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "objectType": "file",
+      "sizeBytes": 328,
+      "sha256": "0ca9cd7237c35446287890ce541a0d5146aee07d2d661bb3ea694e4eac203514",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "objectType": "file",
+      "sizeBytes": 46,
+      "sha256": "8b09e7df09fc7534371988062769ee427af2954a02c04c763e8a8005be0f2be4",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "objectType": "file",
+      "sizeBytes": 350,
+      "sha256": "06d6aa3a02a1737333ce2a2605af82ab5137feec475aaf8493ca1f7fb4625552",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".github/workflows/build.yml",
+      "objectType": "file",
+      "sizeBytes": 22827,
+      "sha256": "969ffed5d09424d3eabf5f71bec03deb2d34e1f2500f378307f882408885e81a",
+      "disposition": "not-applicable",
+      "reason": "repository workspace configuration"
+    },
+    {
+      "path": ".gitignore",
+      "objectType": "file",
+      "sizeBytes": 144,
+      "sha256": "8a7b1a155c5de13bed6af86da4cddafc9c671c117af23b03b4e6c990ae4ba691",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".oxfmtrc.json",
+      "objectType": "file",
+      "sizeBytes": 85,
+      "sha256": "457c13779bd44fdae7d747fe7c3ede5342271a029adfa989cde0a1193c901dbb",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": ".oxlintrc.json",
+      "objectType": "file",
+      "sizeBytes": 236,
+      "sha256": "70e99ffa5eb58c1f32b58fba67b49f87102c81dd4908289d0bd258f3989b9fec",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "AGENTS.md",
+      "objectType": "file",
+      "sizeBytes": 8448,
+      "sha256": "01ee4161f3890dfb1b32699c755dcc5b7114c45b8f73ab871ff345ff0c16d853",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "objectType": "file",
+      "sizeBytes": 35791,
+      "sha256": "9e021aad23ab66038f1d1190e99ae2b7b229ea0720ada1b364fc39149c8e6b72",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "CLAUDE.md",
+      "objectType": "file",
+      "sizeBytes": 11,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "LICENSE",
+      "objectType": "file",
+      "sizeBytes": 1066,
+      "sha256": "8901d96f51f744e64b48dd84b5d61c69dcdb3698cdeaca5889c9eee09f5e68ac",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README.md",
+      "objectType": "file",
+      "sizeBytes": 5350,
+      "sha256": "6bee8f764c5ee808b776e9ff50b605fac0c4c5b4a63ebcbed93cc747f0400ce3",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "README_zh-CN.md",
+      "objectType": "file",
+      "sizeBytes": 5326,
+      "sha256": "d3b9939f6c8159ec3894b3e2ac38f35c9e107053d114ba0737ecf6c22a6b86b4",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "RELEASE_BODY.md",
+      "objectType": "file",
+      "sizeBytes": 3229,
+      "sha256": "4dfb46a2448710653ecbb12ec93c7cfa008c42b5eec8f1a0f2fb404393db24b8",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "bun.lock",
+      "objectType": "file",
+      "sizeBytes": 191110,
+      "sha256": "e06dafe9b2650314a50c31565282ab771e9d2ae15d57ee0f402ee9f4c19e9f04",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "bunfig.toml",
+      "objectType": "file",
+      "sizeBytes": 31,
+      "sha256": "688b4efa66797085326ccb85cd5e70446ad87e7d557b65cb4388cbb6b41f477e",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "components.json",
+      "objectType": "file",
+      "sizeBytes": 407,
+      "sha256": "4630bd417e9f2aed6eb607d2ab3ccae7312fe6ea9cf8be11cf224bc6b182bf1b",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "docs",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/antigravity.png",
+      "objectType": "file",
+      "sizeBytes": 3472,
+      "sha256": "9454074ef897f8bac07a393204ec3c76874a4788a20e993ff94058f3bb19e38e",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/claude-code.png",
+      "objectType": "file",
+      "sizeBytes": 3913,
+      "sha256": "8c67ddf3d47bb54016d1bf036b652f5d2db5b70899c35e39e257e1a7c310f3a1",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/codex.png",
+      "objectType": "file",
+      "sizeBytes": 12256,
+      "sha256": "b925448806d1a98ec7a991664e4227e6ce54092523a6739ab6ecabb20f2393b1",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/cursor.png",
+      "objectType": "file",
+      "sizeBytes": 1437,
+      "sha256": "cae5b1e2df2a29ae751f93a27ae95136e217e5d6fe4ba090d6c8267488e50024",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/gemini.png",
+      "objectType": "file",
+      "sizeBytes": 2774,
+      "sha256": "4a6b4a2df0102d1cf592fcac6dc502c954324474f2cbb01e694260c273ec4a12",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/grok.svg",
+      "objectType": "file",
+      "sizeBytes": 963,
+      "sha256": "a9768b781413e8337ab2bc0b3cd83c3c108feeeaf9aa7733e06081cc3bce08a6",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/hermes.png",
+      "objectType": "file",
+      "sizeBytes": 4100,
+      "sha256": "5fbced606189c9bfc2925a16f8903333041cabbf1f8699fe9fe9b3e24504048f",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/kilo.png",
+      "objectType": "file",
+      "sizeBytes": 1353,
+      "sha256": "5c4963cc5086ee35ed2e2465e30098259767005209ab9846abcc032c54b1a5f6",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/kimi-code.png",
+      "objectType": "file",
+      "sizeBytes": 1835,
+      "sha256": "ae63b98779aea4bf338d8e2990da2f87ab5f34120c2d6e2431b7ca55484b24b6",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/openclaw.png",
+      "objectType": "file",
+      "sizeBytes": 1901,
+      "sha256": "4cf61d78c8a4809ee8d16414697667c8b2c46ebcb219c87aaa994f5b4d6fc94a",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/opencode.png",
+      "objectType": "file",
+      "sizeBytes": 295,
+      "sha256": "2844b8b8684246d609b15ea0d933fe4759707dc8149d5dae1cb8edc8244ed626",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/pi.svg",
+      "objectType": "file",
+      "sizeBytes": 619,
+      "sha256": "adba8ced01f7f268dc8d4ae199396fbe116748fafbf41442e8d25697b9a21c48",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/qoder-cn.png",
+      "objectType": "file",
+      "sizeBytes": 4205,
+      "sha256": "8c5a87bdd0f45fb11e3fe863c08e53fd7003304b8646876741bcddf89c5a6eb0",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/qoderworkcn.png",
+      "objectType": "file",
+      "sizeBytes": 9352,
+      "sha256": "135439a2ffbb49ab0f26169589618ecc1c2b62ae993a3e6dc2a3cd7a4383f3a9",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/qwen-code.png",
+      "objectType": "file",
+      "sizeBytes": 3228,
+      "sha256": "1321c08a8c94749057205a48c1b4b6c76c64adb7e5ed3d24c87419af7764ecf0",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/trae.png",
+      "objectType": "file",
+      "sizeBytes": 207,
+      "sha256": "0bfda12dd395ba78e5caa22f6cb6c7437115a09942e0feb18a93fd4cccaf64f5",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/windsurf.svg",
+      "objectType": "file",
+      "sizeBytes": 1344,
+      "sha256": "0aea67d09906da60df8fd54402b900991fd3dbc5032ade91e726e7d46eb41be8",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/agent-icons/workbuddy.svg",
+      "objectType": "file",
+      "sizeBytes": 4142,
+      "sha256": "10ccbc099e7bc3d5ff12c315c4edd7b21386aa7166c1ec19997b3d55010d5c7d",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/development.md",
+      "objectType": "file",
+      "sizeBytes": 3371,
+      "sha256": "b4edfcb423e857ddc2203ba925af509c70073d80c76bc998a4a6bc5f08b62961",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/favicon.png",
+      "objectType": "file",
+      "sizeBytes": 2597,
+      "sha256": "b572c874de3f2281c8b49bc3f4bbe7e9372dd60895ead659c39f88f80e755ed6",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/header-image.webp",
+      "objectType": "file",
+      "sizeBytes": 139986,
+      "sha256": "97d67389bc865bcc73c0faf797b22bf66044c132971e4c8f1af273faab59dc8f",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/index.html",
+      "objectType": "file",
+      "sizeBytes": 162516,
+      "sha256": "fd6d31981eec0935cb33ff2bfebf7ac53d408440b936df869390d4051e9f77fd",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/local-protocol.md",
+      "objectType": "file",
+      "sizeBytes": 4284,
+      "sha256": "474c87a592aca48aa1779227903481c563d9f0766be39076e139ebb6a565e137",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/screenshots",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/screenshots/screenshot-1.webp",
+      "objectType": "file",
+      "sizeBytes": 126714,
+      "sha256": "a3b622f7233d622295468e9395d092e7f0a583187dea2bbca0f72810868f45e1",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/screenshots/screenshot-2.webp",
+      "objectType": "file",
+      "sizeBytes": 103130,
+      "sha256": "4f9533168d3d7c27839322a4419f30fec6c90ba140e7beb147e87e2a42063e08",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/screenshots/screenshot-3.webp",
+      "objectType": "file",
+      "sizeBytes": 51180,
+      "sha256": "a1a4a49c11f110a8af81219fc3dc4b8efa36ec01a1536c4fae013bde05a3cac5",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "docs/version.json",
+      "objectType": "file",
+      "sizeBytes": 22,
+      "sha256": "2d36afd5f8a383a15277e9beb93b799943a12d9f0ef6388da98c7048b4bd1d88",
+      "disposition": "inspire",
+      "destination": "docs/convergence",
+      "reason": "reference documentation"
+    },
+    {
+      "path": "fixtures",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "test fixtures"
+    },
+    {
+      "path": "fixtures/local-protocol",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/archive-v1-full.json",
+      "objectType": "file",
+      "sizeBytes": 1228,
+      "sha256": "1ea14e06950ebb3e6744f41d1d7cd2d6b1a66819488a9a6fa0ff97520b9bc169",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/archive-v1-minimal.json",
+      "objectType": "file",
+      "sizeBytes": 4,
+      "sha256": "c5c24f7ca1c946fa4dfd44407409c8e11ec6e41f0e1c7c45bf8381b42afb31f1",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/archive-v2-future.json",
+      "objectType": "file",
+      "sizeBytes": 36,
+      "sha256": "ea34fd992978172a7c8296fa7e0d2fb7dd8f7a805bb1736dd34ec2a4accd5bb6",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/imports-v1-full.json",
+      "objectType": "file",
+      "sizeBytes": 276,
+      "sha256": "c5a4e159e91e3c1e7294a3fefa39c55464e8ce96ea3750b346d7c54672456a91",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/imports-v1-minimal.json",
+      "objectType": "file",
+      "sizeBytes": 36,
+      "sha256": "24249f74edb3ab08b1e928a227e72888c2cdefacffb0542ff000a0e24ff45c79",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/imports-v2-future.json",
+      "objectType": "file",
+      "sizeBytes": 36,
+      "sha256": "ed194d2b052c1a3ba054ccb47ea80b3ec08aab24b257962a71cd6779fbf3f632",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/lock-v3-full.json",
+      "objectType": "file",
+      "sizeBytes": 421,
+      "sha256": "4aaf4505bc4f5509e62a36ce1d828c0b3acbd9ebd49eb3e7523f02361062eac6",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/lock-v3-minimal.json",
+      "objectType": "file",
+      "sizeBytes": 4,
+      "sha256": "c5c24f7ca1c946fa4dfd44407409c8e11ec6e41f0e1c7c45bf8381b42afb31f1",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "fixtures/local-protocol/lock-v4-future.json",
+      "objectType": "file",
+      "sizeBytes": 55,
+      "sha256": "3dac61ec15d6df5e22f6eb1cad6f92a1ffd61efe1ac084a22f7fcd415304792b",
+      "disposition": "fixture",
+      "destination": "adapter conformance corpus",
+      "reason": "desktop/CLI local protocol behavior"
+    },
+    {
+      "path": "package.json",
+      "objectType": "file",
+      "sizeBytes": 2967,
+      "sha256": "015be3c765842d3f99768fc75d79e02f008e61d6a8b4b38fa9021100f723ffa3",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "packages",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "packages/cli",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/.editorconfig",
+      "objectType": "file",
+      "sizeBytes": 208,
+      "sha256": "2090058745588d1a1c67d4ab95be5dfc037da95234e27c131bf5e742a91b2a38",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/.gitattributes",
+      "objectType": "file",
+      "sizeBytes": 180,
+      "sha256": "eb84ad329b6f9b66a2f4dcaa4174ac54604b893e9689766e45d077d0b0d33804",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/README.md",
+      "objectType": "file",
+      "sizeBytes": 3679,
+      "sha256": "b1e8ea5217aad006f7dbed3b4a8b3296e2106bbcbf87d775c9c7c142f157b07e",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/package.json",
+      "objectType": "file",
+      "sizeBytes": 986,
+      "sha256": "48ea6759a128efec3f5adfdaff469b8a8e5f23118feab6c2c42ecbea4bf0e534",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/cli.ts",
+      "objectType": "file",
+      "sizeBytes": 31135,
+      "sha256": "76727958f863704777bb982d27b5f69150b90a8c2b351ae36e26f15c9905243f",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/index.ts",
+      "objectType": "file",
+      "sizeBytes": 93,
+      "sha256": "fbf4839993ef9fae08dfd50d521e0aea909c5cc3b9d71dfe7f1cabdebdd2fb5f",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/lib",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/lib/errors.ts",
+      "objectType": "file",
+      "sizeBytes": 348,
+      "sha256": "eae0443c2a46777fe5f32987397f03d4e41de9e3e545bea931ae9f11ca4aef7a",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/lib/io.ts",
+      "objectType": "file",
+      "sizeBytes": 4061,
+      "sha256": "c8657affa1fba57f80a9daa4f0651b6a3422adfbc7263970ac570f5da8f4aa2a",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/output.ts",
+      "objectType": "file",
+      "sizeBytes": 980,
+      "sha256": "8cf221528649e581783cb4397f3456ae7b77c567e9ff8159667a8462d2f94941",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/agents.ts",
+      "objectType": "file",
+      "sizeBytes": 1617,
+      "sha256": "19ddd3cc66582bc33150fc62fad2dcc7b0d8f184181481e8adeabf33b3462027",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/archive.ts",
+      "objectType": "file",
+      "sizeBytes": 15228,
+      "sha256": "46a301138e9e6dbeba1948f2415dd08882a71445c4c734c1a1b0c6acb2e16f32",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/consistency.ts",
+      "objectType": "file",
+      "sizeBytes": 3671,
+      "sha256": "178634338f9733c82ac34c1e5bafa89ed3c5cdc613b69dd5332bceab84b440d4",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/content.ts",
+      "objectType": "file",
+      "sizeBytes": 1362,
+      "sha256": "4cef88fa1da92a058397ce3d3d23918754e5187d9d01279562030fd1a563f64d",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/diagnostics.ts",
+      "objectType": "file",
+      "sizeBytes": 14376,
+      "sha256": "5536617f07c5dd90346b73e3ba26cec80f6d9bf8db37b44255dad5af0e12f608",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/imports.ts",
+      "objectType": "file",
+      "sizeBytes": 19166,
+      "sha256": "211f181e6d2d300e1742b8b50bcb3b9ea23bd8298a0ad1a283e292d9c2f18c68",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/paths.ts",
+      "objectType": "file",
+      "sizeBytes": 2209,
+      "sha256": "fee29b009e779bb9a85484123552fbe855cc1a4328352e38a4a4388bf6693d1f",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/refs.ts",
+      "objectType": "file",
+      "sizeBytes": 1305,
+      "sha256": "78c28ab9c615e997589c129c13750e99e77a5c18739e2ba7367330c36f4b525c",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/scan.ts",
+      "objectType": "file",
+      "sizeBytes": 12499,
+      "sha256": "0c45a7de124b6a9f2e1aed18e8689004666a0dc255d056b65f5850b5a33ddb9f",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/store.ts",
+      "objectType": "file",
+      "sizeBytes": 3740,
+      "sha256": "36ca8492cb5151b05b4828a1ce95171edaaabfb474b6beca8adaa12f2a39eb61",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/protocol/types.ts",
+      "objectType": "file",
+      "sizeBytes": 2427,
+      "sha256": "33ee39a25cfc3caf591749edc098c1f77e1def4ae21c7fa9c5953be2924728ab",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/version.ts",
+      "objectType": "file",
+      "sizeBytes": 214,
+      "sha256": "e6648b101584678483d2bb5bea831fce78de6b200319cc3d47f2f23fc7ca4036",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/wui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/wui/markdown.ts",
+      "objectType": "file",
+      "sizeBytes": 2913,
+      "sha256": "81e64848d88c45c50972c7ef1823f816005d0990c48900a43c39df1baab911e5",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/src/wui/server.ts",
+      "objectType": "file",
+      "sizeBytes": 10938,
+      "sha256": "43e7fb0c83367beda914c54c21a0af6c52fd03f3fb104a62f43a9b388ef331e2",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/archive.test.ts",
+      "objectType": "file",
+      "sizeBytes": 7756,
+      "sha256": "aa669c9edac61363e7310cc64917f79aa751c27243b10d196f9d5c6066532737",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/cli.test.ts",
+      "objectType": "file",
+      "sizeBytes": 19969,
+      "sha256": "f3922eca0fa3dcfd3c65ce3406071fd13c237ec427326c9d410bfecb02174ff6",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/consistency.test.ts",
+      "objectType": "file",
+      "sizeBytes": 2323,
+      "sha256": "d9766844a263d9c48d23f694c3c6956acfd7f8fc6b5c0e4d2b2b2a141db29523",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/diagnostics.test.ts",
+      "objectType": "file",
+      "sizeBytes": 7899,
+      "sha256": "cbf0b0b13895fbc7a8c7745d4104c45c918b28f6adbe531c0d7d410eb45eded1",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/helpers.ts",
+      "objectType": "file",
+      "sizeBytes": 942,
+      "sha256": "f0d70cb40faa691bfef99bf4a823f646f5b175b41228dae727d3328353626a54",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/imports.test.ts",
+      "objectType": "file",
+      "sizeBytes": 25964,
+      "sha256": "f309ffeaf7ea47f449c662b8f87f6320899b1b324c593c6f973dd20f02d007ef",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/package.test.ts",
+      "objectType": "file",
+      "sizeBytes": 814,
+      "sha256": "4383625a70b803a02d84b2c60eda80f86d76357217feb14f32882fc8503df68b",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/paths.test.ts",
+      "objectType": "file",
+      "sizeBytes": 938,
+      "sha256": "99340c6b960eaa36c381df20b6afa6dfad77b9c745795ccc620be89a74a9078b",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/protocol-fixtures.test.ts",
+      "objectType": "file",
+      "sizeBytes": 5267,
+      "sha256": "11b20a3930de9749c765336664d7aeb495cec4b37b17549adf07218b03e3ad53",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/scan.test.ts",
+      "objectType": "file",
+      "sizeBytes": 4482,
+      "sha256": "278859d1ee1e913ef516c4326d558d8ab358a1e689850da8f54c1079ea7ee830",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/version.test.ts",
+      "objectType": "file",
+      "sizeBytes": 418,
+      "sha256": "7e94bd02c6c111b71d39f17cf0013513e56a877e9d05fb8d931ec4991f8e834a",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tests/wui.test.ts",
+      "objectType": "file",
+      "sizeBytes": 7957,
+      "sha256": "895829a6737eef1939b5feb9a0dcba083909160aab15cc61506e830a1ab996ea",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/tsconfig.json",
+      "objectType": "file",
+      "sizeBytes": 482,
+      "sha256": "54ff23887ce9aa3801ce32d36bd2abcf51f63d19b87bc3ade166f618b806a9f9",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/vitest.config.ts",
+      "objectType": "file",
+      "sizeBytes": 133,
+      "sha256": "e9ae92a53caf71a7fd50e9e25db5a029c8eb2b93ee1a0229c0e9bc52279491a9",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/wui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/wui/app.js",
+      "objectType": "file",
+      "sizeBytes": 22614,
+      "sha256": "5ee7eff145c8aeccd9ebdac75c45bb46638bc86f73316ebd2f21f9fe0ed78d14",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/wui/index.html",
+      "objectType": "file",
+      "sizeBytes": 5003,
+      "sha256": "9b6e4818f78385037225517b974d0aae9ffcbd428672117d77cbceb07fa947fe",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "packages/cli/wui/styles.css",
+      "objectType": "file",
+      "sizeBytes": 13170,
+      "sha256": "30a3922d29c033af9ce2fe7fbd443d68f67a1ee7d59d59d293f25d46fc84e2be",
+      "disposition": "adapt",
+      "destination": "internal/cli and target adapters",
+      "reason": "monorepo packages and CLI integration"
+    },
+    {
+      "path": "postcss.config.cjs",
+      "objectType": "file",
+      "sizeBytes": 72,
+      "sha256": "8fa4b01f6633f478ec8ea70633058c85858e2298649cf0aee711362e5bce7b7a",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "skills",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "skills/app-release",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "skills/app-release/SKILL.md",
+      "objectType": "file",
+      "sizeBytes": 8898,
+      "sha256": "c15093d726d337c29495109f3d8066fead672a6bd439bfcb224dfd62d40fc834",
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "skills/npm-release",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "skills/npm-release/SKILL.md",
+      "objectType": "file",
+      "sizeBytes": 9856,
+      "sha256": "f6f4abf972be1695f743d27841e3523f0ec02f62bf4147ed1c5108207f60796c",
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "skills/tauri-updater",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "skills/tauri-updater/SKILL.md",
+      "objectType": "file",
+      "sizeBytes": 10670,
+      "sha256": "a5a3a0b9fc313dc48a67f86a6dd6ce7036ffeb35517b1b7f353ea122521753c2",
+      "disposition": "adapt",
+      "destination": "Resource Hub governance contracts",
+      "reason": "donor skill manifests and assets"
+    },
+    {
+      "path": "src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src-tauri",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "objectType": "file",
+      "sizeBytes": 156279,
+      "sha256": "faee9e25b1f2c8f88473a5971149d3669f80055261f7a15e83666e77a06a117b",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "objectType": "file",
+      "sizeBytes": 1576,
+      "sha256": "654aff6bc50b0b13877855efc5943886ed118d74778d862ecc162d7a5f0380e4",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/build.rs",
+      "objectType": "file",
+      "sizeBytes": 39,
+      "sha256": "487059eaf8a947b80f20a9aacac038a5047b2ad69d2401b827376c67d6fe847f",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/capabilities",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/capabilities/default.json",
+      "objectType": "file",
+      "sizeBytes": 438,
+      "sha256": "e047156259ac8bded585054027c8e7021fbd485784e532172b59fb0a80ca7a08",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/128x128.png",
+      "objectType": "file",
+      "sizeBytes": 31043,
+      "sha256": "ae24025e01de467c16c7d2e4e2d56ebe5857a03b11b37f6afeedfeacb7d61921",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/128x128@2x.png",
+      "objectType": "file",
+      "sizeBytes": 115856,
+      "sha256": "a7eeafe2a94006029e5817af521f69d780ff24dcb43d03b0ec46a8a92e2106f5",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/32x32.png",
+      "objectType": "file",
+      "sizeBytes": 2597,
+      "sha256": "b572c874de3f2281c8b49bc3f4bbe7e9372dd60895ead659c39f88f80e755ed6",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/icon.icns",
+      "objectType": "file",
+      "sizeBytes": 731650,
+      "sha256": "6d2d6bca5281a720ab92cca2bc04e665810bd5716c7855754f2477d8d8b6b74f",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/icon.ico",
+      "objectType": "file",
+      "sizeBytes": 270622,
+      "sha256": "8bb666f3d1d78372d9aefa1890d201a974a99eb9bed9093c2c7f22f394fa7ad4",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/icon.png",
+      "objectType": "file",
+      "sizeBytes": 453447,
+      "sha256": "4d2c298ec061c254e2ff224a2b983e522fdefc81b059804ffeedc97425568900",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/icons/tray-template.png",
+      "objectType": "file",
+      "sizeBytes": 1710,
+      "sha256": "07bea932f57f73ed578a170424d92205d25efb0d8f49f78b3dee90e6c9b2632b",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/banners",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/banners.json",
+      "objectType": "file",
+      "sizeBytes": 671,
+      "sha256": "737c0fb8ba2ee61d73fa2b1d8788a6d1edd6b10241cb36c3bc15c2f9ce517122",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/banners/banner1.webp",
+      "objectType": "file",
+      "sizeBytes": 6502,
+      "sha256": "cd932deed3f34caa0d5b7f1cab7abf4da6a1931579338d1738b1c3eba62b4901",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/banners/banner2.webp",
+      "objectType": "file",
+      "sizeBytes": 98844,
+      "sha256": "d1abf18e9fb08652c0d0765f63ed772a3e9aed8352518c515879e51b84235938",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/banners/banner3.webp",
+      "objectType": "file",
+      "sizeBytes": 281590,
+      "sha256": "e2358a1d7e94ec5632109c95c951be87a69a8e70d19c8a15d7362634e22246e2",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/resources/recommended-repos.json",
+      "objectType": "file",
+      "sizeBytes": 1600,
+      "sha256": "62aaf2c8dbf947a2bde5bfbe80d86306cbbfde2fcf1104c08356d0ea934c6663",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/rustfmt.toml",
+      "objectType": "file",
+      "sizeBytes": 23,
+      "sha256": "8f201bf4d9ff69411e98031ad1b168f58ce02d91fd33bc80406115c2506355d4",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/src",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/commands",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/commands/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 33,
+      "sha256": "a32c28f9a88517e6f7fc9b9005cd6ce2759a39e9eab7adf4b2bf6fca6b068ba2",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/commands/settings.rs",
+      "objectType": "file",
+      "sizeBytes": 25388,
+      "sha256": "bed23a08b02414bdc67d08141b229246ecf9c8081f413040eb79f2bb2c17aa89",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/commands/skill.rs",
+      "objectType": "file",
+      "sizeBytes": 128471,
+      "sha256": "c9adce29570cf29e3225515d9d6bb1e0d483f1b6fdb37e4a12ea924a5f36add6",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/config.rs",
+      "objectType": "file",
+      "sizeBytes": 6883,
+      "sha256": "495b7ccab95bbe38e6d6a9bdea52518679d2181f77d578cb1db62a23dec977eb",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/error.rs",
+      "objectType": "file",
+      "sizeBytes": 11566,
+      "sha256": "c08356acc724290b38d857dca5d108464131488cdf6056cc22c7e52d4c1ef8f9",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "objectType": "file",
+      "sizeBytes": 7567,
+      "sha256": "6dedc4f9eb2cdd174a90e7230b8f4e2ef96b82f8d46cdc802fd5a51e8ef081af",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "objectType": "file",
+      "sizeBytes": 184,
+      "sha256": "cc3ce51d93511ece627e2bd109bf4a3bc6157444204e432ebb3b8f69ed5d9d32",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/persistence",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "persistence handling"
+    },
+    {
+      "path": "src-tauri/src/persistence/archive.rs",
+      "objectType": "file",
+      "sizeBytes": 5177,
+      "sha256": "a263b382e5ba25afc9d4a9a43e730f60ca26a9ad435d2a254db7a70163c530d7",
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "origin-aware archive and update handling"
+    },
+    {
+      "path": "src-tauri/src/persistence/external_imports.rs",
+      "objectType": "file",
+      "sizeBytes": 2352,
+      "sha256": "9bba60e220352e7d6c80940b767f205b05f3188c234c0dc5551cffaa99084b25",
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "origin-aware archive and update handling"
+    },
+    {
+      "path": "src-tauri/src/persistence/metadata.rs",
+      "objectType": "file",
+      "sizeBytes": 3337,
+      "sha256": "fbc7fcff15874b298c6fd5c002f4e988e8f03b1c3ba0191c963c744649852f4d",
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "origin-aware archive and update handling"
+    },
+    {
+      "path": "src-tauri/src/persistence/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 8834,
+      "sha256": "6d4df0accefce4b6933582e994479a3501989367f1addecddebd81f59642e876",
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "persistence handling"
+    },
+    {
+      "path": "src-tauri/src/persistence/update_history.rs",
+      "objectType": "file",
+      "sizeBytes": 5973,
+      "sha256": "1a2d9c2ab9e7d902f23e75ec639bc7f6fdbad3a42ec8635d52ac76b72f873632",
+      "disposition": "adapt",
+      "destination": "source bundles and observations",
+      "reason": "origin-aware archive and update handling"
+    },
+    {
+      "path": "src-tauri/src/services",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/cli.rs",
+      "objectType": "file",
+      "sizeBytes": 62339,
+      "sha256": "a7d2c2cb443c10ce48694a5b6cb98f72ccbc6847f8323c172f8bcd08ef62d74c",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/github.rs",
+      "objectType": "file",
+      "sizeBytes": 4621,
+      "sha256": "eedad828f917636fbec09fa0f2fb04d9296a1a1c594a724a79289a908f69787c",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/lock.rs",
+      "objectType": "file",
+      "sizeBytes": 5321,
+      "sha256": "61fb2db2605425d4744e18d5f04dafd7c5d81bc16287fbb5aeb4077d45fbb388",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 110,
+      "sha256": "f186f4e1a9f90aa69815f49c2e4958d40513179ff1b5202b38e498b47d9798a9",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/skill.rs",
+      "objectType": "file",
+      "sizeBytes": 108093,
+      "sha256": "2fa059971a34dc1e0018277e021b8d1809b5b578c4c9ad9b85cdead21d629f20",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/skill_usage.rs",
+      "objectType": "file",
+      "sizeBytes": 48775,
+      "sha256": "c849587386087f6120cde10311f211a33762b54ca9066e34a5cc5d31c93a74c8",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/tray.rs",
+      "objectType": "file",
+      "sizeBytes": 21365,
+      "sha256": "0b6a981298835581d31bd948886fcb09a2cb2748079c3368a934ae27ad8bf2fc",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/services/watcher.rs",
+      "objectType": "file",
+      "sizeBytes": 19460,
+      "sha256": "285ab01de6ac3abf4ae629878c3b616a9b94eaf3fc86189b6793e825b50cecae",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/src/store.rs",
+      "objectType": "file",
+      "sizeBytes": 916,
+      "sha256": "f1ca25d4ec6c337d944068330a73bd21e3107e0c316ddd86ecb95c2f5ad804a1",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "backend services"
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "objectType": "file",
+      "sizeBytes": 1697,
+      "sha256": "9c670577e22306e06adc0491c9931181087d9b2afbaed9a79f95c4d1189d3746",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/archive_persistence_test.rs",
+      "objectType": "file",
+      "sizeBytes": 3873,
+      "sha256": "bd917bb3d987e89ce760ae0028b6dad502ba3bb61f6d5b20a8efa25925726000",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/common",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/common/mod.rs",
+      "objectType": "file",
+      "sizeBytes": 1523,
+      "sha256": "0fbeb29e3b7fdc5f57e82708df052de072a31370e62cfae531bc17801b3f8c5c",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/lock_test.rs",
+      "objectType": "file",
+      "sizeBytes": 1372,
+      "sha256": "d36d646f35efac5cea7685b13ec95c7a1bf1b8088018662d777c4be28a8d320e",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/path_boundary_test.rs",
+      "objectType": "file",
+      "sizeBytes": 2880,
+      "sha256": "9024c68cfce5d756074c76df120995500ddb198c6018edcb76ba2a686678ba2c",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/persistence_test.rs",
+      "objectType": "file",
+      "sizeBytes": 7457,
+      "sha256": "beb73c339c302bbce7db5a43a855ec4d6275b84485428667f348488120becf23",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/protocol_fixtures_test.rs",
+      "objectType": "file",
+      "sizeBytes": 2885,
+      "sha256": "628614863ddcca5e2a593384d619f92558d54054e125a1ac59813a0e795d9777",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/remove_skill_dir_test.rs",
+      "objectType": "file",
+      "sizeBytes": 924,
+      "sha256": "33620f48ab0e2d58222f5dd980d8ad81c3b6fc267e671703b639b9ce3c2493b0",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src-tauri/tests/skill_service_test.rs",
+      "objectType": "file",
+      "sizeBytes": 12642,
+      "sha256": "a77e9aaa1e8d4169c17c64285ba2abb8e0d101cc7df3d785b6467762c40f9621",
+      "disposition": "adapt",
+      "destination": "internal/resourcehub",
+      "reason": "Tauri workspace"
+    },
+    {
+      "path": "src/App.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 5016,
+      "sha256": "461dae1b52be2dd4c5e38ee9f12c7711720108ced32c8d75148f44605d5c4642",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/App.tsx",
+      "objectType": "file",
+      "sizeBytes": 12666,
+      "sha256": "c334ed5a6e090302cd3bee64165f9070b329dabdf878af7c6c43f6fdcf5edafc",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/assets/logo.png",
+      "objectType": "file",
+      "sizeBytes": 115856,
+      "sha256": "a7eeafe2a94006029e5817af521f69d780ff24dcb43d03b0ec46a8a92e2106f5",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/components",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/layout/Header.tsx",
+      "objectType": "file",
+      "sizeBytes": 3657,
+      "sha256": "30cef27dbbf026e41604e8a80f18fd4949fffe2927f62d39612cb82cb066a59a",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AboutSection.tsx",
+      "objectType": "file",
+      "sizeBytes": 3497,
+      "sha256": "8517684c13b8e980e51e5bcfc724af3ce025b17cfdf863afdaf4a7ee85df71c1",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AgentManagerDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 16851,
+      "sha256": "de525aaed16a347fda3fbc69eb43681ad3e5a679fa953077099071b744e5aeac",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AgentPathsSettings.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 6199,
+      "sha256": "a39e9c64dc5d422f276229b433d6c71facf1ea2dd795302c2113e6ca1c3f39e6",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AgentPathsSettings.tsx",
+      "objectType": "file",
+      "sizeBytes": 8020,
+      "sha256": "db302f4ea7dc1c428ee78850be6fb4fb1aa99a0b438b89574f26181431adf4d6",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AppUpdateSection.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 10231,
+      "sha256": "7925c43b09bbc02d6aaa58907e8a9f2ee853f717dbe3959b3f2fb114cdc134a0",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AppUpdateSection.tsx",
+      "objectType": "file",
+      "sizeBytes": 5101,
+      "sha256": "f707b95dd247f3176ae6ef0abe5d6e221378acdef4cabe649cb58f9a48cd4618",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/AppUpdateShortcut.tsx",
+      "objectType": "file",
+      "sizeBytes": 2805,
+      "sha256": "74b8d6e10a230077c5744a19c56123bc985371d7ee297307976fe82fbc288e02",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/LanguageSettings.tsx",
+      "objectType": "file",
+      "sizeBytes": 1312,
+      "sha256": "369cf1d0f84e2c5d3388e7a86232ceec7bb84d7b10ee501913001c4d21c57d11",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/LocalImportsDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 17788,
+      "sha256": "da15618b5de3685f70e87f74c2bf2ea3b8e5af37d7326993ca64d11f2bf6d2c1",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SettingsView.tsx",
+      "objectType": "file",
+      "sizeBytes": 2334,
+      "sha256": "798f5fe5012ca431afb0442026d6f7f713c5df285ec84d21b074489e41ad1529",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SkillCompanionSettings.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 13429,
+      "sha256": "9ecd1096b5208773a125929c218542011905993be64ad7ef78900a5db84b3583",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SkillCompanionSettings.tsx",
+      "objectType": "file",
+      "sizeBytes": 31748,
+      "sha256": "c0f68700fe786e607c9e590019ea81753b0ce6e142f24ec55cb1b5b2fbe57ffa",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SkillMaintenanceSettings.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 13412,
+      "sha256": "6d85d101196c9faa1da2ca70e9b8ccc1aa96a4743d74bcb241f8953bcb7ed985",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SkillMaintenanceSettings.tsx",
+      "objectType": "file",
+      "sizeBytes": 13816,
+      "sha256": "10366f47e4e8d6de3880f8312dade1cdf0f85215ea4ce5d02dd09bf1eded0e16",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/SkillUpdateManagerDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 15310,
+      "sha256": "713faacdb0b343e5ab2be1939eba75b5bc941df15c8c6ed79e3765355b6a1023",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/settings/ThemeSettings.tsx",
+      "objectType": "file",
+      "sizeBytes": 1543,
+      "sha256": "31e112ae84b9d98979fdb15f56120402ccc9f27749a16790200a2c99b1f717b9",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/skills",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/BannerCarousel.tsx",
+      "objectType": "file",
+      "sizeBytes": 7568,
+      "sha256": "7de3dea5a0084a242d49c4e8506d4b95cbbcfd137ad18f0ec25048e067da87f0",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/BrowseSkills.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 6521,
+      "sha256": "3942cf0cad55af40b28cb1fa17c57f13f40ebf6685249d0c29d0a415eba00c20",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/BrowseSkills.tsx",
+      "objectType": "file",
+      "sizeBytes": 15661,
+      "sha256": "9519cc356a6d16ddc8b998b0153fcbd54df1232144efed26280260722ebe21af",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/ConfigureDialog.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 2857,
+      "sha256": "8cf822882d2e3fc4eca322a39819ee5624a238531cb7f2455018426ab8a976f4",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/ConfigureDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 4774,
+      "sha256": "f4f41bba2538f14413556239a432d9b317dab0095618c1c675f685f6f9714308",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/ConsistencyPanel.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 2666,
+      "sha256": "837e1e676e10e5fda247697d5fb0d49edb12ed13f1bf511b9fc11330333caa9f",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/ConsistencyPanel.tsx",
+      "objectType": "file",
+      "sizeBytes": 22931,
+      "sha256": "2ce38398f4ed31330032eeffe37a0c00182f2929d3e977d40224c7f847af9e8d",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/InstalledSkills.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 20303,
+      "sha256": "10c7ddabe069b69630c85626216126d473ca166f82d3e03f224d0e63e09ce8c5",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/InstalledSkills.tsx",
+      "objectType": "file",
+      "sizeBytes": 41586,
+      "sha256": "3376617d2176c96b212c0d4f1704858ad08a6c720a317a3770c784b039110f81",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/MarkdownContent.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 2215,
+      "sha256": "e85046549e2544933a30c0609bebb75d7e06d81abe9845b2e2b26a8b9977756a",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/MarkdownContent.tsx",
+      "objectType": "file",
+      "sizeBytes": 7451,
+      "sha256": "d04db49627d4981310cfdccc4fd56ad4c03c1bed8bf725d8114e890fad1f9994",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/RepoDetail.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 5994,
+      "sha256": "be13864928dce55a956a3fe867c272709f8f9a2dfa4d49e021bc3a2faf8fcbe1",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/RepoDetail.tsx",
+      "objectType": "file",
+      "sizeBytes": 18649,
+      "sha256": "b47a34985359d2ef5287c84ec2e5246f3cb2b9ca01c21429fe5f2c568ef49b73",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/RepoInfoPanel.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 1985,
+      "sha256": "10dda4bf7786ff588a3e1a3f7c63c1a91ccad6b18110604d65b738cd8388a96b",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/RepoInfoPanel.tsx",
+      "objectType": "file",
+      "sizeBytes": 16459,
+      "sha256": "cb719553417af9fbf2a19d02a9cf3809a3724f22ba51761eca3519cd1dcc90fa",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillAuditCard.tsx",
+      "objectType": "file",
+      "sizeBytes": 7419,
+      "sha256": "d04c73fa6de90bcb79e182af376bbcddba112b5cecc34b7688e5364975ab310c",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillBadges.tsx",
+      "objectType": "file",
+      "sizeBytes": 1760,
+      "sha256": "487ce7ed405a9b642f06eb8d88397dd395e529d67783115337f4989f3b02c268",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillCard.tsx",
+      "objectType": "file",
+      "sizeBytes": 3527,
+      "sha256": "74bc38fe3a65b9e4a11256fb75d957409fa227b82a0fa7f3a0a4459848e9c252",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillCardRow.tsx",
+      "objectType": "file",
+      "sizeBytes": 3814,
+      "sha256": "ba879b52d7793af115697ee3936c559fb9d66de6dcf5f75481c93a16467bb085",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillContentPane.tsx",
+      "objectType": "file",
+      "sizeBytes": 25275,
+      "sha256": "7d34a73ae22270dab3519ae98d5ac016b91e7011c9b041d3f8c98db8617cf6e5",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillCreateView.tsx",
+      "objectType": "file",
+      "sizeBytes": 4236,
+      "sha256": "ed464dd25ad0003a137a85da51da5768d396a4af5b7d666b5a77c980f4f44e1c",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillDetail.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 17649,
+      "sha256": "3122f71b1be18e8a350e36dd8126c26216ef75fab96aa9d9ddcc844741f89e51",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillDetail.tsx",
+      "objectType": "file",
+      "sizeBytes": 10368,
+      "sha256": "ddf7f1d3f1dec139485da8028c4c6822f8d6aac41782026e2203b8fe02858570",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillDndLayer.tsx",
+      "objectType": "file",
+      "sizeBytes": 7096,
+      "sha256": "799ffdcf5397556a09f4beef3873c2524e16543e6aedc6c9f4df5e3be2779b58",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillFileTree.tsx",
+      "objectType": "file",
+      "sizeBytes": 8202,
+      "sha256": "22885801b1e441dd3c69fefa1c89b8932b8a67caed492660121f4aebd457857d",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillHero.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 1428,
+      "sha256": "7c25e8372edf9833e9bdef5dbaa52a3e1bb82db510596b718a322e8d9ef3e848",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillHero.tsx",
+      "objectType": "file",
+      "sizeBytes": 12010,
+      "sha256": "b3c38d8a63584ffa978776619967c2d3382aa523cdd1df1173ae0ea4b70a82c4",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillInstallDialog.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 1806,
+      "sha256": "570fd7ebd3351e03f9b55f72a08cbd81656fae29ef77a1648266b7726f0a93a8",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillInstallDialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 4178,
+      "sha256": "223d66ad98791c4c329ccabf50e2fd00088ba3702a5948ca10e71de2eaea4395",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillSidebar.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 975,
+      "sha256": "4bb4081e970e34cb919097ba1b7f3d6cf2e696979b676f615832ae42c05902c8",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/SkillSidebar.tsx",
+      "objectType": "file",
+      "sizeBytes": 12985,
+      "sha256": "32c96782305ced7eae86ae6cf12362667e0874cc064748f5cdc12e9248cb0fd2",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/skills/StarButton.tsx",
+      "objectType": "file",
+      "sizeBytes": 1106,
+      "sha256": "a297e0a2e54ffb9b5dcca1f2d9b7bcb12862b89a4b3a89aac5d1c82cbce91401",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "skill UI components"
+    },
+    {
+      "path": "src/components/ui",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/BackButton.tsx",
+      "objectType": "file",
+      "sizeBytes": 486,
+      "sha256": "8c8f4e7410328a4c845c6f991a1b1596f221322dc709fabba1b05e51a56f276e",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/badge.tsx",
+      "objectType": "file",
+      "sizeBytes": 1110,
+      "sha256": "92684ffa935ffbb7b4575eb722eec446f82a8b540074d9e7690d58509bf85d5b",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/button.tsx",
+      "objectType": "file",
+      "sizeBytes": 1783,
+      "sha256": "1eeedd6f0bd164ce2cd6fcf851bfa6b6f8351e867747ad9a67398f0575e96de9",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/card.tsx",
+      "objectType": "file",
+      "sizeBytes": 1953,
+      "sha256": "2acc71133f826745a7c2bbc473bfe0f0ff3cc9b0646fe6ae8e497f678858d00d",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "objectType": "file",
+      "sizeBytes": 1123,
+      "sha256": "28096d7d74346d2c8644c6018de7433e828abca550b1bbcb9740f3171c2df6f4",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "objectType": "file",
+      "sizeBytes": 3775,
+      "sha256": "9d08d69d77996d881f3ffb069f58bc90301920ca7cb9dd46f8a06dd43518a81d",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "objectType": "file",
+      "sizeBytes": 1808,
+      "sha256": "7f6e0793d3d946ee8e972a1698c2dd61b2249ab791aec011d7cc49755bb94acc",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "objectType": "file",
+      "sizeBytes": 785,
+      "sha256": "e39fe28c10f02656b7415757c50e6b31fd01be6499679b6a28d1b20a1f7a682b",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/label.tsx",
+      "objectType": "file",
+      "sizeBytes": 700,
+      "sha256": "b86a186558d860aeb72ddd8e2c4de9287940ba8019e1edb3a4525acb3ddb08a3",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/scroll-area.tsx",
+      "objectType": "file",
+      "sizeBytes": 2669,
+      "sha256": "44e3c9ff1013a5c1db5c46aa3abbc135bbe6de303b663b82dcad6b27509fcf0a",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/skeleton.tsx",
+      "objectType": "file",
+      "sizeBytes": 285,
+      "sha256": "c50f4572b7107936ba33cccfbd37b9047e898867c9bf767be883c9e044d95c2a",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "objectType": "file",
+      "sizeBytes": 1155,
+      "sha256": "d1082834406c6b5bcd1adf7ae23771bc40d7209a99277980df1c3443be857eae",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/toggle-row.tsx",
+      "objectType": "file",
+      "sizeBytes": 1104,
+      "sha256": "ca4532694468866d59faf7c95985501e4bdccfff91ae336e86c5b057876f4e4c",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/components/ui/tooltip.tsx",
+      "objectType": "file",
+      "sizeBytes": 1152,
+      "sha256": "b125db9dad92a6fe79635182ed53d0714820d49827aacc553da42213e5967950",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "UI components"
+    },
+    {
+      "path": "src/hooks",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/queryInvalidation.test.ts",
+      "objectType": "file",
+      "sizeBytes": 1532,
+      "sha256": "16fae432ad1f98ca6f11ebf15145bb004961036f5ffe0ebe7f59e8597d048bed",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/queryInvalidation.ts",
+      "objectType": "file",
+      "sizeBytes": 2449,
+      "sha256": "6fae920b1be4bdaa8770116d39ee51fb15569b78c981a9db84649c85fc741bbb",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useAppUpdater.test.tsx",
+      "objectType": "file",
+      "sizeBytes": 4526,
+      "sha256": "f5e4b4d8f7d9173db795126651f37f23ad5a7e236aa97551f127c40c0dd87feb",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useAppUpdater.tsx",
+      "objectType": "file",
+      "sizeBytes": 8492,
+      "sha256": "e78539c59c20221326eb029cfbfdadc5b332492c475498f3962e2ea6816978e4",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useConsistencyLabelSettings.ts",
+      "objectType": "file",
+      "sizeBytes": 2184,
+      "sha256": "93aa4cccf32eca89e7253c0896373c9a465d1046f1cbfb8852a3eb443205255f",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/usePendingMutation.ts",
+      "objectType": "file",
+      "sizeBytes": 667,
+      "sha256": "208da9ab361b5b33c06e6a66894b2a89d060b9285e818c9c2d4388ecbe47e584",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useRecentlyViewed.ts",
+      "objectType": "file",
+      "sizeBytes": 1329,
+      "sha256": "137ef40c1dd58b7d68736a220b670af02ebf62c96ddef871da9af821adf76fe8",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useRepoLoadStage.test.ts",
+      "objectType": "file",
+      "sizeBytes": 1173,
+      "sha256": "55a4b5a4d098a377f22e4ef4fd6437deb3c1c74397145c3f36faabbff2b1a18f",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useRepoLoadStage.ts",
+      "objectType": "file",
+      "sizeBytes": 2474,
+      "sha256": "7f60706b35fcb10080cf347f02a46c261fcaa449213d3e34c4b0e54ddd723a3f",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useRepoPanelCollapsed.ts",
+      "objectType": "file",
+      "sizeBytes": 934,
+      "sha256": "dc4e205f4fbf4be3e699fd7361f0d3d572760d89c5854629b401c7b7a34339bc",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSettings.test.ts",
+      "objectType": "file",
+      "sizeBytes": 3025,
+      "sha256": "c4b6170ab9c4dd92143242d148a726f1b2d94abaf32bb0bbb16385778331b269",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSettings.ts",
+      "objectType": "file",
+      "sizeBytes": 8868,
+      "sha256": "15755e11715592eaf05c13968f11864515ae290162c42332b5d53cd57d8c44d3",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSkillIssues.test.ts",
+      "objectType": "file",
+      "sizeBytes": 1601,
+      "sha256": "66be7403cb695c4636c491b8c611bd018d6963abf37ec2a39683a8c591e039be",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSkillIssues.ts",
+      "objectType": "file",
+      "sizeBytes": 2379,
+      "sha256": "591a2d73402d80ff6a3b4beac38eb680be0926d70ec40395322f9017d8d46108",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSkills.test.ts",
+      "objectType": "file",
+      "sizeBytes": 10155,
+      "sha256": "cd70d8509c706cddefdf76bb41cabc649a3a52635d794f6df70769ed679427d7",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useSkills.ts",
+      "objectType": "file",
+      "sizeBytes": 15766,
+      "sha256": "76a1dad7b341bbb63da3efddaba79f51b44f3000f53f9387471952d1312a5122",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useTheme.test.ts",
+      "objectType": "file",
+      "sizeBytes": 1369,
+      "sha256": "402ab64ba82500d7154f57ecb4b82d79de7a9e552f0dfc1c30e993e79e199d1e",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/hooks/useTheme.ts",
+      "objectType": "file",
+      "sizeBytes": 2545,
+      "sha256": "dd5ecfd3c217f3d70f46e3d7a9e8356a34c1a7bfce4e818b1fc4e6b45f02024c",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/en.json",
+      "objectType": "file",
+      "sizeBytes": 20385,
+      "sha256": "4b19548b12157e5d884f2aba90a1a5c71187df8dd04bcc97b6de2d619b69f9ad",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/index.ts",
+      "objectType": "file",
+      "sizeBytes": 958,
+      "sha256": "3d7c221c99352067ce73e1cdaf4335ec3dc9f4abe216d8d5ad4c09a428739580",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/i18n/zh.json",
+      "objectType": "file",
+      "sizeBytes": 20061,
+      "sha256": "8bf0cfae2e767b299182dbf0a3726251d3cf75d837fa60b7a9cc4c7a9209eb03",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/index.css",
+      "objectType": "file",
+      "sizeBytes": 11101,
+      "sha256": "72d2ce4e75f31188b65de90d5c79a79051af530cb1c2b4193d8b7fda318275ee",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/index.html",
+      "objectType": "file",
+      "sizeBytes": 891,
+      "sha256": "a2780fbfb38e22dd553a3e5f3f83c61a4bd0ba954fb9d9e5d24692016bf718cc",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/agents.ts",
+      "objectType": "file",
+      "sizeBytes": 2055,
+      "sha256": "457f47ff334b49529d0c8dcd19711cd0637de4ff6ee15e4b5bf2acf5009fc7b8",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/api",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/api/errors.test.ts",
+      "objectType": "file",
+      "sizeBytes": 3228,
+      "sha256": "835c59d21de21bd471eae913404180db40b329e9d86f3aad691227c69647ce9d",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/api/errors.ts",
+      "objectType": "file",
+      "sizeBytes": 4298,
+      "sha256": "58d6efe20f33d35dbd1e3cc9c8bce6eacfaf472a7f3d72845370bb3608c5c951",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/api/settings.ts",
+      "objectType": "file",
+      "sizeBytes": 1179,
+      "sha256": "5e8bc5403b11a4439518cb1ceb1558282ec47d6d74174beae30ba10121c5a172",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/api/skills.ts",
+      "objectType": "file",
+      "sizeBytes": 7394,
+      "sha256": "0780e642868819552a3513e2bb6059c390a948007f3ff165e557913bcd1bd7e2",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/date.ts",
+      "objectType": "file",
+      "sizeBytes": 886,
+      "sha256": "8e914d12ac88cccd38e345d388448655ca799adb5decb8927dce3bcdc74175c6",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/skillDnd.ts",
+      "objectType": "file",
+      "sizeBytes": 454,
+      "sha256": "fe320f24305ec59afa481a1be82860fb3f6461bbc2c001867bde80791a4f98d2",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/useEditorState.ts",
+      "objectType": "file",
+      "sizeBytes": 3114,
+      "sha256": "efc8892a7e7f074a8b4db7a60fc11676e95cfd2100513e284071993dfb6c7527",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "objectType": "file",
+      "sizeBytes": 169,
+      "sha256": "4acbc7165a8d54738ff62b51414e772c08fe78434e524e6d8770180d3ba2925f",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/main.tsx",
+      "objectType": "file",
+      "sizeBytes": 911,
+      "sha256": "69398568c7e466c1fbbf635db8550c152aa386685dd6c678617f8ab6dc1c9036",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/public",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/public/theme-init.js",
+      "objectType": "file",
+      "sizeBytes": 519,
+      "sha256": "72e3811ec2c73c9258fdb51a8f324d31efb66d28f85532f5d89850d49338851e",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/setup.ts",
+      "objectType": "file",
+      "sizeBytes": 402,
+      "sha256": "9e990b787bb3254d559d518af091ac4d0c63482fc914dfa695c459aafcf53756",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/test/utils.tsx",
+      "objectType": "file",
+      "sizeBytes": 1387,
+      "sha256": "0f836711ad6400239ea8c0606aff960a44ec93ba5debed9133334a1b7a4d9dcc",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/types",
+      "objectType": "directory",
+      "sizeBytes": 0,
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/types/skills.ts",
+      "objectType": "file",
+      "sizeBytes": 4376,
+      "sha256": "e40e8c5c5448c996bc5a4f4ae2c595af9fa0444fe79815f419b1f09a2fc1f1f1",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "objectType": "file",
+      "sizeBytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "disposition": "inspire",
+      "destination": "decision queues",
+      "reason": "React frontend"
+    },
+    {
+      "path": "tsconfig.json",
+      "objectType": "file",
+      "sizeBytes": 610,
+      "sha256": "17ae6adf05b9da554e05e6eb97bdeea3532bf4ac994ddc53ecf4335739908d39",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "objectType": "file",
+      "sizeBytes": 299,
+      "sha256": "43c2ff6d51f8f0b04bfc6eab38e9e20530f079be8e5782aa7be03805eb93968d",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "vite.config.ts",
+      "objectType": "file",
+      "sizeBytes": 451,
+      "sha256": "bc6bd4cfe79a6b1058917ad10038478e772e5d12f19bf834f1a88697da555121",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    },
+    {
+      "path": "vitest.config.ts",
+      "objectType": "file",
+      "sizeBytes": 414,
+      "sha256": "c92f451e301b9c7e97000b2f17f47d73577450da821acdc1587ae26ce245b65f",
+      "disposition": "not-applicable",
+      "reason": "root repository metadata and build tool configuration"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 ## Platform
 
-web
+windows
 
 ## Users
 
@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-AgentStack Manager is a local, preservation-first control plane for inspecting an existing developer workstation, selecting a capability profile, building a sealed installation plan, applying only the reviewed actions, and preparing a managed MCP routing surface. Success means users can improve their local agent stack without losing unrelated tools, configuration, or credentials.
+AgentStack Manager is a local, preservation-first control plane for inspecting an existing developer workstation, selecting a capability profile, building a reviewed change plan, applying only the reviewed actions, and preparing a managed MCP routing surface. Success means users can improve their local agent stack without losing unrelated tools, configuration, or credentials.
 
 ## Positioning
 
@@ -22,7 +22,7 @@ AgentStack is differentiated by a review-before-mutation mechanism: it inventori
 ## Operating Context
 
 - Runs locally on Windows and exposes a loopback-only browser manager plus CLI workflows.
-- Primary workflow: refresh inventory, choose a profile and providers, select optional components, build a plan, review classifications, authorize the sealed plan, then initialize or diagnose the MCP router.
+- Primary browser workflow: read Home, inspect Environments, select and review exact Changes, authorize once, then follow installation and recovery in Activity. The CLI retains explicit plan ID/digest terminology.
 - Long-running mutations return durable operation receipts and remain observable through status polling.
 - Users may move between browser UI, PowerShell, Codex, and AGY during setup and diagnosis.
 
@@ -33,7 +33,7 @@ AgentStack is differentiated by a review-before-mutation mechanism: it inventori
 - The UI must preserve existing route IDs, field IDs, backend endpoint contracts, and operation-lock behavior.
 - The web surface is embedded static HTML, CSS, and JavaScript served by Go. No frontend package manager or framework is present.
 - The interface must remain usable without external assets, network fonts, or third-party runtime dependencies.
-- **Open decision inferred from absent user interview:** the redesign may replace the visual system, but not product terminology, workflow order, safety claims, or destructive-action confirmation.
+- **Open decision inferred from absent user interview:** the lifecycle workspace may simplify terminology and layout, but it cannot weaken reviewed-plan identity, authorization, safety claims, or destructive-action confirmation.
 
 ## Brand Commitments
 

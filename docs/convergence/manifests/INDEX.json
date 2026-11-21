@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "totalSnapshots": 8,
+  "totalFiles": 10977,
+  "totalSizeBytes": 212252589,
+  "snapshots": [
+    {
+      "id": "agent-of-empires",
+      "sourcePath": "reference repos/agent-of-empires-main/agent-of-empires-main",
+      "manifestDigest": "0c734affb7463dd420aeb3f0cfe2f60cc965762ffc5113d16b1aeb5477b1eaeb",
+      "emptySnapshot": false,
+      "fileCount": 1555,
+      "totalSizeBytes": 30418581,
+      "manifestFile": "agent-of-empires.manifest.json",
+      "receiptFile": "agent-of-empires.receipt.json"
+    },
+    {
+      "id": "agent-skill-library",
+      "sourcePath": "reference repos/skill_library",
+      "manifestDigest": "677b8076942ca1c9e7ddf807ca80d1e53b0c0de1a21229db3321b05fde1fd457",
+      "emptySnapshot": false,
+      "fileCount": 6925,
+      "totalSizeBytes": 62610268,
+      "manifestFile": "agent-skill-library.manifest.json",
+      "receiptFile": "agent-skill-library.receipt.json"
+    },
+    {
+      "id": "agentdns",
+      "sourcePath": "reference repos/AgentDNS-main/deployment",
+      "manifestDigest": "b7fc4fa08bc8d7340cee1d55b86dfa423569f632847edc8092d634ce1baf740e",
+      "emptySnapshot": true,
+      "fileCount": 0,
+      "totalSizeBytes": 0,
+      "manifestFile": "agentdns.manifest.json",
+      "receiptFile": "agentdns.receipt.json"
+    },
+    {
+      "id": "cc-switch-cli",
+      "sourcePath": "reference repos/cc-switch-cli-main/cc-switch-cli-main",
+      "manifestDigest": "29fd34b40aebee4ff7c89b3be11c8592e6c0775706926bc8b4fc80ff1390fd83",
+      "emptySnapshot": false,
+      "fileCount": 521,
+      "totalSizeBytes": 34203222,
+      "manifestFile": "cc-switch-cli.manifest.json",
+      "receiptFile": "cc-switch-cli.receipt.json"
+    },
+    {
+      "id": "cc-switch-desktop",
+      "sourcePath": "reference repos/cc-switch-main/cc-switch-main",
+      "manifestDigest": "51a342147ef59ff40076bc7217757415d160117eb5ff48d1748970f3db894730",
+      "emptySnapshot": false,
+      "fileCount": 1174,
+      "totalSizeBytes": 43952020,
+      "manifestFile": "cc-switch-desktop.manifest.json",
+      "receiptFile": "cc-switch-desktop.receipt.json"
+    },
+    {
+      "id": "skill-zoo",
+      "sourcePath": "reference repos/skill-zoo-main/skill-zoo-main",
+      "manifestDigest": "ffbc260ba1183eb53f79f0e8c5ea0e373c96d978018faca6f03bd272d7f083b3",
+      "emptySnapshot": false,
+      "fileCount": 257,
+      "totalSizeBytes": 4666905,
+      "manifestFile": "skill-zoo.manifest.json",
+      "receiptFile": "skill-zoo.receipt.json"
+    },
+    {
+      "id": "skills-manage",
+      "sourcePath": "reference repos/skills-manage-main/skills-manage-main",
+      "manifestDigest": "46b15aac250d42f491b55d19d42b9430445e231aaeb7b6f77f1db56192bceee4",
+      "emptySnapshot": false,
+      "fileCount": 245,
+      "totalSizeBytes": 6306164,
+      "manifestFile": "skills-manage.manifest.json",
+      "receiptFile": "skills-manage.receipt.json"
+    },
+    {
+      "id": "skills-manager",
+      "sourcePath": "reference repos/skills-manager-main/skills-manager-main",
+      "manifestDigest": "8e28d5202b2725c745df89df1b71fe1c2b56ae4924702ae6b6de45f4a07f8277",
+      "emptySnapshot": false,
+      "fileCount": 300,
+      "totalSizeBytes": 30095429,
+      "manifestFile": "skills-manager.manifest.json",
+      "receiptFile": "skills-manager.receipt.json"
+    }
+  ]
+}

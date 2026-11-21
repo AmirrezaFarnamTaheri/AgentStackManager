@@ -1,6 +1,6 @@
 ---
 name: AgentStack Manager
-description: Conservation Ledger interface for preservation-first local stack control.
+description: Lifecycle Ledger interface for preservation-first local stack control.
 colors:
   action-teal: "#0f766e"
   action-teal-strong: "#0a5f59"
@@ -21,6 +21,7 @@ colors:
   warning: "#946515"
   danger: "#a43c45"
   danger-strong: "#873039"
+  action-ink-dark: "#10201c"
 darkColors:
   canvas-cold: "#111715"
   surface-paper: "#18201e"
@@ -45,7 +46,7 @@ darkColors:
 typography:
   display:
     fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(28px, 3vw, 38px)"
+    fontSize: "clamp(25px, 3.2vw, 40px)"
     fontWeight: 690
     lineHeight: 1.08
     letterSpacing: "-0.035em"
@@ -55,9 +56,29 @@ typography:
     fontWeight: 700
     lineHeight: 1.15
     letterSpacing: "-0.025em"
+  page:
+    fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "26px"
+    fontWeight: 700
+    lineHeight: 1.2
+  title:
+    fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 700
+    lineHeight: 1.3
+  metric:
+    fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "20px"
+    fontWeight: 800
+    lineHeight: 1.2
+  progress:
+    fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 800
+    lineHeight: 1.2
   body:
     fontFamily: "Aptos, Segoe UI Variable Text, Segoe UI, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "14px"
+    fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.55
   label:
@@ -67,12 +88,16 @@ typography:
     lineHeight: 1.4
   mono:
     fontFamily: "Cascadia Code, Cascadia Mono, SFMono-Regular, Consolas, monospace"
-    fontSize: "11px"
+    fontSize: "12px"
     fontWeight: 400
-    lineHeight: 1.7
+    lineHeight: 1.6
 rounded:
   control: "8px"
-  panel: "12px"
+  compact: "9px"
+  medium: "10px"
+  brand: "11px"
+  panel: "14px"
+  pill: "999px"
 spacing:
   compact: "8px"
   control: "12px"
@@ -111,18 +136,18 @@ components:
 
 ## Overview
 
-**Creative North Star: "Conservation Ledger"**
+**Creative North Star: "Lifecycle Ledger"**
 
-AgentStack Manager is an operational provenance workbench. The interface separates observed machine state, plan inputs, reviewed changes, and authorized mutation so users can tell what is known, proposed, and permitted at a glance. Cold paper surfaces and graphite structure keep attention on records rather than decoration. Muted teal appears only where the user can act, where the current section is selected, or where verified state needs emphasis.
+AgentStack Manager is an operational lifecycle workspace. The interface separates detected environments, selected tools, pending changes, active installation, and recorded outcomes so users can tell what exists, what they approved, what is happening, and what needs recovery at a glance. Cold paper surfaces and graphite structure keep attention on work rather than decoration. Muted teal appears only where the user can act, where the current area is selected, or where verified state needs emphasis.
 
-The system is compact and familiar because users arrive to complete a technical task. It avoids marketing-page composition, decorative motion, and repeated card shells. Registry rows, fine dividers, status seals, and one persistent workspace rail provide the product character.
+The system is compact and familiar because users arrive to complete technical work. It avoids marketing-page composition, decorative motion, repeated card shells, and subsystem-first navigation. Environment rows, pending changes, progress items, transactions, fine dividers, and one persistent workspace rail provide the product character.
 
 **Key Characteristics:**
-- Preservation-first hierarchy with observed, planned, and authorized states kept visually distinct.
-- Restrained cold-neutral palette with one scarce action accent.
-- Workhorse sans typography for every task surface, with mono reserved for data and provenance.
-- Flat registry structure by default, with elevation used only for the main work surface and transient feedback.
-- Responsive behavior that changes topology instead of shrinking desktop type.
+- Lifecycle hierarchy keeps detected state, selected intent, pending changes, active installation, and recorded outcomes distinct.
+- Exactly five primary destinations: Home, Environments, Sharing & Sync, Changes, and Activity.
+- One continuous selection-to-approval flow and one server-authoritative apply action.
+- Flat environment, tool, progress, and transaction rows instead of repeated dashboard cards.
+- Responsive behavior changes topology before typography or touch targets shrink.
 
 ## Colors
 
@@ -136,7 +161,7 @@ The palette is a cold neutral field with one muted teal action voice and semanti
 ### Neutral
 - **Cold Canvas** (`canvas-cold`): Application background.
 - **Paper Surface** (`surface-paper`): Default controls and quiet grouped regions.
-- **Raised Paper** (`surface-raised`): Main configuration panel, operation ribbon, and secondary buttons.
+- **Raised Paper** (`surface-raised`): Active work surface, installation tracker, and secondary buttons.
 - **Muted Surface** (`surface-muted`): Hover, skeleton, and secondary structural layers.
 - **Graphite Rail** (`sidebar-graphite`): Persistent workspace navigation.
 - **Graphite Text** (`text-graphite`): Primary copy and controls.
@@ -145,7 +170,7 @@ The palette is a cold neutral field with one muted teal action voice and semanti
 
 ### Semantic
 - **Verified Green** (`success`): Completed or healthy state only.
-- **Review Amber** (`warning`): Recovery guidance or attention without destructive impact.
+- **Attention Amber** (`warning`): Recovery guidance or attention without destructive impact.
 - **Authorization Red** (`danger`): Explicitly destructive or irreversible confirmation only.
 
 **The One Action Voice Rule.** Teal is reserved for primary action, current selection, focus, and verified state. It is never scattered as decoration.
@@ -161,12 +186,14 @@ The palette is a cold neutral field with one muted teal action voice and semanti
 **Character:** One compact workhorse sans family keeps the interface trustworthy and familiar. The mono stack is limited to values, versions, action records, and provenance markers.
 
 ### Hierarchy
-- **Display** (690, `clamp(28px, 3vw, 38px)`, 1.08): Workspace title only.
-- **Headline** (700, 24px, 1.15): Section titles.
-- **Title** (650-700, 13-17px): Panel, row, and action titles.
-- **Body** (400, 13-14px, 1.5-1.55): Guidance and descriptions, normally kept below 75 characters per line.
-- **Label** (650-700, 10-12px): Form labels, statuses, badges, and navigation.
-- **Mono** (400, 9-11px): Numeric values, version strings, record seals, and command output.
+- **Hero** (800, `clamp(25px, 3.2vw, 40px)`, 1.12): Home readiness statement only.
+- **Page** (700, 26px, 1.2): Current workspace title.
+- **Headline** (700, 24px, 1.25): Major section titles.
+- **Metric** (800, 20px, 1.2): Summary values only.
+- **Progress** (800, 18px, 1.2): Installation stage percentage and title.
+- **Title** (650-700, 17px, 1.3): Panel, row, and action titles.
+- **Body** (400, 16px, 1.5): Guidance and descriptions, normally kept below 75 characters per line.
+- **Label / Evidence** (650-750, 12-13px): Form labels, statuses, badges, metadata, and command output.
 
 **The Work Surface Rule.** No separate display typeface enters the product UI. Hierarchy comes from weight, scale, spacing, and structure.
 
@@ -174,9 +201,9 @@ The palette is a cold neutral field with one muted teal action voice and semanti
 
 ## Layout
 
-Desktop uses a 248px persistent rail and a fluid workspace capped at 1560px. The first viewport places a compact task masthead above a live operation ribbon, then a metric ledger and a two-part work area. The main configuration surface receives elevation; the protection register remains flat and divided.
+Desktop uses a 236px persistent rail and a fluid workspace capped at 1440px. Five primary destinations—Home, Environments, Sharing & Sync, Changes, and Activity—form the complete everyday path. Internal engines are represented through the environment inventory, reviewed changes, maintenance actions, or disclosed technical details instead of parallel navigation. The first viewport places a compact masthead above one concise readiness summary; the installation tracker appears only when work exists.
 
-Spacing follows tight internal groups and larger separation between task regions. Panels use 22px internal padding, controls maintain 44px minimum height, and section spacing begins at 30px. The 1120px breakpoint collapses split work areas to one column. At 800px the rail becomes a sticky compact header with horizontally scrollable section tabs. At 520px action clusters and button rows become one-column stacks. All grid children explicitly permit shrinking so navigation content cannot expand the page beyond the viewport.
+Spacing follows tight internal groups and larger separation between task regions. Panels use 18–22px internal padding, controls maintain 44px minimum height, and section spacing begins at 28px. At 1050px split work areas collapse to one column. At 760px the rail becomes a compact four-item navigation strip, and action, approval, tracker, and environment-detail regions stack. All grid children explicitly permit shrinking so navigation content cannot expand the page beyond the viewport.
 
 **The Topology Before Scale Rule.** Mobile changes structure first. It does not solve crowding by shrinking labels or touch targets.
 
@@ -192,7 +219,7 @@ The system is flat by default. Registry rows, metrics, assurance lists, and comm
 
 ## Shapes
 
-Panels use gently curved 12px corners. Controls, fields, navigation items, and transient feedback use 8px corners. Full pills are limited to compact record seals and action-state badges. Borders are one pixel and structural. Major containers do not combine strong borders with strong shadows.
+Panels use gently curved 12–14px corners. Controls, fields, navigation items, and transient feedback use 8px corners. Full pills are limited to compact state badges. Borders are one pixel and structural. Major containers do not combine strong borders with strong shadows.
 
 **The Two Radius Rule.** Use 8px for controls and 12px for surfaces. Pills are status artifacts, not a general shape language.
 
@@ -207,7 +234,7 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 - **Hover / Focus:** One-pixel upward transform on hover, one-pixel press on active, and a visible three-pixel focus outline. Disabled controls retain shape and lose emphasis.
 
 ### Cards / Containers
-- **Corner Style:** 12px for the primary panel and operation ribbon.
+- **Corner Style:** 12–14px for the active work surface and installation tracker.
 - **Background:** Raised Paper for active work, Paper Surface for quiet grouped regions.
 - **Shadow Strategy:** Panel Ambient only on the primary configuration surface.
 - **Border:** One-pixel Registry Line.
@@ -219,46 +246,53 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 - **Error / Disabled:** Semantic text and state, with disabled controls visibly muted while remaining readable.
 
 ### Navigation
-- The desktop rail uses muted labels at rest, raised graphite on hover, and a teal inset marker for the current section.
-- Mobile retains text labels and moves the same items into a horizontally scrollable strip. It never substitutes icon-only navigation.
+- The desktop rail exposes exactly five primary destinations: Home, Environments, Sharing & Sync, Changes, and Activity.
+- Internal engines do not become additional primary navigation. Their evidence appears in the environment inventory, changes, activity, maintenance, or technical details.
+- The current destination uses a teal marker and `aria-current="page"`; inactive destinations remain quiet.
+- Mobile retains all five text labels in a compact navigation strip and never substitutes icon-only navigation.
 
-### Operation Ribbon
-- The ribbon is the single live status surface for running, completed, and failed operations.
-- It uses a compact state icon, action title, recovery or completion detail, and a provenance seal.
+### Installation Tracker and Notice
+- The tracker is the durable status surface for active and partial installation operations.
+- It displays the server-reported stage, percentage, completed/total count, active item, and bounded per-item states.
+- A separate notice may summarize the outcome and one recovery action, but it never duplicates the tracker or exposes private paths.
 - Motion is limited to state feedback and respects reduced-motion settings.
 
-### Metric Ledger
-- Four machine-state metrics share one horizontal record with internal dividers rather than separate cards.
-- Values use mono typography; labels and explanatory text use the UI sans.
-- Loading uses shape-matched skeletons with no generic spinner.
+### Home Summary and Environment Ledger
+- Home shows readiness, environment count, installed tools, attention items, recent activity, and one recommended next action.
+- Environments provides a read-only inventory of AI apps, IDEs, command-line tools, MCP servers, workspaces, resources, and managed connection state.
+- Connection state is visible without implying that generic tool changes mutate sharing or synchronization.
+- Values use mono typography only when they are evidence; labels and guidance use the UI sans.
 
 ### Registry Row
 - Component selection is a full-width row with checkbox, name, explanation, and optional metadata seals.
 - Hover uses a small horizontal transform rather than padding or size animation.
 - Selected rows receive a Washed Teal surface without adding elevation.
 
-### Record Seals
-- Seals are compact provenance labels with mono text, fine borders, and pill geometry.
-- They identify state or ownership. They are never decorative tags.
+### State Badges
+- Badges are compact text labels with fine borders and pill geometry.
+- They identify installed, available, running, successful, failed, skipped, or attention state. They are never decorative tags and never rely on color alone.
 
-### Quick Setup Hero Banner
-- Prominent 1-click preset card for new users with a 5px Controlled Teal accent border (`border-left: 5px solid var(--accent)`).
-- Provides plain-English setup summary and a high-visibility primary setup action (`⚡ Apply Recommended Setup`).
+### Changes Workspace
+- Changes presents one continuous path: choose a profile and tools, inspect the inline estimate, create the exact pending-change list, confirm, and apply.
+- Provider, credential, and runtime-update controls remain secondary to the common profile path.
+- Uses precise, plain-language copy. It never promises absolute safety or implies that a consequential change bypasses review.
+- Apply is the only client mutation action. A reviewed plan is marked consumed before execution and cannot be retried after success or partial failure.
 
-### Plan Diff & Category Toolbar
-- Category filter chips (`All`, `Essential`, `Recommended`, `Optional Local`, `Credential`) filter the registry without page reload.
-- Plan action filter buttons (`All actions`, `Changes only`, `Install`, `Repair`, `Keep`) allow instant mutation isolation before authorization.
+### Pending Changes and Tool Filters
+- Category filter buttons (`All`, `Essential`, `Recommended`, `Optional Local`, `Credential`) filter the tool registry without page reload.
+- The exact consequential actions are rendered directly below the selection workspace before approval. Already-ready items are summarized rather than repeated as a second list.
+- Search is debounced and preserves focus while filtering.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep observed state, plan input, reviewed output, and authorization visually distinct.
+- **Do** keep detected state, selected intent, pending changes, active installation, and recorded outcome visually distinct.
 - **Do** reserve teal for action, selection, focus, and verified state.
 - **Do** use registry lines and negative space before adding another container.
 - **Do** keep every primary control at least 44px high and preserve visible focus.
 - **Do** use the mono stack for evidence such as values, versions, seals, and command output.
-- **Do** collapse layout topology at 1120px, 800px, and 520px before reducing density.
-- **Do** provide global keyboard shortcuts (`Ctrl+K` search, `Alt+1..5` section navigation).
+- **Do** collapse layout topology at 1050px and 760px before reducing density (with 460px and 1180px supporting rules in styles.css).
+- **Do** state preservation and authorization guarantees precisely; describe the reviewed mechanism instead of promising absolute safety.
 
 ### Don't:
 - **Don't** introduce a marketing hero, decorative dashboard cards, or promotional proof into the manager.
@@ -274,8 +308,8 @@ Panels use gently curved 12px corners. Controls, fields, navigation items, and t
 | :--- | :---: | :--- |
 | Generic Fonts (Inter/Roboto/System) | **PASSED** | Structural font stack: Aptos / Segoe UI Variable (UI sans) + Cascadia Code / SFMono (Evidence mono). |
 | Purple/Indigo Gradients | **PASSED** | Palette strictly locked to Cold Canvas (`#edf0ef` / `#111715`) + Controlled Teal (`#0f766e` / `#63b9ad`). |
-| Structural Icons | **PASSED** | Structural navigation icons use SVG; contextual status and action labels may use emoji alongside text. |
+| Structural Icons | **PASSED** | Structural navigation icons use one local SVG language; state and action labels use text rather than decorative glyphs. |
 | Hover Layout Shift | **PASSED** | Smooth 180ms CSS transitions on color/opacity/border. Non-layout driving transforms only. |
 | Sub-44px Touch Targets | **PASSED** | All primary buttons, selects, and input controls meet minimum `44px` height requirement. |
 | Missing Focus Outline | **PASSED** | `3px` visible focus outline on all interactive controls (`:focus-visible`). |
-| Color-Only Indicators | **PASSED** | Every state communicates via text + status mark (`01`, `02`, `03`) + icon + color. |
+| Color-Only Indicators | **PASSED** | Every state communicates through visible text and structure in addition to semantic color. |

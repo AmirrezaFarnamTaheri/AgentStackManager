@@ -13,7 +13,7 @@ const (
 var ErrResourceLimitsUnsupported = errors.New("hard process resource limits are unsupported on this platform")
 
 // Limits defines optional hard ceilings for a managed process tree.
-// CPUPercent is a Windows Job Object hard cap expressed from 1 through 100.
+// CPUPercent is a hard cap expressed from 1 through 100. Linux maps it to cgroup v2 cpu.max; Windows maps it to a Job Object CPU rate cap.
 type Limits struct {
 	MemoryBytes     uint64 `json:"memoryBytes,omitempty"`
 	CPUPercent      uint32 `json:"cpuPercent,omitempty"`

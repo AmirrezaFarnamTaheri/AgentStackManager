@@ -1,0 +1,478 @@
+{
+  "apiVersion": "targetcatalog.asm.dev/v1alpha1",
+  "targets": [
+    {
+      "id": "antigravity-cli",
+      "displayName": "Antigravity CLI Agent",
+      "vendor": "Google DeepMind",
+      "scope": "global",
+      "aliases": [
+        ".antigravity-cli",
+        "gemini-antigravity"
+      ],
+      "globalRootPattern": "~/.gemini/antigravity-cli",
+      "projectRootPattern": ".gemini/antigravity-cli",
+      "subpath": "skills",
+      "discoveryOnlyPaths": [
+        "~/.gemini/antigravity-cli/brain"
+      ],
+      "supportedKinds": [
+        "skill",
+        "rule",
+        "command",
+        "mcp-server"
+      ],
+      "ownershipMarkers": [
+        ".asm-managed",
+        "config.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "antigravity-ide",
+      "displayName": "Antigravity IDE",
+      "vendor": "Google DeepMind",
+      "scope": "global",
+      "aliases": [
+        ".antigravity-ide"
+      ],
+      "globalRootPattern": "~/.gemini/antigravity-ide",
+      "projectRootPattern": ".gemini/antigravity-ide",
+      "subpath": "extensions",
+      "discoveryOnlyPaths": [
+        "~/.gemini/antigravity-ide/workspaces"
+      ],
+      "supportedKinds": [
+        "skill",
+        "context",
+        "mcp-server"
+      ],
+      "ownershipMarkers": [
+        "settings.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "claude",
+      "displayName": "Claude Desktop / Code",
+      "vendor": "Anthropic",
+      "scope": "global",
+      "aliases": [
+        ".claude",
+        "claude-desktop"
+      ],
+      "globalRootPattern": "~/.claude",
+      "projectRootPattern": ".claude",
+      "subpath": "commands",
+      "supportedKinds": [
+        "skill",
+        "command",
+        "mcp-server",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        ".asm-managed",
+        "claude_desktop_config.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "codex",
+      "displayName": "Codex CLI / IDE",
+      "vendor": "OpenAI",
+      "scope": "global",
+      "aliases": [
+        ".codex"
+      ],
+      "globalRootPattern": "~/.codex",
+      "projectRootPattern": ".codex",
+      "subpath": "skills",
+      "supportedKinds": [
+        "skill",
+        "prompt",
+        "rule"
+      ],
+      "ownershipMarkers": [
+        ".asm-managed",
+        "config.toml"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "continue",
+      "displayName": "Continue Dev",
+      "vendor": "Continue",
+      "scope": "global",
+      "aliases": [
+        ".continue"
+      ],
+      "globalRootPattern": "~/.continue",
+      "projectRootPattern": ".continue",
+      "subpath": "prompts",
+      "supportedKinds": [
+        "prompt",
+        "rule",
+        "mcp-server"
+      ],
+      "ownershipMarkers": [
+        "config.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "copilot",
+      "displayName": "GitHub Copilot Workspace",
+      "vendor": "GitHub",
+      "scope": "project",
+      "aliases": [
+        ".github/copilot-instructions.md"
+      ],
+      "globalRootPattern": "~/.copilot",
+      "projectRootPattern": ".github",
+      "subpath": "copilot-instructions.md",
+      "supportedKinds": [
+        "rule"
+      ],
+      "ownershipMarkers": [
+        "copilot-instructions.md"
+      ],
+      "recursionAllowed": false,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "cursor",
+      "displayName": "Cursor IDE",
+      "vendor": "Anysphere",
+      "scope": "project",
+      "aliases": [
+        ".cursor",
+        ".cursorrules"
+      ],
+      "globalRootPattern": "~/.cursor",
+      "projectRootPattern": ".cursor",
+      "subpath": "rules",
+      "supportedKinds": [
+        "rule",
+        "prompt",
+        "skill"
+      ],
+      "ownershipMarkers": [
+        ".cursorrules",
+        "rules"
+      ],
+      "recursionAllowed": false,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "gemini-cli",
+      "displayName": "Gemini CLI",
+      "vendor": "Google DeepMind",
+      "scope": "global",
+      "aliases": [
+        ".gemini-cli"
+      ],
+      "globalRootPattern": "~/.gemini",
+      "projectRootPattern": ".gemini",
+      "subpath": "antigravity-cli/skills",
+      "supportedKinds": [
+        "skill",
+        "prompt",
+        "rule"
+      ],
+      "ownershipMarkers": [
+        "config.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "generic",
+      "displayName": "Generic Agent Target",
+      "vendor": "Generic",
+      "scope": "project",
+      "aliases": [
+        ".agent",
+        ".agents"
+      ],
+      "globalRootPattern": "~/.agents",
+      "projectRootPattern": ".agents",
+      "subpath": "skills",
+      "supportedKinds": [
+        "skill",
+        "rule",
+        "command",
+        "prompt",
+        "context"
+      ],
+      "ownershipMarkers": [
+        ".asm-managed"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "goose",
+      "displayName": "Block Goose",
+      "vendor": "Block",
+      "scope": "global",
+      "aliases": [
+        ".goose"
+      ],
+      "globalRootPattern": "~/.config/goose",
+      "projectRootPattern": ".goose",
+      "subpath": "hints",
+      "supportedKinds": [
+        "rule",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        "config.yaml"
+      ],
+      "recursionAllowed": false,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "hermes",
+      "displayName": "Hermes Agent",
+      "vendor": "Nous Research",
+      "scope": "global",
+      "aliases": [
+        ".hermes"
+      ],
+      "globalRootPattern": "~/.hermes",
+      "projectRootPattern": ".hermes",
+      "subpath": "skills",
+      "supportedKinds": [
+        "skill",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        "config.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": true,
+      "confidence": "medium"
+    },
+    {
+      "id": "kimi",
+      "displayName": "Kimi Moonshot",
+      "vendor": "Moonshot AI",
+      "scope": "global",
+      "aliases": [
+        ".kimi"
+      ],
+      "globalRootPattern": "~/.kimi",
+      "projectRootPattern": ".kimi",
+      "subpath": "context",
+      "supportedKinds": [
+        "context",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        "kimi.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": true,
+      "confidence": "unverified"
+    },
+    {
+      "id": "kiro",
+      "displayName": "Kiro Agent",
+      "vendor": "Kiro",
+      "scope": "project",
+      "aliases": [
+        ".kiro"
+      ],
+      "globalRootPattern": "~/.kiro",
+      "projectRootPattern": ".kiro",
+      "subpath": "steering",
+      "supportedKinds": [
+        "rule",
+        "prompt",
+        "skill"
+      ],
+      "ownershipMarkers": [
+        "specs",
+        "steering"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "nara",
+      "displayName": "Nara AI",
+      "vendor": "Nara",
+      "scope": "global",
+      "aliases": [
+        ".nara"
+      ],
+      "globalRootPattern": "~/.nara",
+      "projectRootPattern": ".nara",
+      "subpath": "rules",
+      "supportedKinds": [
+        "rule"
+      ],
+      "ownershipMarkers": [
+        "nara.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": true,
+      "confidence": "unverified"
+    },
+    {
+      "id": "openclaw",
+      "displayName": "OpenClaw Agent",
+      "vendor": "OpenClaw",
+      "scope": "global",
+      "aliases": [
+        ".openclaw"
+      ],
+      "globalRootPattern": "~/.openclaw",
+      "projectRootPattern": ".openclaw",
+      "subpath": "skills",
+      "supportedKinds": [
+        "skill"
+      ],
+      "ownershipMarkers": [
+        "config.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": true,
+      "confidence": "unverified"
+    },
+    {
+      "id": "opencode",
+      "displayName": "OpenCode Agent",
+      "vendor": "OpenCode Systems",
+      "scope": "project",
+      "aliases": [
+        ".opencode"
+      ],
+      "globalRootPattern": "~/.opencode",
+      "projectRootPattern": ".opencode",
+      "subpath": "skills",
+      "supportedKinds": [
+        "skill",
+        "agent",
+        "rule",
+        "command",
+        "mcp-server"
+      ],
+      "ownershipMarkers": [
+        ".asm-managed",
+        "opencode.json"
+      ],
+      "recursionAllowed": true,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "openhuman",
+      "displayName": "OpenHuman Agent",
+      "vendor": "OpenHuman",
+      "scope": "global",
+      "aliases": [
+        ".openhuman"
+      ],
+      "globalRootPattern": "~/.openhuman",
+      "projectRootPattern": ".openhuman",
+      "subpath": "context",
+      "supportedKinds": [
+        "context",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        "openhuman.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": true,
+      "confidence": "unverified"
+    },
+    {
+      "id": "qwen",
+      "displayName": "Qwen Agent",
+      "vendor": "Alibaba",
+      "scope": "global",
+      "aliases": [
+        ".qwen"
+      ],
+      "globalRootPattern": "~/.qwen",
+      "projectRootPattern": ".qwen",
+      "subpath": "prompts",
+      "supportedKinds": [
+        "prompt",
+        "rule"
+      ],
+      "ownershipMarkers": [
+        "qwen.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": true,
+      "confidence": "unverified"
+    },
+    {
+      "id": "roo-code",
+      "displayName": "Roo Code",
+      "vendor": "Roo Code",
+      "scope": "project",
+      "aliases": [
+        ".clinerules",
+        ".roo"
+      ],
+      "globalRootPattern": "~/.roo",
+      "projectRootPattern": ".roo",
+      "subpath": "rules",
+      "supportedKinds": [
+        "rule",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        ".clinerules"
+      ],
+      "recursionAllowed": false,
+      "readOnly": false,
+      "confidence": "high"
+    },
+    {
+      "id": "windsurf",
+      "displayName": "Windsurf / Cascade",
+      "vendor": "Codeium",
+      "scope": "project",
+      "aliases": [
+        ".codeium",
+        ".windsurf"
+      ],
+      "globalRootPattern": "~/.codeium/windsurf",
+      "projectRootPattern": ".windsurf",
+      "subpath": "memories",
+      "supportedKinds": [
+        "rule",
+        "context",
+        "prompt"
+      ],
+      "ownershipMarkers": [
+        "cascade_rules.json"
+      ],
+      "recursionAllowed": false,
+      "readOnly": false,
+      "confidence": "high"
+    }
+  ],
+  "digest": "sha256:673c0bdb78842e67dd6716cf3dbec352b640f040f1c0786b900c59fc65b225b4"
+}

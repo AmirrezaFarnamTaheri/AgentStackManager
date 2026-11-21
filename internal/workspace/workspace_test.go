@@ -214,6 +214,33 @@ func TestWorkspaceStoreRejectsUnsupportedSchemaVersion(t *testing.T) {
 	}
 }
 
+func TestWorkspaceStoreRejectsDuplicateJSONKeys(t *testing.T) {
+	tests := []struct {
+		name string
+		data string
+	}{
+		{
+			name: "versioned envelope",
+			data: `{"schema":"agentstack.workspace.items","schema":"agentstack.workspace.items","version":1,"items":{}}`,
+		},
+		{
+			name: "legacy collection",
+			data: `{"dup":{"id":"dup","name":"First","type":"folder","createdAt":"2026-08-03T00:00:00Z","updatedAt":"2026-08-03T00:00:00Z"},"dup":{"id":"dup","name":"Second","type":"folder","createdAt":"2026-08-03T00:00:00Z","updatedAt":"2026-08-03T00:00:00Z"}}`,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			root := t.TempDir()
+			if err := os.WriteFile(filepath.Join(root, "workspaces.json"), []byte(test.data), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := New(root).List(); err == nil || !strings.Contains(err.Error(), "duplicate") {
+				t.Fatalf("expected duplicate-key rejection, got %v", err)
+			}
+		})
+	}
+}
+
 func TestArtifactReplacementRollsBackWhenRegistryCommitFails(t *testing.T) {
 	manager := New(t.TempDir())
 	workspaceRoot := t.TempDir()

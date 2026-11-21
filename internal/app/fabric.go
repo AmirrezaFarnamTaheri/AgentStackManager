@@ -4,15 +4,25 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
+	"github.com/agentstack/agentstack/internal/adapters/builtin"
+	"github.com/agentstack/agentstack/internal/adapters/conformance"
+	"github.com/agentstack/agentstack/internal/adapters/external"
+	"github.com/agentstack/agentstack/internal/artifactgraph"
+	"github.com/agentstack/agentstack/internal/cas"
 	"github.com/agentstack/agentstack/internal/contextengine"
 	"github.com/agentstack/agentstack/internal/mcplink"
+	"github.com/agentstack/agentstack/internal/migrations/asmv1"
+	"github.com/agentstack/agentstack/internal/processctl"
 	"github.com/agentstack/agentstack/internal/resourcehub"
 	"github.com/agentstack/agentstack/internal/routines"
 	"github.com/agentstack/agentstack/internal/runner"
+	sqlitestore "github.com/agentstack/agentstack/internal/store/sqlite"
 	"github.com/agentstack/agentstack/internal/workspace"
 )
 
@@ -133,6 +143,205 @@ func (s *Service) FabricStatus(now time.Time) (FabricStatus, error) {
 func (s *Service) ListResources() ([]resourcehub.Resource, error) {
 	return s.resourceHubManager().ListResources()
 }
+func (s *Service) CanonicalResourceGraph() (artifactgraph.Snapshot, error) {
+	return s.resourceHubManager().CanonicalSnapshot()
+}
+
+func (s *Service) AdapterCapabilities(projectRoot, targetRoot string, targets []string) ([]adapters.CapabilitySet, error) {
+	if strings.TrimSpace(projectRoot) == "" {
+		projectRoot = "."
+	}
+	if strings.TrimSpace(targetRoot) == "" {
+		targetRoot = projectRoot
+	}
+	registry := builtin.MustRegistry()
+	environment := builtin.RuntimeEnvironment(projectRoot, targetRoot, "", s.Paths.AgyConfig)
+	return registry.Capabilities(context.Background(), environment, targets)
+}
+
+func (s *Service) AdapterConformance(projectRoot, targetRoot string, targets []string) (conformance.Report, error) {
+	if strings.TrimSpace(projectRoot) == "" {
+		projectRoot = "."
+	}
+	if strings.TrimSpace(targetRoot) == "" {
+		targetRoot = projectRoot
+	}
+	home := filepath.Join(targetRoot, ".agentstack-conformance-home")
+	agyConfig := strings.TrimSpace(s.Paths.AgyConfig)
+	if agyConfig == "" {
+		agyConfig = filepath.Join(home, ".gemini", "config", "mcp_config.json")
+	}
+	environment := builtin.RuntimeEnvironment(projectRoot, targetRoot, home, agyConfig)
+	return conformance.RunEmbedded(context.Background(), builtin.MustRegistry(), conformance.RunOptions{Environment: environment, Targets: targets})
+}
+
+// ExternalAdapterConformance admits pinned executable bytes into a private,
+// synthetic environment and differentially tests them against the reviewed
+// built-in target adapter. It never registers or activates the executable.
+func (s *Service) ExternalAdapterConformance(executable, executableDigest, target string, arguments []string, timeout time.Duration, processLimits processctl.Limits) (external.ConformanceReport, error) {
+	registry := builtin.MustRegistry()
+	reference, err := registry.Get(target)
+	if err != nil {
+		return external.ConformanceReport{}, err
+	}
+	sessionRoot, err := os.MkdirTemp("", "agentstack-external-conformance-")
+	if err != nil {
+		return external.ConformanceReport{}, fmt.Errorf("create external adapter conformance environment: %w", err)
+	}
+	defer os.RemoveAll(sessionRoot)
+	if err := os.Chmod(sessionRoot, 0o700); err != nil {
+		return external.ConformanceReport{}, fmt.Errorf("harden external adapter conformance environment: %w", err)
+	}
+	projectRoot := filepath.Join(sessionRoot, "project")
+	targetRoot := filepath.Join(sessionRoot, "target")
+	home := filepath.Join(sessionRoot, "home")
+	agyConfig := filepath.Join(home, ".gemini", "config", "mcp_config.json")
+	for _, directory := range []string{projectRoot, targetRoot, filepath.Dir(agyConfig)} {
+		if err := os.MkdirAll(directory, 0o700); err != nil {
+			return external.ConformanceReport{}, fmt.Errorf("create external adapter conformance directory: %w", err)
+		}
+	}
+	limits := external.DefaultLimits()
+	if timeout != 0 {
+		limits.Timeout = timeout
+	}
+	limits.Process = processLimits
+	environment := builtin.RuntimeEnvironment(projectRoot, targetRoot, home, agyConfig)
+	admission := external.Admission{
+		Executable: executable, ExecutableDigest: executableDigest, Arguments: arguments,
+		Target: reference.ID(), SandboxRoot: sessionRoot, Environment: environment, Limits: limits,
+	}
+	return external.RunConformance(context.Background(), admission, reference)
+}
+
+func (s *Service) StageResourceHubCAS(root string) (asmv1.Receipt, error) {
+	store, err := s.fabricCASStore(root)
+	if err != nil {
+		return asmv1.Receipt{}, err
+	}
+	return withFabricLease(s, func() (asmv1.Receipt, error) {
+		return asmv1.Stage(s.resourceHubManager(), store, time.Now)
+	})
+}
+
+func (s *Service) VerifyResourceHubCAS(root string, receipt asmv1.Receipt) error {
+	store, err := s.fabricCASStore(root)
+	if err != nil {
+		return err
+	}
+	return asmv1.VerifyCurrent(s.resourceHubManager(), store, receipt)
+}
+
+func (s *Service) RestoreResourceHubCAS(root string, receipt asmv1.Receipt, resourceID, destination string, confirmed bool) error {
+	if !confirmed {
+		return fmt.Errorf("CAS resource restore requires explicit confirmation")
+	}
+	store, err := s.fabricCASStore(root)
+	if err != nil {
+		return err
+	}
+	return withFabricLeaseError(s, func() error {
+		return asmv1.RestoreResource(store, receipt, resourceID, destination)
+	})
+}
+
+// StageResourceHubSQLite creates or advances the reversible SQLite shadow
+// metadata head from a freshly verified Resource Hub/CAS receipt. It does not
+// redirect Resource Hub reads or target mutation authority.
+func (s *Service) StageResourceHubSQLite(databasePath, casRoot string) (sqlitestore.Summary, error) {
+	objectStore, err := s.fabricCASStore(casRoot)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	metadataStore, err := s.fabricSQLiteStore(databasePath)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	return withFabricLease(s, func() (sqlitestore.Summary, error) {
+		receipt, err := asmv1.Stage(s.resourceHubManager(), objectStore, time.Now)
+		if err != nil {
+			return sqlitestore.Summary{}, err
+		}
+		summary, err := metadataStore.Stage(receipt)
+		if err != nil {
+			return sqlitestore.Summary{}, err
+		}
+		inspection, err := metadataStore.Inspect()
+		if err != nil {
+			return sqlitestore.Summary{}, err
+		}
+		if err := asmv1.VerifyCurrent(s.resourceHubManager(), objectStore, inspection.Receipt); err != nil {
+			return sqlitestore.Summary{}, err
+		}
+		return summary, nil
+	})
+}
+
+func (s *Service) InspectResourceHubSQLite(databasePath string) (sqlitestore.Summary, error) {
+	metadataStore, err := s.fabricSQLiteStore(databasePath)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	inspection, err := metadataStore.Inspect()
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	return inspection.Summary, nil
+}
+
+func (s *Service) VerifyResourceHubSQLite(databasePath, casRoot string) (sqlitestore.Summary, error) {
+	metadataStore, err := s.fabricSQLiteStore(databasePath)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	objectStore, err := s.fabricCASStore(casRoot)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	inspection, err := metadataStore.Inspect()
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	if err := asmv1.VerifyCurrent(s.resourceHubManager(), objectStore, inspection.Receipt); err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	return inspection.Summary, nil
+}
+
+func (s *Service) BackupResourceHubSQLite(databasePath, destination string, confirmed bool) (sqlitestore.Summary, error) {
+	if !confirmed {
+		return sqlitestore.Summary{}, fmt.Errorf("SQLite metadata backup requires explicit confirmation")
+	}
+	metadataStore, err := s.fabricSQLiteStore(databasePath)
+	if err != nil {
+		return sqlitestore.Summary{}, err
+	}
+	return withFabricLease(s, func() (sqlitestore.Summary, error) {
+		return metadataStore.Backup(destination)
+	})
+}
+
+func (s *Service) fabricCASStore(root string) (cas.Store, error) {
+	if strings.TrimSpace(root) == "" {
+		root = filepath.Join(s.Paths.DataRoot, "fabric", "cas")
+	}
+	absolute, err := filepath.Abs(root)
+	if err != nil {
+		return cas.Store{}, err
+	}
+	return cas.New(absolute), nil
+}
+
+func (s *Service) fabricSQLiteStore(path string) (sqlitestore.Store, error) {
+	if strings.TrimSpace(path) == "" {
+		path = filepath.Join(s.Paths.DataRoot, "fabric", "metadata.db")
+	}
+	absolute, err := filepath.Abs(path)
+	if err != nil {
+		return sqlitestore.Store{}, err
+	}
+	return sqlitestore.New(absolute), nil
+}
 func (s *Service) ImportResource(source string, options resourcehub.ImportOptions) (resourcehub.Resource, error) {
 	return withFabricLease(s, func() (resourcehub.Resource, error) {
 		return s.resourceHubManager().Import(source, options)
@@ -144,6 +353,10 @@ func (s *Service) AuditResource(id string) (resourcehub.AuditResult, error) {
 func (s *Service) RegisterResourceTarget(target resourcehub.Target) error {
 	return withFabricLeaseError(s, func() error { return s.resourceHubManager().RegisterTarget(target) })
 }
+func (s *Service) InspectResourceSync() (resourcehub.SyncInspection, error) {
+	return s.resourceHubManager().Inspect()
+}
+
 func (s *Service) ListResourceTargets() ([]resourcehub.Target, error) {
 	return s.resourceHubManager().ListTargets()
 }
@@ -161,6 +374,14 @@ func (s *Service) PlanResourceSync(targetID string, resourceIDs []string, option
 func (s *Service) ApplyResourceSync(planID, digest string, confirmed bool) (resourcehub.SyncReport, error) {
 	return withFabricLease(s, func() (resourcehub.SyncReport, error) {
 		return s.resourceHubManager().ApplySync(planID, digest, confirmed)
+	})
+}
+func (s *Service) PlanResourceBatchSync(targetIDs, resourceIDs []string, maxParallel int) (resourcehub.BatchSyncPlan, error) {
+	return s.resourceHubManager().PlanBatchSync(targetIDs, resourceIDs, resourcehub.PlanOptions{TTL: 15 * time.Minute, AllowRisk: true}, maxParallel)
+}
+func (s *Service) ApplyResourceBatchSync(ctx context.Context, planID, digest string, confirmed bool) (resourcehub.BatchSyncReport, error) {
+	return withFabricLease(s, func() (resourcehub.BatchSyncReport, error) {
+		return s.resourceHubManager().ApplyBatchSync(ctx, planID, digest, confirmed)
 	})
 }
 func (s *Service) PlanResourceRefresh(resourceIDs []string) (resourcehub.RefreshPlan, error) {

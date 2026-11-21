@@ -19,14 +19,14 @@ internal/resourcehub/resourcehub_test.go#TestAuditBlocksPromptInjectionAndCreden
 internal/resourcehub/resourcehub_test.go#TestResourceBackupCanBeListedAndRestored,SS-BACKUP,Primary acceptance evidence for resource backup cleanup and restore
 internal/resourcehub/refresh_test.go#TestReviewedResourceRefreshDetectsAndAppliesSourceChanges,SS-SOURCES,Primary acceptance evidence for tracked project and Git source update lifecycle
 internal/resourcehub/resourcehub_test.go#TestTargetDestinationsCoverSupportedAgents,SS-TARGETS,Primary acceptance evidence for agent target path adapters
-internal/ui/web_contract_test.go#TestEmbeddedUIOperationFeedbackContract,SS-UI,Primary acceptance evidence for CLI TUI and web resource operation surfaces
+internal/ui/web_contract_test.go#TestEmbeddedUIOperationAndRecoveryContract,SS-UI,Primary acceptance evidence for CLI TUI and web resource operation surfaces
 internal/resourcehub/resourcehub_test.go#TestManagedResourceStoreListsTypedResourcesDeterministically,SH-STORE,Primary acceptance evidence for managed skills store with tags scope and tools
 internal/resourcehub/resourcehub_test.go#TestImportPlanAndApplyCopyTarget,SH-SYNC,Primary acceptance evidence for bulk sync engine and content hashes
 internal/routines/routines_test.go#TestDailyRoutineDueAndRun,SH-SCHEDULE,Primary acceptance evidence for scheduled skill update runs and result history
-internal/cli/fabric_test.go#TestResourceHubContextAndMCPClientCLI,SH-TOOLS,Primary acceptance evidence for built-in and custom tool adapters
+internal/cli/fabric_test.go#TestResourceHubContextAndMCPClientCLI,SH-TOOLS;FABRIC-CLI,Primary acceptance evidence for built-in and custom tool adapters plus read-only canonical graph inspection.
 internal/resourcehub/resourcehub_test.go#TestImportDoesNotFetchRemoteSources,SH-ONLINE,Primary acceptance evidence for featured skills and GitHub online search
-internal/ui/web_contract_test.go#TestWebFabricStatusFailureDoesNotBlockPrimaryRefresh,SH-UI,Primary acceptance evidence for desktop managed/explore/update/settings views
-internal/mcplink/mcplink_test.go#TestPlanAndApplyLinksFileClientsPreservingForeignServers,ML-CLIENTS,Primary acceptance evidence for multi-client MCP configuration adapters
+internal/ui/web_contract_test.go#TestEmbeddedUILifecycleWorkspaceContract,SH-UI,Primary acceptance evidence for desktop managed/explore/update/settings views
+internal/mcplink/mcplink_test.go#TestPlanAndApplyLinksFileClientsPreservingForeignServers,FABRIC-MCP-ADAPTER-PLAN,Adapter-driven MCP planning preserves unrelated client registrations through the existing authority.
 internal/mcplink/mcplink_test.go#TestPlanReportsForeignNamedConflict,ML-SYNC,Primary acceptance evidence for cross-client MCP synchronization
 internal/mcplink/mcplink_test.go#TestUnlinkRemovesOnlyAgentStackEntry,ML-CRUD,Primary acceptance evidence for MCP server CRUD state
 internal/mcplink/mcplink_test.go#TestCodexRegistrationUsesReviewedPlan,ML-CODEX,Primary acceptance evidence for Codex TOML adapter
@@ -59,3 +59,73 @@ internal/workspace/workspace_test.go#TestWorkspaceDeleteRollsBackAllStoresAndArt
 internal/workspace/workspace_test.go#TestArtifactReplacementRollsBackWhenRegistryCommitFails,AW-ARTIFACT;AW-LOCAL,Artifact replacement restores prior content when metadata commit fails.
 internal/workspace/workspace_test.go#TestArtifactRemovalRollsBackWhenRegistryCommitFails,AW-ARTIFACT;AW-LOCAL,Artifact removal restores quarantined content when metadata commit fails.
 internal/workspace/workspace_test.go#TestCommittedArtifactMutationIsNotReportedFailedWhenCleanupIsDeferred,AW-ARTIFACT;AW-LOCAL,A committed artifact mutation remains successful when non-authoritative cleanup must be deferred.
+internal/cas/store_test.go#TestStorePutTreeDeduplicatesVerifiesAndMaterializes,FABRIC-CAS;FABRIC-CAS-MARKS,Deterministic immutable blob/tree storage recursive verification reachability and reversible materialization.
+internal/cas/store_test.go#TestStoreTreeDigestIsIndependentOfCreationOrder,FABRIC-CAS,Filesystem creation order cannot change canonical tree identity.
+internal/cas/store_test.go#TestStoreRejectsSymlinkInputAndExistingDestination,FABRIC-CAS;FABRIC-CAS-CLI,Symlink sources and pre-existing restore destinations fail closed.
+internal/cas/store_test.go#TestStoreDetectsCorruptBlob,FABRIC-CAS,Referenced blob corruption invalidates the containing tree.
+internal/cas/store_test.go#TestStoreRejectsTraversalManifest,FABRIC-CAS,Manifest traversal cannot escape the restore root.
+internal/cas/store_test.go#TestStoreRejectsSymlinkObjectPrefix,FABRIC-CAS,Symlink object-prefix directories cannot redirect immutable object writes.
+internal/cas/store_test.go#TestStoreMaterializeRejectsSymlinkParent,FABRIC-CAS;FABRIC-CAS-CLI,Restore refuses a symlink destination parent.
+internal/cas/store_test.go#TestStoreVerifyDoesNotCreateMissingRoot,FABRIC-CAS,Read-only verification cannot create durable state.
+internal/cas/store_test.go#TestStorePopulateTreeNeverOverwritesExistingEntry,FABRIC-CAS;FABRIC-CAS-CLI,Tree publication uses exclusive entry creation and preserves raced foreign content.
+internal/cas/store_test.go#TestStoreMaterializeBlobNeverOverwritesDestination,FABRIC-CAS;FABRIC-CAS-CLI,Blob materialization never replaces an existing destination.
+internal/migrations/asmv1/stage_test.go#TestStageResourceHubCreatesVerifiedReversibleShadow,FABRIC-ASM-V1-STAGE,Every staged Resource Hub resource round-trips through CAS and can be restored without authority transfer.
+internal/migrations/asmv1/stage_test.go#TestVerifyCurrentRejectsStaleResourceHub,FABRIC-ASM-V1-STAGE,Changed authoritative Resource Hub state invalidates current-state receipt verification.
+internal/migrations/asmv1/stage_test.go#TestVerifyReceiptRejectsTampering,FABRIC-ASM-V1-STAGE,Digest-bound migration receipts reject altered resource evidence.
+internal/cli/cas_test.go#TestResourceHubCASStageVerifyAndRestoreCLI,FABRIC-CAS-CLI,Operator CLI exposes stage verify and restore as a complete JSON workflow.
+internal/cli/cas_test.go#TestResourceHubCASRestoreRequiresConfirmation,FABRIC-CAS-CLI,CAS restore cannot run without explicit confirmation.
+internal/resourcehub/artifactgraph_test.go#TestCanonicalSnapshotPreservesResourceIdentityProvenanceAndDigest,FABRIC-RH-BRIDGE,Resource Hub resources project into the canonical envelope without changing payload authority.
+internal/strictjson/decode_test.go#TestCanonicalizeSortsObjectKeysAndPreservesLargeNumbers,FABRIC-STRICTJSON,Canonical extension JSON is deterministic and preserves large numeric identifiers.
+internal/strictjson/decode_test.go#TestCanonicalizeRejectsDuplicateKeysAndTrailingContent,FABRIC-STRICTJSON,Duplicate keys and trailing values cannot enter canonical extension state.
+internal/cas/store_test.go#TestRefURIIncludesObjectKind,FABRIC-CAS,CAS references include object kind so blob and tree identities cannot be ambiguous.
+internal/cas/store_test.go#TestStoreFailedTreeRestoreRetainsMarkerAndForeignCollision,FABRIC-CAS;FABRIC-CAS-CLI,A raced foreign entry is preserved and failed tree publication retains an incomplete marker instead of deleting output.
+internal/cli/cas_test.go#TestReadMigrationReceiptRejectsSymlink,FABRIC-CAS-CLI,Migration receipt admission rejects symlink inputs before decoding.
+internal/cas/store_test.go#TestStoreRejectsAmbiguousAndNonCanonicalTreeDocuments,FABRIC-CAS,Tree admission rejects duplicate keys unknown fields and non-canonical encodings.
+internal/cas/store_test.go#TestValidateRefEnforcesKindDigestAndSizeBounds,FABRIC-CAS,Standalone receipt validation enforces CAS kind digest and size bounds before object access.
+internal/migrations/asmv1/stage_test.go#TestStageRejectsResourceHubChangeDuringStaging,FABRIC-ASM-V1-STAGE,The source graph is re-read before receipt issuance so in-flight authoritative changes cannot be sealed into a mixed snapshot.
+internal/strictjson/decode_test.go#TestMarshalCanonicalSortsNestedMaps,FABRIC-STRICTJSON-MARSHAL,Typed canonical metadata serialization is deterministic.
+internal/store/sqlite/store_test.go#TestStageInspectAndIdempotence,FABRIC-SQLITE,SQLite shadow stage is transactional inspectable private and idempotent.
+internal/store/sqlite/store_test.go#TestStageRetainsHistoryAndMovesShadowHead,FABRIC-SQLITE,New receipts retain immutable history while advancing only the non-authoritative shadow head.
+internal/store/sqlite/store_test.go#TestInspectDoesNotCreateMissingDatabase,FABRIC-SQLITE,Read-only inspection cannot create durable metadata state.
+internal/store/sqlite/store_test.go#TestInspectRejectsTamperedArtifactRow,FABRIC-SQLITE,Canonical artifact-row tampering is detected against the sealed receipt.
+internal/store/sqlite/store_test.go#TestBackupIsVerifiedAndNeverOverwrites,FABRIC-SQLITE-BACKUP,Online backup is inspected before publication and refuses destination replacement.
+internal/store/sqlite/store_test.go#TestDatabasePathRejectsSymlink,FABRIC-SQLITE,SQLite metadata paths reject symlink substitution.
+internal/store/sqlite/store_test.go#TestStageRejectsUnrecognizedExistingSQLiteDatabase,FABRIC-SQLITE,ASM refuses to adopt or modify an unrelated existing SQLite database.
+internal/cli/sqlite_test.go#TestResourceHubSQLiteStageInspectVerifyAndBackupCLI,FABRIC-SQLITE-CLI,Operator workflow stages inspects verifies and backs up the shadow metadata end to end.
+internal/cli/sqlite_test.go#TestResourceHubSQLiteBackupRequiresConfirmation,FABRIC-SQLITE-CLI,SQLite backup requires explicit confirmation.
+internal/cli/sqlite_test.go#TestResourceHubSQLiteVerifyRejectsStaleAuthoritativeState,FABRIC-SQLITE-CLI,Current-state verification rejects a shadow head after authoritative Resource Hub change.
+internal/store/sqlite/store_test.go#TestInspectRejectsTamperedReceiptAndResourceRows,FABRIC-SQLITE,Receipt and resource-row tampering cannot survive shadow metadata inspection.
+internal/store/sqlite/store_test.go#TestInspectRejectsFutureSchemaAndMissingMigrationLedger,FABRIC-SQLITE,Unknown schema versions and incomplete migration ledgers fail closed.
+internal/adapters/contract_test.go#TestCapabilityAndLossDigestsAreDeterministic,FABRIC-ADAPTER-CAPABILITY;FABRIC-ADAPTER-LOSS,Capability and fidelity evidence is deterministically sealed and independently verifiable.
+internal/adapters/contract_test.go#TestPlanStateMachinePreservesForeignAndDivergedState,FABRIC-ADAPTER-CONTRACT,The adapter state classifier preserves foreign and diverged target state.
+internal/adapters/contract_test.go#TestPlanRejectsMismatchedLossIdentityAndInvalidDigests,FABRIC-ADAPTER-CONTRACT;FABRIC-ADAPTER-LOSS,Mismatched capability/loss identities and invalid desired digests fail closed.
+internal/adapters/contract_test.go#TestRenderedSetRejectsTraversalAndInvalidDigest,FABRIC-ADAPTER-CONTRACT,Rendered relative paths cannot traverse and rendered content digests must be valid.
+internal/adapters/builtin/builtin_test.go#TestBuiltinsExposeVersionedCapabilitySnapshots,FABRIC-BUILTIN-ADAPTERS;FABRIC-ADAPTER-CAPABILITY,All reviewed target adapters expose valid versioned structural capabilities.
+internal/adapters/builtin/builtin_test.go#TestRenderProducesVisibleFidelityAndConfinedDestination,FABRIC-BUILTIN-ADAPTERS;FABRIC-ADAPTER-LOSS,Built-in rendering is target-confined and byte-preserving transformations remain visible.
+internal/adapters/builtin/builtin_test.go#TestFallbackIsMachineReadable,FABRIC-BUILTIN-ADAPTERS;FABRIC-ADAPTER-LOSS,Fallback projections are explicitly machine-readable and lossy.
+internal/resourcehub/adapters_test.go#TestPlanSyncBindsCapabilitiesAndEnforcesDenyLoss,FABRIC-RH-ADAPTER-PLAN;FABRIC-ADAPTER-LOSS,Resource Hub binds capability/loss evidence and deny-loss rejects partial plans.
+internal/resourcehub/adapters_test.go#TestApplySyncRejectsTamperedPerOperationLossBinding,FABRIC-RH-ADAPTER-PLAN;FABRIC-ADAPTER-LOSS,Apply rejects altered operation-level fidelity evidence even with a recomputed outer plan digest.
+internal/resourcehub/adapters_test.go#TestApplySyncRejectsCapabilityDrift,FABRIC-RH-ADAPTER-PLAN,Apply rejects a live target capability change after plan review.
+internal/mcplink/mcplink_test.go#TestPlanBindsCapabilitySnapshotsAndLossReports,FABRIC-MCP-ADAPTER-PLAN,MCP plans contain valid sorted capability and fidelity snapshots.
+internal/mcplink/mcplink_test.go#TestApplyRejectsTamperedAdapterLossBinding,FABRIC-MCP-ADAPTER-PLAN;FABRIC-ADAPTER-LOSS,MCP apply rejects altered per-operation loss evidence.
+internal/cli/fabric_test.go#TestHubAdaptersCLIResolvesAliasesAndEmitsVerifiedCapabilities,FABRIC-ADAPTER-CLI;FABRIC-ADAPTER-CAPABILITY,CLI resolves an advertised alias and emits a verifiable canonical capability snapshot.
+internal/adapters/contract_test.go#TestVerifyAcceptsAbsentNoopPostcondition,FABRIC-ADAPTER-CONTRACT,An already absent target satisfies an absent no-op without requiring a phantom digest.
+internal/adapters/contract_test.go#TestVerifyAcceptsEquivalentNoopWithoutRewritingDigest,FABRIC-ADAPTER-CONTRACT,A semantic no-op verifies the unchanged equivalent observation rather than assuming an unperformed rewrite.
+internal/adapters/contract_test.go#TestInactiveMCPCapabilityRejectsRegistrationFields,FABRIC-ADAPTER-CAPABILITY,MCP-unsupported capabilities cannot advertise inert registration keys or entry names.
+internal/adapters/builtin/builtin_test.go#TestPassthroughReportsPopulatedMetadataOmissions,FABRIC-ADAPTER-LOSS;FABRIC-BUILTIN-ADAPTERS,Populated canonical description and labels produce explicit omission losses in passthrough projections.
+internal/adapters/conformance/conformance_test.go#TestEmbeddedCorpusCoversEveryBuiltinAdapter,FABRIC-ADAPTER-CONFORMANCE,The strict corpus has exactly one canonical fixture for every reviewed built-in adapter.
+internal/adapters/conformance/conformance_test.go#TestEmbeddedCorpusPassesAllBuiltinAdapters,FABRIC-ADAPTER-CONFORMANCE;FABRIC-BUILTIN-ADAPTERS,All 64 capability differential artifact contract round-trip plan and postcondition cases pass.
+internal/adapters/conformance/conformance_test.go#TestTargetFilterDeduplicatesAliases,FABRIC-ADAPTER-CONFORMANCE,Canonical and alias target filters resolve to one target result.
+internal/adapters/conformance/conformance_test.go#TestCorpusRejectsTraversalAndDifferentialDrift,FABRIC-ADAPTER-CONFORMANCE,Non-canonical fixture paths and intentional capability drift are detected.
+internal/adapters/conformance/conformance_test.go#TestReportTamperingIsRejected,FABRIC-ADAPTER-CONFORMANCE,Altered successful evidence invalidates the sealed report.
+internal/cli/fabric_test.go#TestHubAdapterConformanceCLIEmitsVerifiedReport,FABRIC-ADAPTER-CONFORMANCE-CLI,The read-only CLI emits a verifiable alias-deduplicated conformance report.
+internal/adapters/external/external_test.go#TestOpenPinsExecutableNegotiatesAndMatchesReference,FABRIC-EXTERNAL-PROTOCOL;FABRIC-EXTERNAL-ADMISSION,Pins staged executable identity negotiates the protocol and proves reviewed capability equivalence
+internal/adapters/external/external_test.go#TestRunConformanceMatchesPhase5Corpus,FABRIC-EXTERNAL-DIFFERENTIAL,Runs the complete embedded Phase 5 corpus through the external process boundary and matches reference evidence
+internal/adapters/external/external_test.go#TestCapabilityIntersectionRemovesUnreviewedClaims,FABRIC-EXTERNAL-INTERSECTION,Proves external-only artifact and deployment claims are removed and reported
+internal/adapters/external/external_test.go#TestAdmissionRejectsDigestMismatchAndSymlink,FABRIC-EXTERNAL-ADMISSION,Rejects executable digest mismatch and symlink admission
+internal/adapters/external/external_test.go#TestProcessLimitsAndProtocolIdentityFailClosed,FABRIC-EXTERNAL-PROTOCOL;FABRIC-EXTERNAL-ADMISSION,Rejects deadline output crash malformed identity and stderr-on-success failures
+internal/adapters/external/external_test.go#TestExternalRenderEscapeAndPlanDivergenceAreRejected,FABRIC-EXTERNAL-DIFFERENTIAL,Proves target-root escape and divergence from the reviewed core plan state machine fail differential evidence
+internal/adapters/external/external_test.go#TestConformanceReportTamperingIsRejected,FABRIC-EXTERNAL-DIFFERENTIAL,Rejects altered derived external conformance evidence
+internal/adapters/external/external_test.go#TestAdmittedExecutableIsPrivateAndEnvironmentIsSanitized,FABRIC-EXTERNAL-ADMISSION,Proves private staged-byte execution persists after source mutation and parent secrets are not inherited
+internal/adapters/external/external_test.go#TestCapabilityDriftWithinSessionIsRejected,FABRIC-EXTERNAL-INTERSECTION,Rejects a candidate whose capability changes during one admitted session
+internal/cli/fabric_test.go#TestHubExternalAdapterConformanceCLIEmitsVerifiedReport,FABRIC-EXTERNAL-CLI,Verifies the read-only CLI emits a sealed passing reference-versus-candidate report

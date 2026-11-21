@@ -83,9 +83,9 @@ func (s *childSession) requestRaw(ctx context.Context, method string, params any
 		s.stateMu.Unlock()
 		return nil, errors.New("child session is closed")
 	}
-	s.stateMu.Unlock()
 	id := s.nextID
 	s.nextID++
+	s.stateMu.Unlock()
 	request := map[string]any{"jsonrpc": "2.0", "id": id, "method": method, "params": params}
 	if err := writeJSONLine(s.stdin, request, s.messageLimit); err != nil {
 		return nil, err

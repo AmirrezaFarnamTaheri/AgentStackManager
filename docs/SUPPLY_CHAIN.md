@@ -53,3 +53,7 @@ with the signed-tag commit and CI run evidence before packaging. The provenance 
 Seven donor archives were validated before extraction, hashed file-by-file, and recorded in `docs/convergence/SURFACES.csv`. `docs/convergence/ADOPTION.csv` connects independently meaningful donor units to target symbols, invariants, dispositions, and unique tests.
 
 No donor package manager, build output, vendored dependency tree, browser database, or binary is shipped as an authoritative runtime. Adopted behavior was implemented in the existing Go target and passes the target's source-manifest and release-pack boundaries.
+
+## SQLite native backend
+
+The Phase 3 metadata preview calls the public SQLite C API through a narrow internal CGO boundary and records SQLite's public-domain status in the component license inventory. No downloaded donor database or generated third-party Go binding is vendored. Protected release builders that enable metadata support must pin and inventory the SQLite library, run native tests, include it in SBOM/provenance evidence where applicable, and verify the minimum supported SQLite version. CGO-disabled builds retain a fail-closed stub rather than invoking an untracked external executable.

@@ -45,15 +45,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'go race tests failed' }
     go vet ./...
     if ($LASTEXITCODE -ne 0) { throw 'go vet failed' }
-    $rcPath = Join-Path $root 'cmd/agentstack/icon.rc'
     $sysoPath = Join-Path $root 'cmd/agentstack/icon_windows_amd64.syso'
-    if (Test-Path $rcPath) {
-        if (Get-Command windres -ErrorAction SilentlyContinue) {
-            & windres -i $rcPath -O coff -o $sysoPath
-        } elseif (Get-Command rsrc -ErrorAction SilentlyContinue) {
-            & rsrc -ico (Join-Path $root 'cmd/agentstack/icon.ico') -o $sysoPath
-        }
-    }
+    & go run ./cmd/resourcegen `
+        -icon (Join-Path $root 'cmd/agentstack/icon.ico') `
+        -manifest (Join-Path $root 'cmd/agentstack/agentstack.manifest') `
+        -out $sysoPath
+    if ($LASTEXITCODE -ne 0) { throw 'Windows resource generation failed' }
     $flags="-s -w -buildid= -X main.version=$Version -X main.revision=$revision"
     foreach ($arch in @('amd64','arm64')) {
         $env:CGO_ENABLED='0'; $env:GOOS='windows'; $env:GOARCH=$arch

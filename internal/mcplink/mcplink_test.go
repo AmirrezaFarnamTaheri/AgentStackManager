@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/agentstack/agentstack/internal/adapters"
 	"github.com/agentstack/agentstack/internal/runner"
 )
 
@@ -279,5 +280,54 @@ func TestPlanPreservesSecretBearingNamedEntryAsForeignConflict(t *testing.T) {
 	}
 	if plan.Operations[0].Action != ActionConflict {
 		t.Fatalf("secret-bearing named entry should be preserved as foreign: %#v", plan.Operations[0])
+	}
+}
+
+func TestPlanBindsCapabilitySnapshotsAndLossReports(t *testing.T) {
+	project := t.TempDir()
+	manager := New(t.TempDir(), Options{ProjectRoot: project, Executable: "agentstack", RouterConfig: "router.json"})
+	plan, err := manager.Plan(ModeLink, []ClientKind{ClientClaude, ClientCursor}, time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plan.AdapterContract != adapters.ContractVersion || len(plan.CapabilitySnapshots) != 2 || len(plan.LossReports) != 2 {
+		t.Fatalf("adapter evidence missing: %#v", plan)
+	}
+	for _, capability := range plan.CapabilitySnapshots {
+		if err := adapters.VerifyCapabilitySet(capability); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, report := range plan.LossReports {
+		if err := adapters.VerifyLossReport(report); err != nil {
+			t.Fatal(err)
+		}
+		if report.Fidelity != adapters.FidelityFull || report.HasLosses() {
+			t.Fatalf("MCP registration should be full fidelity: %#v", report)
+		}
+	}
+	if err := manager.verifyAdapterPlan(plan); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestApplyRejectsTamperedAdapterLossBinding(t *testing.T) {
+	project := t.TempDir()
+	manager := New(t.TempDir(), Options{ProjectRoot: project, Executable: "agentstack", RouterConfig: "router.json"})
+	plan, err := manager.Plan(ModeLink, []ClientKind{ClientClaude}, time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+	plan.Operations[0].Losses = []adapters.Loss{{ArtifactID: "local/MCPServer/agentstack-router", Field: "/registration", Kind: adapters.LossTransformation, Code: "tampered", Reason: "not reviewed"}}
+	plan.Operations[0].Fidelity = adapters.FidelityPartial
+	plan.Digest, err = planDigest(plan)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writeJSON(filepath.Join(manager.Root, "plans", plan.ID+".json"), plan); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := manager.Apply(context.Background(), plan.ID, plan.Digest, true); err == nil || !strings.Contains(err.Error(), "loss report mismatch") {
+		t.Fatalf("tampered adapter loss binding was accepted: %v", err)
 	}
 }

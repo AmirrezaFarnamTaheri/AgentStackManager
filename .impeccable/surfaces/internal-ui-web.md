@@ -5,35 +5,36 @@ primary_target: "internal/ui/web"
 related_targets: []
 ---
 
-# AgentStack Manager workspace
+# AgentStack Manager lifecycle workspace
 
 ## Scope and mode
 - Target: `internal/ui/web`
 - Visitor mode: Operate
-- Scope: complete visual replacement of the embedded browser manager while preserving product behavior, route IDs, API contracts, field order, and authorization semantics.
+- Scope: the complete embedded browser manager, preserving server authority, route IDs, authenticated API contracts, reviewed-plan semantics, and operation locking.
 
 ## Audience, job, and success
-- Primary user: a Windows developer or technical operator preparing a local AI engineering stack.
-- Job: understand current machine state, choose capabilities, review exact changes, authorize only the reviewed plan, and prepare the MCP router.
-- Success: the next safe action is obvious, preserved resources remain visible, operation progress is durable, and experts can scan without reading repeated card copy.
+- Primary user: a developer or technical operator managing local AI applications, IDEs, command-line tools, MCP servers, workspaces, and AgentStack-managed resources.
+- Job: understand what exists, choose desired tools, review exact changes, authorize once, follow installation, and recover from partial failure without repeating completed work.
+- Success: one next action is obvious, environment state is discoverable, progress is truthful, errors are path-free, and advanced evidence is available without dominating the interface.
 
 ## Selected direction
-- Direction: Conservation Ledger.
-- World: a provenance workbench combining archive registration, controlled change records, and engineering inspection sheets.
-- Structural thesis: one persistent workspace rail, one compact command masthead, one live operation ribbon, and registry-style content regions divided by intent rather than repeated cards.
-- Memorable moment: the plan review reads as a sealed change record, with preserved/install/repair/configure states expressed as consistent ledger seals.
-- Palette: cold off-white and graphite with one muted teal accent; semantic success, warning, and destructive colors remain functional only.
-- Shape system: 12px panels, 8px controls, pill shapes only for compact status seals.
-- Motion: 160-220ms state transitions and one status-ribbon transition; no decorative page choreography.
+- Direction: Lifecycle Ledger.
+- World: a calm operational record that moves from observed environment state to selected intent, pending changes, active installation, and recorded outcomes.
+- Structural thesis: exactly four primary destinations—Home, Environments, Changes, Activity—one compact masthead, one conditional installation tracker, and flat ledger rows rather than a dashboard-card wall.
+- Memorable moment: a partial installation preserves completed items, identifies failed work, clears the consumed approval, and offers Review failed items or Create fresh plan without exposing internal paths.
+- Palette: cold off-white and graphite with restrained teal for action/progress; green, amber, and red remain semantic only.
+- Shape system: 14px work surfaces, 8px controls, pills only for compact state badges.
+- Motion: bounded state transitions; no decorative choreography; reduced motion disables nonessential movement.
 
 ## Interaction and layout
-- Desktop: 248px navigation rail, fluid workspace, action cluster aligned to current task rather than global hero copy.
-- Mobile: navigation becomes a two-row command strip with horizontally scrollable section tabs and a stable action region; content collapses to one column.
-- Components: metric ledger, profile form, guarantee register, component registry rows, plan table, operation ribbon, command output.
-- States: loading skeletons, instructive empty states, inline recovery messages, durable running/success/error status, disabled and locked controls.
+- Desktop: 236px lifecycle rail; fluid workspace; Home readiness summary; Environments list/detail; Changes selection plus exact review; Activity progress/history/recovery.
+- Mobile: four labelled navigation items remain visible; split regions and action rows stack; 44px targets and 12px text floor remain intact without horizontal overflow.
+- Components: readiness summary, environment filters and detail, connection ledger, profile/tool selector, pending changes, approval block, installation tracker, transaction history, maintenance, system checks, technical disclosure.
+- States: loading, ready, attention, waiting, running, completed, failed, skipped, partial recovery, empty, disabled, and locked.
 
 ## Constraints and anti-goals
-- No frontend dependencies, remote fonts, external imagery, invented claims, customer proof, or fake metrics.
-- No marketing hero, purple glow, three-equal-card grid, decorative status dots, repeated eyebrows, or gratuitous glass.
-- Preserve accessible landmarks, skip link, focus visibility, reduced motion, live regions, and all existing element IDs used by JavaScript and tests.
-- Assumptions are repository-derived because no structured interview tool was available in this session.
+- No frontend framework, remote fonts, external imagery, invented claims, fake progress, or unbounded logs.
+- No subsystem-first navigation, duplicate review screen, confirmation modal, dashboard-card wall, or repeated error surfaces.
+- No browser exposure of filesystem paths, commands, arguments, raw subprocess output, secrets, or credentials.
+- Sharing and sync status is observational; connection mutation retains a separate reviewed Resource Hub or `mcplink` plan.
+- Preserve skip navigation, focus visibility and containment, live regions, reduced motion, light/dark contrast, and server-side mutation authority.

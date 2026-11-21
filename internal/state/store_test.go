@@ -96,7 +96,7 @@ func TestSaveTransactionDoesNotPersistRawProcessOutputOrArguments(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, forbidden := range []string{"ghp_not-for-disk", "private\\\\path", "bearer secret", "api_key=secret", `"args"`, `"output":"installed`} {
+	for _, forbidden := range []string{"ghp_not-for-disk", "private\\\\path", "bearer secret", "api_key=secret", `"command":"tool"`, `"args"`, `"output":"installed`} {
 		if strings.Contains(string(data), forbidden) {
 			t.Fatalf("persisted transaction contains private process data %q: %s", forbidden, data)
 		}
@@ -105,7 +105,7 @@ func TestSaveTransactionDoesNotPersistRawProcessOutputOrArguments(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(loaded.Actions) != 1 || loaded.Actions[0].Output != "" || len(loaded.Actions[0].Args) != 0 {
+	if len(loaded.Actions) != 1 || loaded.Actions[0].Command != "" || loaded.Actions[0].Output != "" || len(loaded.Actions[0].Args) != 0 {
 		t.Fatalf("transaction was not minimized: %+v", loaded.Actions)
 	}
 	if !loaded.Actions[0].OutputTruncated {
@@ -208,5 +208,44 @@ func TestStoreRejectsTraversalIdentifiers(t *testing.T) {
 	}
 	if err := store.DeletePlan("../outside"); err == nil {
 		t.Fatal("invalid plan identifier was accepted for delete")
+	}
+}
+
+func TestListTransactionsReturnsNewestMinimizedRecords(t *testing.T) {
+	store := NewStore(t.TempDir())
+	now := time.Now().UTC()
+	transactions := []model.Transaction{
+		{ID: "old", Status: model.TransactionSucceeded, StartedAt: now.Add(-2 * time.Hour), Actions: []model.TransactionAction{{ComponentID: "old", Args: []string{"secret"}, Output: "private"}}},
+		{ID: "new", Status: model.TransactionFailed, StartedAt: now, Actions: []model.TransactionAction{{ComponentID: "new", Error: "raw failure", Output: "private"}}},
+		{ID: "middle", Status: model.TransactionSucceeded, StartedAt: now.Add(-time.Hour)},
+	}
+	for _, transaction := range transactions {
+		if err := store.SaveTransaction(transaction); err != nil {
+			t.Fatal(err)
+		}
+	}
+	listed, err := store.ListTransactions(2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(listed) != 2 || listed[0].ID != "new" || listed[1].ID != "middle" {
+		t.Fatalf("transactions = %#v", listed)
+	}
+	if len(listed[0].Actions) != 1 || len(listed[0].Actions[0].Args) != 0 || listed[0].Actions[0].Output != "" || listed[0].Actions[0].Error == "raw failure" {
+		t.Fatalf("transaction was not minimized: %#v", listed[0])
+	}
+}
+
+func TestListTransactionsFailsClosedOnInvalidRecord(t *testing.T) {
+	store := NewStore(t.TempDir())
+	if err := store.SaveTransaction(model.Transaction{ID: "valid", StartedAt: time.Now().UTC()}); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(store.Root, "transactions", "broken.json")
+	if err := os.WriteFile(path, []byte(`{"id":"broken","unknown":true}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.ListTransactions(20); err == nil {
+		t.Fatal("invalid transaction record was silently ignored")
 	}
 }
