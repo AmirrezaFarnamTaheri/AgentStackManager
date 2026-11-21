@@ -9,9 +9,9 @@ import (
 type VarianceKind string
 
 const (
-	VarianceExact                 VarianceKind = "Exact"
-	VarianceFrontmatterOnly       VarianceKind = "FrontmatterOnly"
-	VarianceWhitespaceOnly        VarianceKind = "WhitespaceOnly"
+	VarianceExact                VarianceKind = "Exact"
+	VarianceFrontmatterOnly      VarianceKind = "FrontmatterOnly"
+	VarianceWhitespaceOnly       VarianceKind = "WhitespaceOnly"
 	VarianceStructuralDivergence VarianceKind = "StructuralDivergence"
 )
 
