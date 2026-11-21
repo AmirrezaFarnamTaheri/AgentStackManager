@@ -12,33 +12,33 @@ import (
 type ConsolidationRelationship string
 
 const (
-	RelationshipTemplate           ConsolidationRelationship = "Template"
-	RelationshipSpecialization     ConsolidationRelationship = "Specialization"
-	RelationshipAlternative        ConsolidationRelationship = "Alternative"
-	RelationshipComposition        ConsolidationRelationship = "Composition"
+	RelationshipTemplate             ConsolidationRelationship = "Template"
+	RelationshipSpecialization       ConsolidationRelationship = "Specialization"
+	RelationshipAlternative          ConsolidationRelationship = "Alternative"
+	RelationshipComposition          ConsolidationRelationship = "Composition"
 	RelationshipDataParameterization ConsolidationRelationship = "DataParameterization"
 )
 
 type ConsolidationCandidate struct {
-	ResourceID      string `json:"resourceId"`
-	IsOperatorChoice bool   `json:"isOperatorChoice"`
-	IsGovernedSource bool   `json:"isGovernedSource"`
-	CompletenessScore int   `json:"completenessScore"`
-	IsValidSchema    bool   `json:"isValidSchema"`
+	ResourceID        string `json:"resourceId"`
+	IsOperatorChoice  bool   `json:"isOperatorChoice"`
+	IsGovernedSource  bool   `json:"isGovernedSource"`
+	CompletenessScore int    `json:"completenessScore"`
+	IsValidSchema     bool   `json:"isValidSchema"`
 }
 
 type ConsolidationDecision struct {
-	ResourceID         string                    `json:"resourceId"`
-	CanonicalWinnerID  string                    `json:"canonicalWinnerId"`
-	PreservedMaterial  []string                  `json:"preservedMaterial"`
-	RejectedMaterial   []string                  `json:"rejectedMaterial"`
-	Lineage            string                    `json:"lineage"`
-	TargetImpact       string                    `json:"targetImpact"`
-	ReversalPath       string                    `json:"reversalPath"`
-	RelationshipType   ConsolidationRelationship `json:"relationshipType"`
-	ApprovedBy         string                    `json:"approvedBy"`
-	ApprovedAt         time.Time                 `json:"approvedAt"`
-	Digest             string                    `json:"digest"`
+	ResourceID        string                    `json:"resourceId"`
+	CanonicalWinnerID string                    `json:"canonicalWinnerId"`
+	PreservedMaterial []string                  `json:"preservedMaterial"`
+	RejectedMaterial  []string                  `json:"rejectedMaterial"`
+	Lineage           string                    `json:"lineage"`
+	TargetImpact      string                    `json:"targetImpact"`
+	ReversalPath      string                    `json:"reversalPath"`
+	RelationshipType  ConsolidationRelationship `json:"relationshipType"`
+	ApprovedBy        string                    `json:"approvedBy"`
+	ApprovedAt        time.Time                 `json:"approvedAt"`
+	Digest            string                    `json:"digest"`
 }
 
 // SelectCanonicalWinner determines the canonical winner using strictly ordered rules:
