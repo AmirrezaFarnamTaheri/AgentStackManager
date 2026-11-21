@@ -14,7 +14,7 @@ import (
 )
 
 type DeploymentExecutor struct {
-	mu         sync.Mutex
+	mu          sync.Mutex
 	targetLocks map[string]*sync.Mutex
 	backupRoot  string
 }
