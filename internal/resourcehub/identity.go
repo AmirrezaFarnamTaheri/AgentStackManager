@@ -42,8 +42,8 @@ type AliasDecision struct {
 type IdentityIndex struct {
 	mu        sync.RWMutex
 	byDigest  map[string]*IdentityMatch
-	byName    map[string][]string       // lowercased name -> digests
-	decisions map[string]AliasDecision  // resourceId -> decision
+	byName    map[string][]string      // lowercased name -> digests
+	decisions map[string]AliasDecision // resourceId -> decision
 }
 
 func NewIdentityIndex() *IdentityIndex {
