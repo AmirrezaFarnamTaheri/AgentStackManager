@@ -14,18 +14,18 @@ import (
 )
 
 type ChangeSet struct {
-	ChangeSetID        string                              `json:"changeSetId"`
-	TargetID           string                              `json:"targetId"`
-	FileOps            []executor.FileOperation           `json:"fileOps,omitempty"`
-	MCPMutations       []mcplink.MCPMutation               `json:"mcpMutations,omitempty"`
-	BeforeDescriptors  map[string]executor.FileDescriptor `json:"beforeDescriptors,omitempty"`
-	AfterDescriptors   map[string]executor.FileDescriptor `json:"afterDescriptors,omitempty"`
+	ChangeSetID        string                                `json:"changeSetId"`
+	TargetID           string                                `json:"targetId"`
+	FileOps            []executor.FileOperation              `json:"fileOps,omitempty"`
+	MCPMutations       []mcplink.MCPMutation                 `json:"mcpMutations,omitempty"`
+	BeforeDescriptors  map[string]executor.FileDescriptor    `json:"beforeDescriptors,omitempty"`
+	AfterDescriptors   map[string]executor.FileDescriptor    `json:"afterDescriptors,omitempty"`
 	FidelityRecords    map[string]conformance.FidelityRecord `json:"fidelityRecords,omitempty"`
-	OwnershipManifests []resourcehub.OwnershipManifest    `json:"ownershipManifests,omitempty"`
-	RetryPolicy        string                              `json:"retryPolicy"`
-	RecoveryDetail     string                              `json:"recoveryDetail"`
-	CreatedAt          time.Time                           `json:"createdAt"`
-	ChangeSetDigest    string                              `json:"changeSetDigest"`
+	OwnershipManifests []resourcehub.OwnershipManifest       `json:"ownershipManifests,omitempty"`
+	RetryPolicy        string                                `json:"retryPolicy"`
+	RecoveryDetail     string                                `json:"recoveryDetail"`
+	CreatedAt          time.Time                             `json:"createdAt"`
+	ChangeSetDigest    string                                `json:"changeSetDigest"`
 }
 
 type ChangeSetResult struct {
